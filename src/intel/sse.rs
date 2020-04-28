@@ -1018,8 +1018,8 @@ pub fn zeroed_m128() -> m128 {
 
 /// Shuffles the lanes around.
 ///
-/// Has to be a macro because Rust doesn't let you specify that the arguments to
-/// a function must be consts.
+/// This is a macro because the shuffle pattern must be a compile time constant,
+/// and Rust doesn't currently support that for functions.
 ///
 /// ## Two `m128` Inputs
 /// You can provide two `m128` arguments, in which case the low lanes of the

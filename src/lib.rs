@@ -4,10 +4,65 @@
 
 //! Crate that safely exposes arch intrinsics via cfg.
 //!
-//! WIP.
+//! >Incomplete. WIP. Etc.
+//! >
+//! >Current content can be expected to remain stable, but the functionality
+//! >coverage is not that much.
 //!
-//! If a given CPU target feature is enabled for the build, then the associated
-//! hardware intrinsics will be available as safe functions.
+//! This crate lets you safely use CPU intrinsics. Those things in
+//! [`core::arch`](core::arch).
+//! * Most of them are 100% safe to use as long as the CPU feature is available,
+//!   like addition and multiplication and stuff.
+//! * Some of them require that you uphold extra alignment requirements or
+//!   whatever, which we do via the type system when necessary.
+//! * Some of them are absolutely not safe at all because it causes UB at the
+//!   LLVM level, so those things are not exposed here.
+//!
+//! This crate works purely via `cfg` and compile time feature selection, there
+//! are no runtime checks. This means that if you _do_ want to do runtime
+//! feature detection and then dynamically call an intrinsic if it happens to be
+//! available, then this crate sadly isn't for you.
+//!
+//! ## Compile Time CPU Target Features
+//!
+//! At the time of me writing this, Rust enables the `sse` and `sse2` CPU target
+//! features by default for all `i686` (x86) and `x86_64` builds. If you want
+//! additional features available at compile time you'll have to enable them
+//! with an additional arg to `rustc`. For a feature named `name` you pass `-C
+//! target-feature=+name`, such as `-C target-feature=+sse3` for `sse3`.
+//!
+//! It's sometimes hard to know if your target platform will support a given
+//! feature set, but the [Steam Hardware Survey][steam-survey] is generally
+//! taken as a guide to what you can expect people to generally have. If you
+//! click "Other Settings" it'll expand into a list of CPU target features and
+//! how common they are. These days, it seems that `sse3` can be safely assumed,
+//! and `ssse3`, `sse4.1`, and `sse4.2` are pretty safe bets as well. The stuff
+//! above 128-bit isn't as common yet, give it another few years.
+//!
+//! **Please note that executing a program on a CPU that doesn't support the
+//! target features it was compiles for is undefined behavior.**
+//!
+//! Currently, Rust doesn't actually support an easy way for you to check that a
+//! feature enabled at compile time is _actually_ available at runtime. There is
+//! the "[feature_detected][feature_detected]" family of macros, but if you
+//! enable a feature they will evaluate to a constant `true` instead of actually
+//! deferring the check for the feature to runtime. This means that, if you
+//! _did_ want to check at the start of your program that the user's CPU really
+//! supports the features you expect and then error our with a message if their
+//! CPU is too old, you can't use that macro. You gotta use CPUID and check
+//! manually. rip. Hopefully we can make that process easier in a future version
+//! of this crate.
+//!
+//! [steam-survey]:
+//! https://store.steampowered.com/hwsurvey/Steam-Hardware-Software-Survey-Welcome-to-Steam
+//! [feature_detected]:
+//! https://doc.rust-lang.org/std/index.html?search=feature_detected
+//!
+//! ## Current Support
+//! As I said above, the crate is only Work In Progress status!
+//!
+//! * Intel (`x86` / `x86_64`)
+//!   * `sse`
 
 use core::{
   convert::AsRef,
