@@ -24,6 +24,12 @@ use super::*;
 #[allow(non_camel_case_types)]
 pub struct m128(pub __m128);
 
+#[test]
+fn test_m128_size_align() {
+  assert_eq!(core::mem::size_of::<m128>(), 16);
+  assert_eq!(core::mem::align_of::<m128>(), 16);
+}
+
 impl m128 {
   /// Transmutes the data to an array.
   #[must_use]
