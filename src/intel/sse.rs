@@ -1022,11 +1022,19 @@ pub fn zeroed_m128() -> m128 {
 /// and Rust doesn't currently support that for functions.
 ///
 /// ## Two `m128` Inputs
-/// You can provide two `m128` arguments, in which case the low lanes of the
-/// output come from `$a`, as picked by `$z` and `$o` (Zero and One), and the
-/// high lanes of the output come from `$b`, as picked by `$t` and `$e` (Two and
-/// threE). Each of the selection values must be a lane index, 0..4. Out of
-/// bounds values are wrapped to be an in-bounds position.
+/// You can provide two `m128` arguments, in which case:
+/// * The low lanes of the output come from `$a`, as picked by `$z` and `$o`
+///   (Zero and One)
+/// * The high lanes of the output come from `$b`, as picked by `$t` and `$e`
+///   (Two and threE).
+/// * `$a` and `$b` must obviously be `m128` expressions.
+/// * Each of the lane selection values is a lane index (`0..4`). They can be
+///   any integer type as long as all four lane indexes are the same type. Out
+///   of bounds index values are wrapped to just the low 2 bits.
+/// * The lane selection values are combined into a private `const` which is
+///   computed at compile time and then used at runtime. This means that you can
+///   use literals, but you can also use the names of other constants or even a
+///   `const fn` expression, if that is somehow is useful to you.
 ///
 /// ```
 /// # use safe_arch::*;
@@ -1045,9 +1053,9 @@ pub fn zeroed_m128() -> m128 {
 /// ```
 ///
 /// ## One `m128` Input
-/// You can provide one `m128` argument, in which case the above is called with
-/// `$a` the input to both sides of the shuffle (note that any potential side
-/// effects of evaluating `$a` are executed only once).
+/// You can provide one `m128` argument, in which case the above variant is
+/// called with `$a` as the input to both sides of the shuffle (note that any
+/// potential side effects of evaluating `$a` are executed only once).
 ///
 /// ```no_run
 /// # use safe_arch::*;
@@ -1065,7 +1073,7 @@ pub fn zeroed_m128() -> m128 {
 /// ```
 #[macro_export]
 macro_rules! shuffle_m128 {
-  ($a:expr, $b:expr, $z:literal, $o:literal, $t:literal, $e:literal) => {{
+  ($a:expr, $b:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
     const MASK: i32 =
       (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($e & 0b11) << 6)
         as i32;
@@ -1077,7 +1085,7 @@ macro_rules! shuffle_m128 {
     use core::arch::x86_64::_mm_shuffle_ps;
     m128(unsafe { _mm_shuffle_ps(a.0, b.0, MASK) })
   }};
-  ($a:expr, $z:literal, $o:literal, $t:literal, $e:literal) => {{
+  ($a:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
     // Note(Lokathor): this makes sure that any side-effecting expressions we
     // get as input are only executed once, then that expression output goes
     // into both sides of the shuffle.
@@ -1276,6 +1284,13 @@ pub fn unpack_low_m128(a: m128, b: m128) -> m128 {
 pub fn xor_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_xor_ps(a.0, b.0) })
 }
+
+//
+// Defines the Operator Overloads for `m128` to call the correct function from
+// above. This way the `m128` type theoretically will build if there's no `sse`
+// feature enabled, it just won't have the operator overloads. Not that Rust in
+// general really builds properly without `sse`, but ya know.
+//
 
 impl Add for m128 {
   type Output = Self;
