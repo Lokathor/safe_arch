@@ -52,7 +52,7 @@
 //! above 128-bit isn't as common yet, give it another few years.
 //!
 //! **Please note that executing a program on a CPU that doesn't support the
-//! target features it was compiles for is undefined behavior.**
+//! target features it was compiles for is Undefined Behavior.**
 //!
 //! Currently, Rust doesn't actually support an easy way for you to check that a
 //! feature enabled at compile time is _actually_ available at runtime. There is
@@ -69,6 +69,30 @@
 //! [feature_detected]:
 //! https://doc.rust-lang.org/std/index.html?search=feature_detected
 //! [rustc_docs]: https://doc.rust-lang.org/rustc/targets/known-issues.html
+//!
+//! ### A Note On Working With Cfg
+//!
+//! There's two main ways to use `cfg`:
+//! * Via an attribute placed on an item, block, or expression:
+//!   * `#[cfg(debug_assertions)] println!("hello");`
+//! * Via a macro used within an expression position:
+//!   * `if cfg!(debug_assertions) { println!("hello"); }`
+//!
+//! The difference might seem small but it's actually very important:
+//! * The attribute form will include code or not _before_ deciding if all the
+//!   items named and so forth really exist or not. This means that code that is
+//!   configured via attribute can safely name things that don't always exist as
+//!   long as the things they name do exist whenever that code is configured
+//!   into the build.
+//! * The macro form will include the configured code _no matter what_, and then
+//!   the macro resolves to a constant `true` or `false` and the compiler uses
+//!   dead code elimination to cut out the path not taken.
+//!
+//! This crate uses `cfg` via the attribute, so the functions it exposes don't
+//! exist at all when the appropriate CPU target features aren't enabled.
+//! Accordingly, if you plan to call this crate or not depending on what
+//! features are enabled in the build you'll also need to control your use of
+//! this crate via cfg attribute, not cfg macro.
 //!
 //! ## Current Support
 //! As I said above, the crate is only Work In Progress status!
