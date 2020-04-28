@@ -1,5 +1,6 @@
 #![no_std]
-//#![warn(missing_docs)]
+#![warn(missing_docs)]
+#![allow(unused_imports)]
 
 //! Crate that safely exposes arch intrinsics via cfg.
 //!
@@ -12,6 +13,10 @@ use core::{
   convert::AsRef,
   fmt::{
     Binary, Debug, Display, LowerExp, LowerHex, Octal, UpperExp, UpperHex,
+  },
+  ops::{
+    Add, AddAssign, BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor,
+    BitXorAssign, Div, DivAssign, Mul, MulAssign, Neg, Not, Sub, SubAssign,
   },
 };
 

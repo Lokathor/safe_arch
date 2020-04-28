@@ -1005,12 +1005,12 @@ pub fn set_reversed_m128(zero: f32, one: f32, two: f32, three: f32) -> m128 {
 /// All lanes zero.
 /// ```
 /// # use safe_arch::*;
-/// let a = zero_m128().to_array();
+/// let a = zeroed_m128().to_array();
 /// assert_eq!(a, [0.0, 0.0, 0.0, 0.0]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn zero_m128() -> m128 {
+pub fn zeroed_m128() -> m128 {
   m128(unsafe { _mm_setzero_ps() })
 }
 
@@ -1114,7 +1114,7 @@ pub fn sqrt_m128_low(a: m128) -> m128 {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([10.0, 12.0, 13.0, 14.0]);
-/// let mut b = zero_m128();
+/// let mut b = zeroed_m128();
 /// store_m128(&mut b, a);
 /// let c = b.to_array();
 /// assert_eq!(c, [10.0, 12.0, 13.0, 14.0]);
@@ -1141,7 +1141,7 @@ pub fn store_m128_low(r: &mut f32, a: m128) {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([10.0, 12.0, 13.0, 14.0]);
-/// let mut b = zero_m128();
+/// let mut b = zeroed_m128();
 /// store_splat_m128(&mut b, a);
 /// let c = b.to_array();
 /// assert_eq!(c, [10.0, 10.0, 10.0, 10.0]);
@@ -1155,7 +1155,7 @@ pub fn store_splat_m128(r: &mut m128, a: m128) {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([10.0, 12.0, 13.0, 14.0]);
-/// let mut b = zero_m128();
+/// let mut b = zeroed_m128();
 /// store_reverse_m128(&mut b, a);
 /// let c = b.to_array();
 /// assert_eq!(c, [14.0, 13.0, 12.0, 10.0]);
@@ -1273,4 +1273,104 @@ pub fn unpack_low_m128(a: m128, b: m128) -> m128 {
 #[inline(always)]
 pub fn xor_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_xor_ps(a.0, b.0) })
+}
+
+impl Add for m128 {
+  type Output = Self;
+  fn add(self, rhs: Self) -> Self {
+    add_m128(self, rhs)
+  }
+}
+impl AddAssign for m128 {
+  fn add_assign(&mut self, rhs: Self) {
+    *self = *self + rhs;
+  }
+}
+
+impl BitAnd for m128 {
+  type Output = Self;
+  fn bitand(self, rhs: Self) -> Self {
+    and_m128(self, rhs)
+  }
+}
+impl BitAndAssign for m128 {
+  fn bitand_assign(&mut self, rhs: Self) {
+    *self = *self & rhs;
+  }
+}
+
+impl BitOr for m128 {
+  type Output = Self;
+  fn bitor(self, rhs: Self) -> Self {
+    or_m128(self, rhs)
+  }
+}
+impl BitOrAssign for m128 {
+  fn bitor_assign(&mut self, rhs: Self) {
+    *self = *self | rhs;
+  }
+}
+
+impl BitXor for m128 {
+  type Output = Self;
+  fn bitxor(self, rhs: Self) -> Self {
+    xor_m128(self, rhs)
+  }
+}
+impl BitXorAssign for m128 {
+  fn bitxor_assign(&mut self, rhs: Self) {
+    *self = *self ^ rhs;
+  }
+}
+
+impl Div for m128 {
+  type Output = Self;
+  fn div(self, rhs: Self) -> Self {
+    div_m128(self, rhs)
+  }
+}
+impl DivAssign for m128 {
+  fn div_assign(&mut self, rhs: Self) {
+    *self = *self / rhs;
+  }
+}
+
+impl Mul for m128 {
+  type Output = Self;
+  fn mul(self, rhs: Self) -> Self {
+    mul_m128(self, rhs)
+  }
+}
+impl MulAssign for m128 {
+  fn mul_assign(&mut self, rhs: Self) {
+    *self = *self * rhs;
+  }
+}
+
+impl Neg for m128 {
+  type Output = Self;
+  fn neg(self) -> Self {
+    sub_m128(zeroed_m128(), self)
+  }
+}
+
+impl Not for m128 {
+  type Output = Self;
+  /// Not a direct intrinsic, performs an `xor` with an all-1s bit pattern.
+  fn not(self) -> Self {
+    let all_bits = splat_m128(f32::from_bits(u32::MAX));
+    self ^ all_bits
+  }
+}
+
+impl Sub for m128 {
+  type Output = Self;
+  fn sub(self, rhs: Self) -> Self {
+    sub_m128(self, rhs)
+  }
+}
+impl SubAssign for m128 {
+  fn sub_assign(&mut self, rhs: Self) {
+    *self = *self - rhs;
+  }
 }
