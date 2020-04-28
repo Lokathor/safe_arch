@@ -25,15 +25,24 @@
 //!
 //! ## Compile Time CPU Target Features
 //!
-//! At the time of me writing this, Rust enables the `sse` and `sse2` CPU target
-//! features by default for all `i686` (x86) and `x86_64` builds. If you want
-//! additional features available at compile time you'll have to enable them
-//! with an additional arg to `rustc`. For a feature named `name` you pass `-C
-//! target-feature=+name`, such as `-C target-feature=+sse3` for `sse3`.
+//! At the time of me writing this, Rust enables the `sse` and `sse2` CPU
+//! features by default for all `i686` (x86) and `x86_64` builds. Those CPU
+//! features are built into the design of `x86_64`, and you'd need a _super_ old
+//! `x86` CPU for it to not support at least `sse` and `sse2`, so they're a safe
+//! bet for the language to enable all the time.
+//!
+//! If you want additional CPU features available at compile time you'll have to
+//! enable them with an additional arg to `rustc`. For a feature named `name`
+//! you pass `-C target-feature=+name`, such as `-C target-feature=+sse3` for
+//! `sse3`.
+//!
+//! You can alternately enable _all_ target features of the current CPU with `-C
+//! target-cpu=native`. This is primarily of use if you're building a program
+//! you'll only run on your own system.
 //!
 //! It's sometimes hard to know if your target platform will support a given
 //! feature set, but the [Steam Hardware Survey][steam-survey] is generally
-//! taken as a guide to what you can expect people to generally have. If you
+//! taken as a guide to what you can expect people to have available. If you
 //! click "Other Settings" it'll expand into a list of CPU target features and
 //! how common they are. These days, it seems that `sse3` can be safely assumed,
 //! and `ssse3`, `sse4.1`, and `sse4.2` are pretty safe bets as well. The stuff
