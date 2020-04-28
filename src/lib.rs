@@ -33,15 +33,22 @@ macro_rules! submodule {
 }
 
 // unlike with the `submodule!` macro, we _want_ to expose the existence these
-// arch-specific modules
+// arch-specific modules.
 
-#[cfg(target_arch = "x86_64")]
-pub mod x86_64 {
-  //! Types and functions for safe `x86_64` intrinsic usage.
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+pub mod intel {
+  //! Types and functions for safe `x86` / `x86_64` intrinsic usage.
+  //!
+  //! `x86_64` is essentially a superset of `x86`, so we just lump it all into
+  //! one module.
   use super::*;
+  #[cfg(target_arch = "x86")]
+  use core::arch::x86::*;
+  #[cfg(target_arch = "x86_64")]
   use core::arch::x86_64::*;
+
   submodule!(pub m128_);
   submodule!(pub sse);
 }
-#[cfg(target_arch = "x86_64")]
-pub use x86_64::*;
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+pub use intel::*;
