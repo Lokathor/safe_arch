@@ -47,11 +47,10 @@
 //! the "[feature_detected][feature_detected]" family of macros, but if you
 //! enable a feature they will evaluate to a constant `true` instead of actually
 //! deferring the check for the feature to runtime. This means that, if you
-//! _did_ want to check at the start of your program that the user's CPU really
-//! supports the features you expect and then error our with a message if their
-//! CPU is too old, you can't use that macro. You gotta use CPUID and check
-//! manually. rip. Hopefully we can make that process easier in a future version
-//! of this crate.
+//! _did_ want a check at the start of your program, to confirm that all the
+//! assumed features are present and error out when the assumptions don't hold,
+//! you can't use that macro. You gotta use CPUID and check manually. rip.
+//! Hopefully we can make that process easier in a future version of this crate.
 //!
 //! [steam-survey]:
 //! https://store.steampowered.com/hwsurvey/Steam-Hardware-Software-Survey-Welcome-to-Steam
