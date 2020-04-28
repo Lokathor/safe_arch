@@ -29,7 +29,10 @@
 //! features by default for all `i686` (x86) and `x86_64` builds. Those CPU
 //! features are built into the design of `x86_64`, and you'd need a _super_ old
 //! `x86` CPU for it to not support at least `sse` and `sse2`, so they're a safe
-//! bet for the language to enable all the time.
+//! bet for the language to enable all the time. In fact, because the standard
+//! library is compiled with them enabled, simply trying to _disable_ those
+//! features would actually cause ABI issues and fill your program with UB
+//! ([link][rustc_docs]).
 //!
 //! If you want additional CPU features available at compile time you'll have to
 //! enable them with an additional arg to `rustc`. For a feature named `name`
@@ -65,6 +68,7 @@
 //! https://store.steampowered.com/hwsurvey/Steam-Hardware-Software-Survey-Welcome-to-Steam
 //! [feature_detected]:
 //! https://doc.rust-lang.org/std/index.html?search=feature_detected
+//! [rustc_docs]: https://doc.rust-lang.org/rustc/targets/known-issues.html
 //!
 //! ## Current Support
 //! As I said above, the crate is only Work In Progress status!
