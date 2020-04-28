@@ -6,9 +6,9 @@ matrix:
 
 environment:
   matrix:
-    - channel: 1.31.0
+    - channel: 1.43.0
       target: i686-pc-windows-msvc
-    - channel: 1.31.0
+    - channel: 1.43.0
       target: x86_64-pc-windows-msvc
 
 install:
