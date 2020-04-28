@@ -76,6 +76,17 @@
 //! * Intel (`x86` / `x86_64`)
 //!   * `sse`
 
+// https://en.wikipedia.org/wiki/CPUID#Calling_CPUID
+// * first call __get_cpuid_max(0) and check ret.0 for the max leaf.
+// * If a leaf has sub-leaves, call __get_cpuid_max(leaf) and check ret.1 for
+//   that max.
+// * once you know your limits, particular features can be checked for by
+//   getting the info for a leaf and checking the bits of a particular return
+//   register. Which bit you need to look for in what register in what leaf is
+//   mostly covered in the wikipedia article, linked above.
+// * Obviously we need to make checks for the most useful features available via
+//   some helper functions in this crate.
+
 use core::{
   convert::AsRef,
   fmt::{
