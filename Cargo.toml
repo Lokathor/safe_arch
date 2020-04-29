@@ -1,6 +1,6 @@
 [package]
 name = "safe_arch"
-description = "Crate that exposes `core::arch` safely (via cfg)."
+description = "Crate that exposes `core::arch` safely (via `#[cfg()]`)."
 version = "0.0.0-alpha"
 authors = ["Lokathor <zefria@gmail.com>"]
 edition = "2018"
