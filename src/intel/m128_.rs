@@ -13,13 +13,13 @@ use super::*;
 /// * This is _very similar to_ having `[f32; 4]`. The main difference is that
 ///   it's aligned to 16 instead of just 4, and of course you can perform
 ///   various intrinsic operations on it.
-/// * You can use `as_ref` and `as_mut` to convert a reference to this type to a
-///   reference to an array, and from there you _could_ access an individual
-///   lane via indexing if you wanted. However, doing this will really kill your
-///   performance, because the CPU generally has to move the data out of a
-///   register and into memory and then index to the memory location. So, we
-///   implement the `AsFoo` trait pair, and _not_ the `DerefFoo` trait pair.
-///   This makes any (slow) lane-wise access much more visible in the code.
+/// * You can use `as_ref` and `as_mut` to view the type as if it was an array,
+///   and from there you _could_ access an individual lane via indexing if you
+///   wanted. However, doing this will usually kill your performance if you're
+///   in the middle of a series of operations. The CPU has to move the type out
+///   of register and into memory, then index the memory. In other words, you
+///   should index the individual lanes as little as possible. Accordingly, we
+///   make you use a "more obvious" trait if you want to do it.
 #[repr(transparent)]
 #[allow(non_camel_case_types)]
 pub struct m128(pub __m128);

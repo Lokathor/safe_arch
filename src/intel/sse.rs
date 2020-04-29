@@ -1286,10 +1286,14 @@ pub fn xor_m128(a: m128, b: m128) -> m128 {
 }
 
 //
-// Defines the Operator Overloads for `m128` to call the correct function from
-// above. This way the `m128` type theoretically will build if there's no `sse`
-// feature enabled, it just won't have the operator overloads. Not that Rust in
-// general really builds properly without `sse`, but ya know.
+// Here we define the Operator Overloads for `m128`. Each one just calls the
+// correct function from above. By putting the impls here and not with the
+// `m128` type we theoretically would be able to build the crate safely even if
+// there's no `sse` feature enabled. You'd just have a `m128` type without the
+// operator overloads is all. Not that the standard Rust distribution can build
+// properly without `sse` enabled, but maybe you're using a custom target or
+// something. It doesn't really put us out of our way, so it doesn't hurt to try
+// and accommodate the potential use case.
 //
 
 impl Add for m128 {
@@ -1373,7 +1377,10 @@ impl Neg for m128 {
 
 impl Not for m128 {
   type Output = Self;
-  /// Not a direct intrinsic, performs an `xor` with an all-1s bit pattern.
+  /// Not a direct intrinsic, but it's useful and the implementation is simple
+  /// enough.
+  ///
+  /// This performs an `xor` with an all-1s bit pattern.
   fn not(self) -> Self {
     let all_bits = splat_m128(f32::from_bits(u32::MAX));
     self ^ all_bits
