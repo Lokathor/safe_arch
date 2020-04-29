@@ -142,7 +142,8 @@ pub mod intel {
   //! Types and functions for safe `x86` / `x86_64` intrinsic usage.
   //!
   //! `x86_64` is essentially a superset of `x86`, so we just lump it all into
-  //! one module.
+  //! one module. Any functions that are not available on `x86` are simply
+  //! excluded from the `x86_64` build on a case-by-case basis.
   use super::*;
   #[cfg(target_arch = "x86")]
   use core::arch::x86::*;
@@ -150,7 +151,10 @@ pub mod intel {
   use core::arch::x86_64::*;
 
   submodule!(pub m128_);
+  submodule!(pub m128d_);
+  submodule!(pub m128i_);
   submodule!(pub sse);
+  submodule!(pub sse2);
 }
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub use intel::*;
