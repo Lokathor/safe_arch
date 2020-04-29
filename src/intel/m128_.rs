@@ -60,6 +60,8 @@ impl AsRef<[f32; 4]> for m128 {
   #[must_use]
   #[inline(always)]
   fn as_ref(&self) -> &[f32; 4] {
+    // Safety: Since the alignment requirement of the output reference type is
+    // lower than our own reference type this is safe.
     unsafe { core::mem::transmute(self) }
   }
 }
@@ -68,6 +70,8 @@ impl AsMut<[f32; 4]> for m128 {
   #[must_use]
   #[inline(always)]
   fn as_mut(&mut self) -> &mut [f32; 4] {
+    // Safety: Since the alignment requirement of the output reference type is
+    // lower than our own reference type this is safe.
     unsafe { core::mem::transmute(self) }
   }
 }
@@ -85,7 +89,7 @@ impl Default for m128 {
   #[must_use]
   #[inline(always)]
   fn default() -> Self {
-    unsafe { core::mem::zeroed() }
+    zeroed_m128()
   }
 }
 
@@ -93,6 +97,9 @@ impl From<[f32; 4]> for m128 {
   #[must_use]
   #[inline(always)]
   fn from(arr: [f32; 4]) -> Self {
+    // Safety: because this semantically moves the value from the input position
+    // (align4) to the output position (align16) it is fine to increase our
+    // required alignment without worry.
     unsafe { core::mem::transmute(arr) }
   }
 }
@@ -101,6 +108,7 @@ impl From<m128> for [f32; 4] {
   #[must_use]
   #[inline(always)]
   fn from(m: m128) -> Self {
+    // We can of course transmute to a lower alignment
     unsafe { core::mem::transmute(m) }
   }
 }
