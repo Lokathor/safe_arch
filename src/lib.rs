@@ -143,6 +143,17 @@ pub mod intel {
   //!
   //! `x86_64` is essentially a superset of `x86`, so we just lump it all into
   //! one module.
+  //!
+  //! ## Naming Conventions
+  //! The actual intrinsic names are flaming dumpster, so we use easier to
+  //! understand names.
+  //!
+  //! * The general naming scheme is that the operation of the function is
+  //!   followed by the name of the type it operates on:
+  //!   * eg: `sqrt_m128`, `add_m128d`, etc
+  //! * If the function affects only the lowest lane then it has `_s` on the end
+  //!   after the type, because that's a "scalar" operation.
+  //!   * eg: `add_m128_s`, `sqrt_m128_s`
   use super::*;
   #[cfg(target_arch = "x86")]
   use core::arch::x86::*;
