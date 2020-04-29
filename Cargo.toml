@@ -9,6 +9,8 @@ categories = ["api-bindings", "hardware-support", "no-std"]
 keywords = ["intrinsics", "simd"]
 
 [dependencies]
+# If enabled, gives Zeroed and Pod impls for our types
+bytemuck = {version = "1", optional = true}
 
 [profile.test]
 opt-level = 3

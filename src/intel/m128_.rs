@@ -31,20 +31,30 @@ fn test_m128_size_align() {
 }
 
 impl m128 {
-  /// Transmutes the data to an array.
+  /// Transmutes the `m128` to an array.
+  ///
+  /// Same as `m.into()`, just lets you be more explicit about what's happening.
   #[must_use]
   #[inline(always)]
   pub fn to_array(self) -> [f32; 4] {
-    unsafe { core::mem::transmute(self) }
+    self.into()
   }
 
   /// Transmutes an array into `m128`.
+  ///
+  /// Same as `m128::from(arr)`, it just lets you be more explicit about what's
+  /// happening.
   #[must_use]
   #[inline(always)]
   pub fn from_array(f: [f32; 4]) -> Self {
-    unsafe { core::mem::transmute(f) }
+    f.into()
   }
 }
+
+#[cfg(feature = "bytemuck")]
+unsafe impl bytemuck::Zeroed for m128 {}
+#[cfg(feature = "bytemuck")]
+unsafe impl bytemuck::Pod for m128 {}
 
 impl AsRef<[f32; 4]> for m128 {
   #[must_use]
@@ -76,6 +86,22 @@ impl Default for m128 {
   #[inline(always)]
   fn default() -> Self {
     unsafe { core::mem::zeroed() }
+  }
+}
+
+impl From<[f32; 4]> for m128 {
+  #[must_use]
+  #[inline(always)]
+  fn from(arr: [f32; 4]) -> Self {
+    unsafe { core::mem::transmute(arr) }
+  }
+}
+
+impl From<m128> for [f32; 4] {
+  #[must_use]
+  #[inline(always)]
+  fn from(m: m128) -> Self {
+    unsafe { core::mem::transmute(m) }
   }
 }
 
