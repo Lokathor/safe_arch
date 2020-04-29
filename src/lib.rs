@@ -2,7 +2,7 @@
 #![warn(missing_docs)]
 #![allow(unused_imports)]
 
-//! Crate that safely exposes arch intrinsics via cfg.
+//! A crate that safely exposes arch intrinsics via cfg.
 //!
 //! >Incomplete. WIP. Etc.
 //! >
@@ -22,6 +22,13 @@
 //! are no runtime checks. This means that if you _do_ want to do runtime
 //! feature detection and then dynamically call an intrinsic if it happens to be
 //! available, then this crate sadly isn't for you.
+//!
+//! ## Current Support
+//! As I said above, the crate is only Work In Progress status!
+//!
+//! * Intel (`x86` / `x86_64`)
+//!   * `sse`
+//!   * `sse2`
 //!
 //! ## Compile Time CPU Target Features
 //!
@@ -93,12 +100,6 @@
 //! Accordingly, if you plan to call this crate or not depending on what
 //! features are enabled in the build you'll also need to control your use of
 //! this crate via cfg attribute, not cfg macro.
-//!
-//! ## Current Support
-//! As I said above, the crate is only Work In Progress status!
-//!
-//! * Intel (`x86` / `x86_64`)
-//!   * `sse`
 
 // https://en.wikipedia.org/wiki/CPUID#Calling_CPUID
 // * first call __get_cpuid_max(0) and check ret.0 for the max leaf.
