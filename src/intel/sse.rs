@@ -69,13 +69,13 @@ pub fn andnot_m128(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 0.0, 1.0, 0.0]);
 /// let b = m128::from_array([1.0, 1.0, 0.0, 0.0]);
-/// let c = cmp_eq_m128(a, b).to_array();
+/// let c = cmp_eq_m128_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [u32::MAX, 0, 0, u32::MAX]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_eq_m128(a: m128, b: m128) -> m128 {
+pub fn cmp_eq_m128_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpeq_ps(a.0, b.0) })
 }
 
@@ -86,13 +86,13 @@ pub fn cmp_eq_m128(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 0.0, 1.0, 0.0]);
 /// let b = m128::from_array([1.0, 1.0, 0.0, 0.0]);
-/// let c = cmp_eq_m128_s(a, b).to_array();
+/// let c = cmp_eq_m128_s_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [u32::MAX, 0, 1_f32.to_bits(), 0]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_eq_m128_s(a: m128, b: m128) -> m128 {
+pub fn cmp_eq_m128_s_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpeq_ss(a.0, b.0) })
 }
 
@@ -103,13 +103,13 @@ pub fn cmp_eq_m128_s(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_ge_m128(a, b).to_array();
+/// let c = cmp_ge_m128_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [0, u32::MAX, u32::MAX, u32::MAX]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_ge_m128(a: m128, b: m128) -> m128 {
+pub fn cmp_ge_m128_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpge_ps(a.0, b.0) })
 }
 
@@ -120,13 +120,13 @@ pub fn cmp_ge_m128(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([2.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_ge_m128_s(a, b).to_array();
+/// let c = cmp_ge_m128_s_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [u32::MAX, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_ge_m128_s(a: m128, b: m128) -> m128 {
+pub fn cmp_ge_m128_s_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpge_ss(a.0, b.0) })
 }
 
@@ -137,13 +137,13 @@ pub fn cmp_ge_m128_s(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_gt_m128(a, b).to_array();
+/// let c = cmp_gt_m128_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [0, 0, u32::MAX, u32::MAX]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_gt_m128(a: m128, b: m128) -> m128 {
+pub fn cmp_gt_m128_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpgt_ps(a.0, b.0) })
 }
 
@@ -154,13 +154,13 @@ pub fn cmp_gt_m128(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([2.5, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_gt_m128_s(a, b).to_array();
+/// let c = cmp_gt_m128_s_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [u32::MAX, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_gt_m128_s(a: m128, b: m128) -> m128 {
+pub fn cmp_gt_m128_s_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpgt_ss(a.0, b.0) })
 }
 
@@ -171,13 +171,13 @@ pub fn cmp_gt_m128_s(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_le_m128(a, b).to_array();
+/// let c = cmp_le_m128_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [u32::MAX, u32::MAX, 0, 0]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_le_m128(a: m128, b: m128) -> m128 {
+pub fn cmp_le_m128_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmple_ps(a.0, b.0) })
 }
 
@@ -188,13 +188,13 @@ pub fn cmp_le_m128(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([2.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_le_m128_s(a, b).to_array();
+/// let c = cmp_le_m128_s_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [u32::MAX, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_le_m128_s(a: m128, b: m128) -> m128 {
+pub fn cmp_le_m128_s_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmple_ss(a.0, b.0) })
 }
 
@@ -205,13 +205,13 @@ pub fn cmp_le_m128_s(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_lt_m128(a, b).to_array();
+/// let c = cmp_lt_m128_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [u32::MAX, 0, 0, 0]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_lt_m128(a: m128, b: m128) -> m128 {
+pub fn cmp_lt_m128_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmplt_ps(a.0, b.0) })
 }
 
@@ -222,13 +222,13 @@ pub fn cmp_lt_m128(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_lt_m128_s(a, b).to_array();
+/// let c = cmp_lt_m128_s_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [u32::MAX, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_lt_m128_s(a: m128, b: m128) -> m128 {
+pub fn cmp_lt_m128_s_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmplt_ss(a.0, b.0) })
 }
 
@@ -239,13 +239,13 @@ pub fn cmp_lt_m128_s(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 0.0, 1.0, 0.0]);
 /// let b = m128::from_array([1.0, 1.0, 0.0, 0.0]);
-/// let c = cmp_neq_m128(a, b).to_array();
+/// let c = cmp_neq_m128_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [0, u32::MAX, u32::MAX, 0]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_neq_m128(a: m128, b: m128) -> m128 {
+pub fn cmp_neq_m128_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpneq_ps(a.0, b.0) })
 }
 
@@ -256,13 +256,13 @@ pub fn cmp_neq_m128(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 0.0, 1.0, 0.0]);
 /// let b = m128::from_array([1.0, 1.0, 0.0, 0.0]);
-/// let c = cmp_neq_m128_s(a, b).to_array();
+/// let c = cmp_neq_m128_s_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [0, 0, 1_f32.to_bits(), 0]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_neq_m128_s(a: m128, b: m128) -> m128 {
+pub fn cmp_neq_m128_s_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpneq_ss(a.0, b.0) })
 }
 
@@ -273,13 +273,13 @@ pub fn cmp_neq_m128_s(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_nge_m128(a, b).to_array();
+/// let c = cmp_nge_m128_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [u32::MAX, 0, 0, 0]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_nge_m128(a: m128, b: m128) -> m128 {
+pub fn cmp_nge_m128_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpnge_ps(a.0, b.0) })
 }
 
@@ -290,13 +290,13 @@ pub fn cmp_nge_m128(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([2.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_nge_m128_s(a, b).to_array();
+/// let c = cmp_nge_m128_s_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [0, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_nge_m128_s(a: m128, b: m128) -> m128 {
+pub fn cmp_nge_m128_s_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpnge_ss(a.0, b.0) })
 }
 
@@ -307,13 +307,13 @@ pub fn cmp_nge_m128_s(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_ngt_m128(a, b).to_array();
+/// let c = cmp_ngt_m128_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [u32::MAX, u32::MAX, 0, 0]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_ngt_m128(a: m128, b: m128) -> m128 {
+pub fn cmp_ngt_m128_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpngt_ps(a.0, b.0) })
 }
 
@@ -324,13 +324,13 @@ pub fn cmp_ngt_m128(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([2.5, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_ngt_m128_s(a, b).to_array();
+/// let c = cmp_ngt_m128_s_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [0, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_ngt_m128_s(a: m128, b: m128) -> m128 {
+pub fn cmp_ngt_m128_s_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpngt_ss(a.0, b.0) })
 }
 
@@ -341,13 +341,13 @@ pub fn cmp_ngt_m128_s(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_nle_m128(a, b).to_array();
+/// let c = cmp_nle_m128_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [0, 0, u32::MAX, u32::MAX]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_nle_m128(a: m128, b: m128) -> m128 {
+pub fn cmp_nle_m128_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpnle_ps(a.0, b.0) })
 }
 
@@ -358,13 +358,13 @@ pub fn cmp_nle_m128(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([2.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_nle_m128_s(a, b).to_array();
+/// let c = cmp_nle_m128_s_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [0, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_nle_m128_s(a: m128, b: m128) -> m128 {
+pub fn cmp_nle_m128_s_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpnle_ss(a.0, b.0) })
 }
 
@@ -375,13 +375,13 @@ pub fn cmp_nle_m128_s(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_nlt_m128(a, b).to_array();
+/// let c = cmp_nlt_m128_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [0, u32::MAX, u32::MAX, u32::MAX]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_nlt_m128(a: m128, b: m128) -> m128 {
+pub fn cmp_nlt_m128_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpnlt_ps(a.0, b.0) })
 }
 
@@ -392,13 +392,13 @@ pub fn cmp_nlt_m128(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_nlt_m128_s(a, b).to_array();
+/// let c = cmp_nlt_m128_s_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [0, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_nlt_m128_s(a: m128, b: m128) -> m128 {
+pub fn cmp_nlt_m128_s_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpnlt_ss(a.0, b.0) })
 }
 
@@ -409,13 +409,13 @@ pub fn cmp_nlt_m128_s(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([0.0, f32::NAN, 0.0, f32::NAN]);
 /// let b = m128::from_array([0.0, 0.0, f32::NAN, f32::NAN]);
-/// let c = cmp_ord_m128(a, b).to_array();
+/// let c = cmp_ord_m128_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [u32::MAX, 0, 0, 0]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_ord_m128(a: m128, b: m128) -> m128 {
+pub fn cmp_ord_m128_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpord_ps(a.0, b.0) })
 }
 
@@ -426,13 +426,13 @@ pub fn cmp_ord_m128(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([0.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([0.0, f32::NAN, f32::NAN, f32::NAN]);
-/// let c = cmp_ord_m128_s(a, b).to_array();
+/// let c = cmp_ord_m128_s_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [u32::MAX, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_ord_m128_s(a: m128, b: m128) -> m128 {
+pub fn cmp_ord_m128_s_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpord_ss(a.0, b.0) })
 }
 
@@ -443,13 +443,13 @@ pub fn cmp_ord_m128_s(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([0.0, f32::NAN, 0.0, f32::NAN]);
 /// let b = m128::from_array([0.0, 0.0, f32::NAN, f32::NAN]);
-/// let c = cmp_unord_m128(a, b).to_array();
+/// let c = cmp_unord_m128_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [0, u32::MAX, u32::MAX, u32::MAX]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_unord_m128(a: m128, b: m128) -> m128 {
+pub fn cmp_unord_m128_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpunord_ps(a.0, b.0) })
 }
 
@@ -460,13 +460,13 @@ pub fn cmp_unord_m128(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([0.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([0.0, f32::NAN, f32::NAN, f32::NAN]);
-/// let c = cmp_unord_m128_s(a, b).to_array();
+/// let c = cmp_unord_m128_s_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [0, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_unord_m128_s(a: m128, b: m128) -> m128 {
+pub fn cmp_unord_m128_s_mask(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpunord_ss(a.0, b.0) })
 }
 
@@ -477,11 +477,11 @@ pub fn cmp_unord_m128_s(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([1.0, 1.0, 1.0, 1.0]);
-/// assert_eq!(1_i32, cmp_i32eq_m128_s(a, b));
+/// assert_eq!(1_i32, cmp_i32eq_m128_s_mask(a, b));
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_i32eq_m128_s(a: m128, b: m128) -> i32 {
+pub fn cmp_i32eq_m128_s_mask(a: m128, b: m128) -> i32 {
   unsafe { _mm_comieq_ss(a.0, b.0) }
 }
 
@@ -492,11 +492,11 @@ pub fn cmp_i32eq_m128_s(a: m128, b: m128) -> i32 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([2.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([1.0, 1.0, 1.0, 1.0]);
-/// assert_eq!(1_i32, cmp_i32ge_m128_s(a, b));
+/// assert_eq!(1_i32, cmp_i32ge_m128_s_mask(a, b));
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_i32ge_m128_s(a: m128, b: m128) -> i32 {
+pub fn cmp_i32ge_m128_s_mask(a: m128, b: m128) -> i32 {
   unsafe { _mm_comige_ss(a.0, b.0) }
 }
 
@@ -507,11 +507,11 @@ pub fn cmp_i32ge_m128_s(a: m128, b: m128) -> i32 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([2.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([1.0, 1.0, 1.0, 1.0]);
-/// assert_eq!(1_i32, cmp_i32gt_m128_s(a, b));
+/// assert_eq!(1_i32, cmp_i32gt_m128_s_mask(a, b));
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_i32gt_m128_s(a: m128, b: m128) -> i32 {
+pub fn cmp_i32gt_m128_s_mask(a: m128, b: m128) -> i32 {
   unsafe { _mm_comigt_ss(a.0, b.0) }
 }
 
@@ -522,11 +522,11 @@ pub fn cmp_i32gt_m128_s(a: m128, b: m128) -> i32 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([0.5, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([1.0, 1.0, 1.0, 1.0]);
-/// assert_eq!(1_i32, cmp_i32le_m128_s(a, b));
+/// assert_eq!(1_i32, cmp_i32le_m128_s_mask(a, b));
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_i32le_m128_s(a: m128, b: m128) -> i32 {
+pub fn cmp_i32le_m128_s_mask(a: m128, b: m128) -> i32 {
   unsafe { _mm_comile_ss(a.0, b.0) }
 }
 
@@ -537,11 +537,11 @@ pub fn cmp_i32le_m128_s(a: m128, b: m128) -> i32 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([0.5, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([1.0, 1.0, 1.0, 1.0]);
-/// assert_eq!(1_i32, cmp_i32lt_m128_s(a, b));
+/// assert_eq!(1_i32, cmp_i32lt_m128_s_mask(a, b));
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_i32lt_m128_s(a: m128, b: m128) -> i32 {
+pub fn cmp_i32lt_m128_s_mask(a: m128, b: m128) -> i32 {
   unsafe { _mm_comilt_ss(a.0, b.0) }
 }
 
@@ -552,11 +552,11 @@ pub fn cmp_i32lt_m128_s(a: m128, b: m128) -> i32 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([1.0, 1.0, 1.0, 1.0]);
-/// assert_eq!(0_i32, cmp_i32neq_m128_s(a, b));
+/// assert_eq!(0_i32, cmp_i32neq_m128_s_mask(a, b));
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_i32neq_m128_s(a: m128, b: m128) -> i32 {
+pub fn cmp_i32neq_m128_s_mask(a: m128, b: m128) -> i32 {
   unsafe { _mm_comineq_ss(a.0, b.0) }
 }
 
@@ -657,7 +657,7 @@ pub fn div_m128_s(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([10.0, 12.0, 13.0, 14.0]);
 /// let b = load_m128(&a);
-/// let c = cmp_eq_m128(a, b).to_array();
+/// let c = cmp_eq_m128_mask(a, b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [u32::MAX, u32::MAX, u32::MAX, u32::MAX]);
 /// ```
@@ -672,7 +672,8 @@ pub fn load_m128(a: &m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = 1.0;
 /// let b = load_splat_m128(&a);
-/// let c = cmp_eq_m128(m128::from_array([1.0, 1.0, 1.0, 1.0]), b).to_array();
+/// let c =
+///   cmp_eq_m128_mask(m128::from_array([1.0, 1.0, 1.0, 1.0]), b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [u32::MAX, u32::MAX, u32::MAX, u32::MAX]);
 /// ```
@@ -688,7 +689,8 @@ pub fn load_splat_m128(a: &f32) -> m128 {
 /// # use safe_arch::*;
 /// let a = 1.0;
 /// let b = load_f32_m128_s(&a);
-/// let c = cmp_eq_m128(m128::from_array([1.0, 0.0, 0.0, 0.0]), b).to_array();
+/// let c =
+///   cmp_eq_m128_mask(m128::from_array([1.0, 0.0, 0.0, 0.0]), b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [u32::MAX, u32::MAX, u32::MAX, u32::MAX]);
 /// ```
@@ -704,7 +706,8 @@ pub fn load_f32_m128_s(a: &f32) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([10.0, 12.0, 13.0, 14.0]);
 /// let b = load_reverse_m128(&a);
-/// let c = cmp_eq_m128(m128::from_array([14.0, 13.0, 12.0, 10.0]), b).to_array();
+/// let c =
+///   cmp_eq_m128_mask(m128::from_array([14.0, 13.0, 12.0, 10.0]), b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [u32::MAX, u32::MAX, u32::MAX, u32::MAX]);
 /// ```
@@ -723,7 +726,8 @@ pub fn load_reverse_m128(a: &m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = [10.0, 12.0, 13.0, 14.0];
 /// let b = load_unaligned_m128(&a);
-/// let c = cmp_eq_m128(m128::from_array([10.0, 12.0, 13.0, 14.0]), b).to_array();
+/// let c =
+///   cmp_eq_m128_mask(m128::from_array([10.0, 12.0, 13.0, 14.0]), b).to_array();
 /// let d: [u32; 4] = unsafe { core::mem::transmute(c) };
 /// assert_eq!(d, [u32::MAX, u32::MAX, u32::MAX, u32::MAX]);
 /// ```

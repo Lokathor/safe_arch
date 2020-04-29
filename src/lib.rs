@@ -150,10 +150,17 @@ pub mod intel {
   //!
   //! * The general naming scheme is that the operation of the function is
   //!   followed by the name of the type it operates on:
-  //!   * eg: `sqrt_m128`, `add_m128d`, etc
+  //!   * eg: `sqrt_m128`, `add_m128d`
   //! * If the function affects only the lowest lane then it has `_s` on the end
   //!   after the type, because that's a "scalar" operation.
   //!   * eg: `add_m128_s`, `sqrt_m128_s`
+  //! * Functions with a "bool-ish" return value end with `_mask`. These are the
+  //!   comparison functions, and the return value is all 0s in a lane for
+  //!   "false" in that lane, and all 1s in a lane for "true" in that lane.
+  //!   Because a floating point value of all 1s is NaN, the mask values aren't
+  //!   generally useful on their own, they're just a necessary intermediate
+  //!   value for other things you'd want to do.
+  //!   * eg: `cmp_eq_m128_mask`, `cmp_gt_m128_mask`
   use super::*;
   #[cfg(target_arch = "x86")]
   use core::arch::x86::*;
