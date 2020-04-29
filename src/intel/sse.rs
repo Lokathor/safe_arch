@@ -1381,10 +1381,10 @@ impl Neg for m128 {
 
 impl Not for m128 {
   type Output = Self;
-  /// Not a direct intrinsic, but it's useful and the implementation is simple
-  /// enough.
+  /// Not a direct intrinsic, but it's very useful and the implementation is
+  /// simple enough.
   ///
-  /// This performs an `xor` with an all-1s bit pattern.
+  /// Negates the bits by performing an `xor` with an all-1s bit pattern.
   fn not(self) -> Self {
     let all_bits = splat_m128(f32::from_bits(u32::MAX));
     self ^ all_bits
@@ -1400,5 +1400,12 @@ impl Sub for m128 {
 impl SubAssign for m128 {
   fn sub_assign(&mut self, rhs: Self) {
     *self = *self - rhs;
+  }
+}
+
+#[cfg(feature = "partial_eq")]
+impl PartialEq for m128 {
+  fn eq(&self, other: &Self) -> bool {
+    move_mask_m128(cmp_eq_m128_mask(*self, *other)) == 0b1111
   }
 }
