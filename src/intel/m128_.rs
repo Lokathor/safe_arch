@@ -1,5 +1,3 @@
-#![allow(clippy::transmute_ptr_to_ptr)]
-
 //! This module is for the `m128` wrapper type, its bonus methods, and all
 //! necessary trait impls.
 //!
@@ -8,7 +6,7 @@
 
 use super::*;
 
-/// The data for a 128-bit SSE lane.
+/// The data for a 128-bit SSE register of four `f32` lanes.
 ///
 /// * This is _very similar to_ having `[f32; 4]`. The main difference is that
 ///   it's aligned to 16 instead of just 4, and of course you can perform
@@ -112,8 +110,6 @@ impl From<m128> for [f32; 4] {
     unsafe { core::mem::transmute(m) }
   }
 }
-
-// TODO: operator overloading!
 
 //
 // PLEASE KEEP ALL THE FORMAT IMPL JUNK AT THE END OF THE FILE

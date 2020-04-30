@@ -2,10 +2,6 @@
 
 use super::*;
 
-// TODO: load and store m128i values. The operations are technically part of
-// `sse`, but all actual usage of `m128i` is from `sse2`, so we won't tackle
-// that right away.
-
 /// Returns if the f32 array and u32 array are the same bit pattern.
 #[doc(hidden)]
 pub fn debug_check_same_bits(f: [f32; 4], u: [u32; 4]) -> bool {

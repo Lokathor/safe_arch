@@ -1,6 +1,7 @@
 #![no_std]
-#![warn(missing_docs)]
+//#![warn(missing_docs)]
 #![allow(unused_imports)]
+#![allow(clippy::transmute_ptr_to_ptr)]
 
 //! A crate that safely exposes arch intrinsics via cfg.
 //!
