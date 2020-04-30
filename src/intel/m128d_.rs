@@ -47,6 +47,26 @@ impl m128d {
   pub fn from_array(f: [f64; 2]) -> Self {
     f.into()
   }
+
+  //
+
+  /// Converts into the bit patterns of these doubles (`[u64;2]`).
+  ///
+  /// Like [`f64::to_bits`](f64::to_bits), but both lanes at once.
+  #[must_use]
+  #[inline(always)]
+  pub fn to_bits(self) -> [u64; 2] {
+    unsafe { core::mem::transmute(self) }
+  }
+
+  /// Converts from the bit patterns of these doubles (`[u64;2]`).
+  ///
+  /// Like [`f64::from_bits`](f64::from_bits), but both lanes at once.
+  #[must_use]
+  #[inline(always)]
+  pub fn from_bits(bits: [u64; 2]) -> Self {
+    unsafe { core::mem::transmute(bits) }
+  }
 }
 
 #[cfg(feature = "bytemuck")]

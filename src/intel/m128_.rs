@@ -47,32 +47,32 @@ impl m128 {
   pub fn from_array(f: [f32; 4]) -> Self {
     f.into()
   }
+
+  //
+
+  /// Converts into the bit patterns of these floats (`[u32;4]`).
+  ///
+  /// Like [`f32::to_bits`](f32::to_bits), but all four lanes at once.
+  #[must_use]
+  #[inline(always)]
+  pub fn to_bits(self) -> [u32; 4] {
+    unsafe { core::mem::transmute(self) }
+  }
+
+  /// Converts from the bit patterns of these floats (`[u32;4]`).
+  ///
+  /// Like [`f32::from_bits`](f32::from_bits), but all four lanes at once.
+  #[must_use]
+  #[inline(always)]
+  pub fn from_bits(bits: [u32; 4]) -> Self {
+    unsafe { core::mem::transmute(bits) }
+  }
 }
 
 #[cfg(feature = "bytemuck")]
 unsafe impl bytemuck::Zeroed for m128 {}
 #[cfg(feature = "bytemuck")]
 unsafe impl bytemuck::Pod for m128 {}
-
-impl AsRef<[f32; 4]> for m128 {
-  #[must_use]
-  #[inline(always)]
-  fn as_ref(&self) -> &[f32; 4] {
-    // Safety: Since the alignment requirement of the output reference type is
-    // lower than our own reference type this is safe.
-    unsafe { core::mem::transmute(self) }
-  }
-}
-
-impl AsMut<[f32; 4]> for m128 {
-  #[must_use]
-  #[inline(always)]
-  fn as_mut(&mut self) -> &mut [f32; 4] {
-    // Safety: Since the alignment requirement of the output reference type is
-    // lower than our own reference type this is safe.
-    unsafe { core::mem::transmute(self) }
-  }
-}
 
 impl Clone for m128 {
   #[must_use]

@@ -9,16 +9,11 @@ use super::*;
 /// The data for a 128-bit SSE register of integer data.
 ///
 /// * The exact layout to view the type as depends on the operation used.
-/// * Formatting impls print as four `i32` values. If you want alternate
-///   formatting you can use the appropriate `From`/`Into` conversion and then
-///   format that.
-/// * You can use `as_ref` and `as_mut` to view the type as if it was an array,
-///   and from there you _could_ access an individual lane via indexing if you
-///   wanted. However, doing this will usually kill your performance if you're
-///   in the middle of a series of operations. The CPU has to move the type out
-///   of register and into memory, then index the memory. In other words, you
-///   should index the individual lanes as little as possible. Accordingly, we
-///   make you use a "more obvious" trait if you want to do it.
+/// * `From` and `Into` impls are provided for all the relevant signed integer
+///   array types.
+/// * Formatting impls print as four `i32` values just because they have to pick
+///   something. If you want an alternative you can turn it into an array and
+///   print as you like.
 #[repr(transparent)]
 #[allow(non_camel_case_types)]
 pub struct m128i(pub __m128i);
@@ -33,26 +28,6 @@ fn test_m128_size_align() {
 unsafe impl bytemuck::Zeroed for m128i {}
 #[cfg(feature = "bytemuck")]
 unsafe impl bytemuck::Pod for m128i {}
-
-impl AsRef<[i32; 4]> for m128i {
-  #[must_use]
-  #[inline(always)]
-  fn as_ref(&self) -> &[i32; 4] {
-    // Safety: Since the alignment requirement of the output reference type is
-    // lower than our own reference type this is safe.
-    unsafe { core::mem::transmute(self) }
-  }
-}
-
-impl AsMut<[i32; 4]> for m128i {
-  #[must_use]
-  #[inline(always)]
-  fn as_mut(&mut self) -> &mut [i32; 4] {
-    // Safety: Since the alignment requirement of the output reference type is
-    // lower than our own reference type this is safe.
-    unsafe { core::mem::transmute(self) }
-  }
-}
 
 impl Clone for m128i {
   #[must_use]
@@ -72,7 +47,7 @@ impl Default for m128i {
   }
 }
 
-// i8
+// 8-bit
 
 impl From<[i8; 16]> for m128i {
   #[must_use]
@@ -90,7 +65,23 @@ impl From<m128i> for [i8; 16] {
   }
 }
 
-// i16
+impl From<[u8; 16]> for m128i {
+  #[must_use]
+  #[inline(always)]
+  fn from(arr: [u8; 16]) -> Self {
+    unsafe { core::mem::transmute(arr) }
+  }
+}
+
+impl From<m128i> for [u8; 16] {
+  #[must_use]
+  #[inline(always)]
+  fn from(m: m128i) -> Self {
+    unsafe { core::mem::transmute(m) }
+  }
+}
+
+// 16-bit
 
 impl From<[i16; 8]> for m128i {
   #[must_use]
@@ -108,7 +99,23 @@ impl From<m128i> for [i16; 8] {
   }
 }
 
-// i32
+impl From<[u16; 8]> for m128i {
+  #[must_use]
+  #[inline(always)]
+  fn from(arr: [u16; 8]) -> Self {
+    unsafe { core::mem::transmute(arr) }
+  }
+}
+
+impl From<m128i> for [u16; 8] {
+  #[must_use]
+  #[inline(always)]
+  fn from(m: m128i) -> Self {
+    unsafe { core::mem::transmute(m) }
+  }
+}
+
+// 32-bit
 
 impl From<[i32; 4]> for m128i {
   #[must_use]
@@ -126,7 +133,23 @@ impl From<m128i> for [i32; 4] {
   }
 }
 
-// i64
+impl From<[u32; 4]> for m128i {
+  #[must_use]
+  #[inline(always)]
+  fn from(arr: [u32; 4]) -> Self {
+    unsafe { core::mem::transmute(arr) }
+  }
+}
+
+impl From<m128i> for [u32; 4] {
+  #[must_use]
+  #[inline(always)]
+  fn from(m: m128i) -> Self {
+    unsafe { core::mem::transmute(m) }
+  }
+}
+
+// 64-bit
 
 impl From<[i64; 2]> for m128i {
   #[must_use]
@@ -137,6 +160,22 @@ impl From<[i64; 2]> for m128i {
 }
 
 impl From<m128i> for [i64; 2] {
+  #[must_use]
+  #[inline(always)]
+  fn from(m: m128i) -> Self {
+    unsafe { core::mem::transmute(m) }
+  }
+}
+
+impl From<[u64; 2]> for m128i {
+  #[must_use]
+  #[inline(always)]
+  fn from(arr: [u64; 2]) -> Self {
+    unsafe { core::mem::transmute(arr) }
+  }
+}
+
+impl From<m128i> for [u64; 2] {
   #[must_use]
   #[inline(always)]
   fn from(m: m128i) -> Self {

@@ -12,17 +12,24 @@ pub fn debug_check_same_bits_f64(f: [f64; 2], u: [u64; 2]) -> bool {
 /// Lanewise `a + b` with lanes as `i8`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m128i::from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-/// let b =
-///   m128i::from([0, 11, 2, 13, 4, 15, 6, 17, 8, 19, -20, 21, 22, -23, 24, 127]);
+/// let a = m128i::from(
+///   [0_i8, 1, 2, 3, 4, 5, 6, 7,
+///   8, 9, 10, 11, 12, 13, 14, 15]
+/// );
+/// let b = m128i::from(
+///   [0_i8, 11, 2, 13, 4, 15, 6, 17,
+///   8, 19, -20, 21, 22, -23, 24, 127]
+/// );
 /// let c: [i8; 16] = add_i8_m128i(a, b).into();
 /// assert_eq!(
 ///   c,
-///   [0, 12, 4, 16, 8, 20, 12, 24, 16, 28, -10, 32, 34, -10, 38, -114]
+///   [0, 12, 4, 16, 8, 20, 12, 24, 16,
+///   28, -10, 32, 34, -10, 38, -114]
 /// );
 /// ```
 #[must_use]
 #[inline(always)]
+#[rustfmt::skip]
 pub fn add_i8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_add_epi8(a.0, b.0) })
 }
@@ -30,8 +37,8 @@ pub fn add_i8_m128i(a: m128i, b: m128i) -> m128i {
 /// Lanewise `a + b` with lanes as `i16`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m128i::from([1, 2, 3, 4, -1, -2, -3, -4]);
-/// let b = m128i::from([5, 6, 7, 8, -15, -26, -37, 48]);
+/// let a = m128i::from([1_i16, 2, 3, 4, -1, -2, -3, -4]);
+/// let b = m128i::from([5_i16, 6, 7, 8, -15, -26, -37, 48]);
 /// let c: [i16; 8] = add_i16_m128i(a, b).into();
 /// assert_eq!(c, [6, 8, 10, 12, -16, -28, -40, 44]);
 /// ```
@@ -58,8 +65,8 @@ pub fn add_i32_m128i(a: m128i, b: m128i) -> m128i {
 /// Lanewise `a + b` with lanes as `i64`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m128i::from([92, 87]);
-/// let b = m128i::from([-9001, 1]);
+/// let a = m128i::from([92_i64, 87]);
+/// let b = m128i::from([-9001_i64, 1]);
 /// let c: [i64; 2] = add_i64_m128i(a, b).into();
 /// assert_eq!(c, [-8909, 88]);
 /// ```
@@ -83,29 +90,198 @@ pub fn add_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_add_pd(a.0, b.0) })
 }
 
-// _mm_add_sd
+/// Lowest lane `a + b`, high lane unchanged.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([92.0, 87.5]);
+/// let b = m128d::from_array([100.0, -600.0]);
+/// let c = add_m128d_s(a, b).to_array();
+/// assert_eq!(c, [192.0, 87.5]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn add_m128d_s(a: m128d, b: m128d) -> m128d {
+  m128d(unsafe { _mm_add_sd(a.0, b.0) })
+}
 
-// _mm_add_si64
+/// Lanewise saturating `a + b` with lanes as `i8`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([
+///   i8::MAX, i8::MIN, 3, 4, -1, -2, -3, -4,
+///   3, 4, -1, -2, -1, -2, -3, -4,
+/// ]);
+/// let b = m128i::from([
+///   i8::MAX, i8::MIN, 7, 8, -15, -26, -37, 48,
+///   7, 8, -15, -26, -15, -26, -37, 48,
+/// ]);
+/// let c: [i8; 16] = add_saturating_i8_m128i(a, b).into();
+/// assert_eq!(
+///   c,
+///   [
+///     i8::MAX, i8::MIN, 10, 12, -16, -28, -40, 44,
+///     10, 12, -16, -28, -16, -28, -40, 44
+///   ]
+/// );
+/// ```
+#[must_use]
+#[inline(always)]
+#[rustfmt::skip]
+pub fn add_saturating_i8_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_adds_epi8(a.0, b.0) })
+}
 
-// _mm_adds_epi16
+/// Lanewise saturating `a + b` with lanes as `i16`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([i16::MAX, i16::MIN, 3, 4, -1, -2, -3, -4]);
+/// let b = m128i::from([i16::MAX, i16::MIN, 7, 8, -15, -26, -37, 48]);
+/// let c: [i16; 8] = add_saturating_i16_m128i(a, b).into();
+/// assert_eq!(c, [i16::MAX, i16::MIN, 10, 12, -16, -28, -40, 44]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn add_saturating_i16_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_adds_epi16(a.0, b.0) })
+}
 
-// _mm_adds_epi8
+/// Lanewise saturating `a + b` with lanes as `u8`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([
+///   u8::MAX, 0, 3, 4, 254, 2, 3, 4,
+///   3, 4, 1, 2, 1, 2, 128, 4,
+/// ]);
+/// let b = m128i::from([
+///   u8::MAX, 0, 7, 8, 15, 26, 37, 48,
+///   7, 8, 15, 26, 15, 26, 37, 48,
+/// ]);
+/// let c: [u8; 16] = add_saturating_u8_m128i(a, b).into();
+/// assert_eq!(
+///   c,
+///   [
+///     u8::MAX, 0, 10, 12, 255, 28, 40, 52,
+///     10, 12, 16, 28, 16, 28, 165, 52
+///   ]
+/// );
+/// ```
+#[must_use]
+#[inline(always)]
+#[rustfmt::skip]
+pub fn add_saturating_u8_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_adds_epu8(a.0, b.0) })
+}
 
-// _mm_adds_epu16
+/// Lanewise saturating `a + b` with lanes as `u16`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([u16::MAX, 0, 3, 4, 1, 2, 3, 4]);
+/// let b = m128i::from([u16::MAX, 0, 7, 8, 15, 26, 37, 48]);
+/// let c: [u16; 8] = add_saturating_u16_m128i(a, b).into();
+/// assert_eq!(c, [u16::MAX, 0, 10, 12, 16, 28, 40, 52]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn add_saturating_u16_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_adds_epu16(a.0, b.0) })
+}
 
-// _mm_adds_epu8
+/// Bitwise `a & b`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 0.0]);
+/// let b = m128d::from_array([1.0, 1.0]);
+/// let c = and_m128d(a, b).to_array();
+/// assert_eq!(c, [1.0, 0.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn and_m128d(a: m128d, b: m128d) -> m128d {
+  m128d(unsafe { _mm_and_pd(a.0, b.0) })
+}
 
-// _mm_and_pd
+/// Bitwise `a & b`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1, 0, 1, 0]);
+/// let b = m128i::from([1, 1, 0, 0]);
+/// let c: [i32; 4] = and_m128i(a, b).into();
+/// assert_eq!(c, [1, 0, 0, 0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn and_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_and_si128(a.0, b.0) })
+}
 
-// _mm_and_si128
+/// Bitwise `(!a) & b`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 0.0]);
+/// let b = m128d::from_array([1.0, 1.0]);
+/// let c = andnot_m128d(a, b).to_array();
+/// assert_eq!(c, [0.0, 1.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn andnot_m128d(a: m128d, b: m128d) -> m128d {
+  m128d(unsafe { _mm_andnot_pd(a.0, b.0) })
+}
 
-// _mm_andnot_pd
+/// Bitwise `(!a) & b`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1, 0, 1, 0]);
+/// let b = m128i::from([1, 1, 0, 0]);
+/// let c: [i32; 4] = andnot_m128i(a, b).into();
+/// assert_eq!(c, [0, 1, 0, 0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn andnot_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_andnot_si128(a.0, b.0) })
+}
 
-// _mm_andnot_si128
+/// Lanewise saturating `a + b` with lanes as `u8`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([
+///   u8::MAX, 0, 3, 4, 254, 2, 3, 4,
+///   3, 4, 1, 2, 1, 2, 128, 4,
+/// ]);
+/// let b = m128i::from([
+///   u8::MAX, 0, 7, 8, 15, 26, 37, 48,
+///   7, 8, 15, 26, 15, 26, 37, 48,
+/// ]);
+/// let c: [u8; 16] = average_u8_m128i(a, b).into();
+/// assert_eq!(
+///   c,
+///   [
+///     u8::MAX, 0, 10, 12, 255, 28, 40, 52,
+///     10, 12, 16, 28, 16, 28, 165, 52
+///   ]
+/// );
+/// ```
+#[must_use]
+#[inline(always)]
+#[rustfmt::skip]
+pub fn average_u8_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_avg_epu8(a.0, b.0) })
+}
 
-// _mm_avg_epu16
-
-// _mm_avg_epu8
+/// Lanewise saturating `a + b` with lanes as `u16`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([u16::MAX, 0, 3, 4, 1, 2, 3, 4]);
+/// let b = m128i::from([u16::MAX, 0, 7, 8, 15, 26, 37, 48]);
+/// let c: [u16; 8] = average_u16_m128i(a, b).into();
+/// assert_eq!(c, [u16::MAX, 0, 10, 12, 16, 28, 40, 52]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn average_u16_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_avg_epu16(a.0, b.0) })
+}
 
 // _mm_bslli_si128
 
