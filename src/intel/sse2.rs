@@ -2,13 +2,6 @@
 
 use super::*;
 
-/// Returns if the f64 array and u64 array are the same bit pattern.
-#[doc(hidden)]
-pub fn debug_check_same_bits_f64(f: [f64; 2], u: [u64; 2]) -> bool {
-  let x: [u64; 2] = unsafe { core::mem::transmute(f) };
-  x == u
-}
-
 /// Lanewise `a + b` with lanes as `i8`.
 /// ```
 /// # use safe_arch::*;
