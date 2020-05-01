@@ -183,6 +183,40 @@ impl From<m128i> for [u64; 2] {
   }
 }
 
+// 128-bit
+
+impl From<i128> for m128i {
+  #[must_use]
+  #[inline(always)]
+  fn from(i: i128) -> Self {
+    unsafe { core::mem::transmute(i) }
+  }
+}
+
+impl From<m128i> for i128 {
+  #[must_use]
+  #[inline(always)]
+  fn from(m: m128i) -> Self {
+    unsafe { core::mem::transmute(m) }
+  }
+}
+
+impl From<u128> for m128i {
+  #[must_use]
+  #[inline(always)]
+  fn from(u: u128) -> Self {
+    unsafe { core::mem::transmute(u) }
+  }
+}
+
+impl From<m128i> for u128 {
+  #[must_use]
+  #[inline(always)]
+  fn from(m: m128i) -> Self {
+    unsafe { core::mem::transmute(m) }
+  }
+}
+
 //
 // PLEASE KEEP ALL THE FORMAT IMPL JUNK AT THE END OF THE FILE
 //
