@@ -1394,12 +1394,11 @@ impl SubAssign for m128 {
 
 #[cfg(feature = "partial_eq")]
 impl PartialEq for m128 {
-  /// Checks for partial equality in all lanes with `cmp_eq` and then comparing
-  /// the mask generated with `0b111`.
+  /// Not a direct intrinsic, this is a `cmp_eq_mask` and then a `move_mask`.
   #[must_use]
   #[inline(always)]
   fn eq(&self, other: &Self) -> bool {
-    move_mask_m128(cmp_eq_m128_mask(*self, *other)) == 0b1111
+    move_mask_m128(cmp_eq_mask_m128(*self, *other)) == 0b1111
   }
 }
 
