@@ -1099,19 +1099,72 @@ pub fn convert_to_m128_from_m128i(a: m128i) -> m128 {
   m128(unsafe { _mm_cvtepi32_ps(a.0) })
 }
 
-// _mm_cvtpd_epi32
+/// Rounds the two `f64` lanes to the low two `i32` lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 2.5]);
+/// let b = convert_to_m128i_from_m128d(a);
+/// let c: [i32; 4] = b.into();
+/// assert_eq!(c, [1, 2, 0, 0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn convert_to_m128i_from_m128d(a: m128d) -> m128i {
+  m128i(unsafe { _mm_cvtpd_epi32(a.0) })
+}
 
-// _mm_cvtpd_pi32
+/// Rounds the two `f64` lanes to the low two `f32` lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 2.5]);
+/// let b = convert_to_m128_from_m128d(a);
+/// assert_eq!(b.to_bits(), [1_f32.to_bits(), 2.5_f32.to_bits(), 0, 0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn convert_to_m128_from_m128d(a: m128d) -> m128 {
+  m128(unsafe { _mm_cvtpd_ps(a.0) })
+}
 
-// _mm_cvtpd_ps
+/// Rounds the two `f64` lanes to the low two `i32` lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128::from_array([1.0, 2.5, 3.0, 4.0]);
+/// let b = convert_to_m128i_from_m128(a);
+/// let c: [i32; 4] = b.into();
+/// assert_eq!(c, [1, 2, 3, 4]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn convert_to_m128i_from_m128(a: m128) -> m128i {
+  m128i(unsafe { _mm_cvtps_epi32(a.0) })
+}
 
-// _mm_cvtpi32_pd
+/// Rounds the two `f64` lanes to the low two `f32` lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128::from_array([1.0, 2.5, 3.6, 4.7]);
+/// let b = convert_to_m128d_from_m128(a);
+/// assert_eq!(b.to_bits(), [1_f64.to_bits(), 2.5_f64.to_bits()]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn convert_to_m128d_from_m128(a: m128) -> m128d {
+  m128d(unsafe { _mm_cvtps_pd(a.0) })
+}
 
-// _mm_cvtps_epi32
-
-// _mm_cvtps_pd
-
-// _mm_cvtsd_f64
+/// Gets the lower lane as a an `f64` value.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 2.5]);
+/// let b = get_f64_m128d_s(a);
+/// assert_eq!(b, 1.0_f64);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn get_f64_m128d_s(a: m128d) -> f64 {
+  unsafe { _mm_cvtsd_f64(a.0) }
+}
 
 // _mm_cvtsd_si32
 
