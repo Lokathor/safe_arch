@@ -6,9 +6,6 @@
 //! A crate that safely exposes arch intrinsics via cfg.
 //!
 //! >Incomplete. WIP. Etc.
-//! >
-//! >Current content can be expected to remain stable, but the functionality
-//! >coverage is not that much.
 //!
 //! This crate lets you safely use CPU intrinsics. Those things in
 //! [`core::arch`](core::arch).
@@ -147,7 +144,7 @@ pub mod intel {
   //! one module.
   //!
   //! ## Naming Conventions
-  //! The actual intrinsic names are flaming dumpster, so we use easier to
+  //! The actual intrinsic names are a flaming dumpster, so we use easier to
   //! understand names.
   //!
   //! * The general naming scheme is that the operation of the function is
@@ -156,13 +153,15 @@ pub mod intel {
   //! * If the function affects only the lowest lane then it has `_s` on the end
   //!   after the type, because that's a "scalar" operation.
   //!   * eg: [`add_m128_s`], [`sqrt_m128_s`]
-  //! * Functions with a "bool-ish" return values have `_mask` in their name.
-  //!   These are the comparison functions, and the return value is all 0s in a
-  //!   lane for "false" in that lane, and all 1s in a lane for "true" in that
-  //!   lane. Because a float or double point value of all 1s is NaN, the mask
-  //!   making functions aren't generally useful on their own, they're just an
-  //!   intermediate value.
+  //! * Many functions with a "bool-ish" return values have `_mask` in their
+  //!   name. These are the comparison functions, and the return value is all 0s
+  //!   in a lane for "false" in that lane, and all 1s in a lane for "true" in
+  //!   that lane. Because a float or double point value of all 1s is NaN, the
+  //!   mask making functions aren't generally useful on their own, they're just
+  //!   an intermediate value.
   //!   * eg: [`cmp_eq_mask_m128`], [`cmp_gt_mask_m128`]
+  //! * `convert` functions will round to an approximate numeric value.
+  //! * `cast` functions will preserve the bit patterns involved.
   use super::*;
   #[cfg(target_arch = "x86")]
   use core::arch::x86::*;
