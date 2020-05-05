@@ -300,12 +300,12 @@ pub fn average_u16_m128i(a: m128i, b: m128i) -> m128i {
 macro_rules! byte_shift_left_logical_immediate_m128i {
   ($a:expr, $imm:expr) => {{
     let a: m128i = $a;
-    const imm: i32 = $imm as i32;
+    const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_mm_bslli_si128;
     #[cfg(target_arch = "x86_64")]
     use core::arch::x86_64::_mm_bslli_si128;
-    m128i(unsafe { _mm_bslli_si128(a.0, imm) })
+    m128i(unsafe { _mm_bslli_si128(a.0, IMM) })
   }};
 }
 
@@ -1153,152 +1153,809 @@ pub fn convert_to_m128d_from_m128(a: m128) -> m128d {
   m128d(unsafe { _mm_cvtps_pd(a.0) })
 }
 
-/// Gets the lower lane as a an `f64` value.
+/// Gets the lower lane as an `f64` value.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128d::from_array([1.0, 2.5]);
-/// let b = get_f64_m128d_s(a);
+/// let b = get_f64_from_m128d_s(a);
 /// assert_eq!(b, 1.0_f64);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn get_f64_m128d_s(a: m128d) -> f64 {
+pub fn get_f64_from_m128d_s(a: m128d) -> f64 {
   unsafe { _mm_cvtsd_f64(a.0) }
 }
 
-// _mm_cvtsd_si32
-
-// _mm_cvtsd_si64
-
-// _mm_cvtsd_si64x
-
-// _mm_cvtsd_ss
-
-// _mm_cvtsi128_si32
-
-// _mm_cvtsi128_si64
-
-// _mm_cvtsi128_si64x
-
-// _mm_cvtsi32_sd
-
-// _mm_cvtsi32_si128
-
-// _mm_cvtsi64_sd
-
-// _mm_cvtsi64_si128
-
-// _mm_cvtsi64x_sd
-
-// _mm_cvtsi64x_si128
-
-// _mm_cvtss_sd
-
-// _mm_cvttpd_epi32
-
-// _mm_cvttpd_pi32
-
-// _mm_cvttps_epi32
-
-// _mm_cvttsd_si32
-
-// _mm_cvttsd_si64
-
-// _mm_cvttsd_si64x
-
-// _mm_div_pd
-
-// _mm_div_sd
-
-// _mm_extract_epi16
-
-// _mm_insert_epi16
-
-// _mm_lfence
-
-// _mm_load_pd
-
-// _mm_load_pd1
-
-// _mm_load_sd
-
-// _mm_load_si128
-
-// _mm_load1_pd
-
-// _mm_loadh_pd
-
-// _mm_loadl_epi64
-
-// _mm_loadl_pd
-
-// _mm_loadr_pd
-
-// _mm_loadu_pd
-
-// _mm_loadu_si128
-
-// _mm_loadu_si32
-
-// _mm_madd_epi16
-
-// _mm_maskmoveu_si128
-
-// _mm_max_epi16
-
-// _mm_max_epu8
-
-// _mm_max_pd
-
-// _mm_max_sd
-
-// _mm_mfence
-
-// _mm_min_epi16
-
-// _mm_min_epu8
-
-// _mm_min_pd
-
-// _mm_min_sd
-
-// _mm_move_epi64
-
-// _mm_move_sd
-
-// _mm_movemask_epi8
-
-// _mm_movemask_pd
-
-// _mm_movepi64_pi64
-
-// _mm_movpi64_epi64
-
-// _mm_mul_epu32
-
-// _mm_mul_pd
-
-// _mm_mul_sd
-
-// _mm_mul_su32
-
-// _mm_mulhi_epi16
-
-// _mm_mulhi_epu16
-
-// _mm_mullo_epi16
-
-// _mm_or_pd
-
-// _mm_or_si128
-
-// _mm_packs_epi16
-
-// _mm_packs_epi32
-
-// _mm_packus_epi16
-
-// _mm_pause
+/// Converts the lower lane to an `i32` value.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 2.5]);
+/// let b = get_i32_from_m128d_s(a);
+/// assert_eq!(b, 1_i32);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn get_i32_from_m128d_s(a: m128d) -> i32 {
+  unsafe { _mm_cvtsd_si32(a.0) }
+}
+
+/// Converts the lower lane to an `i64` value.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 2.5]);
+/// let b = get_i64_from_m128d_s(a);
+/// assert_eq!(b, 1_i64);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg(target_arch = "x86_64")]
+pub fn get_i64_from_m128d_s(a: m128d) -> i64 {
+  unsafe { _mm_cvtsd_si64(a.0) }
+}
+
+/// Converts the low `f64` to `f32` and replaces the low lane of the input.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128::from_array([3.0, 4.0, 5.0, 6.0]);
+/// let b = m128d::from_array([1.0, 2.5]);
+/// let c = convert_m128d_s_replace_m128_s(a, b);
+/// assert_eq!(c.to_array(), [1.0, 4.0, 5.0, 6.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg(target_arch = "x86_64")]
+pub fn convert_m128d_s_replace_m128_s(a: m128, b: m128d) -> m128 {
+  m128(unsafe { _mm_cvtsd_ss(a.0, b.0) })
+}
+
+/// Converts the lower lane to an `i32` value.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1, 3, 5, 7]);
+/// let b = get_i32_from_m128i_s(a);
+/// assert_eq!(b, 1_i32);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn get_i32_from_m128i_s(a: m128i) -> i32 {
+  unsafe { _mm_cvtsi128_si32(a.0) }
+}
+
+/// Converts the lower lane to an `i64` value.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i64, 3]);
+/// let b = get_i64_from_m128i_s(a);
+/// assert_eq!(b, 1_i64);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg(target_arch = "x86_64")]
+pub fn get_i64_from_m128i_s(a: m128i) -> i64 {
+  unsafe { _mm_cvtsi128_si64(a.0) }
+}
+
+/// Convert `i32` to `f64` and replace the low lane of the input.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 2.0]);
+/// let b = convert_i32_replace_m128d_s(a, 5_i32);
+/// assert_eq!(b.to_array(), [5.0, 2.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn convert_i32_replace_m128d_s(a: m128d, i: i32) -> m128d {
+  m128d(unsafe { _mm_cvtsi32_sd(a.0, i) })
+}
+
+/// Set an `i32` as the low 32-bit lane of an `m128i`, other lanes blank.
+/// ```
+/// # use safe_arch::*;
+/// let a: [i32; 4] = set_i32_m128i_s(1_i32).into();
+/// let b: [i32; 4] = m128i::from([1, 0, 0, 0]).into();
+/// assert_eq!(a, b);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn set_i32_m128i_s(i: i32) -> m128i {
+  m128i(unsafe { _mm_cvtsi32_si128(i) })
+}
+
+/// Convert `i64` to `f64` and replace the low lane of the input.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 2.0]);
+/// let b = convert_i64_replace_m128d_s(a, 5_i64);
+/// assert_eq!(b.to_array(), [5.0, 2.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg(target_arch = "x86_64")]
+pub fn convert_i64_replace_m128d_s(a: m128d, i: i64) -> m128d {
+  m128d(unsafe { _mm_cvtsi64_sd(a.0, i) })
+}
+
+/// Set an `i64` as the low 64-bit lane of an `m128i`, other lanes blank.
+/// ```
+/// # use safe_arch::*;
+/// let a: [i64; 2] = set_i64_m128i_s(1_i64).into();
+/// let b: [i64; 2] = m128i::from([1_i64, 0]).into();
+/// assert_eq!(a, b);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg(target_arch = "x86_64")]
+pub fn set_i64_m128i_s(i: i64) -> m128i {
+  m128i(unsafe { _mm_cvtsi64_si128(i) })
+}
+
+/// Converts the lower `f32` to `f64` and replace the low lane of the input
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 2.5]);
+/// let b = m128::from_array([3.0, 4.0, 5.0, 6.0]);
+/// let c = convert_m128_s_replace_m128d_s(a, b);
+/// assert_eq!(c.to_array(), [3.0, 2.5]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg(target_arch = "x86_64")]
+pub fn convert_m128_s_replace_m128d_s(a: m128d, b: m128) -> m128d {
+  m128d(unsafe { _mm_cvtss_sd(a.0, b.0) })
+}
+
+/// Truncate the `f64` lanes to the lower `i32` lanes (upper `i32` lanes 0).
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.1, 2.6]);
+/// let b = truncate_m128d_to_m128i(a);
+/// assert_eq!(<[i32; 4]>::from(b), [1, 2, 0, 0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg(target_arch = "x86_64")]
+pub fn truncate_m128d_to_m128i(a: m128d) -> m128i {
+  m128i(unsafe { _mm_cvttpd_epi32(a.0) })
+}
+
+/// Truncate the `f32` lanes to `i32` lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128::from_array([1.1, 2.6, 3.5, 4.0]);
+/// let b = truncate_m128_to_m128i(a);
+/// assert_eq!(<[i32; 4]>::from(b), [1, 2, 3, 4]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg(target_arch = "x86_64")]
+pub fn truncate_m128_to_m128i(a: m128) -> m128i {
+  m128i(unsafe { _mm_cvttps_epi32(a.0) })
+}
+
+/// Truncate the lower lane into an `i32`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.7, 2.6]);
+/// assert_eq!(truncate_to_i32_m128d_s(a), 1_i32);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn truncate_to_i32_m128d_s(a: m128d) -> i32 {
+  unsafe { _mm_cvttsd_si32(a.0) }
+}
+
+/// Truncate the lower lane into an `i64`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.7, 2.6]);
+/// assert_eq!(truncate_to_i64_m128d_s(a), 1_i64);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg(target_arch = "x86_64")]
+pub fn truncate_to_i64_m128d_s(a: m128d) -> i64 {
+  unsafe { _mm_cvttsd_si64(a.0) }
+}
+
+/// Lanewise `a / b`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([92.0, 42.0]);
+/// let b = m128d::from_array([100.0, -6.0]);
+/// let c = div_m128d(a, b).to_array();
+/// assert_eq!(c, [0.92, -7.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn div_m128d(a: m128d, b: m128d) -> m128d {
+  m128d(unsafe { _mm_div_pd(a.0, b.0) })
+}
+
+/// Lowest lane `a / b`, high lane unchanged.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([92.0, 87.5]);
+/// let b = m128d::from_array([100.0, -600.0]);
+/// let c = div_m128d_s(a, b).to_array();
+/// assert_eq!(c, [0.92, 87.5]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn div_m128d_s(a: m128d, b: m128d) -> m128d {
+  m128d(unsafe { _mm_div_sd(a.0, b.0) })
+}
+
+/// Gets an `i16` value out of an `m128i`, returns as `i32`.
+///
+/// The lane to get must be a constant. If you select outside the range `0..8`
+/// then the selection is wrapped to be in range (only the lowest 3 bits of the
+/// input are used).
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([0xA_i16, 0xB, 0xC, 0xD, 0, 0, 0, 0]);
+/// //
+/// assert_eq!(extract_i16_as_i32_m128i!(a, 0), 0xA);
+/// assert_eq!(extract_i16_as_i32_m128i!(a, 1), 0xB);
+/// // the lane requested is "wrapped" to be a valid index.
+/// assert_eq!(50 & 0b111, 2);
+/// assert_eq!(extract_i16_as_i32_m128i!(a, 50), 0xC);
+/// ```
+#[macro_export]
+macro_rules! extract_i16_as_i32_m128i {
+  ($a:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    const LANE: i32 = ($imm & 0b111) as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_extract_epi16;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_extract_epi16;
+    unsafe { _mm_extract_epi16(a.0, LANE) }
+  }};
+}
+
+/// Inserts the low 16 bits of an `i32` value into an `m128i`.
+///
+/// The lane to get must be a constant. If you select outside the range `0..8`
+/// then the selection is wrapped to be in range (only the lowest 3 bits of the
+/// input are used).
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([0xA_i16, 0xB, 0xC, 0xD, 0, 0, 0, 0]);
+/// //
+/// let b = insert_i16_as_i32_m128i!(a, -1, 0);
+/// assert_eq!(<[i16; 8]>::from(b), [-1, 0xB, 0xC, 0xD, 0, 0, 0, 0]);
+/// // the lane requested is "wrapped" to be a valid index.
+/// assert_eq!(50 & 0b111, 2);
+/// let c = insert_i16_as_i32_m128i!(a, -1, 50);
+/// assert_eq!(<[i16; 8]>::from(c), [0xA, 0xB, -1, 0xD, 0, 0, 0, 0]);
+/// ```
+#[macro_export]
+macro_rules! insert_i16_as_i32_m128i {
+  ($a:expr, $i:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    let i: i32 = $i;
+    const LANE: i32 = ($imm & 0b111) as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_insert_epi16;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_insert_epi16;
+    m128i(unsafe { _mm_insert_epi16(a.0, i, LANE) })
+  }};
+}
+
+/// Loads the reference into a register.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([10.0, 12.0]);
+/// let b = load_m128d(&a);
+/// assert_eq!(a.to_bits(), b.to_bits());
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn load_m128d(a: &m128d) -> m128d {
+  m128d(unsafe { _mm_load_pd(a as *const m128d as *const f64) })
+}
+
+/// Loads the reference into all lanes of a register.
+/// ```
+/// # use safe_arch::*;
+/// let a = 1.0;
+/// let b = load_splat_m128d(&a);
+/// assert_eq!(m128d::from_array([1.0, 1.0]).to_bits(), b.to_bits());
+/// ```
+#[must_use]
+#[inline(always)]
+#[allow(clippy::trivially_copy_pass_by_ref)]
+pub fn load_splat_m128d(a: &f64) -> m128d {
+  m128d(unsafe { _mm_load1_pd(a) })
+}
+
+/// Loads the reference into the low lane of the register.
+/// ```
+/// # use safe_arch::*;
+/// let a = 1.0;
+/// let b = load_f64_m128d_s(&a);
+/// assert_eq!(m128d::from_array([1.0, 0.0]).to_bits(), b.to_bits());
+/// ```
+#[must_use]
+#[inline(always)]
+#[allow(clippy::trivially_copy_pass_by_ref)]
+pub fn load_f64_m128d_s(a: &f64) -> m128d {
+  m128d(unsafe { _mm_load_sd(a) })
+}
+
+/// Loads the reference into a register.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1, 2, 3, 4]);
+/// let b = load_m128i(&a);
+/// assert_eq!(<[i32; 4]>::from(a), <[i32; 4]>::from(b));
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn load_m128i(a: &m128i) -> m128i {
+  m128i(unsafe { _mm_load_si128(a as *const m128i as *const __m128i) })
+}
+
+/// Loads the reference into a register, replacing the high lane.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from([1.0, 2.0]);
+/// let double = 7.0;
+/// let b = load_replace_high_m128d(a, &double);
+/// assert_eq!(b.to_array(), [1.0, 7.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn load_replace_high_m128d(a: m128d, b: &f64) -> m128d {
+  m128d(unsafe { _mm_loadh_pd(a.0, b) })
+}
+
+/// Loads the low `i64` into a register.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i64, 2]);
+/// let b = load_i64_m128i_s(&a);
+/// assert_eq!([1_i64, 0], <[i64; 2]>::from(b));
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn load_i64_m128i_s(a: &m128i) -> m128i {
+  m128i(unsafe { _mm_loadl_epi64(a as *const m128i as *const __m128i) })
+}
+
+/// Loads the reference into a register, replacing the low lane.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from([1.0, 2.0]);
+/// let double = 7.0;
+/// let b = load_replace_low_m128d(a, &double);
+/// assert_eq!(b.to_array(), [7.0, 2.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn load_replace_low_m128d(a: m128d, b: &f64) -> m128d {
+  m128d(unsafe { _mm_loadl_pd(a.0, b) })
+}
+
+/// Loads the reference into a register with reversed order.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([10.0, 12.0]);
+/// let b = load_reverse_m128d(&a);
+/// assert_eq!(m128d::from_array([12.0, 10.0]).to_bits(), b.to_bits());
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn load_reverse_m128d(a: &m128d) -> m128d {
+  m128d(unsafe { _mm_loadr_pd(a as *const m128d as *const f64) })
+}
+
+/// Loads the reference into a register.
+///
+/// This generally has no speed penalty if the reference happens to be 16-byte
+/// aligned, but there is a slight speed penalty if the reference is only 8-byte
+/// aligned.
+/// ```
+/// # use safe_arch::*;
+/// let a = [10.0, 12.0];
+/// let b = load_unaligned_m128d(&a);
+/// assert_eq!(m128d::from_array(a).to_bits(), b.to_bits());
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn load_unaligned_m128d(a: &[f64; 2]) -> m128d {
+  m128d(unsafe { _mm_loadu_pd(a as *const [f64; 2] as *const f64) })
+}
+
+/// Loads the reference into a register.
+///
+/// This generally has no speed penalty if the reference happens to be 16-byte
+/// aligned, but there is a slight speed penalty if the reference is less
+/// aligned.
+/// ```
+/// # use safe_arch::*;
+/// let a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+/// let b = load_unaligned_m128i(&a);
+/// assert_eq!(a, <[u8; 16]>::from(b));
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn load_unaligned_m128i(a: &[u8; 16]) -> m128i {
+  m128i(unsafe { _mm_loadu_si128(a as *const [u8; 16] as *const __m128i) })
+}
+
+/// Multiply `i16` lanes producing `i32` values, horizontal add pairs of `i32`
+/// values to produce the final output.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i16, 2, 3, 4, -1, -2, -3, -4]);
+/// let b = m128i::from([5_i16, 6, 7, 8, -15, -26, -37, 48]);
+/// let c: [i32; 4] = mul_i16_horizontal_add_m128i(a, b).into();
+/// assert_eq!(c, [17, 53, 67, -81]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn mul_i16_horizontal_add_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_madd_epi16(a.0, b.0) })
+}
+
+/// Lanewise `max(a, b)` with lanes as `u8`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from(
+///   [0_u8, 1, 2, 3, 4, 5, 6, 7,
+///   8, 9, 10, 11, 12, 13, 14, 15]
+/// );
+/// let b = m128i::from(
+///   [0_u8, 11, 2, 13, 4, 15, 6, 17,
+///   8, 19, 20, 21, 22, 23, 24, 127]
+/// );
+/// let c: [u8; 16] = max_u8_m128i(a, b).into();
+/// assert_eq!(
+///   c,
+///   [0, 11, 2, 13, 4, 15, 6, 17,
+///   8, 19, 20, 21, 22, 23, 24, 127]
+/// );
+/// ```
+#[must_use]
+#[inline(always)]
+#[rustfmt::skip]
+pub fn max_u8_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_max_epu8(a.0, b.0) })
+}
+
+/// Lanewise `max(a, b)` with lanes as `i16`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i16, 2, 3, 4, -1, -2, -3, -4]);
+/// let b = m128i::from([5_i16, 6, 7, 8, -15, -26, -37, 48]);
+/// let c: [i16; 8] = max_i16_m128i(a, b).into();
+/// assert_eq!(c, [5_i16, 6, 7, 8, -1, -2, -3, 48]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn max_i16_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_max_epi16(a.0, b.0) })
+}
+
+/// Lanewise `max(a, b)`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([5.0, 2.0]);
+/// let b = m128d::from_array([1.0, 6.0]);
+/// let c = max_m128d(a, b).to_array();
+/// assert_eq!(c, [5.0, 6.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn max_m128d(a: m128d, b: m128d) -> m128d {
+  m128d(unsafe { _mm_max_pd(a.0, b.0) })
+}
+
+/// Low lane `max(a, b)`, other lanes unchanged.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 12.0]);
+/// let b = m128d::from_array([5.0, 6.0]);
+/// let c = max_m128d_s(a, b).to_array();
+/// assert_eq!(c, [5.0, 12.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn max_m128d_s(a: m128d, b: m128d) -> m128d {
+  m128d(unsafe { _mm_max_sd(a.0, b.0) })
+}
+
+/// Lanewise `min(a, b)` with lanes as `u8`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from(
+///   [0_u8, 1, 2, 3, 4, 5, 6, 7,
+///   8, 9, 10, 11, 12, 13, 14, 15]
+/// );
+/// let b = m128i::from(
+///   [0_u8, 11, 2, 13, 4, 15, 6, 17,
+///   8, 0, 20, 0, 22, 0, 24, 0]
+/// );
+/// let c: [u8; 16] = min_u8_m128i(a, b).into();
+/// assert_eq!(
+///   c,
+///   [0_u8, 1, 2, 3, 4, 5, 6, 7,
+///   8, 0, 10, 0, 12, 0, 14, 0]
+/// );
+/// ```
+#[must_use]
+#[inline(always)]
+#[rustfmt::skip]
+pub fn min_u8_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_min_epu8(a.0, b.0) })
+}
+
+/// Lanewise `min(a, b)` with lanes as `i16`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i16, 2, 3, 4, -1, -2, -3, -4]);
+/// let b = m128i::from([5_i16, 6, 7, 8, -15, -26, -37, 48]);
+/// let c: [i16; 8] = min_i16_m128i(a, b).into();
+/// assert_eq!(c, [1_i16, 2, 3, 4, -15, -26, -37, -4]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn min_i16_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_min_epi16(a.0, b.0) })
+}
+
+/// Lanewise `min(a, b)`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 12.0]);
+/// let b = m128d::from_array([5.0, 6.0]);
+/// let c = min_m128d(a, b).to_array();
+/// assert_eq!(c, [1.0, 6.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn min_m128d(a: m128d, b: m128d) -> m128d {
+  m128d(unsafe { _mm_min_pd(a.0, b.0) })
+}
+
+/// Low lane `min(a, b)`, other lanes unchanged.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 12.0]);
+/// let b = m128d::from_array([0.0, 6.0]);
+/// let c = min_m128d_s(a, b).to_array();
+/// assert_eq!(c, [0.0, 12.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn min_m128d_s(a: m128d, b: m128d) -> m128d {
+  m128d(unsafe { _mm_min_sd(a.0, b.0) })
+}
+
+/// Copy the low `i64` lane to a new register, upper bits 0.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i64, 2]);
+/// let b = copy_i64_m128i_s(a);
+/// assert_eq!(<[i64; 2]>::from(b), [1, 0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn copy_i64_m128i_s(a: m128i) -> m128i {
+  m128i(unsafe { _mm_move_epi64(a.0) })
+}
+
+/// Copies the `a` value and replaces the low lane with the low `b` value.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from([1.0, 2.0]);
+/// let b = m128d::from([3.0, 4.0]);
+/// let c = copy_replace_low_f64_m128d(a, b);
+/// assert_eq!(c.to_array(), [3.0, 2.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn copy_replace_low_f64_m128d(a: m128d, b: m128d) -> m128d {
+  m128d(unsafe { _mm_move_sd(a.0, b.0) })
+}
+
+/// Gathers the `i8` sign bit of each lane.
+///
+/// The output has lane 0 as bit 0, lane 1 as bit 1, and so on.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([
+///   0_i8, -11, -2, 13, 4, 15, -6, 17, 8, 19, -20, 21, 22, 23, -24, 127,
+/// ]);
+/// let i = move_mask_i8_m128i(a);
+/// assert_eq!(i, 0b0100010001000110);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn move_mask_i8_m128i(a: m128i) -> i32 {
+  unsafe { _mm_movemask_epi8(a.0) }
+}
+
+/// Gathers the sign bit of each lane.
+///
+/// The output has lane 0 as bit 0, lane 1 as bit 1.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([-1.0, 12.0]);
+/// let i = move_mask_m128d(a);
+/// assert_eq!(i, 0b01);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn move_mask_m128d(a: m128d) -> i32 {
+  unsafe { _mm_movemask_pd(a.0) }
+}
+
+/// Multiplies the lower 32 bits (only) of each `u64` lane into 64-bit `u64`
+/// values.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_u64, u32::MAX as u64]);
+/// let b = m128i::from([5_u64, u32::MAX as u64]);
+/// let c: [u64; 2] = mul_u64_widen_low_bits_m128i(a, b).into();
+/// assert_eq!(c, [5_u64, (u32::MAX as u64 * u32::MAX as u64)]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn mul_u64_widen_low_bits_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_mul_epu32(a.0, b.0) })
+}
+
+/// Lanewise `a * b`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([92.0, 87.5]);
+/// let b = m128d::from_array([100.0, -6.0]);
+/// let c = mul_m128d(a, b).to_array();
+/// assert_eq!(c, [9200.0, -525.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn mul_m128d(a: m128d, b: m128d) -> m128d {
+  m128d(unsafe { _mm_mul_pd(a.0, b.0) })
+}
+
+/// Lowest lane `a * b`, high lane unchanged.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([92.0, 87.5]);
+/// let b = m128d::from_array([100.0, -600.0]);
+/// let c = mul_m128d_s(a, b).to_array();
+/// assert_eq!(c, [9200.0, 87.5]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn mul_m128d_s(a: m128d, b: m128d) -> m128d {
+  m128d(unsafe { _mm_mul_sd(a.0, b.0) })
+}
+
+/// Lanewise `a * b` with lanes as `i16`, keep the high bits of the `i32`
+/// intermediates.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i16, 200, 300, 4568, -1, -2, -3, -4]);
+/// let b = m128i::from([5_i16, 600, 700, 8910, -15, -26, -37, 48]);
+/// let c: [i16; 8] = mul_i16_keep_high_m128i(a, b).into();
+/// assert_eq!(c, [0, 1, 3, 621, 0, 0, 0, -1]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn mul_i16_keep_high_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_mulhi_epi16(a.0, b.0) })
+}
+
+/// Lanewise `a * b` with lanes as `u16`, keep the high bits of the `u32`
+/// intermediates.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_u16, 2003, 3005, 45687, 1, 2, 3, 4]);
+/// let b = m128i::from([5_u16, 6004, 7006, 8910, 15, 26, 37, 48]);
+/// let c: [u16; 8] = mul_u16_keep_high_m128i(a, b).into();
+/// assert_eq!(c, [0, 183, 321, 6211, 0, 0, 0, 0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn mul_u16_keep_high_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_mulhi_epu16(a.0, b.0) })
+}
+
+/// Lanewise `a * b` with lanes as `i16`, keep the low bits of the `i32`
+/// intermediates.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i16, 200, 300, 4568, -1, -2, -3, -4]);
+/// let b = m128i::from([5_i16, 600, 700, 8910, -15, -26, -37, 48]);
+/// let c: [i16; 8] = mul_i16_keep_low_m128i(a, b).into();
+/// assert_eq!(c, [5, -11072, 13392, 3024, 15, 52, 111, -192]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn mul_i16_keep_low_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_mullo_epi16(a.0, b.0) })
+}
+
+/// Bitwise `a | b`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 0.0]);
+/// let b = m128d::from_array([1.0, 1.0]);
+/// let c = or_m128d(a, b).to_array();
+/// assert_eq!(c, [1.0, 1.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn or_m128d(a: m128d, b: m128d) -> m128d {
+  m128d(unsafe { _mm_or_pd(a.0, b.0) })
+}
+
+/// Bitwise `a | b`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1, 0, 1, 0]);
+/// let b = m128i::from([1, 1, 0, 0]);
+/// let c: [i32; 4] = or_m128i(a, b).into();
+/// assert_eq!(c, [1, 1, 1, 0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn or_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_or_si128(a.0, b.0) })
+}
+
+/// Saturating convert `i16` to `i8`, and interleave the values.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i16, 2, 3, 4, 5, 6, 7, 8]);
+/// let b = m128i::from([9_i16, 10, 11, 12, 13, 14, 15, 16]);
+/// let c: [i8; 16] = pack_i16_to_i8_m128i(a, b).into();
+/// assert_eq!(c, [1_i8, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn pack_i16_to_i8_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_packs_epi16(a.0, b.0) })
+}
+
+/// Saturating convert `i32` to `i16`, and interleave the values.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i32, 2, 3, 4]);
+/// let b = m128i::from([5_i32, 6, 7, 8]);
+/// let c: [i16; 8] = pack_i32_to_i16_m128i(a, b).into();
+/// assert_eq!(c, [1_i16, 2, 3, 4, 5, 6, 7, 8]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn pack_i32_to_i16_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_packs_epi32(a.0, b.0) })
+}
+
+/// Saturating convert `i16` to `u8`, and interleave the values.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([-1_i16, 2, -3, 4, -5, 6, -7, 8]);
+/// let b = m128i::from([9_i16, 10, 11, 12, 13, -14, 15, -16]);
+/// let c: [u8; 16] = pack_i16_to_i8_m128i(a, b).into();
+/// assert_eq!(
+///   c,
+///   [255_u8, 2, 253, 4, 251, 6, 249, 8, 9, 10, 11, 12, 13, 242, 15, 240]
+/// );
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn pack_i16_to_u8_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_packus_epi16(a.0, b.0) })
+}
 
 // _mm_sad_epu8
 

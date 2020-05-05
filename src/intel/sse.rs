@@ -536,12 +536,12 @@ pub fn cmp_neq_i32_m128_s(a: m128, b: m128) -> i32 {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
-/// let b = convert_replace_i32_m128_s(a, 5_i32).to_array();
+/// let b = convert_i32_replace_m128_s(a, 5_i32).to_array();
 /// assert_eq!(b, [5.0, 2.0, 3.0, 4.0]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn convert_replace_i32_m128_s(a: m128, i: i32) -> m128 {
+pub fn convert_i32_replace_m128_s(a: m128, i: i32) -> m128 {
   m128(unsafe { _mm_cvtsi32_ss(a.0, i) })
 }
 
@@ -549,13 +549,13 @@ pub fn convert_replace_i32_m128_s(a: m128, i: i32) -> m128 {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
-/// let b = convert_replace_i64_m128_s(a, 5_i64).to_array();
+/// let b = convert_i64_replace_m128_s(a, 5_i64).to_array();
 /// assert_eq!(b, [5.0, 2.0, 3.0, 4.0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg(arch = "x86_64")]
-pub fn convert_replace_i64_m128_s(a: m128, i: i64) -> m128 {
+pub fn convert_i64_replace_m128_s(a: m128, i: i64) -> m128 {
   m128(unsafe { _mm_cvtsi64_ss(a.0, i) })
 }
 
@@ -563,11 +563,11 @@ pub fn convert_replace_i64_m128_s(a: m128, i: i64) -> m128 {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
-/// assert_eq!(1_f32, get_f32_m128_s(a));
+/// assert_eq!(1_f32, get_f32_from_m128_s(a));
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn get_f32_m128_s(a: m128) -> f32 {
+pub fn get_f32_from_m128_s(a: m128) -> f32 {
   unsafe { _mm_cvtss_f32(a.0) }
 }
 
@@ -575,11 +575,11 @@ pub fn get_f32_m128_s(a: m128) -> f32 {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
-/// assert_eq!(1_i32, convert_get_i32_m128_s(a));
+/// assert_eq!(1_i32, get_i32_from_m128_s(a));
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn convert_get_i32_m128_s(a: m128) -> i32 {
+pub fn get_i32_from_m128_s(a: m128) -> i32 {
   unsafe { _mm_cvtss_si32(a.0) }
 }
 
@@ -587,12 +587,12 @@ pub fn convert_get_i32_m128_s(a: m128) -> i32 {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
-/// assert_eq!(1_i64, convert_get_i64_m128_s(a));
+/// assert_eq!(1_i64, get_i64_from_m128_s(a));
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg(arch = "x86_64")]
-pub fn convert_get_i64_m128_s(a: m128) -> i64 {
+pub fn get_i64_from_m128_s(a: m128) -> i64 {
   unsafe { _mm_cvttss_si64(a.0) }
 }
 
@@ -651,7 +651,7 @@ pub fn load_splat_m128(a: &f32) -> m128 {
   m128(unsafe { _mm_load_ps1(a) })
 }
 
-/// Loads the reference into all lanes of a register.
+/// Loads the reference into the low lane of the register.
 /// ```
 /// # use safe_arch::*;
 /// let a = 1.0;
@@ -793,7 +793,7 @@ pub fn move_low_high_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_movelh_ps(a.0, b.0) })
 }
 
-/// Gathers the sign bit of each lane as an `i32`.
+/// Gathers the sign bit of each lane.
 ///
 /// The output has lane 0 as bit 0, lane 1 as bit 1, and so on.
 /// ```
