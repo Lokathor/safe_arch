@@ -13,9 +13,7 @@ keywords = ["intrinsics", "simd"]
 bytemuck = {version = "1", optional = true}
 
 [features]
-# Adds impls for PartialEq. This might not be what you want, because you
-# probably want to make a mask for two code paths, run both, and then merge the
-# two outputs at the end.
+# Adds impls for PartialEq to the newtypes.
 partial_eq = []
 
 [profile.test]

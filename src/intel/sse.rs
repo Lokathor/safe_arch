@@ -1149,7 +1149,7 @@ pub fn store_reverse_m128(r: &mut m128, a: m128) {
 /// ```
 #[inline(always)]
 pub fn store_unaligned_m128(r: &mut [f32; 4], a: m128) {
-  unsafe { _mm_store_ps(r as *mut [f32; 4] as *mut f32, a.0) }
+  unsafe { _mm_store_ps(r.as_mut_ptr(), a.0) }
 }
 
 /// Lanewise `a - b`.
