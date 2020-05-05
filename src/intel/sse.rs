@@ -1384,7 +1384,6 @@ impl SubAssign for m128 {
   }
 }
 
-#[cfg(feature = "partial_eq")]
 impl PartialEq for m128 {
   /// Not a direct intrinsic, this is a `cmp_eq_mask` and then a `move_mask`.
   #[must_use]

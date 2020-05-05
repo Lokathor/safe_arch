@@ -3432,7 +3432,6 @@ impl Not for m128i {
   }
 }
 
-#[cfg(feature = "partial_eq")]
 impl PartialEq for m128i {
   /// Not a direct intrinsic, this is a `cmp_eq_mask_i8_m128i` and then a
   /// `move_mask_i8_m128i`.
@@ -3444,5 +3443,4 @@ impl PartialEq for m128i {
   }
 }
 /// Unlike with the floating types, ints have absolute equality.
-#[cfg(feature = "partial_eq")]
 impl Eq for m128i {}
