@@ -5,24 +5,19 @@ use super::*;
 /// Lanewise `a + b` with lanes as `i8`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m128i::from(
-///   [0_i8, 1, 2, 3, 4, 5, 6, 7,
-///   8, 9, 10, 11, 12, 13, 14, 15]
-/// );
-/// let b = m128i::from(
-///   [0_i8, 11, 2, 13, 4, 15, 6, 17,
-///   8, 19, -20, 21, 22, -23, 24, 127]
-/// );
+/// let a =
+///   m128i::from([0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+/// let b = m128i::from([
+///   0_i8, 11, 2, 13, 4, 15, 6, 17, 8, 19, -20, 21, 22, -23, 24, 127,
+/// ]);
 /// let c: [i8; 16] = add_i8_m128i(a, b).into();
 /// assert_eq!(
 ///   c,
-///   [0, 12, 4, 16, 8, 20, 12, 24, 16,
-///   28, -10, 32, 34, -10, 38, -114]
+///   [0, 12, 4, 16, 8, 20, 12, 24, 16, 28, -10, 32, 34, -10, 38, -114]
 /// );
 /// ```
 #[must_use]
 #[inline(always)]
-#[rustfmt::skip]
 pub fn add_i8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_add_epi8(a.0, b.0) })
 }
@@ -425,24 +420,16 @@ pub fn cast_to_m128_from_m128i(a: m128i) -> m128 {
 /// All bits 1 for true (`-1`), all bit 0 for false (`0`).
 /// ```
 /// # use safe_arch::*;
-/// let a = m128i::from(
-///   [0_i8, 1, 2, 3, 4, 5, 6, 7,
-///   8, 9, 10, 11, 12, 13, 14, 127]
-/// );
-/// let b = m128i::from(
-///   [0_i8, 11, 2, 13, 4, 15, 6, 17,
-///   8, 19, -20, 21, 22, -23, 24, 127]
-/// );
+/// let a =
+///   m128i::from([0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127]);
+/// let b = m128i::from([
+///   0_i8, 11, 2, 13, 4, 15, 6, 17, 8, 19, -20, 21, 22, -23, 24, 127,
+/// ]);
 /// let c: [i8; 16] = cmp_eq_mask_i8_m128i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [-1, 0, -1, 0,-1, 0, -1, 0, -1,
-///   0, 0, 0, 0, 0, 0, -1]
-/// );
+/// assert_eq!(c, [-1, 0, -1, 0, -1, 0, -1, 0, -1, 0, 0, 0, 0, 0, 0, -1]);
 /// ```
 #[must_use]
 #[inline(always)]
-#[rustfmt::skip]
 pub fn cmp_eq_mask_i8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_cmpeq_epi8(a.0, b.0) })
 }
@@ -548,24 +535,16 @@ pub fn cmp_ge_mask_m128d_s(a: m128d, b: m128d) -> m128d {
 /// All bits 1 for true (`-1`), all bit 0 for false (`0`).
 /// ```
 /// # use safe_arch::*;
-/// let a = m128i::from(
-///   [1_i8, 1, 20, 3, 40, 5, 60, 7, 80,
-///   9, 10, 11, 12, 13, 14, 127]
-/// );
-/// let b = m128i::from(
-///   [0_i8, 11, 2, 13, 4, 15, 6, 17,
-///   8, 19, -20, 21, 22, -23, 24, 120]
-/// );
+/// let a =
+///   m128i::from([1_i8, 1, 20, 3, 40, 5, 60, 7, 80, 9, 10, 11, 12, 13, 14, 127]);
+/// let b = m128i::from([
+///   0_i8, 11, 2, 13, 4, 15, 6, 17, 8, 19, -20, 21, 22, -23, 24, 120,
+/// ]);
 /// let c: [i8; 16] = cmp_gt_mask_i8_m128i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [-1, 0, -1, 0,-1, 0, -1, 0, -1,
-///   0, -1, 0, 0, -1, 0, -1]
-/// );
+/// assert_eq!(c, [-1, 0, -1, 0, -1, 0, -1, 0, -1, 0, -1, 0, 0, -1, 0, -1]);
 /// ```
 #[must_use]
 #[inline(always)]
-#[rustfmt::skip]
 pub fn cmp_gt_mask_i8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_cmpgt_epi8(a.0, b.0) })
 }
@@ -671,24 +650,16 @@ pub fn cmp_le_mask_m128d_s(a: m128d, b: m128d) -> m128d {
 /// All bits 1 for true (`-1`), all bit 0 for false (`0`).
 /// ```
 /// # use safe_arch::*;
-/// let a = m128i::from(
-///   [1_i8, 1, 20, 3, 40, 5, 60, 7, 80,
-///   9, 10, 11, 12, 13, 14, 127]
-/// );
-/// let b = m128i::from(
-///   [0_i8, 11, 2, 13, 4, 15, 6, 17,
-///   8, 19, -20, 21, 22, -23, 24, 120]
-/// );
+/// let a =
+///   m128i::from([1_i8, 1, 20, 3, 40, 5, 60, 7, 80, 9, 10, 11, 12, 13, 14, 127]);
+/// let b = m128i::from([
+///   0_i8, 11, 2, 13, 4, 15, 6, 17, 8, 19, -20, 21, 22, -23, 24, 120,
+/// ]);
 /// let c: [i8; 16] = cmp_lt_mask_i8_m128i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [0, -1, 0,-1,0, -1, 0, -1, 0,
-///   -1, 0, -1, -1, 0, -1, 0]
-/// );
+/// assert_eq!(c, [0, -1, 0, -1, 0, -1, 0, -1, 0, -1, 0, -1, -1, 0, -1, 0]);
 /// ```
 #[must_use]
 #[inline(always)]
-#[rustfmt::skip]
 pub fn cmp_lt_mask_i8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_cmplt_epi8(a.0, b.0) })
 }
@@ -1583,6 +1554,7 @@ pub fn load_unaligned_m128d(a: &[f64; 2]) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
+#[allow(clippy::cast_ptr_alignment)]
 pub fn load_unaligned_m128i(a: &[u8; 16]) -> m128i {
   m128i(unsafe { _mm_loadu_si128(a as *const [u8; 16] as *const __m128i) })
 }
@@ -1605,24 +1577,16 @@ pub fn mul_i16_horizontal_add_m128i(a: m128i, b: m128i) -> m128i {
 /// Lanewise `max(a, b)` with lanes as `u8`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m128i::from(
-///   [0_u8, 1, 2, 3, 4, 5, 6, 7,
-///   8, 9, 10, 11, 12, 13, 14, 15]
-/// );
-/// let b = m128i::from(
-///   [0_u8, 11, 2, 13, 4, 15, 6, 17,
-///   8, 19, 20, 21, 22, 23, 24, 127]
-/// );
+/// let a =
+///   m128i::from([0_u8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+/// let b = m128i::from([
+///   0_u8, 11, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127,
+/// ]);
 /// let c: [u8; 16] = max_u8_m128i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [0, 11, 2, 13, 4, 15, 6, 17,
-///   8, 19, 20, 21, 22, 23, 24, 127]
-/// );
+/// assert_eq!(c, [0, 11, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127]);
 /// ```
 #[must_use]
 #[inline(always)]
-#[rustfmt::skip]
 pub fn max_u8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_max_epu8(a.0, b.0) })
 }
@@ -1672,24 +1636,15 @@ pub fn max_m128d_s(a: m128d, b: m128d) -> m128d {
 /// Lanewise `min(a, b)` with lanes as `u8`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m128i::from(
-///   [0_u8, 1, 2, 3, 4, 5, 6, 7,
-///   8, 9, 10, 11, 12, 13, 14, 15]
-/// );
-/// let b = m128i::from(
-///   [0_u8, 11, 2, 13, 4, 15, 6, 17,
-///   8, 0, 20, 0, 22, 0, 24, 0]
-/// );
+/// let a =
+///   m128i::from([0_u8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+/// let b =
+///   m128i::from([0_u8, 11, 2, 13, 4, 15, 6, 17, 8, 0, 20, 0, 22, 0, 24, 0]);
 /// let c: [u8; 16] = min_u8_m128i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [0_u8, 1, 2, 3, 4, 5, 6, 7,
-///   8, 0, 10, 0, 12, 0, 14, 0]
-/// );
+/// assert_eq!(c, [0_u8, 1, 2, 3, 4, 5, 6, 7, 8, 0, 10, 0, 12, 0, 14, 0]);
 /// ```
 #[must_use]
 #[inline(always)]
-#[rustfmt::skip]
 pub fn min_u8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_min_epu8(a.0, b.0) })
 }
@@ -1957,97 +1912,883 @@ pub fn pack_i16_to_u8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_packus_epi16(a.0, b.0) })
 }
 
-// _mm_sad_epu8
+/// Compute "sum of `u8` absolute differences".
+///
+/// * `u8` lanewise `abs(a - b)`, producing `u8` intermediate values.
+/// * Sum the first eight and second eight values.
+/// * Place into the low 16 bits of two `u64` lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([
+///   0_u8, 11, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127,
+/// ]);
+/// let b = m128i::from([
+///   20_u8, 110, 250, 103, 34, 105, 60, 217, 8, 19, 210, 201, 202, 203, 204, 127,
+/// ]);
+/// let c: [u64; 2] = sum_of_u8_abs_diff_m128i(a, b).into();
+/// assert_eq!(c, [831_u64, 910]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn sum_of_u8_abs_diff_m128i(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_sad_epu8(a.0, b.0) })
+}
 
-// _mm_set_epi16
+/// Sets the args into an `m128i`, first arg is the high lane.
+/// ```
+/// # use safe_arch::*;
+/// let a =
+///   m128i::from([15_i8, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
+/// let b = set_i8_m128i(0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
+/// assert_eq!(<[i8; 16]>::from(a), <[i8; 16]>::from(b));
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn set_i8_m128i(
+  a: i8,
+  b: i8,
+  c: i8,
+  d: i8,
+  e: i8,
+  f: i8,
+  g: i8,
+  h: i8,
+  i: i8,
+  j: i8,
+  k: i8,
+  l: i8,
+  m: i8,
+  n: i8,
+  o: i8,
+  p: i8,
+) -> m128i {
+  m128i(unsafe { _mm_set_epi8(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) })
+}
 
-// _mm_set_epi32
+/// Sets the args into an `m128i`, first arg is the high lane.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([7_i16, 6, 5, 4, 3, 2, 1, 0]);
+/// let b = set_i16_m128i(0_i16, 1, 2, 3, 4, 5, 6, 7);
+/// assert_eq!(<[i16; 8]>::from(a), <[i16; 8]>::from(b));
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn set_i16_m128i(
+  a: i16,
+  b: i16,
+  c: i16,
+  d: i16,
+  e: i16,
+  f: i16,
+  g: i16,
+  h: i16,
+) -> m128i {
+  m128i(unsafe { _mm_set_epi16(a, b, c, d, e, f, g, h) })
+}
 
-// _mm_set_epi64
+/// Sets the args into an `m128i`, first arg is the high lane.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([3, 2, 1, 0]);
+/// let b = set_i32_m128i(0, 1, 2, 3);
+/// assert_eq!(<[i32; 4]>::from(a), <[i32; 4]>::from(b));
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn set_i32_m128i(a: i32, b: i32, c: i32, d: i32) -> m128i {
+  m128i(unsafe { _mm_set_epi32(a, b, c, d) })
+}
 
-// _mm_set_epi64x
+/// Sets the args into an `m128i`, first arg is the high lane.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i64, 0]);
+/// let b = set_i64_m128i(0, 1);
+/// assert_eq!(<[i64; 2]>::from(a), <[i64; 2]>::from(b));
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn set_i64_m128i(a: i64, b: i64) -> m128i {
+  m128i(unsafe { _mm_set_epi64x(a, b) })
+}
 
-// _mm_set_epi8
+/// Sets the args into an `m128d`, first arg is the high lane.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 0.0]);
+/// let b = set_m128d(0.0, 1.0);
+/// assert_eq!(a.to_array(), b.to_array());
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn set_m128d(a: f64, b: f64) -> m128d {
+  m128d(unsafe { _mm_set_pd(a, b) })
+}
 
-// _mm_set_pd
+/// Sets the args into the low lane of a `m128d`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 0.0]);
+/// let b = set_m128d_s(1.0);
+/// assert_eq!(a.to_array(), b.to_array());
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn set_m128d_s(a: f64) -> m128d {
+  m128d(unsafe { _mm_set_sd(a) })
+}
 
-// _mm_set_pd1
+/// Splats the args into both lanes of the `m128d`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 1.0]);
+/// let b = splat_m128d(1.0);
+/// assert_eq!(a.to_array(), b.to_array());
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn splat_m128d(a: f64) -> m128d {
+  m128d(unsafe { _mm_set1_pd(a) })
+}
 
-// _mm_set_sd
+/// Splats the `i8` to all lanes of the `m128i`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
+/// let b = splat_i8_m128i(1);
+/// assert_eq!(<[i8; 16]>::from(a), <[i8; 16]>::from(a));
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn splat_i8_m128i(i: i8) -> m128i {
+  m128i(unsafe { _mm_set1_epi8(i) })
+}
 
-// _mm_set1_epi16
+/// Splats the `i16` to all lanes of the `m128i`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i16, 1, 1, 1, 1, 1, 1, 1]);
+/// let b = splat_i16_m128i(1);
+/// assert_eq!(<[i16; 8]>::from(a), <[i16; 8]>::from(a));
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn splat_i16_m128i(i: i16) -> m128i {
+  m128i(unsafe { _mm_set1_epi16(i) })
+}
 
-// _mm_set1_epi32
+/// Splats the `i32` to all lanes of the `m128i`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1, 1, 1, 1]);
+/// let b = splat_i32_m128i(1);
+/// assert_eq!(<[i32; 4]>::from(a), <[i32; 4]>::from(a));
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn splat_i32_m128i(i: i32) -> m128i {
+  m128i(unsafe { _mm_set1_epi32(i) })
+}
 
-// _mm_set1_epi64
+/// Splats the `i64` to both lanes of the `m128i`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i64, 1]);
+/// let b = splat_i64_m128i(1);
+/// assert_eq!(<[i64; 2]>::from(a), <[i64; 2]>::from(a));
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn splat_i64_m128i(i: i64) -> m128i {
+  m128i(unsafe { _mm_set1_epi64x(i) })
+}
 
-// _mm_set1_epi64x
+/// Sets the args into an `m128i`, first arg is the low lane.
+/// ```
+/// # use safe_arch::*;
+/// let a =
+///   m128i::from([0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+/// let b = set_reversed_i8_m128i(
+///   0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+/// );
+/// assert_eq!(<[i8; 16]>::from(a), <[i8; 16]>::from(b));
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn set_reversed_i8_m128i(
+  a: i8,
+  b: i8,
+  c: i8,
+  d: i8,
+  e: i8,
+  f: i8,
+  g: i8,
+  h: i8,
+  i: i8,
+  j: i8,
+  k: i8,
+  l: i8,
+  m: i8,
+  n: i8,
+  o: i8,
+  p: i8,
+) -> m128i {
+  m128i(unsafe {
+    _mm_setr_epi8(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p)
+  })
+}
 
-// _mm_set1_epi8
+/// Sets the args into an `m128i`, first arg is the low lane.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([0_i16, 1, 2, 3, 4, 5, 6, 7]);
+/// let b = set_reversed_i16_m128i(0_i16, 1, 2, 3, 4, 5, 6, 7);
+/// assert_eq!(<[i16; 8]>::from(a), <[i16; 8]>::from(b));
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn set_reversed_i16_m128i(
+  a: i16,
+  b: i16,
+  c: i16,
+  d: i16,
+  e: i16,
+  f: i16,
+  g: i16,
+  h: i16,
+) -> m128i {
+  m128i(unsafe { _mm_setr_epi16(a, b, c, d, e, f, g, h) })
+}
 
-// _mm_set1_pd
+/// Sets the args into an `m128i`, first arg is the low lane.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([0, 1, 2, 3]);
+/// let b = set_reversed_i32_m128i(0, 1, 2, 3);
+/// assert_eq!(<[i32; 4]>::from(a), <[i32; 4]>::from(b));
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn set_reversed_i32_m128i(a: i32, b: i32, c: i32, d: i32) -> m128i {
+  m128i(unsafe { _mm_setr_epi32(a, b, c, d) })
+}
 
-// _mm_setr_epi16
+/// Sets the args into an `m128d`, first arg is the low lane.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([0.0, 1.0]);
+/// let b = set_reversed_m128d(0.0, 1.0);
+/// assert_eq!(a.to_array(), b.to_array());
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn set_reversed_m128d(a: f64, b: f64) -> m128d {
+  m128d(unsafe { _mm_setr_pd(a, b) })
+}
 
-// _mm_setr_epi32
+/// All lanes zero.
+/// ```
+/// # use safe_arch::*;
+/// let a = zeroed_m128i();
+/// assert_eq!(u128::from(a), 0);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn zeroed_m128i() -> m128i {
+  m128i(unsafe { _mm_setzero_si128() })
+}
 
-// _mm_setr_epi64
+/// Both lanes zero.
+/// ```
+/// # use safe_arch::*;
+/// let a = zeroed_m128d();
+/// assert_eq!(a.to_array(), [0.0, 0.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn zeroed_m128d() -> m128d {
+  m128d(unsafe { _mm_setzero_pd() })
+}
 
-// _mm_setr_epi8
+/// Shuffles the `i32` lanes around.
+///
+/// This is a macro because the shuffle pattern must be a compile time constant,
+/// and Rust doesn't currently support that for functions.
+///
+/// * `$a` must obviously be an `m128i` expression.
+/// * Each of the lane selection values is a lane index (`0..4`). They can be
+///   any integer type as long as all four lane indexes are the same type. Out
+///   of bounds index values are wrapped to just the low 2 bits.
+/// * The lane selection values are combined into a private `const` which is
+///   computed at compile time and then used at runtime. This means that you can
+///   use literals, but you can also use the names of other constants or even a
+///   `const fn` expression, if that is somehow is useful to you.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([6, 7, 8, 9]);
+/// //
+/// let c = shuffle_i32_m128i!(a, 0, 0, 0, 0);
+/// assert_eq!(<[i32; 4]>::from(c), [6, 6, 6, 6]);
+/// //
+/// let c = shuffle_i32_m128i!(a, 0, 1, 2, 3);
+/// assert_eq!(<[i32; 4]>::from(c), [6, 7, 8, 9]);
+/// //
+/// let c = shuffle_i32_m128i!(a, 0, 2, 2, 1);
+/// assert_eq!(<[i32; 4]>::from(c), [6, 8, 8, 7]);
+/// ```
+#[macro_export]
+macro_rules! shuffle_i32_m128i {
+  ($a:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
+    const MASK: i32 =
+      (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($e & 0b11) << 6)
+        as i32;
+    let a: m128i = $a;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_shuffle_epi32;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_shuffle_epi32;
+    m128i(unsafe { _mm_shuffle_epi32(a.0, MASK) })
+  }};
+}
 
-// _mm_setr_pd
+/// Shuffles the lanes around.
+///
+/// This is a macro because the shuffle pattern must be a compile time constant,
+/// and Rust doesn't currently support that for functions.
+///
+/// ## Two `m128d` Inputs
+/// You can provide two `m128d` arguments, in which case:
+/// * The lane lane of the output comes from `$a`, as picked by `$z` (Zero)
+/// * The high lane of the output comes from `$b`, as picked by `$o` (One)
+/// * `$a` and `$b` must obviously be `m128d` expressions.
+/// * Both of the lane selection values is a lane index (`0..2`). They can be
+///   any integer type as long as they're same type. Out of bounds index values
+///   are wrapped to just the low bit.
+/// * The lane selection values are combined into a private `const` which is
+///   computed at compile time and then used at runtime. This means that you can
+///   use literals, but you can also use the names of other constants or even a
+///   `const fn` expression, if that is somehow is useful to you.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 2.0]);
+/// let b = m128d::from_array([3.0, 4.0]);
+/// //
+/// let c = shuffle_m128d!(a, b, 0, 0).to_array();
+/// assert_eq!(c, [1.0, 3.0]);
+/// //
+/// let c = shuffle_m128d!(a, b, 0, 1).to_array();
+/// assert_eq!(c, [1.0, 4.0]);
+/// ```
+///
+/// ## One `m128` Input
+/// You can provide one `m128d` argument, in which case the above variant is
+/// called with `$a` as the input to both sides of the shuffle (note that any
+/// potential side effects of evaluating `$a` are executed only once).
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 2.0]);
+/// //
+/// let c = shuffle_m128d!(a, 0, 0).to_array();
+/// assert_eq!(c, [1.0, 1.0]);
+/// //
+/// let c = shuffle_m128d!(a, 0, 1).to_array();
+/// assert_eq!(c, [1.0, 2.0]);
+/// ```
+#[macro_export]
+macro_rules! shuffle_m128d {
+  ($a:expr, $b:expr, $z:expr, $o:expr) => {{
+    const MASK: i32 = (($z & 0b1) | ($o & 0b1) << 1) as i32;
+    let a: m128d = $a;
+    let b: m128d = $b;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_shuffle_pd;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_shuffle_pd;
+    m128d(unsafe { _mm_shuffle_pd(a.0, b.0, MASK) })
+  }};
+  ($a:expr, $z:expr, $o:expr) => {{
+    // Note(Lokathor): this makes sure that any side-effecting expressions we
+    // get as input are only executed once, then that expression output goes
+    // into both sides of the shuffle.
+    let a: m128d = $a;
+    shuffle_m128d!(a, a, $z, $o)
+  }};
+}
 
-// _mm_setzero_pd
+/// Shuffles the higher `i16` lanes, low lanes unaffected.
+///
+/// This is a macro because the shuffle pattern must be a compile time constant,
+/// and Rust doesn't currently support that for functions.
+///
+/// * `$a` must obviously be an `m128i` expression.
+/// * Each of the lane selection values is a lane index (`0..4`) within the high
+///   lanes (eg: 0 to this macro is the 5th `i16` lane ). They can be any
+///   integer type as long as all four lane indexes are the same type. Out of
+///   bounds index values are wrapped to just the low 2 bits.
+/// * The lane selection values are combined into a private `const` which is
+///   computed at compile time and then used at runtime. This means that you can
+///   use literals, but you can also use the names of other constants or even a
+///   `const fn` expression, if that is somehow is useful to you.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i16, 2, 3, 4, 5, 6, 7, 8]);
+/// //
+/// let c = shuffle_i16_high_lanes_m128i!(a, 0, 0, 0, 0);
+/// assert_eq!(<[i16; 8]>::from(c), [1_i16, 2, 3, 4, 5, 5, 5, 5]);
+/// //
+/// let c = shuffle_i16_high_lanes_m128i!(a, 0, 1, 2, 3);
+/// assert_eq!(<[i16; 8]>::from(c), [1_i16, 2, 3, 4, 5, 6, 7, 8]);
+/// //
+/// let c = shuffle_i16_high_lanes_m128i!(a, 0, 2, 2, 1);
+/// assert_eq!(<[i16; 8]>::from(c), [1_i16, 2, 3, 4, 5, 7, 7, 6]);
+/// ```
+#[macro_export]
+macro_rules! shuffle_i16_high_lanes_m128i {
+  ($a:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
+    const MASK: i32 =
+      (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($e & 0b11) << 6)
+        as i32;
+    let a: m128i = $a;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_shufflehi_epi16;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_shufflehi_epi16;
+    m128i(unsafe { _mm_shufflehi_epi16(a.0, MASK) })
+  }};
+}
 
-// _mm_setzero_si128
+/// Shuffles the lower `i16` lanes, high lanes unaffected.
+///
+/// This is a macro because the shuffle pattern must be a compile time constant,
+/// and Rust doesn't currently support that for functions.
+///
+/// * `$a` must obviously be an `m128i` expression.
+/// * Each of the lane selection values is a lane index (`0..4`). They can be
+///   any integer type as long as all four lane indexes are the same type. Out
+///   of bounds index values are wrapped to just the low 2 bits.
+/// * The lane selection values are combined into a private `const` which is
+///   computed at compile time and then used at runtime. This means that you can
+///   use literals, but you can also use the names of other constants or even a
+///   `const fn` expression, if that is somehow is useful to you.
+///
+/// ```
+/// # use safe_arch::*;
+/// # use safe_arch::shuffle_i32_m128i;
+/// let a = m128i::from([1_i16, 2, 3, 4, 5, 6, 7, 8]);
+/// //
+/// let c = shuffle_i16_low_lanes_m128i!(a, 0, 0, 0, 0);
+/// assert_eq!(<[i16; 8]>::from(c), [1, 1, 1, 1, 5, 6, 7, 8_i16]);
+/// //
+/// let c = shuffle_i16_low_lanes_m128i!(a, 0, 1, 2, 3);
+/// assert_eq!(<[i16; 8]>::from(c), [1, 2, 3, 4, 5, 6, 7, 8_i16]);
+/// //
+/// let c = shuffle_i16_low_lanes_m128i!(a, 0, 2, 2, 1);
+/// assert_eq!(<[i16; 8]>::from(c), [1, 3, 3, 2, 5, 6, 7, 8_i16]);
+/// ```
+#[macro_export]
+macro_rules! shuffle_i16_low_lanes_m128i {
+  ($a:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
+    const MASK: i32 =
+      (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($e & 0b11) << 6)
+        as i32;
+    let a: m128i = $a;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_shufflelo_epi16;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_shufflelo_epi16;
+    m128i(unsafe { _mm_shufflelo_epi16(a.0, MASK) })
+  }};
+}
 
-// _mm_shuffle_epi32
+/// Shift each `i16` lane to the left by the `count` in the lower `i64` lane.
+///
+/// New bits are 0s.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i16, 2, 3, 4, -1, -2, -3, -4]);
+/// let b = m128i::from([3_i64, 0]);
+/// let c: [i16; 8] = shift_left_logical_i16_m128i(a, b).into();
+/// assert_eq!(
+///   c,
+///   [1_i16 << 3, 2 << 3, 3 << 3, 4 << 3, -1 << 3, -2 << 3, -3 << 3, -4 << 3]
+/// );
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn shift_left_logical_i16_m128i(a: m128i, count: m128i) -> m128i {
+  m128i(unsafe { _mm_sll_epi16(a.0, count.0) })
+}
 
-// _mm_shuffle_pd
+/// Shift each `i32` lane to the left by the `count` in the lower `i64` lane.
+///
+/// New bits are 0s.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i32, 2, -3, -4]);
+/// let b = m128i::from([3_i64, 0]);
+/// let c: [i32; 4] = shift_left_logical_i32_m128i(a, b).into();
+/// assert_eq!(c, [1 << 3, 2 << 3, -3 << 3, -4 << 3]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn shift_left_logical_i32_m128i(a: m128i, count: m128i) -> m128i {
+  m128i(unsafe { _mm_sll_epi32(a.0, count.0) })
+}
 
-// _mm_shufflehi_epi16
+/// Shift each `i64` lane to the left by the `count` in the lower `i64` lane.
+///
+/// New bits are 0s.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i64, -2]);
+/// let b = m128i::from([3_i64, 0]);
+/// let c: [i64; 2] = shift_left_logical_i64_m128i(a, b).into();
+/// assert_eq!(c, [1 << 3, -2 << 3]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn shift_left_logical_i64_m128i(a: m128i, count: m128i) -> m128i {
+  m128i(unsafe { _mm_sll_epi64(a.0, count.0) })
+}
 
-// _mm_shufflelo_epi16
+/// Shifts all `i16` lanes left by an immediate.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i16, 2, 3, 4, -1, -2, -3, -4]);
+/// let c: [i16; 8] = shift_left_logical_i16_immediate_m128i!(a, 3).into();
+/// assert_eq!(
+///   c,
+///   [1_i16 << 3, 2 << 3, 3 << 3, 4 << 3, -1 << 3, -2 << 3, -3 << 3, -4 << 3]
+/// );
+/// ```
+#[macro_export]
+macro_rules! shift_left_logical_i16_immediate_m128i {
+  ($a:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_slli_epi16;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_slli_epi16;
+    m128i(unsafe { _mm_slli_epi16(a.0, IMM) })
+  }};
+}
 
-// _mm_sll_epi16
+/// Shifts all `i32` lanes left by an immediate.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1, 2, -3, -4]);
+/// let c: [i32; 4] = shift_left_logical_i32_immediate_m128i!(a, 3).into();
+/// assert_eq!(c, [1 << 3, 2 << 3, -3 << 3, -4 << 3]);
+/// ```
+#[macro_export]
+macro_rules! shift_left_logical_i32_immediate_m128i {
+  ($a:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_slli_epi32;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_slli_epi32;
+    m128i(unsafe { _mm_slli_epi32(a.0, IMM) })
+  }};
+}
 
-// _mm_sll_epi32
+/// Shifts both `i64` lanes left by an immediate.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i64, -2]);
+/// let c: [i64; 2] = shift_left_logical_i64_immediate_m128i!(a, 3).into();
+/// assert_eq!(c, [1_i64 << 3, -2 << 3]);
+/// ```
+#[macro_export]
+macro_rules! shift_left_logical_i64_immediate_m128i {
+  ($a:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_slli_epi64;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_slli_epi64;
+    m128i(unsafe { _mm_slli_epi64(a.0, IMM) })
+  }};
+}
 
-// _mm_sll_epi64
+/// Lanewise `sqrt(a)`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([25.0, 16.0]);
+/// let b = sqrt_m128d(a).to_array();
+/// assert_eq!(b, [5.0, 4.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn sqrt_m128d(a: m128d) -> m128d {
+  m128d(unsafe { _mm_sqrt_pd(a.0) })
+}
 
-// _mm_slli_epi16
+/// Low lane `sqrt(b)`, upper lane is unchanged from `a`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 2.0]);
+/// let b = m128d::from_array([25.0, 4.0]);
+/// let c = sqrt_m128d_s(a, b);
+/// assert_eq!(c.to_array(), [5.0, 2.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn sqrt_m128d_s(a: m128d, b: m128d) -> m128d {
+  m128d(unsafe { _mm_sqrt_sd(a.0, b.0) })
+}
 
-// _mm_slli_epi32
+/// Shift each `i16` lane to the right by the `count` in the lower `i64` lane.
+///
+/// New bits are the sign bit.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i16, 2, 3, 4, -1, -2, -3, -4]);
+/// let b = m128i::from([3_i64, 0]);
+/// let c: [i16; 8] = shift_right_arithmetic_i16_m128i(a, b).into();
+/// assert_eq!(
+///   c,
+///   [1_i16 >> 3, 2 >> 3, 3 >> 3, 4 >> 3, -1 >> 3, -2 >> 3, -3 >> 3, -4 >> 3]
+/// );
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn shift_right_arithmetic_i16_m128i(a: m128i, count: m128i) -> m128i {
+  m128i(unsafe { _mm_sra_epi16(a.0, count.0) })
+}
 
-// _mm_slli_epi64
+/// Shift each `i32` lane to the right by the `count` in the lower `i64` lane.
+///
+/// New bits are the sign bit.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i32, 2, -3, -4]);
+/// let b = m128i::from([3_i64, 0]);
+/// let c: [i32; 4] = shift_right_arithmetic_i32_m128i(a, b).into();
+/// assert_eq!(c, [1 >> 3, 2 >> 3, -3 >> 3, -4 >> 3]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn shift_right_arithmetic_i32_m128i(a: m128i, count: m128i) -> m128i {
+  m128i(unsafe { _mm_sra_epi32(a.0, count.0) })
+}
 
-// _mm_slli_si128
+/// Shifts all `i16` lanes right by an immediate.
+///
+/// New bits are the sign bit.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i16, 2, 3, 4, -1, -2, -3, -4]);
+/// let c: [i16; 8] = shift_right_arithmetic_i16_immediate_m128i!(a, 3).into();
+/// assert_eq!(
+///   c,
+///   [1_i16 >> 3, 2 >> 3, 3 >> 3, 4 >> 3, -1 >> 3, -2 >> 3, -3 >> 3, -4 >> 3]
+/// );
+/// ```
+#[macro_export]
+macro_rules! shift_right_arithmetic_i16_immediate_m128i {
+  ($a:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_srai_epi16;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_srai_epi16;
+    m128i(unsafe { _mm_srai_epi16(a.0, IMM) })
+  }};
+}
 
-// _mm_sqrt_pd
+/// Shifts all `i32` lanes right by an immediate.
+///
+/// New bits are the sign bit.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1, 2, -3, -4]);
+/// let c: [i32; 4] = shift_right_arithmetic_i32_immediate_m128i!(a, 3).into();
+/// assert_eq!(c, [1 >> 3, 2 >> 3, -3 >> 3, -4 >> 3]);
+/// ```
+#[macro_export]
+macro_rules! shift_right_arithmetic_i32_immediate_m128i {
+  ($a:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_srai_epi32;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_srai_epi32;
+    m128i(unsafe { _mm_srai_epi32(a.0, IMM) })
+  }};
+}
 
-// _mm_sqrt_sd
+/// Shift each `i16` lane to the right by the `count` in the lower `i64` lane.
+///
+/// New bits are 0s.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i16, 2, 3, 4, -1, -2, -3, -4]);
+/// let b = m128i::from([3_i64, 0]);
+/// let c: [i16; 8] = shift_right_logical_i16_m128i(a, b).into();
+/// assert_eq!(
+///   c,
+///   [
+///     1_i16 >> 3,
+///     2 >> 3,
+///     3 >> 3,
+///     4 >> 3,
+///     (((-1_i16) as u16) >> 3) as i16,
+///     (((-2_i16) as u16) >> 3) as i16,
+///     (((-3_i16) as u16) >> 3) as i16,
+///     (((-4_i16) as u16) >> 3) as i16,
+///   ]
+/// );
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn shift_right_logical_i16_m128i(a: m128i, count: m128i) -> m128i {
+  m128i(unsafe { _mm_srl_epi16(a.0, count.0) })
+}
 
-// _mm_sra_epi16
+/// Shift each `i32` lane to the right by the `count` in the lower `i64` lane.
+///
+/// New bits are 0s.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i32, 2, -3, -4]);
+/// let b = m128i::from([3_i64, 0]);
+/// let c: [i32; 4] = shift_right_logical_i32_m128i(a, b).into();
+/// assert_eq!(
+///   c,
+///   [
+///     1 >> 3,
+///     2 >> 3,
+///     ((-3_i32) as u32 >> 3) as i32,
+///     ((-4_i32) as u32 >> 3) as i32,
+///   ]
+/// );
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn shift_right_logical_i32_m128i(a: m128i, count: m128i) -> m128i {
+  m128i(unsafe { _mm_srl_epi32(a.0, count.0) })
+}
 
-// _mm_sra_epi32
+/// Shift each `i64` lane to the right by the `count` in the lower `i64` lane.
+///
+/// New bits are 0s.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i64, -2]);
+/// let b = m128i::from([3_i64, 0]);
+/// let c: [i64; 2] = shift_right_logical_i64_m128i(a, b).into();
+/// assert_eq!(c, [1 >> 3, (((-2_i64) as u64) >> 3) as i64]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn shift_right_logical_i64_m128i(a: m128i, count: m128i) -> m128i {
+  m128i(unsafe { _mm_srl_epi64(a.0, count.0) })
+}
 
-// _mm_srai_epi16
+/// Shifts all `i16` lanes right by an immediate.
+///
+/// New bits are 0s.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i16, 2, 3, 4, -1, -2, -3, -4]);
+/// let c: [i16; 8] = shift_right_logical_i16_immediate_m128i!(a, 3).into();
+/// assert_eq!(
+///   c,
+///   [
+///     1_i16 >> 3,
+///     2 >> 3,
+///     3 >> 3,
+///     4 >> 3,
+///     (((-1_i16) as u16) >> 3) as i16,
+///     (((-2_i16) as u16) >> 3) as i16,
+///     (((-3_i16) as u16) >> 3) as i16,
+///     (((-4_i16) as u16) >> 3) as i16,
+///   ]
+/// );
+/// ```
+#[macro_export]
+macro_rules! shift_right_logical_i16_immediate_m128i {
+  ($a:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_srli_epi16;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_srli_epi16;
+    m128i(unsafe { _mm_srli_epi16(a.0, IMM) })
+  }};
+}
 
-// _mm_srai_epi32
+/// Shifts all `i32` lanes right by an immediate.
+///
+/// New bits are 0s.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1, 2, -3, -4]);
+/// let c: [i32; 4] = shift_right_logical_i32_immediate_m128i!(a, 3).into();
+/// assert_eq!(
+///   c,
+///   [
+///     1 >> 3,
+///     2 >> 3,
+///     ((-3_i32) as u32 >> 3) as i32,
+///     ((-4_i32) as u32 >> 3) as i32,
+///   ]
+/// );
+/// ```
+#[macro_export]
+macro_rules! shift_right_logical_i32_immediate_m128i {
+  ($a:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_srli_epi32;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_srli_epi32;
+    m128i(unsafe { _mm_srli_epi32(a.0, IMM) })
+  }};
+}
 
-// _mm_srl_epi16
-
-// _mm_srl_epi32
-
-// _mm_srl_epi64
-
-// _mm_srli_epi16
-
-// _mm_srli_epi32
-
-// _mm_srli_epi64
-
-// _mm_srli_si128
+/// Shifts both `i64` lanes right by an immediate.
+///
+/// New bits are 0s.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_i64, -2]);
+/// let c: [i64; 2] = shift_right_logical_i64_immediate_m128i!(a, 3).into();
+/// assert_eq!(c, [1_i64 >> 3, (((-2_i64) as u64) >> 3) as i64]);
+/// ```
+#[macro_export]
+macro_rules! shift_right_logical_i64_immediate_m128i {
+  ($a:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_srli_epi64;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_srli_epi64;
+    m128i(unsafe { _mm_srli_epi64(a.0, IMM) })
+  }};
+}
 
 // _mm_store_pd
 

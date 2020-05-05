@@ -1,5 +1,5 @@
 #![no_std]
-//#![warn(missing_docs)]
+#![warn(missing_docs)]
 #![allow(unused_imports)]
 #![allow(clippy::transmute_ptr_to_ptr)]
 
@@ -15,11 +15,18 @@
 //!   whatever, which we do via the type system when necessary.
 //! * Some of them are absolutely not safe at all because it causes UB at the
 //!   LLVM level, so those things are not exposed here.
-//!
-//! This crate works purely via `cfg` and compile time feature selection, there
-//! are no runtime checks. This means that if you _do_ want to do runtime
-//! feature detection and then dynamically call an intrinsic if it happens to be
-//! available, then this crate sadly isn't for you.
+//! * Some of them are pointless to expose here because the `core` crate already
+//!   provides the same functionality in a cross-platform way, so we skip those.
+//! * This crate works purely via `cfg` and compile time feature selection,
+//!   there are no runtime checks added. This means that if you _do_ want to do
+//!   runtime feature detection and then dynamically call an intrinsic if it
+//!   happens to be available, then this crate sadly isn't for you.
+//! * This crate aims to be as _minimal_ as possible. Just exposing each
+//!   intrinsic as a safe function with an easier to understand name and some
+//!   minimal docs. Building higher level abstractions on top of the intrinsics
+//!   is the domain of other crates.
+//! * That said, each raw SIMD type is newtype'd as a wrapper (with a `pub`
+//!   field) so that better trait impls can be provided.
 //!
 //! ## Current Support
 //! As I said above, the crate is only Work In Progress status!

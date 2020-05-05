@@ -1000,7 +1000,6 @@ pub fn zeroed_m128() -> m128 {
 ///
 /// ```
 /// # use safe_arch::*;
-/// # use safe_arch::shuffle_m128;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([5.0, 6.0, 7.0, 8.0]);
 /// //
@@ -1266,7 +1265,6 @@ impl Add for m128 {
   }
 }
 impl AddAssign for m128 {
-  #[must_use]
   #[inline(always)]
   fn add_assign(&mut self, rhs: Self) {
     *self = *self + rhs;
@@ -1282,7 +1280,6 @@ impl BitAnd for m128 {
   }
 }
 impl BitAndAssign for m128 {
-  #[must_use]
   #[inline(always)]
   fn bitand_assign(&mut self, rhs: Self) {
     *self = *self & rhs;
@@ -1298,7 +1295,6 @@ impl BitOr for m128 {
   }
 }
 impl BitOrAssign for m128 {
-  #[must_use]
   #[inline(always)]
   fn bitor_assign(&mut self, rhs: Self) {
     *self = *self | rhs;
@@ -1314,7 +1310,6 @@ impl BitXor for m128 {
   }
 }
 impl BitXorAssign for m128 {
-  #[must_use]
   #[inline(always)]
   fn bitxor_assign(&mut self, rhs: Self) {
     *self = *self ^ rhs;
@@ -1330,7 +1325,6 @@ impl Div for m128 {
   }
 }
 impl DivAssign for m128 {
-  #[must_use]
   #[inline(always)]
   fn div_assign(&mut self, rhs: Self) {
     *self = *self / rhs;
@@ -1346,7 +1340,6 @@ impl Mul for m128 {
   }
 }
 impl MulAssign for m128 {
-  #[must_use]
   #[inline(always)]
   fn mul_assign(&mut self, rhs: Self) {
     *self = *self * rhs;
@@ -1385,7 +1378,6 @@ impl Sub for m128 {
   }
 }
 impl SubAssign for m128 {
-  #[must_use]
   #[inline(always)]
   fn sub_assign(&mut self, rhs: Self) {
     *self = *self - rhs;
@@ -1399,14 +1391,5 @@ impl PartialEq for m128 {
   #[inline(always)]
   fn eq(&self, other: &Self) -> bool {
     move_mask_m128(cmp_eq_mask_m128(*self, *other)) == 0b1111
-  }
-}
-
-impl From<f32> for m128 {
-  /// Uses [`splat_m128`].
-  #[must_use]
-  #[inline(always)]
-  fn from(f: f32) -> Self {
-    splat_m128(f)
   }
 }

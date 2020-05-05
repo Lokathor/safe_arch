@@ -22,6 +22,13 @@ use super::*;
 #[allow(non_camel_case_types)]
 pub struct m128d(pub __m128d);
 
+#[cfg(feature = "bytemuck")]
+unsafe impl bytemuck::Zeroable for m128d {}
+#[cfg(feature = "bytemuck")]
+unsafe impl bytemuck::Pod for m128d {}
+#[cfg(feature = "bytemuck")]
+unsafe impl bytemuck::TransparentWrapper<__m128d> for m128d {}
+
 #[test]
 fn test_m128_size_align() {
   assert_eq!(core::mem::size_of::<m128d>(), 16);
@@ -68,11 +75,6 @@ impl m128d {
     unsafe { core::mem::transmute(bits) }
   }
 }
-
-#[cfg(feature = "bytemuck")]
-unsafe impl bytemuck::Zeroed for m128d {}
-#[cfg(feature = "bytemuck")]
-unsafe impl bytemuck::Pod for m128d {}
 
 impl AsRef<[f64; 2]> for m128d {
   #[must_use]
