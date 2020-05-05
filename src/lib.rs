@@ -1,13 +1,11 @@
 #![no_std]
 #![warn(missing_docs)]
 #![allow(unused_imports)]
+#![allow(clippy::transmute_ptr_to_ptr)]
 
-//! Crate that safely exposes arch intrinsics via cfg.
+//! A crate that safely exposes arch intrinsics via cfg.
 //!
 //! >Incomplete. WIP. Etc.
-//! >
-//! >Current content can be expected to remain stable, but the functionality
-//! >coverage is not that much.
 //!
 //! This crate lets you safely use CPU intrinsics. Those things in
 //! [`core::arch`](core::arch).
@@ -17,11 +15,25 @@
 //!   whatever, which we do via the type system when necessary.
 //! * Some of them are absolutely not safe at all because it causes UB at the
 //!   LLVM level, so those things are not exposed here.
+//! * Some of them are pointless to expose here because the `core` crate already
+//!   provides the same functionality in a cross-platform way, so we skip those.
+//! * This crate works purely via `cfg` and compile time feature selection,
+//!   there are no runtime checks added. This means that if you _do_ want to do
+//!   runtime feature detection and then dynamically call an intrinsic if it
+//!   happens to be available, then this crate sadly isn't for you.
+//! * This crate aims to be as _minimal_ as possible. Just exposing each
+//!   intrinsic as a safe function with an easier to understand name and some
+//!   minimal docs. Building higher level abstractions on top of the intrinsics
+//!   is the domain of other crates.
+//! * That said, each raw SIMD type is newtype'd as a wrapper (with a `pub`
+//!   field) so that better trait impls can be provided.
 //!
-//! This crate works purely via `cfg` and compile time feature selection, there
-//! are no runtime checks. This means that if you _do_ want to do runtime
-//! feature detection and then dynamically call an intrinsic if it happens to be
-//! available, then this crate sadly isn't for you.
+//! ## Current Support
+//! As I said above, the crate is only Work In Progress status!
+//!
+//! * Intel (`x86` / `x86_64`)
+//!   * `sse`
+//!   * `sse2`
 //!
 //! ## Compile Time CPU Target Features
 //!
@@ -93,12 +105,6 @@
 //! Accordingly, if you plan to call this crate or not depending on what
 //! features are enabled in the build you'll also need to control your use of
 //! this crate via cfg attribute, not cfg macro.
-//!
-//! ## Current Support
-//! As I said above, the crate is only Work In Progress status!
-//!
-//! * Intel (`x86` / `x86_64`)
-//!   * `sse`
 
 // https://en.wikipedia.org/wiki/CPUID#Calling_CPUID
 // * first call __get_cpuid_max(0) and check ret.0 for the max leaf.
@@ -145,22 +151,24 @@ pub mod intel {
   //! one module.
   //!
   //! ## Naming Conventions
-  //! The actual intrinsic names are flaming dumpster, so we use easier to
+  //! The actual intrinsic names are a flaming dumpster, so we use easier to
   //! understand names.
   //!
   //! * The general naming scheme is that the operation of the function is
   //!   followed by the name of the type it operates on:
-  //!   * eg: `sqrt_m128`, `add_m128d`
+  //!   * eg: [`sqrt_m128`], [`add_m128d`]
   //! * If the function affects only the lowest lane then it has `_s` on the end
   //!   after the type, because that's a "scalar" operation.
-  //!   * eg: `add_m128_s`, `sqrt_m128_s`
-  //! * Functions with a "bool-ish" return value end with `_mask`. These are the
-  //!   comparison functions, and the return value is all 0s in a lane for
-  //!   "false" in that lane, and all 1s in a lane for "true" in that lane.
-  //!   Because a floating point value of all 1s is NaN, the mask values aren't
-  //!   generally useful on their own, they're just a necessary intermediate
-  //!   value for other things you'd want to do.
-  //!   * eg: `cmp_eq_m128_mask`, `cmp_gt_m128_mask`
+  //!   * eg: [`add_m128_s`], [`sqrt_m128_s`]
+  //! * Many functions with a "bool-ish" return values have `_mask` in their
+  //!   name. These are the comparison functions, and the return value is all 0s
+  //!   in a lane for "false" in that lane, and all 1s in a lane for "true" in
+  //!   that lane. Because a float or double point value of all 1s is NaN, the
+  //!   mask making functions aren't generally useful on their own, they're just
+  //!   an intermediate value.
+  //!   * eg: [`cmp_eq_mask_m128`], [`cmp_gt_mask_m128`]
+  //! * `convert` functions will round to an approximate numeric value.
+  //! * `cast` functions will preserve the bit patterns involved.
   use super::*;
   #[cfg(target_arch = "x86")]
   use core::arch::x86::*;
@@ -168,7 +176,10 @@ pub mod intel {
   use core::arch::x86_64::*;
 
   submodule!(pub m128_);
+  submodule!(pub m128d_);
+  submodule!(pub m128i_);
   submodule!(pub sse);
+  submodule!(pub sse2);
 }
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub use intel::*;

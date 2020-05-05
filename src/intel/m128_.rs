@@ -1,5 +1,3 @@
-#![allow(clippy::transmute_ptr_to_ptr)]
-
 //! This module is for the `m128` wrapper type, its bonus methods, and all
 //! necessary trait impls.
 //!
@@ -8,7 +6,7 @@
 
 use super::*;
 
-/// The data for a 128-bit SSE lane.
+/// The data for a 128-bit SSE register of four `f32` lanes.
 ///
 /// * This is _very similar to_ having `[f32; 4]`. The main difference is that
 ///   it's aligned to 16 instead of just 4, and of course you can perform
@@ -23,6 +21,13 @@ use super::*;
 #[repr(transparent)]
 #[allow(non_camel_case_types)]
 pub struct m128(pub __m128);
+
+#[cfg(feature = "bytemuck")]
+unsafe impl bytemuck::Zeroable for m128 {}
+#[cfg(feature = "bytemuck")]
+unsafe impl bytemuck::Pod for m128 {}
+#[cfg(feature = "bytemuck")]
+unsafe impl bytemuck::TransparentWrapper<__m128> for m128 {}
 
 #[test]
 fn test_m128_size_align() {
@@ -49,30 +54,25 @@ impl m128 {
   pub fn from_array(f: [f32; 4]) -> Self {
     f.into()
   }
-}
 
-#[cfg(feature = "bytemuck")]
-unsafe impl bytemuck::Zeroed for m128 {}
-#[cfg(feature = "bytemuck")]
-unsafe impl bytemuck::Pod for m128 {}
+  //
 
-impl AsRef<[f32; 4]> for m128 {
+  /// Converts into the bit patterns of these floats (`[u32;4]`).
+  ///
+  /// Like [`f32::to_bits`](f32::to_bits), but all four lanes at once.
   #[must_use]
   #[inline(always)]
-  fn as_ref(&self) -> &[f32; 4] {
-    // Safety: Since the alignment requirement of the output reference type is
-    // lower than our own reference type this is safe.
+  pub fn to_bits(self) -> [u32; 4] {
     unsafe { core::mem::transmute(self) }
   }
-}
 
-impl AsMut<[f32; 4]> for m128 {
+  /// Converts from the bit patterns of these floats (`[u32;4]`).
+  ///
+  /// Like [`f32::from_bits`](f32::from_bits), but all four lanes at once.
   #[must_use]
   #[inline(always)]
-  fn as_mut(&mut self) -> &mut [f32; 4] {
-    // Safety: Since the alignment requirement of the output reference type is
-    // lower than our own reference type this is safe.
-    unsafe { core::mem::transmute(self) }
+  pub fn from_bits(bits: [u32; 4]) -> Self {
+    unsafe { core::mem::transmute(bits) }
   }
 }
 
@@ -112,8 +112,6 @@ impl From<m128> for [f32; 4] {
     unsafe { core::mem::transmute(m) }
   }
 }
-
-// TODO: operator overloading!
 
 //
 // PLEASE KEEP ALL THE FORMAT IMPL JUNK AT THE END OF THE FILE

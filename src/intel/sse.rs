@@ -2,17 +2,6 @@
 
 use super::*;
 
-// TODO: load and store m128i values. The operations are technically part of
-// `sse`, but all actual usage of `m128i` is from `sse2`, so we won't tackle
-// that right away.
-
-/// Returns if the f32 array and u32 array are the same bit pattern.
-#[doc(hidden)]
-pub fn debug_check_same_bits(f: [f32; 4], u: [u32; 4]) -> bool {
-  let x: [u32; 4] = unsafe { core::mem::transmute(f) };
-  x == u
-}
-
 /// Lanewise `a + b`.
 /// ```
 /// # use safe_arch::*;
@@ -71,505 +60,475 @@ pub fn andnot_m128(a: m128, b: m128) -> m128 {
 
 /// Lanewise `a == b`.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 0.0, 1.0, 0.0]);
 /// let b = m128::from_array([1.0, 1.0, 0.0, 0.0]);
-/// let c = cmp_eq_m128_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(c, [u32::MAX, 0, 0, u32::MAX]));
+/// let c = cmp_eq_mask_m128(a, b).to_bits();
+/// assert_eq!(c, [u32::MAX, 0, 0, u32::MAX]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_eq_m128_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_eq_mask_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpeq_ps(a.0, b.0) })
 }
 
 /// Low lane `a == b`, other lanes unchanged.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 0.0, 1.0, 0.0]);
 /// let b = m128::from_array([1.0, 1.0, 0.0, 0.0]);
-/// let c = cmp_eq_m128_s_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(c, [u32::MAX, 0, 1_f32.to_bits(), 0]));
+/// let c = cmp_eq_mask_m128_s(a, b).to_bits();
+/// assert_eq!(c, [u32::MAX, 0, 1_f32.to_bits(), 0]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_eq_m128_s_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_eq_mask_m128_s(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpeq_ss(a.0, b.0) })
 }
 
 /// Lanewise `a >= b`.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_ge_m128_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(c, [0, u32::MAX, u32::MAX, u32::MAX]));
+/// let c = cmp_ge_mask_m128(a, b).to_bits();
+/// assert_eq!(c, [0, u32::MAX, u32::MAX, u32::MAX]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_ge_m128_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_ge_mask_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpge_ps(a.0, b.0) })
 }
 
 /// Low lane `a >= b`, other lanes unchanged.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([2.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_ge_m128_s_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(
-///   c,
-///   [u32::MAX, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]
-/// ));
+/// let c = cmp_ge_mask_m128_s(a, b).to_bits();
+/// assert_eq!(c, [u32::MAX, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_ge_m128_s_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_ge_mask_m128_s(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpge_ss(a.0, b.0) })
 }
 
 /// Lanewise `a > b`.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_gt_m128_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(c, [0, 0, u32::MAX, u32::MAX]));
+/// let c = cmp_gt_mask_m128(a, b).to_bits();
+/// assert_eq!(c, [0, 0, u32::MAX, u32::MAX]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_gt_m128_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_gt_mask_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpgt_ps(a.0, b.0) })
 }
 
 /// Low lane `a > b`, other lanes unchanged.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([2.5, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_gt_m128_s_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(
-///   c,
-///   [u32::MAX, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]
-/// ));
+/// let c = cmp_gt_mask_m128_s(a, b).to_bits();
+/// assert_eq!(c, [u32::MAX, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_gt_m128_s_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_gt_mask_m128_s(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpgt_ss(a.0, b.0) })
 }
 
 /// Lanewise `a <= b`.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_le_m128_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(c, [u32::MAX, u32::MAX, 0, 0]));
+/// let c = cmp_le_mask_m128(a, b).to_bits();
+/// assert_eq!(c, [u32::MAX, u32::MAX, 0, 0]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_le_m128_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_le_mask_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmple_ps(a.0, b.0) })
 }
 
 /// Low lane `a <= b`, other lanes unchanged.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([2.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_le_m128_s_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(
-///   c,
-///   [u32::MAX, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]
-/// ));
+/// let c = cmp_le_mask_m128_s(a, b).to_bits();
+/// assert_eq!(c, [u32::MAX, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_le_m128_s_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_le_mask_m128_s(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmple_ss(a.0, b.0) })
 }
 
 /// Lanewise `a < b`.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_lt_m128_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(c, [u32::MAX, 0, 0, 0]));
+/// let c = cmp_lt_mask_m128(a, b).to_bits();
+/// assert_eq!(c, [u32::MAX, 0, 0, 0]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_lt_m128_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_lt_mask_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmplt_ps(a.0, b.0) })
 }
 
 /// Low lane `a < b`, other lanes unchanged.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_lt_m128_s_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(
-///   c,
-///   [u32::MAX, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]
-/// ));
+/// let c = cmp_lt_mask_m128_s(a, b).to_bits();
+/// assert_eq!(c, [u32::MAX, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_lt_m128_s_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_lt_mask_m128_s(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmplt_ss(a.0, b.0) })
 }
 
 /// Lanewise `a != b`.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 0.0, 1.0, 0.0]);
 /// let b = m128::from_array([1.0, 1.0, 0.0, 0.0]);
-/// let c = cmp_neq_m128_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(c, [0, u32::MAX, u32::MAX, 0]));
+/// let c = cmp_neq_mask_m128(a, b).to_bits();
+/// assert_eq!(c, [0, u32::MAX, u32::MAX, 0]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_neq_m128_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_neq_mask_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpneq_ps(a.0, b.0) })
 }
 
 /// Low lane `a != b`, other lanes unchanged.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 0.0, 1.0, 0.0]);
 /// let b = m128::from_array([1.0, 1.0, 0.0, 0.0]);
-/// let c = cmp_neq_m128_s_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(c, [0, 0, 1_f32.to_bits(), 0]));
+/// let c = cmp_neq_mask_m128_s(a, b).to_bits();
+/// assert_eq!(c, [0, 0, 1_f32.to_bits(), 0]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_neq_m128_s_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_neq_mask_m128_s(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpneq_ss(a.0, b.0) })
 }
 
 /// Lanewise `!(a >= b)`.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_nge_m128_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(c, [u32::MAX, 0, 0, 0]));
+/// let c = cmp_nge_mask_m128(a, b).to_bits();
+/// assert_eq!(c, [u32::MAX, 0, 0, 0]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_nge_m128_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_nge_mask_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpnge_ps(a.0, b.0) })
 }
 
 /// Low lane `!(a >= b)`, other lanes unchanged.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([2.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_nge_m128_s_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(
-///   c,
-///   [0, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]
-/// ));
+/// let c = cmp_nge_mask_m128_s(a, b).to_bits();
+/// assert_eq!(c, [0, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_nge_m128_s_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_nge_mask_m128_s(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpnge_ss(a.0, b.0) })
 }
 
 /// Lanewise `!(a > b)`.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_ngt_m128_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(c, [u32::MAX, u32::MAX, 0, 0]));
+/// let c = cmp_ngt_mask_m128(a, b).to_bits();
+/// assert_eq!(c, [u32::MAX, u32::MAX, 0, 0]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_ngt_m128_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_ngt_mask_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpngt_ps(a.0, b.0) })
 }
 
 /// Low lane `!(a > b)`, other lanes unchanged.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([2.5, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_ngt_m128_s_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(
-///   c,
-///   [0, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]
-/// ));
+/// let c = cmp_ngt_mask_m128_s(a, b).to_bits();
+/// assert_eq!(c, [0, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_ngt_m128_s_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_ngt_mask_m128_s(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpngt_ss(a.0, b.0) })
 }
 
 /// Lanewise `!(a <= b)`.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_nle_m128_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(c, [0, 0, u32::MAX, u32::MAX]));
+/// let c = cmp_nle_mask_m128(a, b).to_bits();
+/// assert_eq!(c, [0, 0, u32::MAX, u32::MAX]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_nle_m128_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_nle_mask_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpnle_ps(a.0, b.0) })
 }
 
 /// Low lane `!(a <= b)`, other lanes unchanged.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([2.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_nle_m128_s_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(
-///   c,
-///   [0, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]
-/// ));
+/// let c = cmp_nle_mask_m128_s(a, b).to_bits();
+/// assert_eq!(c, [0, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_nle_m128_s_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_nle_mask_m128_s(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpnle_ss(a.0, b.0) })
 }
 
 /// Lanewise `!(a < b)`.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_nlt_m128_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(c, [0, u32::MAX, u32::MAX, u32::MAX]));
+/// let c = cmp_nlt_mask_m128(a, b).to_bits();
+/// assert_eq!(c, [0, u32::MAX, u32::MAX, u32::MAX]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_nlt_m128_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_nlt_mask_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpnlt_ps(a.0, b.0) })
 }
 
 /// Low lane `!(a < b)`, other lanes unchanged.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([2.0, 2.0, 2.0, 2.0]);
-/// let c = cmp_nlt_m128_s_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(
-///   c,
-///   [0, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]
-/// ));
+/// let c = cmp_nlt_mask_m128_s(a, b).to_bits();
+/// assert_eq!(c, [0, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_nlt_m128_s_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_nlt_mask_m128_s(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpnlt_ss(a.0, b.0) })
 }
 
 /// Lanewise `(!a.is_nan()) & (!b.is_nan())`.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([0.0, f32::NAN, 0.0, f32::NAN]);
 /// let b = m128::from_array([0.0, 0.0, f32::NAN, f32::NAN]);
-/// let c = cmp_ord_m128_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(c, [u32::MAX, 0, 0, 0]));
+/// let c = cmp_ord_mask_m128(a, b).to_bits();
+/// assert_eq!(c, [u32::MAX, 0, 0, 0]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_ord_m128_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_ord_mask_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpord_ps(a.0, b.0) })
 }
 
 /// Low lane `(!a.is_nan()) & (!b.is_nan())`, other lanes unchanged.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([0.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([0.0, f32::NAN, f32::NAN, f32::NAN]);
-/// let c = cmp_ord_m128_s_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(
-///   c,
-///   [u32::MAX, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]
-/// ));
+/// let c = cmp_ord_mask_m128_s(a, b).to_bits();
+/// assert_eq!(c, [u32::MAX, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_ord_m128_s_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_ord_mask_m128_s(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpord_ss(a.0, b.0) })
 }
 
 /// Lanewise `a.is_nan() | b.is_nan()`.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([0.0, f32::NAN, 0.0, f32::NAN]);
 /// let b = m128::from_array([0.0, 0.0, f32::NAN, f32::NAN]);
-/// let c = cmp_unord_m128_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(c, [0, u32::MAX, u32::MAX, u32::MAX]));
+/// let c = cmp_unord_mask_m128(a, b).to_bits();
+/// assert_eq!(c, [0, u32::MAX, u32::MAX, u32::MAX]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_unord_m128_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_unord_mask_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpunord_ps(a.0, b.0) })
 }
 
 /// Low lane `a.is_nan() | b.is_nan()`, other lanes unchanged.
 ///
-/// All bits 1 for true, all bit 0 for false.
+/// Mask output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([0.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([0.0, f32::NAN, f32::NAN, f32::NAN]);
-/// let c = cmp_unord_m128_s_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(
-///   c,
-///   [0, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]
-/// ));
+/// let c = cmp_unord_mask_m128_s(a, b).to_bits();
+/// assert_eq!(c, [0, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_unord_m128_s_mask(a: m128, b: m128) -> m128 {
+pub fn cmp_unord_mask_m128_s(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpunord_ss(a.0, b.0) })
 }
 
-/// Low lane `i32` equality.
+/// Low lane equality.
 ///
-/// 1 for true, 0 for false.
+/// `i32` output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([1.0, 1.0, 1.0, 1.0]);
-/// assert_eq!(1_i32, cmp_i32eq_m128_s_mask(a, b));
+/// assert_eq!(1_i32, cmp_eq_i32_m128_s(a, b));
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_i32eq_m128_s_mask(a: m128, b: m128) -> i32 {
+pub fn cmp_eq_i32_m128_s(a: m128, b: m128) -> i32 {
   unsafe { _mm_comieq_ss(a.0, b.0) }
 }
 
-/// Low lane `i32` greater than or equal to.
+/// Low lane greater than or equal to.
 ///
-/// 1 for true, 0 for false.
+/// `i32` output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([2.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([1.0, 1.0, 1.0, 1.0]);
-/// assert_eq!(1_i32, cmp_i32ge_m128_s_mask(a, b));
+/// assert_eq!(1_i32, cmp_ge_i32_m128_s(a, b));
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_i32ge_m128_s_mask(a: m128, b: m128) -> i32 {
+pub fn cmp_ge_i32_m128_s(a: m128, b: m128) -> i32 {
   unsafe { _mm_comige_ss(a.0, b.0) }
 }
 
-/// Low lane `i32` greater than.
+/// Low lane greater than.
 ///
-/// 1 for true, 0 for false.
+/// `i32` output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([2.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([1.0, 1.0, 1.0, 1.0]);
-/// assert_eq!(1_i32, cmp_i32gt_m128_s_mask(a, b));
+/// assert_eq!(1_i32, cmp_gt_i32_m128_s(a, b));
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_i32gt_m128_s_mask(a: m128, b: m128) -> i32 {
+pub fn cmp_gt_i32_m128_s(a: m128, b: m128) -> i32 {
   unsafe { _mm_comigt_ss(a.0, b.0) }
 }
 
-/// Low lane `i32` less than or equal to.
+/// Low lane less than or equal to.
 ///
-/// 1 for true, 0 for false.
+/// `i32` output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([0.5, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([1.0, 1.0, 1.0, 1.0]);
-/// assert_eq!(1_i32, cmp_i32le_m128_s_mask(a, b));
+/// assert_eq!(1_i32, cmp_le_i32_m128_s(a, b));
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_i32le_m128_s_mask(a: m128, b: m128) -> i32 {
+pub fn cmp_le_i32_m128_s(a: m128, b: m128) -> i32 {
   unsafe { _mm_comile_ss(a.0, b.0) }
 }
 
-/// Low lane `i32` less than.
+/// Low lane less than.
 ///
-/// 1 for true, 0 for false.
+/// `i32` output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([0.5, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([1.0, 1.0, 1.0, 1.0]);
-/// assert_eq!(1_i32, cmp_i32lt_m128_s_mask(a, b));
+/// assert_eq!(1_i32, cmp_lt_i32_m128_s(a, b));
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_i32lt_m128_s_mask(a: m128, b: m128) -> i32 {
+pub fn cmp_lt_i32_m128_s(a: m128, b: m128) -> i32 {
   unsafe { _mm_comilt_ss(a.0, b.0) }
 }
 
-/// Low lane `i32` not equal to.
+/// Low lane not equal to.
 ///
-/// 1 for true, 0 for false.
+/// `i32` output.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([1.0, 1.0, 1.0, 1.0]);
-/// assert_eq!(0_i32, cmp_i32neq_m128_s_mask(a, b));
+/// assert_eq!(0_i32, cmp_neq_i32_m128_s(a, b));
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn cmp_i32neq_m128_s_mask(a: m128, b: m128) -> i32 {
+pub fn cmp_neq_i32_m128_s(a: m128, b: m128) -> i32 {
   unsafe { _mm_comineq_ss(a.0, b.0) }
 }
 
@@ -577,12 +536,12 @@ pub fn cmp_i32neq_m128_s_mask(a: m128, b: m128) -> i32 {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
-/// let b = convert_replace_i32_m128_s(a, 5_i32).to_array();
+/// let b = convert_i32_replace_m128_s(a, 5_i32).to_array();
 /// assert_eq!(b, [5.0, 2.0, 3.0, 4.0]);
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn convert_replace_i32_m128_s(a: m128, i: i32) -> m128 {
+pub fn convert_i32_replace_m128_s(a: m128, i: i32) -> m128 {
   m128(unsafe { _mm_cvtsi32_ss(a.0, i) })
 }
 
@@ -590,13 +549,13 @@ pub fn convert_replace_i32_m128_s(a: m128, i: i32) -> m128 {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
-/// let b = convert_replace_i64_m128_s(a, 5_i64).to_array();
+/// let b = convert_i64_replace_m128_s(a, 5_i64).to_array();
 /// assert_eq!(b, [5.0, 2.0, 3.0, 4.0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg(arch = "x86_64")]
-pub fn convert_replace_i64_m128_s(a: m128, i: i64) -> m128 {
+pub fn convert_i64_replace_m128_s(a: m128, i: i64) -> m128 {
   m128(unsafe { _mm_cvtsi64_ss(a.0, i) })
 }
 
@@ -604,11 +563,11 @@ pub fn convert_replace_i64_m128_s(a: m128, i: i64) -> m128 {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
-/// assert_eq!(1_f32, get_f32_m128_s(a));
+/// assert_eq!(1_f32, get_f32_from_m128_s(a));
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn get_f32_m128_s(a: m128) -> f32 {
+pub fn get_f32_from_m128_s(a: m128) -> f32 {
   unsafe { _mm_cvtss_f32(a.0) }
 }
 
@@ -616,11 +575,11 @@ pub fn get_f32_m128_s(a: m128) -> f32 {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
-/// assert_eq!(1_i32, convert_get_i32_m128_s(a));
+/// assert_eq!(1_i32, get_i32_from_m128_s(a));
 /// ```
 #[must_use]
 #[inline(always)]
-pub fn convert_get_i32_m128_s(a: m128) -> i32 {
+pub fn get_i32_from_m128_s(a: m128) -> i32 {
   unsafe { _mm_cvtss_si32(a.0) }
 }
 
@@ -628,12 +587,12 @@ pub fn convert_get_i32_m128_s(a: m128) -> i32 {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
-/// assert_eq!(1_i64, convert_get_i64_m128_s(a));
+/// assert_eq!(1_i64, get_i64_from_m128_s(a));
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg(arch = "x86_64")]
-pub fn convert_get_i64_m128_s(a: m128) -> i64 {
+pub fn get_i64_from_m128_s(a: m128) -> i64 {
   unsafe { _mm_cvttss_si64(a.0) }
 }
 
@@ -670,8 +629,7 @@ pub fn div_m128_s(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([10.0, 12.0, 13.0, 14.0]);
 /// let b = load_m128(&a);
-/// let c = cmp_eq_m128_mask(a, b).to_array();
-/// assert!(debug_check_same_bits(c, [u32::MAX, u32::MAX, u32::MAX, u32::MAX]));
+/// assert_eq!(a.to_bits(), b.to_bits());
 /// ```
 #[must_use]
 #[inline(always)]
@@ -684,9 +642,7 @@ pub fn load_m128(a: &m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = 1.0;
 /// let b = load_splat_m128(&a);
-/// let c =
-///   cmp_eq_m128_mask(m128::from_array([1.0, 1.0, 1.0, 1.0]), b).to_array();
-/// assert!(debug_check_same_bits(c, [u32::MAX, u32::MAX, u32::MAX, u32::MAX]));
+/// assert_eq!(m128::from_array([1.0, 1.0, 1.0, 1.0]).to_bits(), b.to_bits());
 /// ```
 #[must_use]
 #[inline(always)]
@@ -695,14 +651,12 @@ pub fn load_splat_m128(a: &f32) -> m128 {
   m128(unsafe { _mm_load_ps1(a) })
 }
 
-/// Loads the reference into all lanes of a register.
+/// Loads the reference into the low lane of the register.
 /// ```
 /// # use safe_arch::*;
 /// let a = 1.0;
 /// let b = load_f32_m128_s(&a);
-/// let c =
-///   cmp_eq_m128_mask(m128::from_array([1.0, 0.0, 0.0, 0.0]), b).to_array();
-/// assert!(debug_check_same_bits(c, [u32::MAX, u32::MAX, u32::MAX, u32::MAX]));
+/// assert_eq!(m128::from_array([1.0, 0.0, 0.0, 0.0]).to_bits(), b.to_bits());
 /// ```
 #[must_use]
 #[inline(always)]
@@ -716,9 +670,7 @@ pub fn load_f32_m128_s(a: &f32) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([10.0, 12.0, 13.0, 14.0]);
 /// let b = load_reverse_m128(&a);
-/// let c =
-///   cmp_eq_m128_mask(m128::from_array([14.0, 13.0, 12.0, 10.0]), b).to_array();
-/// assert!(debug_check_same_bits(c, [u32::MAX, u32::MAX, u32::MAX, u32::MAX]));
+/// assert_eq!(m128::from_array([14.0, 13.0, 12.0, 10.0]).to_bits(), b.to_bits());
 /// ```
 #[must_use]
 #[inline(always)]
@@ -735,9 +687,7 @@ pub fn load_reverse_m128(a: &m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = [10.0, 12.0, 13.0, 14.0];
 /// let b = load_unaligned_m128(&a);
-/// let c =
-///   cmp_eq_m128_mask(m128::from_array([10.0, 12.0, 13.0, 14.0]), b).to_array();
-/// assert!(debug_check_same_bits(c, [u32::MAX, u32::MAX, u32::MAX, u32::MAX]));
+/// assert_eq!(m128::from_array(a).to_bits(), b.to_bits());
 /// ```
 #[must_use]
 #[inline(always)]
@@ -843,7 +793,7 @@ pub fn move_low_high_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_movelh_ps(a.0, b.0) })
 }
 
-/// Gathers the sign bit of each lane as an `i32`.
+/// Gathers the sign bit of each lane.
 ///
 /// The output has lane 0 as bit 0, lane 1 as bit 1, and so on.
 /// ```
@@ -1050,7 +1000,6 @@ pub fn zeroed_m128() -> m128 {
 ///
 /// ```
 /// # use safe_arch::*;
-/// # use safe_arch::shuffle_m128;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([5.0, 6.0, 7.0, 8.0]);
 /// //
@@ -1069,9 +1018,8 @@ pub fn zeroed_m128() -> m128 {
 /// called with `$a` as the input to both sides of the shuffle (note that any
 /// potential side effects of evaluating `$a` are executed only once).
 ///
-/// ```no_run
+/// ```
 /// # use safe_arch::*;
-/// # use safe_arch::shuffle_m128;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// //
 /// let c = shuffle_m128!(a, 0, 0, 0, 0).to_array();
@@ -1201,7 +1149,7 @@ pub fn store_reverse_m128(r: &mut m128, a: m128) {
 /// ```
 #[inline(always)]
 pub fn store_unaligned_m128(r: &mut [f32; 4], a: m128) {
-  unsafe { _mm_store_ps(r as *mut [f32; 4] as *mut f32, a.0) }
+  unsafe { _mm_store_ps(r.as_mut_ptr(), a.0) }
 }
 
 /// Lanewise `a - b`.
@@ -1317,7 +1265,6 @@ impl Add for m128 {
   }
 }
 impl AddAssign for m128 {
-  #[must_use]
   #[inline(always)]
   fn add_assign(&mut self, rhs: Self) {
     *self = *self + rhs;
@@ -1333,7 +1280,6 @@ impl BitAnd for m128 {
   }
 }
 impl BitAndAssign for m128 {
-  #[must_use]
   #[inline(always)]
   fn bitand_assign(&mut self, rhs: Self) {
     *self = *self & rhs;
@@ -1349,7 +1295,6 @@ impl BitOr for m128 {
   }
 }
 impl BitOrAssign for m128 {
-  #[must_use]
   #[inline(always)]
   fn bitor_assign(&mut self, rhs: Self) {
     *self = *self | rhs;
@@ -1365,7 +1310,6 @@ impl BitXor for m128 {
   }
 }
 impl BitXorAssign for m128 {
-  #[must_use]
   #[inline(always)]
   fn bitxor_assign(&mut self, rhs: Self) {
     *self = *self ^ rhs;
@@ -1381,7 +1325,6 @@ impl Div for m128 {
   }
 }
 impl DivAssign for m128 {
-  #[must_use]
   #[inline(always)]
   fn div_assign(&mut self, rhs: Self) {
     *self = *self / rhs;
@@ -1397,7 +1340,6 @@ impl Mul for m128 {
   }
 }
 impl MulAssign for m128 {
-  #[must_use]
   #[inline(always)]
   fn mul_assign(&mut self, rhs: Self) {
     *self = *self * rhs;
@@ -1436,20 +1378,17 @@ impl Sub for m128 {
   }
 }
 impl SubAssign for m128 {
-  #[must_use]
   #[inline(always)]
   fn sub_assign(&mut self, rhs: Self) {
     *self = *self - rhs;
   }
 }
 
-#[cfg(feature = "partial_eq")]
 impl PartialEq for m128 {
-  /// Checks for partial equality in all lanes with `cmp_eq` and then comparing
-  /// the mask generated with `0b111`.
+  /// Not a direct intrinsic, this is a `cmp_eq_mask` and then a `move_mask`.
   #[must_use]
   #[inline(always)]
   fn eq(&self, other: &Self) -> bool {
-    move_mask_m128(cmp_eq_m128_mask(*self, *other)) == 0b1111
+    move_mask_m128(cmp_eq_mask_m128(*self, *other)) == 0b1111
   }
 }
