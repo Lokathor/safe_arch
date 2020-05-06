@@ -30,7 +30,7 @@ pub fn add_sub_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_addsub_ps(a.0, b.0) })
 }
 
-/// Perform a "horizontal add" of the lanes to adjacent lanes.
+/// Add each lane horizontally, pack the outputs as `a` then `b`.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128d::from_array([10.0, 50.0]);
@@ -44,7 +44,7 @@ pub fn add_horizontal_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_hadd_pd(a.0, b.0) })
 }
 
-/// Perform a "horizontal add" of the lanes to adjacent lanes.
+/// Add each lane horizontally, pack the outputs as `a` then `b`.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([10.0, 20.0, 30.0, 40.0]);
@@ -58,7 +58,7 @@ pub fn add_horizontal_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_hadd_ps(a.0, b.0) })
 }
 
-/// Perform a "horizontal sub" of the lanes from adjacent lanes.
+/// Subtract each lane horizontally, pack the outputs as `a` then `b`.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128d::from_array([10.0, 50.0]);
@@ -72,7 +72,7 @@ pub fn sub_horizontal_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_hsub_pd(a.0, b.0) })
 }
 
-/// Perform a "horizontal sub" of the lanes from adjacent lanes.
+/// Subtract each lane horizontally, pack the outputs as `a` then `b`.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([10.0, 20.0, 30.0, 45.0]);

@@ -5,8 +5,6 @@
 
 //! A crate that safely exposes arch intrinsics via cfg.
 //!
-//! >Incomplete. WIP. Etc.
-//!
 //! This crate lets you safely use CPU intrinsics. Those things in
 //! [`core::arch`](core::arch).
 //! * Most of them are 100% safe to use as long as the CPU feature is available,
@@ -29,12 +27,10 @@
 //!   field) so that better trait impls can be provided.
 //!
 //! ## Current Support
-//! As I said above, the crate is only Work In Progress status!
+//! This grows slowly because there's just _so many_ intrinsics.
 //!
 //! * Intel (`x86` / `x86_64`)
-//!   * `sse`
-//!   * `sse2`
-//!   * `sse3`
+//!   * 128-bit: `sse`, `sse2`, `sse3`, `ssse3`
 //!
 //! ## Compile Time CPU Target Features
 //!
@@ -178,6 +174,8 @@ pub mod intel {
   submodule!(pub sse2);
   #[cfg(target_feature = "sse3")]
   submodule!(pub sse3);
+  #[cfg(target_feature = "ssse3")]
+  submodule!(pub ssse3);
 }
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub use intel::*;
