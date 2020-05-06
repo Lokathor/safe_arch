@@ -34,6 +34,7 @@
 //! * Intel (`x86` / `x86_64`)
 //!   * `sse`
 //!   * `sse2`
+//!   * `sse3`
 //!
 //! ## Compile Time CPU Target Features
 //!
@@ -106,17 +107,6 @@
 //! features are enabled in the build you'll also need to control your use of
 //! this crate via cfg attribute, not cfg macro.
 
-// https://en.wikipedia.org/wiki/CPUID#Calling_CPUID
-// * first call __get_cpuid_max(0) and check ret.0 for the max leaf.
-// * If a leaf has sub-leaves, call __get_cpuid_max(leaf) and check ret.1 for
-//   that max.
-// * once you know your limits, particular features can be checked for by
-//   getting the info for a leaf and checking the bits of a particular return
-//   register. Which bit you need to look for in what register in what leaf is
-//   mostly covered in the wikipedia article, linked above.
-// * Obviously we need to make checks for the most useful features available via
-//   some helper functions in this crate.
-
 use core::{
   convert::AsRef,
   fmt::{
@@ -178,8 +168,16 @@ pub mod intel {
   submodule!(pub m128_);
   submodule!(pub m128d_);
   submodule!(pub m128i_);
+  // Note(Lokathor): We only include these sub-modules if the feature is enabled
+  // and we *also* cfg attribute on the inside of the modules as a
+  // double-verification of sorts. Technically either way on its own would also
+  // be fine.
+  #[cfg(target_feature = "sse")]
   submodule!(pub sse);
+  #[cfg(target_feature = "sse2")]
   submodule!(pub sse2);
+  #[cfg(target_feature = "sse3")]
+  submodule!(pub sse3);
 }
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub use intel::*;
