@@ -44,8 +44,7 @@ impl Default for m128i {
   #[must_use]
   #[inline(always)]
   fn default() -> Self {
-    // TODO: use the zeroed intrinsic
-    unsafe { core::mem::zeroed() }
+    zeroed_m128i()
   }
 }
 
