@@ -2,6 +2,7 @@
 #![warn(missing_docs)]
 #![allow(unused_imports)]
 #![allow(clippy::transmute_ptr_to_ptr)]
+#![cfg_attr(building_on_docs_rs, feature(doc_cfg))]
 
 //! A crate that safely exposes arch intrinsics via cfg.
 //!
