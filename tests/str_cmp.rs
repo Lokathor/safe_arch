@@ -4,6 +4,9 @@ use core::convert::TryFrom;
 
 use safe_arch::*;
 
+// Notes on how I think this stuff is supposed to work:
+// https://hackmd.io/@ai5OEYRrSJKhrJP85tjTZQ/BkslfpW98
+
 #[allow(unused_imports)]
 #[cfg(target_arch = "x86_64")]
 use core::arch::x86_64::{
