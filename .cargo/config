@@ -1,4 +1,8 @@
 
+[build]
+# Turn this off before publishing!!
+rustdocflags = ["-Ctarget-cpu=native"]
+
 # Note: Cargo doesn't carry these settings to dependencies.
 # They only affect our own builds. This is so that we can easily
 # use `cargo test` and `cargo doc` and such.
