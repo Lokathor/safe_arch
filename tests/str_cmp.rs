@@ -8,6 +8,15 @@ use safe_arch::*;
 // https://hackmd.io/@ai5OEYRrSJKhrJP85tjTZQ/BkslfpW98
 
 #[allow(unused_imports)]
+#[cfg(target_arch = "x86")]
+use core::arch::x86::{
+  _SIDD_BIT_MASK, _SIDD_CMP_EQUAL_ANY, _SIDD_CMP_EQUAL_EACH,
+  _SIDD_CMP_EQUAL_ORDERED, _SIDD_CMP_RANGES, _SIDD_LEAST_SIGNIFICANT,
+  _SIDD_MASKED_NEGATIVE_POLARITY, _SIDD_MOST_SIGNIFICANT,
+  _SIDD_NEGATIVE_POLARITY, _SIDD_SBYTE_OPS, _SIDD_SWORD_OPS, _SIDD_UBYTE_OPS,
+  _SIDD_UNIT_MASK, _SIDD_UWORD_OPS,
+};
+#[allow(unused_imports)]
 #[cfg(target_arch = "x86_64")]
 use core::arch::x86_64::{
   _SIDD_BIT_MASK, _SIDD_CMP_EQUAL_ANY, _SIDD_CMP_EQUAL_EACH,
