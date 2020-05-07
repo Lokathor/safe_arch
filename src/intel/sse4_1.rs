@@ -517,6 +517,7 @@ macro_rules! get_i32_immediate_m128i {
 /// assert_eq!(get_i64_immediate_m128i!(a, 1), 6_i64);
 /// ```
 #[macro_export]
+#[cfg(target_arch = "x86_64")]
 macro_rules! get_i64_immediate_m128i {
   ($a:expr, $imm:expr) => {{
     let a: m128i = $a;
@@ -655,6 +656,7 @@ macro_rules! insert_i32_immediate_m128i {
 /// assert_eq!(b, [5_i64, 23]);
 /// ```
 #[macro_export]
+#[cfg(target_arch = "x86_64")]
 macro_rules! insert_i64_immediate_m128i {
   ($a:expr, $new:expr, $imm:expr) => {{
     let a: m128i = $a;
