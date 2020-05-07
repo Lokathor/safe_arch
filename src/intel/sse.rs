@@ -12,6 +12,7 @@ use super::*;
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse")))]
 pub fn add_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_add_ps(a.0, b.0) })
 }
@@ -1031,7 +1032,7 @@ pub fn zeroed_m128() -> m128 {
 /// let c = shuffle_m128!(a, 0, 2, 2, 1).to_array();
 /// assert_eq!(c, [1.0, 3.0, 3.0, 2.0]);
 /// ```
-#[macro_export]
+#[cfg_attr(target_feature = "sse", macro_export)]
 macro_rules! shuffle_m128 {
   ($a:expr, $b:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
     const MASK: i32 =

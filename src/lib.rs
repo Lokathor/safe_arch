@@ -2,6 +2,7 @@
 #![warn(missing_docs)]
 #![allow(unused_imports)]
 #![allow(clippy::transmute_ptr_to_ptr)]
+#![cfg_attr(building_on_docs_rs, feature(doc_cfg))]
 
 //! A crate that safely exposes arch intrinsics via cfg.
 //!
@@ -176,6 +177,8 @@ pub mod intel {
   submodule!(pub sse3);
   #[cfg(target_feature = "ssse3")]
   submodule!(pub ssse3);
+  #[cfg(target_feature = "sse4.1")]
+  submodule!(pub sse4_1);
 }
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub use intel::*;
