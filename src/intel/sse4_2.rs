@@ -73,46 +73,323 @@ pub fn crc32_u64(crc: u64, v: u64) -> u64 {
   unsafe { _mm_crc32_u64(crc, v) }
 }
 
-// HARD
+/// ?
+///
+/// ```
+/// # use safe_arch::*;
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+macro_rules! cmp_e_str_a {
+  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    let la: i32 = $la;
+    let b: m128i = $b;
+    let lb: i32 = $lb;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_cmpestra;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_cmpestra;
+    unsafe { _mm_cmpestra(a.0, la, b.0, lb, IMM) }
+  }};
+}
 
-// ? a c i m o s z ?
+/// ?
+///
+/// ```
+/// # use safe_arch::*;
+/// //
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+macro_rules! cmp_e_str_c {
+  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    let la: i32 = $la;
+    let b: m128i = $b;
+    let lb: i32 = $lb;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_cmpestrc;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_cmpestrc;
+    unsafe { _mm_cmpestrc(a.0, la, b.0, lb, IMM) }
+  }};
+}
 
-// EXPLICIT LENGTHS
+/// ?
+///
+/// ```
+/// # use safe_arch::*;
+/// //
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+macro_rules! cmp_e_str_i {
+  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    let la: i32 = $la;
+    let b: m128i = $b;
+    let lb: i32 = $lb;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_cmpestri;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_cmpestri;
+    unsafe { _mm_cmpestri(a.0, la, b.0, lb, IMM) }
+  }};
+}
 
-// _mm_cmpestra
-// returns 1 if b did not contain a null character and the resulting mask was
-// zero, and 0 otherwise.
+/// ?
+///
+/// ```
+/// # use safe_arch::*;
+/// //
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+macro_rules! cmp_e_str_m {
+  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    let la: i32 = $la;
+    let b: m128i = $b;
+    let lb: i32 = $lb;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_cmpestrm;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_cmpestrm;
+    m128i(unsafe { _mm_cmpestrm(a.0, la, b.0, lb, IMM) })
+  }};
+}
 
-// _mm_cmpestrc
-// returns 1 if the resulting mask was non-zero, and 0 otherwise.
+/// ?
+///
+/// ```
+/// # use safe_arch::*;
+/// //
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+macro_rules! cmp_e_str_o {
+  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    let la: i32 = $la;
+    let b: m128i = $b;
+    let lb: i32 = $lb;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_cmpestro;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_cmpestro;
+    unsafe { _mm_cmpestro(a.0, la, b.0, lb, IMM) }
+  }};
+}
 
-// _mm_cmpestri
-// store the generated index in dst.
+/// ?
+///
+/// ```
+/// # use safe_arch::*;
+/// //
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+macro_rules! cmp_e_str_s {
+  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    let la: i32 = $la;
+    let b: m128i = $b;
+    let lb: i32 = $lb;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_cmpestrs;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_cmpestrs;
+    unsafe { _mm_cmpestrs(a.0, la, b.0, lb, IMM) }
+  }};
+}
 
-// _mm_cmpestrm
-// store the generated mask in dst.
+/// ?
+///
+/// ```
+/// # use safe_arch::*;
+/// //
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+macro_rules! cmp_e_str_z {
+  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    let la: i32 = $la;
+    let b: m128i = $b;
+    let lb: i32 = $lb;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_cmpestrz;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_cmpestrz;
+    unsafe { _mm_cmpestrz(a.0, la, b.0, lb, IMM) }
+  }};
+}
 
-// _mm_cmpestro
-// returns bit 0 of the resulting bit mask.
+/// ?
+///
+/// ```
+/// # use safe_arch::*;
+/// //
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+macro_rules! cmp_i_str_a {
+  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    let la: i32 = $la;
+    let b: m128i = $b;
+    let lb: i32 = $lb;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_cmpistra;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_cmpistra;
+    unsafe { _mm_cmpistra(a.0, la, b.0, lb, IMM) }
+  }};
+}
 
-// _mm_cmpestrs
-// returns 1 if any character in a was null, and 0 otherwise.
+/// ?
+///
+/// ```
+/// # use safe_arch::*;
+/// //
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+macro_rules! cmp_i_str_c {
+  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    let la: i32 = $la;
+    let b: m128i = $b;
+    let lb: i32 = $lb;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_cmpistrc;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_cmpistrc;
+    unsafe { _mm_cmpistrc(a.0, la, b.0, lb, IMM) }
+  }};
+}
 
-// _mm_cmpestrz
-// returns 1 if any character in b was null, and 0 otherwise.
+/// ?
+///
+/// ```
+/// # use safe_arch::*;
+/// //
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+macro_rules! cmp_i_str_i {
+  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    let la: i32 = $la;
+    let b: m128i = $b;
+    let lb: i32 = $lb;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_cmpistri;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_cmpistri;
+    unsafe { _mm_cmpistri(a.0, la, b.0, lb, IMM) }
+  }};
+}
 
-// IMPLICIT LENGTHS
+/// ?
+///
+/// ```
+/// # use safe_arch::*;
+/// //
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+macro_rules! cmp_i_str_m {
+  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    let la: i32 = $la;
+    let b: m128i = $b;
+    let lb: i32 = $lb;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_cmpistrm;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_cmpistrm;
+    m128i(unsafe { _mm_cmpistrm(a.0, la, b.0, lb, IMM) })
+  }};
+}
 
-// _mm_cmpistra
+/// ?
+///
+/// ```
+/// # use safe_arch::*;
+/// //
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+macro_rules! cmp_i_str_o {
+  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    let la: i32 = $la;
+    let b: m128i = $b;
+    let lb: i32 = $lb;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_cmpistro;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_cmpistro;
+    unsafe { _mm_cmpistro(a.0, la, b.0, lb, IMM) }
+  }};
+}
 
-// _mm_cmpistrc
+/// ?
+///
+/// ```
+/// # use safe_arch::*;
+/// //
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+macro_rules! cmp_i_str_s {
+  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    let la: i32 = $la;
+    let b: m128i = $b;
+    let lb: i32 = $lb;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_cmpistrs;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_cmpistrs;
+    unsafe { _mm_cmpistrs(a.0, la, b.0, lb, IMM) }
+  }};
+}
 
-// _mm_cmpistri
-
-// _mm_cmpistrm
-
-// _mm_cmpistro
-
-// _mm_cmpistrs
-
-// _mm_cmpistrz
+/// ?
+///
+/// ```
+/// # use safe_arch::*;
+/// //
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+macro_rules! cmp_i_str_z {
+  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
+    let a: m128i = $a;
+    let la: i32 = $la;
+    let b: m128i = $b;
+    let lb: i32 = $lb;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_cmpistrz;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_cmpistrz;
+    unsafe { _mm_cmpistrz(a.0, la, b.0, lb, IMM) }
+  }};
+}

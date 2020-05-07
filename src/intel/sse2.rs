@@ -286,9 +286,9 @@ macro_rules! byte_shift_left_u128_immediate_m128i {
     let a: m128i = $a;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_bslli_si128;
+    use ::core::arch::x86::_mm_bslli_si128;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_bslli_si128;
+    use ::core::arch::x86_64::_mm_bslli_si128;
     m128i(unsafe { _mm_bslli_si128(a.0, IMM) })
   }};
 }
@@ -308,9 +308,9 @@ macro_rules! byte_shift_right_u128_immediate_m128i {
     let a: m128i = $a;
     const imm: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_bsrli_si128;
+    use ::core::arch::x86::_mm_bsrli_si128;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_bsrli_si128;
+    use ::core::arch::x86_64::_mm_bsrli_si128;
     m128i(unsafe { _mm_bsrli_si128(a.0, imm) })
   }};
 }
@@ -1356,9 +1356,9 @@ macro_rules! extract_i16_as_i32_m128i {
     let a: m128i = $a;
     const LANE: i32 = ($imm & 0b111) as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_extract_epi16;
+    use ::core::arch::x86::_mm_extract_epi16;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_extract_epi16;
+    use ::core::arch::x86_64::_mm_extract_epi16;
     unsafe { _mm_extract_epi16(a.0, LANE) }
   }};
 }
@@ -1387,9 +1387,9 @@ macro_rules! insert_i16_from_i32_m128i {
     let i: i32 = $i;
     const LANE: i32 = ($imm & 0b111) as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_insert_epi16;
+    use ::core::arch::x86::_mm_insert_epi16;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_insert_epi16;
+    use ::core::arch::x86_64::_mm_insert_epi16;
     m128i(unsafe { _mm_insert_epi16(a.0, i, LANE) })
   }};
 }
@@ -2232,9 +2232,9 @@ macro_rules! shuffle_i32_m128i {
         as i32;
     let a: m128i = $a;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_shuffle_epi32;
+    use ::core::arch::x86::_mm_shuffle_epi32;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_shuffle_epi32;
+    use ::core::arch::x86_64::_mm_shuffle_epi32;
     m128i(unsafe { _mm_shuffle_epi32(a.0, MASK) })
   }};
 }
@@ -2291,9 +2291,9 @@ macro_rules! shuffle_m128d {
     let a: m128d = $a;
     let b: m128d = $b;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_shuffle_pd;
+    use ::core::arch::x86::_mm_shuffle_pd;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_shuffle_pd;
+    use ::core::arch::x86_64::_mm_shuffle_pd;
     m128d(unsafe { _mm_shuffle_pd(a.0, b.0, MASK) })
   }};
   ($a:expr, $z:expr, $o:expr) => {{
@@ -2341,9 +2341,9 @@ macro_rules! shuffle_i16_high_lanes_m128i {
         as i32;
     let a: m128i = $a;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_shufflehi_epi16;
+    use ::core::arch::x86::_mm_shufflehi_epi16;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_shufflehi_epi16;
+    use ::core::arch::x86_64::_mm_shufflehi_epi16;
     m128i(unsafe { _mm_shufflehi_epi16(a.0, MASK) })
   }};
 }
@@ -2384,9 +2384,9 @@ macro_rules! shuffle_i16_low_lanes_m128i {
         as i32;
     let a: m128i = $a;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_shufflelo_epi16;
+    use ::core::arch::x86::_mm_shufflelo_epi16;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_shufflelo_epi16;
+    use ::core::arch::x86_64::_mm_shufflelo_epi16;
     m128i(unsafe { _mm_shufflelo_epi16(a.0, MASK) })
   }};
 }
@@ -2459,9 +2459,9 @@ macro_rules! shift_left_i16_immediate_m128i {
     let a: m128i = $a;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_slli_epi16;
+    use ::core::arch::x86::_mm_slli_epi16;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_slli_epi16;
+    use ::core::arch::x86_64::_mm_slli_epi16;
     m128i(unsafe { _mm_slli_epi16(a.0, IMM) })
   }};
 }
@@ -2480,9 +2480,9 @@ macro_rules! shift_left_i32_immediate_m128i {
     let a: m128i = $a;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_slli_epi32;
+    use ::core::arch::x86::_mm_slli_epi32;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_slli_epi32;
+    use ::core::arch::x86_64::_mm_slli_epi32;
     m128i(unsafe { _mm_slli_epi32(a.0, IMM) })
   }};
 }
@@ -2501,9 +2501,9 @@ macro_rules! shift_left_i64_immediate_m128i {
     let a: m128i = $a;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_slli_epi64;
+    use ::core::arch::x86::_mm_slli_epi64;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_slli_epi64;
+    use ::core::arch::x86_64::_mm_slli_epi64;
     m128i(unsafe { _mm_slli_epi64(a.0, IMM) })
   }};
 }
@@ -2589,9 +2589,9 @@ macro_rules! shift_right_i16_immediate_m128i {
     let a: m128i = $a;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_srai_epi16;
+    use ::core::arch::x86::_mm_srai_epi16;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_srai_epi16;
+    use ::core::arch::x86_64::_mm_srai_epi16;
     m128i(unsafe { _mm_srai_epi16(a.0, IMM) })
   }};
 }
@@ -2612,9 +2612,9 @@ macro_rules! shift_right_i32_immediate_m128i {
     let a: m128i = $a;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_srai_epi32;
+    use ::core::arch::x86::_mm_srai_epi32;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_srai_epi32;
+    use ::core::arch::x86_64::_mm_srai_epi32;
     m128i(unsafe { _mm_srai_epi32(a.0, IMM) })
   }};
 }
@@ -2705,9 +2705,9 @@ macro_rules! shift_right_u16_immediate_m128i {
     let a: m128i = $a;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_srli_epi16;
+    use ::core::arch::x86::_mm_srli_epi16;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_srli_epi16;
+    use ::core::arch::x86_64::_mm_srli_epi16;
     m128i(unsafe { _mm_srli_epi16(a.0, IMM) })
   }};
 }
@@ -2726,9 +2726,9 @@ macro_rules! shift_right_u32_immediate_m128i {
     let a: m128i = $a;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_srli_epi32;
+    use ::core::arch::x86::_mm_srli_epi32;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_srli_epi32;
+    use ::core::arch::x86_64::_mm_srli_epi32;
     m128i(unsafe { _mm_srli_epi32(a.0, IMM) })
   }};
 }
@@ -2747,9 +2747,9 @@ macro_rules! shift_right_u64_immediate_m128i {
     let a: m128i = $a;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_srli_epi64;
+    use ::core::arch::x86::_mm_srli_epi64;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_srli_epi64;
+    use ::core::arch::x86_64::_mm_srli_epi64;
     m128i(unsafe { _mm_srli_epi64(a.0, IMM) })
   }};
 }
