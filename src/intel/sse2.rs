@@ -1845,7 +1845,7 @@ pub fn or_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_or_si128(a.0, b.0) })
 }
 
-/// Saturating convert `i16` to `i8`, and interleave the values.
+/// Saturating convert `i16` to `i8`, and pack the values.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([1_i16, 2, 3, 4, 5, 6, 7, 8]);
@@ -1859,7 +1859,7 @@ pub fn pack_i16_to_i8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_packs_epi16(a.0, b.0) })
 }
 
-/// Saturating convert `i32` to `i16`, and interleave the values.
+/// Saturating convert `i32` to `i16`, and pack the values.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([1_i32, 2, 3, 4]);
@@ -1873,7 +1873,7 @@ pub fn pack_i32_to_i16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_packs_epi32(a.0, b.0) })
 }
 
-/// Saturating convert `i16` to `u8`, and interleave the values.
+/// Saturating convert `i16` to `u8`, and pack the values.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([-1_i16, 2, -3, 4, -5, 6, -7, 8]);
@@ -3106,16 +3106,6 @@ pub fn unpack_high_i64_m128i(a: m128i, b: m128i) -> m128i {
 pub fn unpack_high_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_unpackhi_pd(a.0, b.0) })
 }
-
-// _mm_unpacklo_epi16
-
-// _mm_unpacklo_epi32
-
-// _mm_unpacklo_epi64
-
-// _mm_unpacklo_epi8
-
-// _mm_unpacklo_pd
 
 /// Unpack and interleave low `i8` lanes of `a` and `b`.
 /// ```
