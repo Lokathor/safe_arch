@@ -40,5 +40,5 @@ fn foo() {
   dbg!(cmp_e_str_o!(a, 5, b, 5, MODE));
   dbg!(cmp_e_str_s!(a, 5, b, 5, MODE));
   dbg!(cmp_e_str_z!(a, 5, b, 5, MODE));
-  panic!();
+  //panic!();
 }
