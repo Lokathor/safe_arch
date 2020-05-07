@@ -32,6 +32,7 @@
 //!
 //! * Intel (`x86` / `x86_64`)
 //!   * 128-bit: `sse`, `sse2`, `sse3`, `ssse3`
+//!   * Other: `bmi`
 //!
 //! ## Compile Time CPU Target Features
 //!
@@ -179,6 +180,8 @@ pub mod intel {
   submodule!(pub ssse3);
   #[cfg(target_feature = "sse4.1")]
   submodule!(pub sse4_1);
+  #[cfg(target_feature = "bmi1")]
+  submodule!(pub bmi1);
 }
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub use intel::*;
