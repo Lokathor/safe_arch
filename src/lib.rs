@@ -165,6 +165,9 @@ pub mod intel {
   submodule!(pub m128_);
   submodule!(pub m128d_);
   submodule!(pub m128i_);
+  submodule!(pub m256_);
+  submodule!(pub m256d_);
+  submodule!(pub m256i_);
   // Note(Lokathor): We only include these sub-modules if the feature is enabled
   // and we *also* cfg attribute on the inside of the modules as a
   // double-verification of sorts. Technically either way on its own would also
