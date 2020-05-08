@@ -638,21 +638,21 @@ pub fn load_m128(a: &m128) -> m128 {
   m128(unsafe { _mm_load_ps(a as *const m128 as *const f32) })
 }
 
-/// Loads the reference into all lanes of a register.
+/// Loads the `f32` reference into all lanes of a register.
 /// ```
 /// # use safe_arch::*;
 /// let a = 1.0;
-/// let b = load_splat_m128(&a);
+/// let b = load_f32_splat_m128(&a);
 /// assert_eq!(m128::from_array([1.0, 1.0, 1.0, 1.0]).to_bits(), b.to_bits());
 /// ```
 #[must_use]
 #[inline(always)]
 #[allow(clippy::trivially_copy_pass_by_ref)]
-pub fn load_splat_m128(a: &f32) -> m128 {
+pub fn load_f32_splat_m128(a: &f32) -> m128 {
   m128(unsafe { _mm_load_ps1(a) })
 }
 
-/// Loads the reference into the low lane of the register.
+/// Loads the `f32` reference into the low lane of the register.
 /// ```
 /// # use safe_arch::*;
 /// let a = 1.0;
