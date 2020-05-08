@@ -4,34 +4,59 @@
 #![allow(clippy::transmute_ptr_to_ptr)]
 #![cfg_attr(docs_rs, feature(doc_cfg))]
 
-//! A crate that safely exposes arch intrinsics via cfg.
+//! A crate that safely exposes arch intrinsics via `#[cfg()]`.
 //!
-//! This crate lets you safely use CPU intrinsics. Those things in
-//! [`core::arch`](core::arch).
-//! * Most of them are 100% safe to use as long as the CPU feature is available,
-//!   like addition and multiplication and stuff.
-//! * Some of them require that you uphold extra alignment requirements or
-//!   whatever, which we do via the type system when necessary.
-//! * Some of them are absolutely not safe at all because it causes UB at the
-//!   LLVM level, so those things are not exposed here.
-//! * Some of them are pointless to expose here because the `core` crate already
-//!   provides the same functionality in a cross-platform way, so we skip those.
-//! * This crate works purely via `cfg` and compile time feature selection,
-//!   there are no runtime checks added. This means that if you _do_ want to do
-//!   runtime feature detection and then dynamically call an intrinsic if it
-//!   happens to be available, then this crate sadly isn't for you.
-//! * This crate aims to be as _minimal_ as possible. Just exposing each
-//!   intrinsic as a safe function with an easier to understand name and some
-//!   minimal docs. Building higher level abstractions on top of the intrinsics
-//!   is the domain of other crates.
-//! * That said, each raw SIMD type is newtype'd as a wrapper (with a `pub`
-//!   field) so that better trait impls can be provided.
+//! `safe_arch` lets you safely use CPU intrinsics. Those things in the
+//! [`core::arch`](core::arch) modules. It works purely via `#[cfg()]` and
+//! compile time CPU feature declaration. If you want to check for a feature at
+//! runtime and then call an intrinsic or use a fallback path based on that then
+//! this crate is sadly not for you.
+//!
+//! SIMD register types are "newtype'd" so that better trait impls can be given
+//! to them, but the inner value is a `pub` field so feel to just grab it out if
+//! you need to. Trait impls of the newtypes include: `Default` (zeroed),
+//! `From`/`Into` of appropriate data types, and appropriate operator
+//! overloading.
+//!
+//! * Most intrinsics (like addition and multiplication) are totally safe to use
+//!   as long as the CPU feature is available. In this case, what you get is 1:1
+//!   with the actual intrinsic.
+//! * Some intrinsics take a pointer of an assumed minimum alignment and
+//!   validity span. For these, the `safe_arch` function takes a reference of an
+//!   appropriate type to uphold safety.
+//!   * Try the [bytemuck](https://docs.rs/bytemuck) crate (and turn on the
+//!     `bytemuck` feature of this crate) if you want help safely casting
+//!     between reference types.
+//! * Some intrinsics are not safe unless you're _very_ careful about how you
+//!   use them, such as the streaming operations requiring you to use them in
+//!   combination with an appropriate memory fence. Those operations aren't
+//!   exposed here.
+//! * Some intrinsics mess with the processor state, such as changing the
+//!   floating point flags, saving and loading special register state, and so
+//!   on. LLVM doesn't really support you messing with that within a high level
+//!   language, so those operations aren't exposed here. Use assembly or
+//!   something if you want to do that.
+//!
+//! ## Naming Conventions
+//! The actual names for each intrinsic are generally a flaming dumpster, so we
+//! use easier to understand names. Well, I hope they're easier to understand.
+//!
+//! * Function names start with the primary "verb" of the operation, and then
+//!   any adverbs go after that. This makes for slightly awkward English but
+//!   helps the list of all the functions sort a little better.
+//!   * Eg: `add_i32_m128i` and `add_i16_saturating_m128i`
+//! * Function names end with the register type they're associated with.
+//!   * Eg: `and_m128` (for `m128`) and `and_m128d` (for `m128d`)
+//! * If a function operates on just the lowest data lane it generally has `_s`
+//!   after the register type, because it's a "scalar" operation. The high(er)
+//!   lane(s) are generally just copied forward, or taken from a secondary
+//!   argument, or something. Details vary.
+//!   * Eg: `sqrt_m128` (all lanes) and `sqrt_m128_s` (low lane only)
 //!
 //! ## Current Support
-//! This grows slowly because there's just _so many_ intrinsics.
-//!
 //! * Intel (`x86` / `x86_64`)
 //!   * 128-bit: `sse`, `sse2`, `sse3`, `ssse3`
+//!   * 256-bit: `avx`
 //!
 //! ## Compile Time CPU Target Features
 //!
@@ -136,26 +161,6 @@ pub mod intel {
   //!
   //! `x86_64` is essentially a superset of `x86`, so we just lump it all into
   //! one module.
-  //!
-  //! ## Naming Conventions
-  //! The actual intrinsic names are a flaming dumpster, so we use easier to
-  //! understand names.
-  //!
-  //! * The general naming scheme is that the operation of the function is
-  //!   followed by the name of the type it operates on:
-  //!   * eg: [`sqrt_m128`], [`add_m128d`]
-  //! * If the function affects only the lowest lane then it has `_s` on the end
-  //!   after the type, because that's a "scalar" operation.
-  //!   * eg: [`add_m128_s`], [`sqrt_m128_s`]
-  //! * Many functions with a "bool-ish" return values have `_mask` in their
-  //!   name. These are the comparison functions, and the return value is all 0s
-  //!   in a lane for "false" in that lane, and all 1s in a lane for "true" in
-  //!   that lane. Because a float or double point value of all 1s is NaN, the
-  //!   mask making functions aren't generally useful on their own, they're just
-  //!   an intermediate value.
-  //!   * eg: [`cmp_eq_mask_m128`], [`cmp_gt_mask_m128`]
-  //! * `convert` functions will round to an approximate numeric value.
-  //! * `cast` functions will preserve the bit patterns involved.
   use super::*;
   #[cfg(target_arch = "x86")]
   use core::arch::x86::*;
