@@ -26,7 +26,7 @@ unsafe impl bytemuck::Pod for m256i {}
 unsafe impl bytemuck::TransparentWrapper<__m256i> for m256i {}
 
 #[test]
-fn test_m256_size_align() {
+fn test_m256i_size_align() {
   assert_eq!(core::mem::size_of::<m256i>(), 32);
   assert_eq!(core::mem::align_of::<m256i>(), 32);
 }

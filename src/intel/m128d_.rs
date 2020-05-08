@@ -23,7 +23,7 @@ unsafe impl bytemuck::Pod for m128d {}
 unsafe impl bytemuck::TransparentWrapper<__m128d> for m128d {}
 
 #[test]
-fn test_m128_size_align() {
+fn test_m128d_size_align() {
   assert_eq!(core::mem::size_of::<m128d>(), 16);
   assert_eq!(core::mem::align_of::<m128d>(), 16);
 }
