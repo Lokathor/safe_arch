@@ -179,6 +179,8 @@ pub mod intel {
   submodule!(pub ssse3);
   #[cfg(target_feature = "sse4.1")]
   submodule!(pub sse4_1);
+  #[cfg(target_feature = "aes")]
+  submodule!(pub aes);
 }
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub use intel::*;
