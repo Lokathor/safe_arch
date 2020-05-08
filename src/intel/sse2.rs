@@ -1407,17 +1407,17 @@ pub fn load_m128d(a: &m128d) -> m128d {
   m128d(unsafe { _mm_load_pd(a as *const m128d as *const f64) })
 }
 
-/// Loads the reference into all lanes of a register.
+/// Loads the `f64` reference into all lanes of a register.
 /// ```
 /// # use safe_arch::*;
 /// let a = 1.0;
-/// let b = load_splat_m128d(&a);
+/// let b = load_f64_splat_m128d(&a);
 /// assert_eq!(m128d::from_array([1.0, 1.0]).to_bits(), b.to_bits());
 /// ```
 #[must_use]
 #[inline(always)]
 #[allow(clippy::trivially_copy_pass_by_ref)]
-pub fn load_splat_m128d(a: &f64) -> m128d {
+pub fn load_f64_splat_m128d(a: &f64) -> m128d {
   m128d(unsafe { _mm_load1_pd(a) })
 }
 
