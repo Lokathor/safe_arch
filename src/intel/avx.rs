@@ -72,6 +72,7 @@ pub fn add_sub_m256(a: m256, b: m256) -> m256 {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn and_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_and_pd(a.0, b.0) })
 }
@@ -86,6 +87,7 @@ pub fn and_m256d(a: m256d, b: m256d) -> m256d {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn and_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_and_ps(a.0, b.0) })
 }
@@ -100,6 +102,7 @@ pub fn and_m256(a: m256, b: m256) -> m256 {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn andnot_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_andnot_pd(a.0, b.0) })
 }
@@ -114,14 +117,108 @@ pub fn andnot_m256d(a: m256d, b: m256d) -> m256d {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn andnot_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_andnot_ps(a.0, b.0) })
 }
 
-// _mm256_blend_pd
-// _mm256_blend_ps
-// _mm256_blendv_pd
-// _mm256_blendv_ps
+/// Blends the `f64` lanes according to the immediate mask.
+///
+/// Each bit 0 though 3 controls lane 0 through 3. Use 0 for the `$a` value and
+/// 1 for the `$b` value.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from_array([10.0, 20.0, 30.0, 40.0]);
+/// let b = m256d::from_array([100.0, 200.0, 300.0, 400.0]);
+/// //
+/// let c = blend_immediate_m256d!(a, b, 0b0110).to_array();
+/// assert_eq!(c, [10.0, 200.0, 300.0, 40.0]);
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+macro_rules! blend_immediate_m256d {
+  ($a:expr, $b:expr, $imm:expr) => {{
+    let a: m256d = $a;
+    let b: m256d = $b;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm256_blend_pd;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm256_blend_pd;
+    m256d(unsafe { _mm256_blend_pd(a.0, b.0, IMM) })
+  }};
+}
+
+/// Blends the `f32` lanes according to the immediate mask.
+///
+/// Each bit 0 though 7 controls lane 0 through 7. Use 0 for the `$a` value and
+/// 1 for the `$b` value.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0]);
+/// let b =
+///   m256::from_array([100.0, 200.0, 300.0, 400.0, 500.0, 600.0, 700.0, 800.0]);
+/// //
+/// let c = blend_immediate_m256!(a, b, 0b0011_0110).to_array();
+/// assert_eq!(c, [10.0, 200.0, 300.0, 40.0, 500.0, 600.0, 70.0, 80.0]);
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+macro_rules! blend_immediate_m256 {
+  ($a:expr, $b:expr, $imm:expr) => {{
+    let a: m256 = $a;
+    let b: m256 = $b;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm256_blend_ps;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm256_blend_ps;
+    m256(unsafe { _mm256_blend_ps(a.0, b.0, IMM) })
+  }};
+}
+
+/// Blend the lanes according to a runtime varying mask.
+///
+/// The sign bit of each lane in the `mask` value determines if the output
+/// lane uses `a` (mask non-negative) or `b` (mask negative).
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from_array([0.0, 1.0, 20.0, 30.0]);
+/// let b = m256d::from_array([2.0, 3.0, 70.0, 80.0]);
+/// let mask = m256d::from_array([-1.0, 0.0, 0.0, -1.0]);
+/// let c = blend_varying_m256d(a, b, mask).to_array();
+/// assert_eq!(c, [2.0, 1.0, 20.0, 80.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn blend_varying_m256d(a: m256d, b: m256d, mask: m256d) -> m256d {
+  m256d(unsafe { _mm256_blendv_pd(a.0, b.0, mask.0) })
+}
+
+/// Blend the lanes according to a runtime varying mask.
+///
+/// The sign bit of each lane in the `mask` value determines if the output
+/// lane uses `a` (mask non-negative) or `b` (mask negative).
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([0.0, 1.0, 2.0, 3.0, 8.0, 9.0, 10.0, 11.0]);
+/// let b = m256::from_array([4.0, 5.0, 6.0, 7.0, -4.0, -5.0, -6.0, -7.0]);
+/// let mask = m256::from_array([-1.0, 0.0, -1.0, 0.0, -1.0, -1.0, 0.0, 0.0]);
+/// let c = blend_varying_m256(a, b, mask).to_array();
+/// assert_eq!(c, [4.0, 1.0, 6.0, 3.0, -4.0, -5.0, 10.0, 11.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn blend_varying_m256(a: m256, b: m256, mask: m256) -> m256 {
+  m256(unsafe { _mm256_blendv_ps(a.0, b.0, mask.0) })
+}
+
 // _mm256_broadcast_pd
 // _mm256_broadcast_ps
 // _mm256_broadcast_sd
