@@ -28,17 +28,19 @@ use core::arch::x86_64::{
 
 #[test]
 fn foo() {
-  let a_bytes: [u8; 16] = <[u8; 16]>::try_from(*b"this is a testXX").unwrap();
-  let b_bytes: [u8; 16] = <[u8; 16]>::try_from(*b"this is a testXX").unwrap();
+  let a_bytes: [u8; 16] = *b"here is a demo!!";
+  let b_bytes: [u8; 16] = *b"here is another.";
   let a: m128i = m128i::from(a_bytes);
   let b: m128i = m128i::from(b_bytes);
-  const MODE: i32 = _SIDD_UWORD_OPS | _SIDD_CMP_EQUAL_EACH;
-  dbg!(cmp_e_str_a!(a, 5, b, 5, MODE));
-  dbg!(cmp_e_str_c!(a, 5, b, 5, MODE));
-  dbg!(cmp_e_str_i!(a, 5, b, 5, MODE));
-  dbg!(cmp_e_str_m!(a, 5, b, 5, MODE));
-  dbg!(cmp_e_str_o!(a, 5, b, 5, MODE));
-  dbg!(cmp_e_str_s!(a, 5, b, 5, MODE));
-  dbg!(cmp_e_str_z!(a, 5, b, 5, MODE));
-  //panic!();
+  const MODE: i32 = _SIDD_UBYTE_OPS | _SIDD_CMP_EQUAL_EACH;
+  dbg!(cmp_e_str_a!(a, 16, b, 16, MODE));
+  dbg!(cmp_e_str_c!(a, 16, b, 16, u8, EqAny));
+  dbg!(cmp_e_str_i!(a, 16, b, 16, MODE));
+  dbg!(cmp_e_str_m!(a, 16, b, 16, MODE));
+  dbg!(cmp_e_str_o!(a, 16, b, 16, MODE));
+  dbg!(cmp_e_str_s!(a, 5, b, 16, MODE));
+  dbg!(cmp_e_str_z!(a, 16, b, 5, MODE));
+  //let mask_bytes: [u16; 8] = cmp_e_str_m!(a, 16, b, 16, MODE).into();
+  //eprintln!("{:016b}", mask_bytes[0]);
+  panic!();
 }

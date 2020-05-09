@@ -81,11 +81,11 @@ pub fn crc32_u64(crc: u64, v: u64) -> u64 {
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 macro_rules! cmp_e_str_a {
-  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
-    let a: m128i = $a;
-    let la: i32 = $la;
-    let b: m128i = $b;
-    let lb: i32 = $lb;
+  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $imm:expr) => {{
+    let a: m128i = $needle;
+    let la: i32 = $len_needle;
+    let b: m128i = $haystack;
+    let lb: i32 = $len_haystack;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_mm_cmpestra;
@@ -95,20 +95,171 @@ macro_rules! cmp_e_str_a {
   }};
 }
 
-/// ?
+/// TODO
+#[doc(hidden)]
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+macro_rules! str_cmp_type {
+  (@ u8) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_UBYTE_OPS;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_UBYTE_OPS;
+    _SIDD_UBYTE_OPS
+  }};
+  (@ u16) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_UWORD_OPS;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_UWORD_OPS;
+    _SIDD_UWORD_OPS
+  }};
+  (@ i8) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_SBYTE_OPS;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_SBYTE_OPS;
+    _SIDD_SBYTE_OPS
+  }};
+  (@ i16) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_SWORD_OPS;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_SWORD_OPS;
+    _SIDD_SWORD_OPS
+  }};
+  (@ $unknown:tt) => {
+    compile_error!("legal str_cmp types are: u8, u16, i8, i16")
+  };
+}
+
+/// TODO
+#[doc(hidden)]
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+macro_rules! str_cmp_op {
+  (@ EqAny) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_CMP_EQUAL_ANY;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_CMP_EQUAL_ANY;
+    _SIDD_CMP_EQUAL_ANY
+  }};
+  (@ CmpRanges) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_CMP_RANGES;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_CMP_RANGES;
+    _SIDD_CMP_RANGES
+  }};
+  (@ CmpEqEach) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_CMP_EQUAL_EACH;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_CMP_EQUAL_EACH;
+    _SIDD_CMP_EQUAL_EACH
+  }};
+  (@ CmpEqOrdered) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_CMP_EQUAL_ORDERED;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_CMP_EQUAL_ORDERED;
+    _SIDD_CMP_EQUAL_ORDERED
+  }};
+  (@ $unknown:tt) => {
+    compile_error!(
+      "legal str_cmp ops are: EqAny, CmpRanges, CmpEqEach, CmpEqOrdered"
+    )
+  };
+}
+
+/// TODO
+#[doc(hidden)]
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+macro_rules! str_negation {
+  (@ NegativePolarity) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_NEGATIVE_POLARITY;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_NEGATIVE_POLARITY;
+    _SIDD_NEGATIVE_POLARITY
+  }};
+  (@ MaskedNegativePolarity) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_MASKED_NEGATIVE_POLARITY;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_MASKED_NEGATIVE_POLARITY;
+    _SIDD_MASKED_NEGATIVE_POLARITY
+  }};
+  (@ $unknown:tt) => {
+    compile_error!(
+      "legal str negations are: NegativePolarity, MaskedNegativePolarity"
+    )
+  };
+}
+
+/// Performs the comparison and says if there was _any_ match, even if it wasn't
+/// a full match.
+///
+/// * `$t`: one of `u8`, `u16`, `i8`, `i16`
+/// * `$op`: one of `EqAny`, `CmpRanges`, `CmpEqEach`, `CmpEqOrdered`
 ///
 /// ```
 /// # use safe_arch::*;
-/// //
+/// let haystack: m128i = m128i::from(*b"some test words.");
+///
+/// // using `EqAny`, we can find an 'w' anywhere in `haystack`
+/// let needle: m128i = m128i::from(*b"w_______________");
+/// assert_eq!(1, cmp_e_str_c!(needle, 1, haystack, 16, u8, EqAny));
+/// // but if we limit the length of `haystack` it's not found.
+/// assert_eq!(0, cmp_e_str_c!(needle, 1, haystack, 5, u8, EqAny));
+///
+/// // using `CmpRanges`, `needle` is range pair to check for in `haystack`.
+/// let needle: m128i = m128i::from(*b"az______________");
+/// assert_eq!(1, cmp_e_str_c!(needle, 2, haystack, 16, u8, CmpRanges));
+/// let needle: m128i = m128i::from(*b"AZ______________");
+/// assert_eq!(0, cmp_e_str_c!(needle, 2, haystack, 16, u8, CmpRanges));
+///
+/// // using `CmpEqEach`, see if the start of `needle` partly matches
+/// // the start of `haystack`.
+/// let needle: m128i = m128i::from(*b"som.____________");
+/// assert_eq!(1, cmp_e_str_c!(needle, 4, haystack, 16, u8, CmpEqEach));
+/// // but a match farther into the string doesn't count.
+/// let needle: m128i = m128i::from(*b"test____________");
+/// assert_eq!(0, cmp_e_str_c!(needle, 4, haystack, 16, u8, CmpEqEach));
+///
+/// // using `CmpEqOrdered`, the `needle` substring-search needs to
+/// // have a full sub-string match to trigger a hit.
+/// let needle: m128i = m128i::from(*b"som.____________");
+/// assert_eq!(0, cmp_e_str_c!(needle, 4, haystack, 16, u8, CmpEqOrdered));
+/// // this time "test" sub-string is found somewhere in `haystack`.
+/// let needle: m128i = m128i::from(*b"test____________");
+/// assert_eq!(1, cmp_e_str_c!(needle, 4, haystack, 16, u8, CmpEqOrdered));
 /// ```
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 macro_rules! cmp_e_str_c {
-  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
-    let a: m128i = $a;
-    let la: i32 = $la;
-    let b: m128i = $b;
-    let lb: i32 = $lb;
+  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $t:tt, $op:tt) => {{
+    $crate::cmp_e_str_c!(
+      @ $needle, $len_needle, $haystack, $len_haystack,
+      $crate::str_cmp_type!(@ $t)
+      | $crate::str_cmp_op!(@ $op)
+    )
+  }};
+  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $t:tt, $op:tt, $neg:tt) => {{
+    $crate::cmp_e_str_c!(
+      @ $needle, $len_needle, $haystack, $len_haystack,
+      $crate::str_cmp_type!(@ $t)
+      | $crate::str_cmp_op!(@ $op)
+      | $crate::str_negation!(@ $neg)
+    )
+  }};
+  (@ $needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $imm:expr) => {{
+    let a: m128i = $needle;
+    let la: i32 = $len_needle;
+    let b: m128i = $haystack;
+    let lb: i32 = $len_haystack;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_mm_cmpestrc;
@@ -127,11 +278,11 @@ macro_rules! cmp_e_str_c {
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 macro_rules! cmp_e_str_i {
-  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
-    let a: m128i = $a;
-    let la: i32 = $la;
-    let b: m128i = $b;
-    let lb: i32 = $lb;
+  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $imm:expr) => {{
+    let a: m128i = $needle;
+    let la: i32 = $len_needle;
+    let b: m128i = $haystack;
+    let lb: i32 = $len_haystack;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_mm_cmpestri;
@@ -150,11 +301,11 @@ macro_rules! cmp_e_str_i {
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 macro_rules! cmp_e_str_m {
-  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
-    let a: m128i = $a;
-    let la: i32 = $la;
-    let b: m128i = $b;
-    let lb: i32 = $lb;
+  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $imm:expr) => {{
+    let a: m128i = $needle;
+    let la: i32 = $len_needle;
+    let b: m128i = $haystack;
+    let lb: i32 = $len_haystack;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_mm_cmpestrm;
@@ -173,11 +324,11 @@ macro_rules! cmp_e_str_m {
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 macro_rules! cmp_e_str_o {
-  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
-    let a: m128i = $a;
-    let la: i32 = $la;
-    let b: m128i = $b;
-    let lb: i32 = $lb;
+  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $imm:expr) => {{
+    let a: m128i = $needle;
+    let la: i32 = $len_needle;
+    let b: m128i = $haystack;
+    let lb: i32 = $len_haystack;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_mm_cmpestro;
@@ -196,11 +347,11 @@ macro_rules! cmp_e_str_o {
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 macro_rules! cmp_e_str_s {
-  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
-    let a: m128i = $a;
-    let la: i32 = $la;
-    let b: m128i = $b;
-    let lb: i32 = $lb;
+  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $imm:expr) => {{
+    let a: m128i = $needle;
+    let la: i32 = $len_needle;
+    let b: m128i = $haystack;
+    let lb: i32 = $len_haystack;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_mm_cmpestrs;
@@ -219,11 +370,11 @@ macro_rules! cmp_e_str_s {
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 macro_rules! cmp_e_str_z {
-  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
-    let a: m128i = $a;
-    let la: i32 = $la;
-    let b: m128i = $b;
-    let lb: i32 = $lb;
+  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $imm:expr) => {{
+    let a: m128i = $needle;
+    let la: i32 = $len_needle;
+    let b: m128i = $haystack;
+    let lb: i32 = $len_haystack;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_mm_cmpestrz;
@@ -242,40 +393,80 @@ macro_rules! cmp_e_str_z {
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 macro_rules! cmp_i_str_a {
-  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
-    let a: m128i = $a;
-    let la: i32 = $la;
-    let b: m128i = $b;
-    let lb: i32 = $lb;
+  ($needle:expr, $haystack:expr, $imm:expr) => {{
+    let a: m128i = $needle;
+    let b: m128i = $haystack;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_mm_cmpistra;
     #[cfg(target_arch = "x86_64")]
     use core::arch::x86_64::_mm_cmpistra;
-    unsafe { _mm_cmpistra(a.0, la, b.0, lb, IMM) }
+    unsafe { _mm_cmpistra(a.0, b.0, IMM) }
   }};
 }
 
-/// ?
+/// Works like [`cmp_e_str_c`], but with implicit string lengths
+/// (null-terminated).
+///
+/// See that macro's for more info.
 ///
 /// ```
 /// # use safe_arch::*;
-/// //
+/// let haystack: m128i = m128i::from(*b"some test words.");
+///
+/// // using `EqAny`
+/// let needle: m128i = m128i::from(*b"w\0______________");
+/// assert_eq!(1, cmp_i_str_c!(needle, haystack, u8, EqAny));
+/// assert_eq!(
+///   0,
+///   cmp_i_str_c!(needle, m128i::from(*b"som\0 test words."), u8, EqAny)
+/// );
+///
+/// // using `CmpRanges`
+/// let needle: m128i = m128i::from(*b"az\0_____________");
+/// assert_eq!(1, cmp_i_str_c!(needle, haystack, u8, CmpRanges));
+/// let needle: m128i = m128i::from(*b"AZ\0_____________");
+/// assert_eq!(0, cmp_i_str_c!(needle, haystack, u8, CmpRanges));
+///
+/// // using `CmpEqEach`
+/// let needle: m128i = m128i::from(*b"som.\0___________");
+/// assert_eq!(1, cmp_i_str_c!(needle, haystack, u8, CmpEqEach));
+/// let needle: m128i = m128i::from(*b"test\0___________");
+/// assert_eq!(0, cmp_i_str_c!(needle, haystack, u8, CmpEqEach));
+///
+/// // using `CmpEqOrdered`
+/// let needle: m128i = m128i::from(*b"som.\0___________");
+/// assert_eq!(0, cmp_i_str_c!(needle, haystack, u8, CmpEqOrdered));
+/// let needle: m128i = m128i::from(*b"test\0___________");
+/// assert_eq!(1, cmp_i_str_c!(needle, haystack, u8, CmpEqOrdered));
 /// ```
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 macro_rules! cmp_i_str_c {
-  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
-    let a: m128i = $a;
-    let la: i32 = $la;
-    let b: m128i = $b;
-    let lb: i32 = $lb;
+  ($needle:expr, $haystack:expr, $t:tt, $op:tt) => {{
+    $crate::cmp_i_str_c!(
+      @ $needle, $haystack,
+      $crate::str_cmp_type!(@ $t)
+      | $crate::str_cmp_op!(@ $op)
+    )
+  }};
+  ($needle:expr, $haystack:expr, $t:tt, $op:tt, $neg:tt) => {{
+    $crate::cmp_i_str_c!(
+      @ $needle, $haystack,
+      $crate::str_cmp_type!(@ $t)
+      | $crate::str_cmp_op!(@ $op)
+      | $crate::str_negation!(@ $neg)
+    )
+  }};
+  (@ $needle:expr, $haystack:expr, $imm:expr) => {{
+    let a: m128i = $needle;
+    let b: m128i = $haystack;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_mm_cmpistrc;
     #[cfg(target_arch = "x86_64")]
     use core::arch::x86_64::_mm_cmpistrc;
-    unsafe { _mm_cmpistrc(a.0, la, b.0, lb, IMM) }
+    unsafe { _mm_cmpistrc(a.0, b.0, IMM) }
   }};
 }
 
@@ -288,17 +479,15 @@ macro_rules! cmp_i_str_c {
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 macro_rules! cmp_i_str_i {
-  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
-    let a: m128i = $a;
-    let la: i32 = $la;
-    let b: m128i = $b;
-    let lb: i32 = $lb;
+  ($needle:expr, $haystack:expr, $imm:expr) => {{
+    let a: m128i = $needle;
+    let b: m128i = $haystack;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_mm_cmpistri;
     #[cfg(target_arch = "x86_64")]
     use core::arch::x86_64::_mm_cmpistri;
-    unsafe { _mm_cmpistri(a.0, la, b.0, lb, IMM) }
+    unsafe { _mm_cmpistri(a.0, b.0, IMM) }
   }};
 }
 
@@ -311,17 +500,15 @@ macro_rules! cmp_i_str_i {
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 macro_rules! cmp_i_str_m {
-  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
-    let a: m128i = $a;
-    let la: i32 = $la;
-    let b: m128i = $b;
-    let lb: i32 = $lb;
+  ($needle:expr, $haystack:expr, $imm:expr) => {{
+    let a: m128i = $needle;
+    let b: m128i = $haystack;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_mm_cmpistrm;
     #[cfg(target_arch = "x86_64")]
     use core::arch::x86_64::_mm_cmpistrm;
-    m128i(unsafe { _mm_cmpistrm(a.0, la, b.0, lb, IMM) })
+    m128i(unsafe { _mm_cmpistrm(a.0, b.0, IMM) })
   }};
 }
 
@@ -334,17 +521,15 @@ macro_rules! cmp_i_str_m {
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 macro_rules! cmp_i_str_o {
-  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
-    let a: m128i = $a;
-    let la: i32 = $la;
-    let b: m128i = $b;
-    let lb: i32 = $lb;
+  ($needle:expr, $haystack:expr, $imm:expr) => {{
+    let a: m128i = $needle;
+    let b: m128i = $haystack;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_mm_cmpistro;
     #[cfg(target_arch = "x86_64")]
     use core::arch::x86_64::_mm_cmpistro;
-    unsafe { _mm_cmpistro(a.0, la, b.0, lb, IMM) }
+    unsafe { _mm_cmpistro(a.0, b.0, IMM) }
   }};
 }
 
@@ -357,17 +542,15 @@ macro_rules! cmp_i_str_o {
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 macro_rules! cmp_i_str_s {
-  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
-    let a: m128i = $a;
-    let la: i32 = $la;
-    let b: m128i = $b;
-    let lb: i32 = $lb;
+  ($needle:expr, $haystack:expr, $imm:expr) => {{
+    let a: m128i = $needle;
+    let b: m128i = $haystack;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_mm_cmpistrs;
     #[cfg(target_arch = "x86_64")]
     use core::arch::x86_64::_mm_cmpistrs;
-    unsafe { _mm_cmpistrs(a.0, la, b.0, lb, IMM) }
+    unsafe { _mm_cmpistrs(a.0, b.0, IMM) }
   }};
 }
 
@@ -380,16 +563,14 @@ macro_rules! cmp_i_str_s {
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 macro_rules! cmp_i_str_z {
-  ($a:expr, $la:expr, $b:expr, $lb:expr, $imm:expr) => {{
-    let a: m128i = $a;
-    let la: i32 = $la;
-    let b: m128i = $b;
-    let lb: i32 = $lb;
+  ($needle:expr, $haystack:expr, $imm:expr) => {{
+    let a: m128i = $needle;
+    let b: m128i = $haystack;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_mm_cmpistrz;
     #[cfg(target_arch = "x86_64")]
     use core::arch::x86_64::_mm_cmpistrz;
-    unsafe { _mm_cmpistrz(a.0, la, b.0, lb, IMM) }
+    unsafe { _mm_cmpistrz(a.0, b.0, IMM) }
   }};
 }
