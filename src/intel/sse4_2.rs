@@ -199,11 +199,14 @@ macro_rules! str_negation {
   };
 }
 
-/// Performs the comparison and says if there was _any_ match, even if it wasn't
-/// a full match.
+/// String comparison with "was there any match at all?" output.
 ///
+/// * Looks for `$needle` in `$haystack`, with explicit lengths for both.
 /// * `$t`: one of `u8`, `u16`, `i8`, `i16`
 /// * `$op`: one of `EqAny`, `CmpRanges`, `CmpEqEach`, `CmpEqOrdered`
+/// * `$neg`: optional, one of `NegativePolarity`, `MaskedNegativePolarity`
+///
+/// The output itself is 1 for true and 0 for false.
 ///
 /// ```
 /// # use safe_arch::*;
