@@ -649,6 +649,7 @@ pub fn load_m128(a: &m128) -> m128 {
 #[inline(always)]
 #[allow(clippy::trivially_copy_pass_by_ref)]
 pub fn load_f32_splat_m128(a: &f32) -> m128 {
+  // question: how is this different from _mm_broadcast_ss?
   m128(unsafe { _mm_load_ps1(a) })
 }
 

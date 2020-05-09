@@ -38,25 +38,93 @@
 //!   something if you want to do that.
 //!
 //! ## Naming Conventions
-//! The actual names for each intrinsic are generally a flaming dumpster, so we
-//! use easier to understand names. Well, I hope they're easier to understand.
+//! The actual names for each intrinsic are generally a flaming dumpster of
+//! letters that only make sense _after_ you've learned all the names. They're
+//! very bad for learning what things do. Accordingly, `safe_arch` uses very
+//! verbose naming that (hopefully) improves the new-user experience.
 //!
 //! * Function names start with the primary "verb" of the operation, and then
 //!   any adverbs go after that. This makes for slightly awkward English but
 //!   helps the list of all the functions sort a little better.
 //!   * Eg: `add_i32_m128i` and `add_i16_saturating_m128i`
-//! * Function names end with the register type they're associated with.
+//! * Function names end with the register type they're most associated with.
 //!   * Eg: `and_m128` (for `m128`) and `and_m128d` (for `m128d`)
 //! * If a function operates on just the lowest data lane it generally has `_s`
-//!   after the register type, because it's a "scalar" operation. The high(er)
-//!   lane(s) are generally just copied forward, or taken from a secondary
+//!   after the register type, because it's a "scalar" operation. The higher
+//!   lanes are generally just copied forward, or taken from a secondary
 //!   argument, or something. Details vary.
 //!   * Eg: `sqrt_m128` (all lanes) and `sqrt_m128_s` (low lane only)
+//!
+//! Sometimes there's more than one name for essentially the same operation,
+//! because these intrinsics were added to the CPU slowly over a decade or more.
+//! Particularly for going into and out of SIMD form there's the following
+//! naming convention:
+//! * `load` reads from memory into a register.
+//! * `store` writes from a register into memory.
+//! * `set` packs non-SIMD data into a SIMD register.
+//! * `splat` copies a value as many times as it fits across a SIMD register.
+//! * `extract` picks a lane's value out of SIMD into a non-SIMD data type.
+//! * `insert` copies a register and replaces a particular lane's value.
+//!
+//! **This crate is pre-1.0 and if you feel that an operation should have a
+//! better name to improve the crate's consistency please file an issue.**
 //!
 //! ## Current Support
 //! * Intel (`x86` / `x86_64`)
 //!   * 128-bit: `sse`, `sse2`, `sse3`, `ssse3`
 //!   * 256-bit: `avx`
+//!
+//! ## Power License Levels
+//! It sounds like a goofy thing from a video game, but different CPU operations
+//! have a "license level", and this crate makes an attempt to recognize this
+//! concept via cargo feature because it can have a performance impact.
+//! * Any 256-bit multiplication (via either AVX or FMA), as well as all 512-bit
+//!   operations, are "license 1".
+//! * Any 512-bit multiplication is "license 2".
+//! * Any other operation is just "license 0".
+//! * A heavy enough mix of instructions that wouldn't normally demand a higher
+//!   license level individually can still cause a core to request a higher
+//!   license level, as can speculative executions from a failed branch
+//!   prediction.
+//!
+//! If you execute an instruction that's of a _higher_ license level than the
+//! CPU core's current license level then the core greatly slows down while it
+//! negotiates with the power manager that it wants to be at the new higher
+//! license level and drawing more power (this takes up to 500 micro-seconds).
+//!
+//! While the CPU is actually at license 1 or license 2 the core's clock rate is
+//! limited compared to the normal license 0 clock rate. The higher power draw
+//! means more heat, and so the core has to clock down to compensate. Exactly
+//! how much the core has to clock down depends on the CPU and how many cores
+//! are using what license levels and so on. Basically, more power used means
+//! more heat build up means the device has to slow down or it would damage
+//! itself.
+//!
+//! After a while (~2ms) of not executing any higher license level instructions
+//! the CPU core will naturally reduce its license level back down on its own.
+//!
+//! * Dedicated usage of a higher license level feature will generally give an
+//!   overall gain in performance. The core slows down a bit at the start, and
+//!   then runs a little slower than the normal top speed while working, but
+//!   processes through all the lane elements twice as fast and so overall
+//!   there's a gain.
+//! * Occasional usage of a higher license level _can_ make performance worse,
+//!   because the CPU slows down, doesn't do enough work to justify the slow
+//!   down, and then whatever happens after that work is done is _also_ slowed
+//!   until the higher license level "wears off" and things go back to normal.
+//!
+//! So if you want to opt-in to the functions that will demand a higher license
+//! level you have to enable them via the `license1` and `license2` cargo
+//! features. This isn't meant to be a major obstacle, just a tiny reminder.
+//! Even with the cargo features on you must also have the appropriate CPU
+//! feature enabled during the build of course.
+//!
+//! For more details, search the word "license" in the [Intel 64 and IA-32
+//! Architectures Optimization Reference Manual][pdf], it's in section 2.2.3 of
+//! the current version.
+//!
+//! [pdf]:
+//! https://software.intel.com/sites/default/files/managed/9e/bc/64-ia-32-architectures-optimization-manual.pdf
 //!
 //! ## Compile Time CPU Target Features
 //!

@@ -219,12 +219,84 @@ pub fn blend_varying_m256(a: m256, b: m256, mask: m256) -> m256 {
   m256(unsafe { _mm256_blendv_ps(a.0, b.0, mask.0) })
 }
 
-// _mm256_broadcast_pd
-// _mm256_broadcast_ps
-// _mm256_broadcast_sd
-// _mm_broadcast_ss
-// _mm256_broadcast_ss
-// _mm256_castpd_ps
+/// Load an `m128d` and splat it to the lower and upper half of an `m256d`
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([0.0, 1.0]);
+/// let b = load_m128d_splat_m256d(&a).to_array();
+/// assert_eq!(b, [0.0, 1.0, 0.0, 1.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn load_m128d_splat_m256d(a: &m128d) -> m256d {
+  m256d(unsafe { _mm256_broadcast_pd(&a.0) })
+}
+
+/// Load an `m128` and splat it to the lower and upper half of an `m256`
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128::from_array([0.0, 1.0, 2.0, 3.0]);
+/// let b = load_m128_splat_m256(&a).to_array();
+/// assert_eq!(b, [0.0, 1.0, 2.0, 3.0, 0.0, 1.0, 2.0, 3.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn load_m128_splat_m256(a: &m128) -> m256 {
+  m256(unsafe { _mm256_broadcast_ps(&a.0) })
+}
+
+/// Load an `f64` and splat it to all lanes of an `m256d`
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = 1.0;
+/// let b = load_f64_splat_m256d(&a).to_array();
+/// assert_eq!(b, [1.0, 1.0, 1.0, 1.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn load_f64_splat_m256d(a: &f64) -> m256d {
+  m256d(unsafe { _mm256_broadcast_sd(&a) })
+}
+
+/// Load an `f32` and splat it to all lanes of an `m256d`
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = 1.0;
+/// let b = load_f32_splat_m256(&a).to_array();
+/// assert_eq!(b, [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn load_f32_splat_m256(a: &f32) -> m256 {
+  m256(unsafe { _mm256_broadcast_ss(&a) })
+}
+
+/// Bit-preserving cast from `m256d` to `m256`.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = load_f64_splat_m256d(&1.0);
+/// assert_eq!(
+///   cast_from_m256d_to_m256(a).to_bits(),
+///   [0, 0x3FF0_0000, 0, 0x3FF0_0000, 0, 0x3FF0_0000, 0, 0x3FF0_0000]
+/// );
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn cast_from_m256d_to_m256(a: m256d) -> m256 {
+  m256(unsafe { _mm256_castpd_ps(a.0) })
+}
+
+//
 // _mm256_castpd_si256
 // _mm256_castpd128_pd256
 // _mm256_castpd256_pd128
