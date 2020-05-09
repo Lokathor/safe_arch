@@ -1,6 +1,6 @@
 
 [build]
-# Turn this off before publishing!!
+# This can cause weirdness!
 rustdocflags = ["-Ctarget-cpu=native"]
 
 # Note: Cargo doesn't carry these settings to dependencies.

@@ -44,7 +44,7 @@ impl Default for m128i {
   #[must_use]
   #[inline(always)]
   fn default() -> Self {
-    zeroed_m128i()
+    unsafe { core::mem::zeroed() }
   }
 }
 
