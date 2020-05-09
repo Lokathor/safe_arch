@@ -230,7 +230,7 @@ pub fn andnot_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_andnot_si128(a.0, b.0) })
 }
 
-/// Lanewise saturating `a + b` with lanes as `u8`.
+/// Lanewise average of the `u8` values.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([
@@ -257,7 +257,7 @@ pub fn average_u8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_avg_epu8(a.0, b.0) })
 }
 
-/// Lanewise saturating `a + b` with lanes as `u16`.
+/// Lanewise average of the `u16` values.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([u16::MAX, 0, 3, 4, 1, 2, 3, 4]);
