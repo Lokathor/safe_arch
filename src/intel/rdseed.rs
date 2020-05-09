@@ -11,7 +11,7 @@ use super::*;
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "rdrand")))]
-pub fn rdrand_u16(out: &mut u16) -> i32 {
+pub fn rdseed_u16(out: &mut u16) -> i32 {
   unsafe { _rdrand16_step(out) }
 }
 
@@ -24,7 +24,7 @@ pub fn rdrand_u16(out: &mut u16) -> i32 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "rdrand")))]
-pub fn rdrand_u32(out: &mut u32) -> i32 {
+pub fn rdseed_u32(out: &mut u32) -> i32 {
   unsafe { _rdrand32_step(out) }
 }
 
@@ -38,6 +38,6 @@ pub fn rdrand_u32(out: &mut u32) -> i32 {
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "rdrand")))]
-pub fn rdrand_u64(out: &mut u64) -> i32 {
+pub fn rdseed_u64(out: &mut u64) -> i32 {
   unsafe { _rdrand64_step(out) }
 }
