@@ -23,6 +23,7 @@ pub fn leading_zero_count_u32(a: u32) -> u32 {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg(target_arch = "x86_64")]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse")))]
 pub fn leading_zero_count_u64(a: u64) -> u64 {
   unsafe { _lzcnt_u64(a) }
