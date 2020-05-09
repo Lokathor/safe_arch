@@ -179,6 +179,8 @@ pub mod intel {
   submodule!(pub ssse3);
   #[cfg(target_feature = "sse4.1")]
   submodule!(pub sse4_1);
+  #[cfg(target_feature = "adx")]
+  submodule!(pub adx);
   #[cfg(target_feature = "pclmulqdq")]
   submodule!(pub pclmulqdq);
   #[cfg(target_feature = "aes")]
