@@ -191,14 +191,16 @@ pub mod intel {
   submodule!(pub bmi1);
   #[cfg(target_feature = "bmi2")]
   submodule!(pub bmi2);
+  #[cfg(target_feature = "lzcnt")]
+  submodule!(pub lzcnt);
+  #[cfg(target_feature = "pclmulqdq")]
+  submodule!(pub pclmulqdq);
   #[cfg(target_feature = "popcnt")]
   submodule!(pub popcnt);
   #[cfg(target_feature = "rdrand")]
   submodule!(pub rdrand);
   #[cfg(target_feature = "rdseed")]
   submodule!(pub rdseed);
-  #[cfg(target_feature = "pclmulqdq")]
-  submodule!(pub pclmulqdq);
 }
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub use intel::*;
