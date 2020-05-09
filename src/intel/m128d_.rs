@@ -76,26 +76,6 @@ impl m128d {
   }
 }
 
-impl AsRef<[f64; 2]> for m128d {
-  #[must_use]
-  #[inline(always)]
-  fn as_ref(&self) -> &[f64; 2] {
-    // Safety: Since the alignment requirement of the output reference type is
-    // lower than our own reference type this is safe.
-    unsafe { core::mem::transmute(self) }
-  }
-}
-
-impl AsMut<[f64; 2]> for m128d {
-  #[must_use]
-  #[inline(always)]
-  fn as_mut(&mut self) -> &mut [f64; 2] {
-    // Safety: Since the alignment requirement of the output reference type is
-    // lower than our own reference type this is safe.
-    unsafe { core::mem::transmute(self) }
-  }
-}
-
 impl Clone for m128d {
   #[must_use]
   #[inline(always)]
