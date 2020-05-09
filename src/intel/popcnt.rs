@@ -25,6 +25,7 @@ pub fn population_count_i32(a: i32) -> i32 {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg(target_arch = "x86_64")]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "popcnt")))]
 pub fn population_count_i64(a: i64) -> i32 {
   unsafe { _popcnt64(a) }
