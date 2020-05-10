@@ -301,6 +301,9 @@ macro_rules! cmp_e_str_c {
 
 /// String comparison with the index of the match returned.
 ///
+/// If there's more than one needle you just get the index of the lowest or
+/// highest index of a match without knowing which thing matched.
+///
 /// * Looks for `$needle` in `$haystack`, with explicit lengths for both.
 /// * `$t`: one of `u8`, `u16`, `i8`, `i16`
 /// * `$op`: one of `EqAny`, `CmpRanges`, `CmpEqEach`, `CmpEqOrdered`
@@ -311,20 +314,65 @@ macro_rules! cmp_e_str_c {
 /// # use safe_arch::*;
 /// let haystack: m128i = m128i::from(*b"some test words.");
 ///
-/// // using `EqAny`
-/// let needle: m128i = m128i::from(*b"som_____________");
-/// assert_eq!(1, cmp_e_str_i!(needle, 3, haystack, 16, u8, EqAny, LowIndex));
-/// assert_eq!(1, cmp_e_str_i!(needle, 3, haystack, 16, u8, EqAny, HighIndex));
+/// // using `EqAny` we get the first or last index where any needle element
+/// // is in the haystack
+/// let needle: m128i = m128i::from(*b"ew______________");
+/// // The first 'e' is at index 0.
+/// assert_eq!(3, cmp_e_str_i!(needle, 2, haystack, 16, u8, EqAny, LowIndex));
+/// // There's a 'w' at index 10.
+/// assert_eq!(10, cmp_e_str_i!(needle, 2, haystack, 16, u8, EqAny, HighIndex));
 ///
-/// // TODO: CmpRanges
-/// // TODO: CmpEqEach
-/// // TODO: CmpEqOrdered
+/// // using `CmpRanges`, we can check for letters in ranges
+/// let needle: m128i = m128i::from(*b"vzef____________");
+/// // an element from `e..=f` is at index 3 ('e')
+/// assert_eq!(3, cmp_e_str_i!(needle, 4, haystack, 16, u8, CmpRanges, LowIndex));
+/// // an element from `v..=z` is at index 10 ('w')
+/// assert_eq!(
+///   10,
+///   cmp_e_str_i!(needle, 4, haystack, 16, u8, CmpRanges, HighIndex)
+/// );
+///
+/// // using `CmpEqEach`, we can check for where there might be an exact match
+/// // between the needle and the haystack on a letter by letter basis,
+/// // any any letter that fails to match doesn't make the whole test fail.
+/// // The underscores don't match but "test" does.
+/// let needle: m128i = m128i::from(*b"_____test_______");
+/// assert_eq!(
+///   5,
+///   cmp_e_str_i!(needle, 16, haystack, 16, u8, CmpEqEach, LowIndex)
+/// );
+/// assert_eq!(
+///   8,
+///   cmp_e_str_i!(needle, 16, haystack, 16, u8, CmpEqEach, HighIndex)
+/// );
+///
+/// // using `CmpEqOrdered`, we can check for where there might be a match
+/// // from the start of the needle all the way to the end of the needle and
+/// // we don't count "partial" matches, so this works because it's len 4.
+/// let needle: m128i = m128i::from(*b"some____________");
+/// assert_eq!(
+///   0,
+///   cmp_e_str_i!(needle, 4, haystack, 16, u8, CmpEqOrdered, LowIndex)
+/// );
+/// // but this fails to match because we increased the length to 5, and
+/// // the complete substring "some_" isn't in our haystack.
+/// assert_eq!(
+///   16,
+///   cmp_e_str_i!(needle, 5, haystack, 16, u8, CmpEqOrdered, LowIndex)
+/// );
+/// // If the substring is later in the string it's fine, the substring "test"
+/// // is found starting at position 5.
+/// let needle: m128i = m128i::from(*b"test____________");
+/// assert_eq!(
+///   5,
+///   cmp_e_str_i!(needle, 4, haystack, 16, u8, CmpEqOrdered, LowIndex)
+/// );
 /// ```
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 macro_rules! cmp_e_str_i {
   ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $t:tt, $op:tt, $i:tt) => {{
-    $crate::cmp_e_str_c!(
+    $crate::cmp_e_str_i!(
       @ $needle, $len_needle, $haystack, $len_haystack,
       $crate::str_cmp_type!(@ $t)
       | $crate::str_cmp_op!(@ $op)
@@ -332,7 +380,7 @@ macro_rules! cmp_e_str_i {
     )
   }};
   ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $t:tt, $op:tt, $i:tt, $neg:tt) => {{
-    $crate::cmp_e_str_c!(
+    $crate::cmp_e_str_i!(
       @ $needle, $len_needle, $haystack, $len_haystack,
       $crate::str_cmp_type!(@ $t)
       | $crate::str_cmp_op!(@ $op)
@@ -532,16 +580,67 @@ macro_rules! cmp_i_str_c {
   }};
 }
 
-/// ?
+/// Works like [`cmp_e_str_i`], but with implicit string lengths
+/// (null-terminated).
+///
+/// See that macro's for more info.
 ///
 /// ```
 /// # use safe_arch::*;
-/// //
+/// let haystack: m128i = m128i::from(*b"some test words.");
+///
+/// // Using `EqAny`
+/// let needle: m128i = m128i::from(*b"ew\0_____________");
+/// assert_eq!(3, cmp_i_str_i!(needle, haystack, u8, EqAny, LowIndex));
+/// assert_eq!(10, cmp_i_str_i!(needle, haystack, u8, EqAny, HighIndex));
+///
+/// // Using `CmpRanges`
+/// let needle: m128i = m128i::from(*b"vzef\0___________");
+/// assert_eq!(3, cmp_i_str_i!(needle, haystack, u8, CmpRanges, LowIndex));
+/// assert_eq!(10, cmp_i_str_i!(needle, haystack, u8, CmpRanges, HighIndex));
+///
+/// // Using `CmpEqEach`
+/// let needle: m128i = m128i::from(*b"_____test\0______");
+/// assert_eq!(5, cmp_i_str_i!(needle, haystack, u8, CmpEqEach, LowIndex));
+/// assert_eq!(8, cmp_i_str_i!(needle, haystack, u8, CmpEqEach, HighIndex));
+///
+/// // Using `CmpEqOrdered`
+/// let needle: m128i = m128i::from(*b"some\0___________");
+/// assert_eq!(0, cmp_i_str_i!(needle, haystack, u8, CmpEqOrdered, LowIndex));
+/// assert_eq!(
+///   16,
+///   cmp_i_str_i!(
+///     m128i::from(*b"some_\0__________"),
+///     haystack,
+///     u8,
+///     CmpEqOrdered,
+///     LowIndex
+///   )
+/// );
+/// let needle: m128i = m128i::from(*b"test\0___________");
+/// assert_eq!(5, cmp_i_str_i!(needle, haystack, u8, CmpEqOrdered, LowIndex));
 /// ```
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 macro_rules! cmp_i_str_i {
-  ($needle:expr, $haystack:expr, $imm:expr) => {{
+  ($needle:expr, $haystack:expr, $t:tt, $op:tt, $i:tt) => {{
+    $crate::cmp_i_str_i!(
+      @ $needle, $haystack,
+      $crate::str_cmp_type!(@ $t)
+      | $crate::str_cmp_op!(@ $op)
+      | $crate::str_index!(@ $i)
+    )
+  }};
+  ($needle:expr, $haystack:expr, $t:tt, $op:tt, $i:tt, $neg:tt) => {{
+    $crate::cmp_i_str_i!(
+      @ $needle, $haystack,
+      $crate::str_cmp_type!(@ $t)
+      | $crate::str_cmp_op!(@ $op)
+      | $crate::str_negation!(@ $neg)
+      | $crate::str_index!(@ $i)
+    )
+  }};
+  (@ $needle:expr, $haystack:expr, $imm:expr) => {{
     let a: m128i = $needle;
     let b: m128i = $haystack;
     const IMM: i32 = $imm as i32;
