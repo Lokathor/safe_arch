@@ -180,24 +180,27 @@ pub mod intel {
   submodule!(pub ssse3);
   #[cfg(target_feature = "sse4.1")]
   submodule!(pub sse4_1);
-  #[cfg(target_feature = "lzcnt")]
-  submodule!(pub lzcnt);
-  #[cfg(target_feature = "popcnt")]
-  submodule!(pub popcnt);
-  #[cfg(target_feature = "bmi2")]
-  submodule!(pub bmi2);
+  #[cfg(target_feature = "sse4.2")]
+  submodule!(pub sse4_2);
+
+  #[cfg(target_feature = "adx")]
+  submodule!(pub adx);
+  #[cfg(target_feature = "aes")]
+  submodule!(pub aes);
   #[cfg(target_feature = "bmi1")]
   submodule!(pub bmi1);
+  #[cfg(target_feature = "bmi2")]
+  submodule!(pub bmi2);
+  #[cfg(target_feature = "lzcnt")]
+  submodule!(pub lzcnt);
+  #[cfg(target_feature = "pclmulqdq")]
+  submodule!(pub pclmulqdq);
+  #[cfg(target_feature = "popcnt")]
+  submodule!(pub popcnt);
   #[cfg(target_feature = "rdrand")]
   submodule!(pub rdrand);
   #[cfg(target_feature = "rdseed")]
   submodule!(pub rdseed);
-  #[cfg(target_feature = "adx")]
-  submodule!(pub adx);
-  #[cfg(target_feature = "pclmulqdq")]
-  submodule!(pub pclmulqdq);
-  #[cfg(target_feature = "aes")]
-  submodule!(pub aes);
 }
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub use intel::*;

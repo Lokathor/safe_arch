@@ -718,9 +718,9 @@ macro_rules! insert_f32_immediate_m128 {
       | ($a_lane_dest & 0b11) << 4
       | ($clear_lanes & 0b1111);
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_insert_ps;
+    use ::core::arch::x86::_mm_insert_ps;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_insert_ps;
+    use ::core::arch::x86_64::_mm_insert_ps;
     m128(unsafe { _mm_insert_ps(a.0, b.0, IMM) })
   }};
   ($a:expr, $b:expr, from $b_lane_src:expr, to $a_lane_dest:expr) => {{
