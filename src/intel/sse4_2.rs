@@ -73,347 +73,218 @@ pub fn crc32_u64(crc: u64, v: u64) -> u64 {
   unsafe { _mm_crc32_u64(crc, v) }
 }
 
-/// This expands the string comparison types you can use into the appropriate
-/// const.
-#[doc(hidden)]
+/// Looks for `$needle` in `$haystack` and gives the index of the either the
+/// first or last match.
+///
+/// > This is a fairly flexible operation, and so I apologize in advance.
+///
+/// * The "needle" is the string you're looking _for_.
+/// * The "haystack" is the string you're looking _inside of_.
+/// * The lengths of each string can be "explicit" or "implicit".
+///   * "explicit" is specified with `[str, len]` pairs.
+///   * "implicit" just ends at the first `\0`.
+///   * Either way a string doesn't go past the end of the register.
+/// * You need to pick a "char type", which can be any of `u8`, `i8`, `u16`,
+///   `i16`. These operations always operate on `m128i` registers, but the
+///   interpretation of the data is configurable.
+/// * You need to pick the search operation, which determines how the `needle`
+///   is compared to the `haystack`:
+///   * `EqAny`: Matches when _any_ haystack character equals _any_ needle
+///     character, regardless of position.
+///   * `CmpRanges`: Interprets consecutive pairs of characters in the needle as
+///     `(low..=high)` ranges to compare each haystack character to.
+///   * `CmpEqEach`: Matches when a character position in the needle is equal to
+///     the character at the same position in the haystack.
+///   * `CmpEqOrdered`: Matches when the complete needle string is a substring
+///     somewhere in the haystack.
+/// * Finally, you need to specify if you're looking for the `FirstMatch` or
+///   `LastMatch`.
+///   * If no match is found the output will be the length of the haystack.
+///
+/// It's a lot to take in. Hopefully the examples below can help clarify how
+/// things work. They all use `u8` since Rust string literals are UTF-8, but
+/// it's the same with the other character types.
+///
+/// ## EqAny
+/// ```
+/// # use safe_arch::*;
+/// let hay: m128i = m128i::from(*b"some test words.");
+///
+/// // explicit needle length
+/// let needle: m128i = m128i::from(*b"e_______________");
+/// let i: i32 =
+///   string_search_for_index!([needle, 1], [hay, 16], u8, EqAny, FirstMatch);
+/// assert_eq!(i, 3);
+/// let i: i32 =
+///   string_search_for_index!([needle, 1], [hay, 16], u8, EqAny, LastMatch);
+/// assert_eq!(i, 6);
+///
+/// // implicit needle length
+/// let needle: m128i = m128i::from(*b"e\0______________");
+/// let i: i32 = string_search_for_index!(needle, hay, u8, EqAny, FirstMatch);
+/// assert_eq!(i, 3);
+/// let i: i32 = string_search_for_index!(needle, hay, u8, EqAny, LastMatch);
+/// assert_eq!(i, 6);
+///
+/// // more than one needle character will match any of them, though we
+/// // don't get info about _which_ needle character matched.
+/// let needle: m128i = m128i::from(*b"et\0_____________");
+/// let i: i32 = string_search_for_index!(needle, hay, u8, EqAny, FirstMatch);
+/// assert_eq!(i, 3);
+/// let i: i32 = string_search_for_index!(needle, hay, u8, EqAny, LastMatch);
+/// assert_eq!(i, 8);
+/// ```
+/// ## CmpRanges
+/// ```
+/// # use safe_arch::*;
+/// let hay: m128i = m128i::from(*b"some test words.");
+/// let needle: m128i = m128i::from(*b"vz\0_____________");
+/// let i: i32 = string_search_for_index!(needle, hay, u8, CmpRanges, FirstMatch);
+/// assert_eq!(i, 10); // matches the 'w'
+/// ```
+/// ## CmpEqEach
+/// ```
+/// # use safe_arch::*;
+/// let hay: m128i = m128i::from(*b"some test words.");
+/// let needle: m128i = m128i::from(*b"_____test_______");
+/// let i: i32 = string_search_for_index!(needle, hay, u8, CmpEqEach, FirstMatch);
+/// assert_eq!(i, 5); // start of "test"
+/// let i: i32 = string_search_for_index!(needle, hay, u8, CmpEqEach, LastMatch);
+/// assert_eq!(i, 8); // end of "test"
+/// ```
+/// ## CmpEqOrdered
+/// ```
+/// # use safe_arch::*;
+/// let hay: m128i = m128i::from(*b"some test words.");
+/// let needle: m128i = m128i::from(*b"words\0__________");
+/// let i: i32 =
+///   string_search_for_index!(needle, hay, u8, CmpEqOrdered, FirstMatch);
+/// assert_eq!(i, 10); // This is where the "words" substring begins
+/// ```
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-macro_rules! str_cmp_type {
-  (@ u8) => {{
+macro_rules! string_search_for_index {
+  ([$needle:expr, $needle_len:expr], [$haystack:expr, $haystack_len:expr], $char_type:tt, $search_op:tt, $index_end:tt) => {{
+    $crate::string_search_for_index!(
+      @_raw_explicit_len
+      $needle,
+      $needle_len,
+      $haystack,
+      $haystack_len,
+      $crate::string_search_for_index!(@_char_type $char_type)
+      | $crate::string_search_for_index!(@_search_op $search_op)
+      | $crate::string_search_for_index!(@_index_end $index_end)
+    )
+  }};
+
+  ($needle:expr, $haystack:expr, $char_type:tt, $search_op:tt, $index_end:tt) => {{
+    $crate::string_search_for_index!(
+      @_raw_implicit_len
+      $needle,
+      $haystack,
+      $crate::string_search_for_index!(@_char_type $char_type)
+      | $crate::string_search_for_index!(@_search_op $search_op)
+      | $crate::string_search_for_index!(@_index_end $index_end)
+    )
+  }};
+
+  // Character types
+
+  (@_char_type u8) => {{
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_SIDD_UBYTE_OPS;
     #[cfg(target_arch = "x86_64")]
     use core::arch::x86_64::_SIDD_UBYTE_OPS;
     _SIDD_UBYTE_OPS
   }};
-  (@ u16) => {{
+  (@_char_type u16) => {{
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_SIDD_UWORD_OPS;
     #[cfg(target_arch = "x86_64")]
     use core::arch::x86_64::_SIDD_UWORD_OPS;
     _SIDD_UWORD_OPS
   }};
-  (@ i8) => {{
+  (@_char_type i8) => {{
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_SIDD_SBYTE_OPS;
     #[cfg(target_arch = "x86_64")]
     use core::arch::x86_64::_SIDD_SBYTE_OPS;
     _SIDD_SBYTE_OPS
   }};
-  (@ i16) => {{
+  (@_char_type i16) => {{
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_SIDD_SWORD_OPS;
     #[cfg(target_arch = "x86_64")]
     use core::arch::x86_64::_SIDD_SWORD_OPS;
     _SIDD_SWORD_OPS
   }};
-  (@ $unknown:tt) => {
-    compile_error!("legal str_cmp types are: u8, u16, i8, i16")
+  (@_char_type $unknown:tt) => {
+    compile_error!("legal character types are: u8, u16, i8, i16")
   };
-}
 
-/// This expands the string comparison operations you can do into the
-/// appropriate const.
-#[doc(hidden)]
-#[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-macro_rules! str_cmp_op {
-  (@ EqAny) => {{
+  // Search styles
+
+  (@_search_op EqAny) => {{
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_SIDD_CMP_EQUAL_ANY;
     #[cfg(target_arch = "x86_64")]
     use core::arch::x86_64::_SIDD_CMP_EQUAL_ANY;
     _SIDD_CMP_EQUAL_ANY
   }};
-  (@ CmpRanges) => {{
+  (@_search_op CmpRanges) => {{
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_SIDD_CMP_RANGES;
     #[cfg(target_arch = "x86_64")]
     use core::arch::x86_64::_SIDD_CMP_RANGES;
     _SIDD_CMP_RANGES
   }};
-  (@ CmpEqEach) => {{
+  (@_search_op CmpEqEach) => {{
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_SIDD_CMP_EQUAL_EACH;
     #[cfg(target_arch = "x86_64")]
     use core::arch::x86_64::_SIDD_CMP_EQUAL_EACH;
     _SIDD_CMP_EQUAL_EACH
   }};
-  (@ CmpEqOrdered) => {{
+  (@_search_op CmpEqOrdered) => {{
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_SIDD_CMP_EQUAL_ORDERED;
     #[cfg(target_arch = "x86_64")]
     use core::arch::x86_64::_SIDD_CMP_EQUAL_ORDERED;
     _SIDD_CMP_EQUAL_ORDERED
   }};
-  (@ $unknown:tt) => {
+  (@_search_op $unknown:tt) => {
     compile_error!(
-      "legal str_cmp ops are: EqAny, CmpRanges, CmpEqEach, CmpEqOrdered"
+      "legal search operations are: EqAny, CmpRanges, CmpEqEach, CmpEqOrdered"
     )
   };
-}
 
-/// This expands the string comparison negations you can do into the appropriate
-/// const.
-#[doc(hidden)]
-#[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-macro_rules! str_negation {
-  (@ NegativePolarity) => {{
-    #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_NEGATIVE_POLARITY;
-    #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_NEGATIVE_POLARITY;
-    _SIDD_NEGATIVE_POLARITY
-  }};
-  (@ MaskedNegativePolarity) => {{
-    #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_MASKED_NEGATIVE_POLARITY;
-    #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_MASKED_NEGATIVE_POLARITY;
-    _SIDD_MASKED_NEGATIVE_POLARITY
-  }};
-  (@ $unknown:tt) => {
-    compile_error!(
-      "legal str negations are: NegativePolarity, MaskedNegativePolarity"
-    )
-  };
-}
+  // Index end
 
-/// This expands the string comparison index types you can ask for.
-#[doc(hidden)]
-#[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-macro_rules! str_index {
-  (@ LowIndex) => {{
+  (@_index_end FirstMatch) => {{
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_SIDD_LEAST_SIGNIFICANT;
     #[cfg(target_arch = "x86_64")]
     use core::arch::x86_64::_SIDD_LEAST_SIGNIFICANT;
     _SIDD_LEAST_SIGNIFICANT
   }};
-  (@ HighIndex) => {{
+  (@_index_end LastMatch) => {{
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_SIDD_MOST_SIGNIFICANT;
     #[cfg(target_arch = "x86_64")]
     use core::arch::x86_64::_SIDD_MOST_SIGNIFICANT;
     _SIDD_MOST_SIGNIFICANT
   }};
-  (@ $unknown:tt) => {
-    compile_error!("legal str index args are: LowIndex, HighIndex")
+  (@_index_end $unknown:tt) => {
+    compile_error!("legal index args are: FirstMatch, LastMatch")
   };
-}
 
-/// This expands the string comparison mask types you can ask for.
-#[doc(hidden)]
-#[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-macro_rules! str_mask {
-  (@ BitMask) => {{
-    #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_BIT_MASK;
-    #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_BIT_MASK;
-    _SIDD_BIT_MASK
-  }};
-  (@ UnitMask) => {{
-    #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_UNIT_MASK;
-    #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_UNIT_MASK;
-    _SIDD_UNIT_MASK
-  }};
-  (@ $unknown:tt) => {
-    compile_error!("legal str mask args are: BitMask, UnitMask")
-  };
-}
+  // The final, actual, calls to the intrinsic.
 
-// // // // //
-// Explicit Length
-// // // // //
-
-/// ?
-///
-/// ```
-/// # use safe_arch::*;
-/// ```
-#[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-macro_rules! cmp_e_str_a {
-  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $imm:expr) => {{
-    todo!()
-  }};
-}
-
-/// String comparison with "was there any match at all?" output.
-///
-/// * Looks for `$needle` in `$haystack`, with explicit lengths for both.
-/// * `$t`: one of `u8`, `u16`, `i8`, `i16`
-/// * `$op`: one of `EqAny`, `CmpRanges`, `CmpEqEach`, `CmpEqOrdered`
-/// * `$neg`: optional, one of `NegativePolarity`, `MaskedNegativePolarity`
-///
-/// The output itself is 1 for true and 0 for false.
-///
-/// ```
-/// # use safe_arch::*;
-/// let haystack: m128i = m128i::from(*b"some test words.");
-///
-/// // using `EqAny`, we can find an 'w' anywhere in `haystack`
-/// let needle: m128i = m128i::from(*b"w_______________");
-/// assert_eq!(1, cmp_e_str_c!(needle, 1, haystack, 16, u8, EqAny));
-/// // but if we limit the length of `haystack` it's not found.
-/// assert_eq!(0, cmp_e_str_c!(needle, 1, haystack, 5, u8, EqAny));
-///
-/// // using `CmpRanges`, `needle` is range pair to check for in `haystack`.
-/// let needle: m128i = m128i::from(*b"az______________");
-/// assert_eq!(1, cmp_e_str_c!(needle, 2, haystack, 16, u8, CmpRanges));
-/// let needle: m128i = m128i::from(*b"AZ______________");
-/// assert_eq!(0, cmp_e_str_c!(needle, 2, haystack, 16, u8, CmpRanges));
-///
-/// // using `CmpEqEach`, see if the start of `needle` partly matches
-/// // the start of `haystack`.
-/// let needle: m128i = m128i::from(*b"som.____________");
-/// assert_eq!(1, cmp_e_str_c!(needle, 4, haystack, 16, u8, CmpEqEach));
-/// // but a match farther into the string doesn't count.
-/// let needle: m128i = m128i::from(*b"test____________");
-/// assert_eq!(0, cmp_e_str_c!(needle, 4, haystack, 16, u8, CmpEqEach));
-///
-/// // using `CmpEqOrdered`, the `needle` substring-search needs to
-/// // have a full sub-string match to trigger a hit.
-/// let needle: m128i = m128i::from(*b"som.____________");
-/// assert_eq!(0, cmp_e_str_c!(needle, 4, haystack, 16, u8, CmpEqOrdered));
-/// // this time "test" sub-string is found somewhere in `haystack`.
-/// let needle: m128i = m128i::from(*b"test____________");
-/// assert_eq!(1, cmp_e_str_c!(needle, 4, haystack, 16, u8, CmpEqOrdered));
-/// ```
-#[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-macro_rules! cmp_e_str_c {
-  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $t:tt, $op:tt) => {{
-    $crate::cmp_e_str_c!(
-      @ $needle, $len_needle, $haystack, $len_haystack,
-      $crate::str_cmp_type!(@ $t)
-      | $crate::str_cmp_op!(@ $op)
-    )
-  }};
-  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $t:tt, $op:tt, $neg:tt) => {{
-    $crate::cmp_e_str_c!(
-      @ $needle, $len_needle, $haystack, $len_haystack,
-      $crate::str_cmp_type!(@ $t)
-      | $crate::str_cmp_op!(@ $op)
-      | $crate::str_negation!(@ $neg)
-    )
-  }};
-  (@ $needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $imm:expr) => {{
+  (@_raw_explicit_len $needle:expr, $needle_len:expr, $haystack:expr, $haystack_len:expr, $imm:expr) => {{
     let a: m128i = $needle;
-    let la: i32 = $len_needle;
+    let la: i32 = $needle_len;
     let b: m128i = $haystack;
-    let lb: i32 = $len_haystack;
-    const IMM: i32 = $imm as i32;
-    #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_cmpestrc;
-    #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_cmpestrc;
-    unsafe { _mm_cmpestrc(a.0, la, b.0, lb, IMM) }
-  }};
-}
-
-/// String comparison with the index of the match returned.
-///
-/// You can get back the lowest or highest index where there was a match.
-///
-/// If there's more than one needle you just get the index of the lowest or
-/// highest index of a match without knowing which thing matched.
-///
-/// * Looks for `$needle` in `$haystack`, with explicit lengths for both.
-/// * `$t`: one of `u8`, `u16`, `i8`, `i16`
-/// * `$op`: one of `EqAny`, `CmpRanges`, `CmpEqEach`, `CmpEqOrdered`
-/// * `$i`: one of `LowIndex`, `HighIndex`
-/// * `$neg`: optional, one of `NegativePolarity`, `MaskedNegativePolarity`
-///
-/// ```
-/// # use safe_arch::*;
-/// let haystack: m128i = m128i::from(*b"some test words.");
-///
-/// // using `EqAny` we get the first or last index where any needle element
-/// // is in the haystack
-/// let needle: m128i = m128i::from(*b"ew______________");
-/// // The first 'e' is at index 0.
-/// assert_eq!(3, cmp_e_str_i!(needle, 2, haystack, 16, u8, EqAny, LowIndex));
-/// // There's a 'w' at index 10.
-/// assert_eq!(10, cmp_e_str_i!(needle, 2, haystack, 16, u8, EqAny, HighIndex));
-///
-/// // using `CmpRanges`, we can check for letters in ranges
-/// let needle: m128i = m128i::from(*b"vzef____________");
-/// // an element from `e..=f` is at index 3 ('e')
-/// assert_eq!(3, cmp_e_str_i!(needle, 4, haystack, 16, u8, CmpRanges, LowIndex));
-/// // an element from `v..=z` is at index 10 ('w')
-/// assert_eq!(
-///   10,
-///   cmp_e_str_i!(needle, 4, haystack, 16, u8, CmpRanges, HighIndex)
-/// );
-///
-/// // using `CmpEqEach`, we can check for where there might be an exact match
-/// // between the needle and the haystack on a letter by letter basis,
-/// // any any letter that fails to match doesn't make the whole test fail.
-/// // The underscores don't match but "test" does.
-/// let needle: m128i = m128i::from(*b"_____test_______");
-/// assert_eq!(
-///   5,
-///   cmp_e_str_i!(needle, 16, haystack, 16, u8, CmpEqEach, LowIndex)
-/// );
-/// assert_eq!(
-///   8,
-///   cmp_e_str_i!(needle, 16, haystack, 16, u8, CmpEqEach, HighIndex)
-/// );
-///
-/// // using `CmpEqOrdered`, we can check for where there might be a match
-/// // from the start of the needle all the way to the end of the needle and
-/// // we don't count "partial" matches, so this works because it's len 4.
-/// let needle: m128i = m128i::from(*b"some____________");
-/// assert_eq!(
-///   0,
-///   cmp_e_str_i!(needle, 4, haystack, 16, u8, CmpEqOrdered, LowIndex)
-/// );
-/// // but this fails to match because we increased the length to 5, and
-/// // the complete substring "some_" isn't in our haystack.
-/// assert_eq!(
-///   16,
-///   cmp_e_str_i!(needle, 5, haystack, 16, u8, CmpEqOrdered, LowIndex)
-/// );
-/// // If the substring is later in the string it's fine, the substring "test"
-/// // is found starting at position 5.
-/// let needle: m128i = m128i::from(*b"test____________");
-/// assert_eq!(
-///   5,
-///   cmp_e_str_i!(needle, 4, haystack, 16, u8, CmpEqOrdered, LowIndex)
-/// );
-/// ```
-#[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-macro_rules! cmp_e_str_i {
-  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $t:tt, $op:tt, $i:tt) => {{
-    $crate::cmp_e_str_i!(
-      @ $needle, $len_needle, $haystack, $len_haystack,
-      $crate::str_cmp_type!(@ $t)
-      | $crate::str_cmp_op!(@ $op)
-      | $crate::str_index!(@ $i)
-    )
-  }};
-  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $t:tt, $op:tt, $i:tt, $neg:tt) => {{
-    $crate::cmp_e_str_i!(
-      @ $needle, $len_needle, $haystack, $len_haystack,
-      $crate::str_cmp_type!(@ $t)
-      | $crate::str_cmp_op!(@ $op)
-      | $crate::str_negation!(@ $neg)
-      | $crate::str_index!(@ $i)
-    )
-  }};
-  (@ $needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $imm:expr) => {{
-    let a: m128i = $needle;
-    let la: i32 = $len_needle;
-    let b: m128i = $haystack;
-    let lb: i32 = $len_haystack;
+    let lb: i32 = $haystack_len;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_mm_cmpestri;
@@ -421,244 +292,8 @@ macro_rules! cmp_e_str_i {
     use core::arch::x86_64::_mm_cmpestri;
     unsafe { _mm_cmpestri(a.0, la, b.0, lb, IMM) }
   }};
-}
 
-/// String comparison with the mask of the match returned.
-///
-/// The mask returned can be either in terms of bits or in terms of "units",
-/// where the unit size of the mask is the unit size of the input.
-///
-/// * Looks for `$needle` in `$haystack`, with explicit lengths for both.
-/// * `$t`: one of `u8`, `u16`, `i8`, `i16`
-/// * `$op`: one of `EqAny`, `CmpRanges`, `CmpEqEach`, `CmpEqOrdered`
-/// * `$m`: one of `BitMask`, `UnitMask`
-/// * `$neg`: optional, one of `NegativePolarity`, `MaskedNegativePolarity`
-///
-/// ```
-/// # use safe_arch::*;
-/// let haystack: m128i = m128i::from(*b"some test words.");
-///
-/// // using `EqAny` we can get a mask of every position that has
-/// // any of the needle values.
-/// let needle: m128i = m128i::from(*b"ew______________");
-/// let x: [i8;16] =
-///   cmp_e_str_m!(needle, 2, haystack, 16, u8, EqAny, UnitMask).into();
-/// assert_eq!(x, [0_i8, 0, 0, -1, 0, 0, -1, 0, 0, 0, -1, 0,0,0,0,0]);
-/// let x: u128 =
-///   cmp_e_str_m!(needle, 2, haystack, 16, u8, EqAny, BitMask).into();
-/// assert_eq!(x, 0b0000010001001000);
-///
-/// // using `CmpRanges` we can similarly find elements that are in a range.
-/// let needle: m128i = m128i::from(*b"vzef____________");
-/// let x: u128 =
-///   cmp_e_str_m!(needle, 4, haystack, 16, u8, CmpRanges, BitMask).into();
-/// assert_eq!(x, 0b0000010001001000);
-///
-/// // using `CmpEqEach`, we can find each haystack position that exactly
-/// // matches the same position of the needle.
-/// let needle: m128i = m128i::from(*b"_____test_______");
-/// let x: u128 =
-///   cmp_e_str_m!(needle, 16, haystack, 16, u8, CmpEqEach, BitMask).into();
-/// assert_eq!(x, 0b0000000111100000);
-///
-/// // using `CmpEqOrdered`, the mask is set at each position that marks
-/// // the start of a complete occurrence of the substring.
-/// let needle: m128i = m128i::from(*b"some____________");
-/// let x: u128 =
-///   cmp_e_str_m!(needle, 4, haystack, 16, u8, CmpEqOrdered, BitMask).into();
-/// assert_eq!(x, 0b0000000000000001);
-/// let x: u128 =
-///   cmp_e_str_m!(needle, 5, haystack, 16, u8, CmpEqOrdered, BitMask).into();
-/// assert_eq!(x, 0b0000000000000000);
-/// let needle: m128i = m128i::from(*b"test____________");
-/// let x: u128 =
-///   cmp_e_str_m!(needle, 4, haystack, 16, u8, CmpEqOrdered, BitMask).into();
-/// assert_eq!(x, 0b0000000000100000);
-#[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-macro_rules! cmp_e_str_m {
-  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $t:tt, $op:tt, $m:tt) => {{
-    $crate::cmp_e_str_m!(
-      @ $needle, $len_needle, $haystack, $len_haystack,
-      $crate::str_cmp_type!(@ $t)
-      | $crate::str_cmp_op!(@ $op)
-      | $crate::str_mask!(@ $m)
-    )
-  }};
-  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $t:tt, $op:tt, $m:tt, $neg:tt) => {{
-    $crate::cmp_e_str_m!(
-      @ $needle, $len_needle, $haystack, $len_haystack,
-      $crate::str_cmp_type!(@ $t)
-      | $crate::str_cmp_op!(@ $op)
-      | $crate::str_negation!(@ $neg)
-      | $crate::str_mask!(@ $m)
-    )
-  }};
-  (@ $needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $imm:expr) => {{
-    let a: m128i = $needle;
-    let la: i32 = $len_needle;
-    let b: m128i = $haystack;
-    let lb: i32 = $len_haystack;
-    const IMM: i32 = $imm as i32;
-    #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_cmpestrm;
-    #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_cmpestrm;
-    m128i(unsafe { _mm_cmpestrm(a.0, la, b.0, lb, IMM) })
-  }};
-}
-
-// Note(Lokathor): `_mm_cmpestrs` is skipped since it just returns if the needle
-// length is the full length or not, which is stupid. Same with `_mm_cmpestrz`,
-// which does the same thing for the haystack. We also don't have both
-// `_mm_cmpistrs` and `_mm_cmpistrz`, since they both just check if one of the
-// args is less than full length, so they're equivalent to each other with arg
-// order swapped.
-
-// // // // //
-// Implicit Length
-// // // // //
-
-/// ?
-///
-/// ```
-/// # use safe_arch::*;
-/// //
-/// ```
-#[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-macro_rules! cmp_i_str_a {
-  ($needle:expr, $haystack:expr, $imm:expr) => {{
-    todo!()
-  }};
-}
-
-/// Works like [`cmp_e_str_c`], but with implicit string lengths
-/// (null-terminated).
-///
-/// See that macro's for more info.
-///
-/// ```
-/// # use safe_arch::*;
-/// let haystack: m128i = m128i::from(*b"some test words.");
-///
-/// // using `EqAny`
-/// let needle: m128i = m128i::from(*b"w\0______________");
-/// assert_eq!(1, cmp_i_str_c!(needle, haystack, u8, EqAny));
-/// assert_eq!(
-///   0,
-///   cmp_i_str_c!(needle, m128i::from(*b"som\0 test words."), u8, EqAny)
-/// );
-///
-/// // using `CmpRanges`
-/// let needle: m128i = m128i::from(*b"az\0_____________");
-/// assert_eq!(1, cmp_i_str_c!(needle, haystack, u8, CmpRanges));
-/// let needle: m128i = m128i::from(*b"AZ\0_____________");
-/// assert_eq!(0, cmp_i_str_c!(needle, haystack, u8, CmpRanges));
-///
-/// // using `CmpEqEach`
-/// let needle: m128i = m128i::from(*b"som.\0___________");
-/// assert_eq!(1, cmp_i_str_c!(needle, haystack, u8, CmpEqEach));
-/// let needle: m128i = m128i::from(*b"test\0___________");
-/// assert_eq!(0, cmp_i_str_c!(needle, haystack, u8, CmpEqEach));
-///
-/// // using `CmpEqOrdered`
-/// let needle: m128i = m128i::from(*b"som.\0___________");
-/// assert_eq!(0, cmp_i_str_c!(needle, haystack, u8, CmpEqOrdered));
-/// let needle: m128i = m128i::from(*b"test\0___________");
-/// assert_eq!(1, cmp_i_str_c!(needle, haystack, u8, CmpEqOrdered));
-/// ```
-#[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-macro_rules! cmp_i_str_c {
-  ($needle:expr, $haystack:expr, $t:tt, $op:tt) => {{
-    $crate::cmp_i_str_c!(
-      @ $needle, $haystack,
-      $crate::str_cmp_type!(@ $t)
-      | $crate::str_cmp_op!(@ $op)
-    )
-  }};
-  ($needle:expr, $haystack:expr, $t:tt, $op:tt, $neg:tt) => {{
-    $crate::cmp_i_str_c!(
-      @ $needle, $haystack,
-      $crate::str_cmp_type!(@ $t)
-      | $crate::str_cmp_op!(@ $op)
-      | $crate::str_negation!(@ $neg)
-    )
-  }};
-  (@ $needle:expr, $haystack:expr, $imm:expr) => {{
-    let a: m128i = $needle;
-    let b: m128i = $haystack;
-    const IMM: i32 = $imm as i32;
-    #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_cmpistrc;
-    #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_cmpistrc;
-    unsafe { _mm_cmpistrc(a.0, b.0, IMM) }
-  }};
-}
-
-/// Works like [`cmp_e_str_i`], but with implicit string lengths
-/// (null-terminated).
-///
-/// See that macro's for more info.
-///
-/// ```
-/// # use safe_arch::*;
-/// let haystack: m128i = m128i::from(*b"some test words.");
-///
-/// // Using `EqAny`
-/// let needle: m128i = m128i::from(*b"ew\0_____________");
-/// assert_eq!(3, cmp_i_str_i!(needle, haystack, u8, EqAny, LowIndex));
-/// assert_eq!(10, cmp_i_str_i!(needle, haystack, u8, EqAny, HighIndex));
-///
-/// // Using `CmpRanges`
-/// let needle: m128i = m128i::from(*b"vzef\0___________");
-/// assert_eq!(3, cmp_i_str_i!(needle, haystack, u8, CmpRanges, LowIndex));
-/// assert_eq!(10, cmp_i_str_i!(needle, haystack, u8, CmpRanges, HighIndex));
-///
-/// // Using `CmpEqEach`
-/// let needle: m128i = m128i::from(*b"_____test\0______");
-/// assert_eq!(5, cmp_i_str_i!(needle, haystack, u8, CmpEqEach, LowIndex));
-/// assert_eq!(8, cmp_i_str_i!(needle, haystack, u8, CmpEqEach, HighIndex));
-///
-/// // Using `CmpEqOrdered`
-/// let needle: m128i = m128i::from(*b"some\0___________");
-/// assert_eq!(0, cmp_i_str_i!(needle, haystack, u8, CmpEqOrdered, LowIndex));
-/// assert_eq!(
-///   16,
-///   cmp_i_str_i!(
-///     m128i::from(*b"some_\0__________"),
-///     haystack,
-///     u8,
-///     CmpEqOrdered,
-///     LowIndex
-///   )
-/// );
-/// let needle: m128i = m128i::from(*b"test\0___________");
-/// assert_eq!(5, cmp_i_str_i!(needle, haystack, u8, CmpEqOrdered, LowIndex));
-/// ```
-#[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-macro_rules! cmp_i_str_i {
-  ($needle:expr, $haystack:expr, $t:tt, $op:tt, $i:tt) => {{
-    $crate::cmp_i_str_i!(
-      @ $needle, $haystack,
-      $crate::str_cmp_type!(@ $t)
-      | $crate::str_cmp_op!(@ $op)
-      | $crate::str_index!(@ $i)
-    )
-  }};
-  ($needle:expr, $haystack:expr, $t:tt, $op:tt, $i:tt, $neg:tt) => {{
-    $crate::cmp_i_str_i!(
-      @ $needle, $haystack,
-      $crate::str_cmp_type!(@ $t)
-      | $crate::str_cmp_op!(@ $op)
-      | $crate::str_negation!(@ $neg)
-      | $crate::str_index!(@ $i)
-    )
-  }};
-  (@ $needle:expr, $haystack:expr, $imm:expr) => {{
+  (@_raw_implicit_len $needle:expr, $haystack:expr, $imm:expr) => {{
     let a: m128i = $needle;
     let b: m128i = $haystack;
     const IMM: i32 = $imm as i32;
@@ -670,33 +305,227 @@ macro_rules! cmp_i_str_i {
   }};
 }
 
-/// ?
+/// Looks for `$needle` in `$haystack` and gives the mask of where the matches
+/// were.
 ///
+/// > This is a fairly flexible operation, and so I apologize in advance.
+///
+/// * The "needle" is the string you're looking _for_.
+/// * The "haystack" is the string you're looking _inside of_.
+/// * The lengths of each string can be "explicit" or "implicit".
+///   * "explicit" is specified with `[str, len]` pairs.
+///   * "implicit" just ends at the first `\0`.
+///   * Either way a string doesn't go past the end of the register.
+/// * You need to pick a "char type", which can be any of `u8`, `i8`, `u16`,
+///   `i16`. These operations always operate on `m128i` registers, but the
+///   interpretation of the data is configurable.
+/// * You need to pick the search operation, which determines how the `needle`
+///   is compared to the `haystack`:
+///   * `EqAny`: Matches when _any_ haystack character equals _any_ needle
+///     character, regardless of position.
+///   * `CmpRanges`: Interprets consecutive pairs of characters in the needle as
+///     `(low..=high)` ranges to compare each haystack character to.
+///   * `CmpEqEach`: Matches when a character position in the needle is equal to
+///     the character at the same position in the haystack.
+///   * `CmpEqOrdered`: Matches when the complete needle string is a substring
+///     somewhere in the haystack.
+/// * Finally, you need to specify if you want to have a `BitMask` or a
+///   `UnitMask`.
+///   * With a `BitMask`, each bit in the output will be set if there was a
+///     match at that position of the haystack.
+///   * In the `UnitMask` case, each "unit" in the output will be set if there's
+///     a match at that position in the haystack. The size of a unit is set by
+///     the "char type" you select (either 8 bits or 16 bits at a time).
+///
+/// It's a lot to take in. Hopefully the examples below can help clarify how
+/// things work. They all use `u8` since Rust string literals are UTF-8, but
+/// it's the same with the other character types.
+///
+/// ## EqAny
 /// ```
 /// # use safe_arch::*;
-/// //
+/// let hay: m128i = m128i::from(*b"some test words.");
+///
+/// // explicit needle length
+/// let needle: m128i = m128i::from(*b"e_______________");
+/// let i: u128 =
+///   string_search_for_mask!([needle, 1], [hay, 16], u8, EqAny, BitMask).into();
+/// assert_eq!(i, 0b0000000001001000);
+/// let i: [i8; 16] =
+///   string_search_for_mask!([needle, 1], [hay, 16], u8, EqAny, UnitMask).into();
+/// assert_eq!(i, [0, 0, 0, -1, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+///
+/// // implicit needle length
+/// let needle: m128i = m128i::from(*b"e\0______________");
+/// let i: u128 = string_search_for_mask!(needle, hay, u8, EqAny, BitMask).into();
+/// assert_eq!(i, 0b0000000001001000);
+///
+/// // more than one needle character will match any of them, though we
+/// // don't get info about _which_ needle character matched.
+/// let needle: m128i = m128i::from(*b"et\0_____________");
+/// let i: u128 = string_search_for_mask!(needle, hay, u8, EqAny, BitMask).into();
+/// assert_eq!(i, 0b0000000101101000);
+/// ```
+/// ## CmpRanges
+/// ```
+/// # use safe_arch::*;
+/// let hay: m128i = m128i::from(*b"some test words.");
+/// let needle: m128i = m128i::from(*b"am\0_____________");
+/// let i: u128 =
+///   string_search_for_mask!(needle, hay, u8, CmpRanges, BitMask).into();
+/// assert_eq!(i, 0b0010000001001100);
+/// ```
+/// ## CmpEqEach
+/// ```
+/// # use safe_arch::*;
+/// let hay: m128i = m128i::from(*b"some test words.");
+/// let needle: m128i = m128i::from(*b"_____test_______");
+/// let i: u128 =
+///   string_search_for_mask!(needle, hay, u8, CmpEqEach, BitMask).into();
+/// assert_eq!(i, 0b0000000111100000);
+/// ```
+/// ## CmpEqOrdered
+/// ```
+/// # use safe_arch::*;
+/// let hay: m128i = m128i::from(*b"some test words.");
+/// let needle: m128i = m128i::from(*b"words\0__________");
+/// let i: u128 =
+///   string_search_for_mask!(needle, hay, u8, CmpEqOrdered, BitMask).into();
+/// assert_eq!(i, 0b00000010000000000); // one bit at the start of the match
 /// ```
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-macro_rules! cmp_i_str_m {
-  ($needle:expr, $haystack:expr, $t:tt, $op:tt, $m:tt) => {{
-    $crate::cmp_i_str_m!(
-      @ $needle, $haystack,
-      $crate::str_cmp_type!(@ $t)
-      | $crate::str_cmp_op!(@ $op)
-      | $crate::str_index!(@ $m)
+macro_rules! string_search_for_mask {
+  ([$needle:expr, $needle_len:expr], [$haystack:expr, $haystack_len:expr], $char_type:tt, $search_op:tt, $mask_style:tt) => {{
+    $crate::string_search_for_mask!(
+      @_raw_explicit_len
+      $needle,
+      $needle_len,
+      $haystack,
+      $haystack_len,
+      $crate::string_search_for_mask!(@_char_type $char_type)
+      | $crate::string_search_for_mask!(@_search_op $search_op)
+      | $crate::string_search_for_mask!(@_mask_style $mask_style)
     )
   }};
-  ($needle:expr, $haystack:expr, $t:tt, $op:tt, $m:tt, $neg:tt) => {{
-    $crate::cmp_i_str_m!(
-      @ $needle, $haystack,
-      $crate::str_cmp_type!(@ $t)
-      | $crate::str_cmp_op!(@ $op)
-      | $crate::str_negation!(@ $neg)
-      | $crate::str_index!(@ $m)
+
+  ($needle:expr, $haystack:expr, $char_type:tt, $search_op:tt, $mask_style:tt) => {{
+    $crate::string_search_for_mask!(
+      @_raw_implicit_len
+      $needle,
+      $haystack,
+      $crate::string_search_for_mask!(@_char_type $char_type)
+      | $crate::string_search_for_mask!(@_search_op $search_op)
+      | $crate::string_search_for_mask!(@_mask_style $mask_style)
     )
   }};
-  (@ $needle:expr, $haystack:expr, $imm:expr) => {{
+
+  // Character types
+
+  (@_char_type u8) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_UBYTE_OPS;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_UBYTE_OPS;
+    _SIDD_UBYTE_OPS
+  }};
+  (@_char_type u16) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_UWORD_OPS;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_UWORD_OPS;
+    _SIDD_UWORD_OPS
+  }};
+  (@_char_type i8) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_SBYTE_OPS;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_SBYTE_OPS;
+    _SIDD_SBYTE_OPS
+  }};
+  (@_char_type i16) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_SWORD_OPS;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_SWORD_OPS;
+    _SIDD_SWORD_OPS
+  }};
+  (@_char_type $unknown:tt) => {
+    compile_error!("legal character types are: u8, u16, i8, i16")
+  };
+
+  // Search styles
+
+  (@_search_op EqAny) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_CMP_EQUAL_ANY;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_CMP_EQUAL_ANY;
+    _SIDD_CMP_EQUAL_ANY
+  }};
+  (@_search_op CmpRanges) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_CMP_RANGES;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_CMP_RANGES;
+    _SIDD_CMP_RANGES
+  }};
+  (@_search_op CmpEqEach) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_CMP_EQUAL_EACH;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_CMP_EQUAL_EACH;
+    _SIDD_CMP_EQUAL_EACH
+  }};
+  (@_search_op CmpEqOrdered) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_CMP_EQUAL_ORDERED;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_CMP_EQUAL_ORDERED;
+    _SIDD_CMP_EQUAL_ORDERED
+  }};
+  (@_search_op $unknown:tt) => {
+    compile_error!(
+      "legal search operations are: EqAny, CmpRanges, CmpEqEach, CmpEqOrdered"
+    )
+  };
+
+  // Mask output style
+
+  (@_mask_style BitMask) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_BIT_MASK;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_BIT_MASK;
+    _SIDD_BIT_MASK
+  }};
+  (@_mask_style UnitMask) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_UNIT_MASK;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_UNIT_MASK;
+    _SIDD_UNIT_MASK
+  }};
+  (@_mask_style $unknown:tt) => {
+    compile_error!("legal str mask style are: BitMask, UnitMask")
+  };
+
+  // The final, actual, calls to the intrinsic.
+
+  (@_raw_explicit_len $needle:expr, $needle_len:expr, $haystack:expr, $haystack_len:expr, $imm:expr) => {{
+    let a: m128i = $needle;
+    let la: i32 = $needle_len;
+    let b: m128i = $haystack;
+    let lb: i32 = $haystack_len;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_cmpestrm;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_cmpestrm;
+    m128i(unsafe { _mm_cmpestrm(a.0, la, b.0, lb, IMM) })
+  }};
+
+  (@_raw_implicit_len $needle:expr, $haystack:expr, $imm:expr) => {{
     let a: m128i = $needle;
     let b: m128i = $haystack;
     const IMM: i32 = $imm as i32;
@@ -704,47 +533,6 @@ macro_rules! cmp_i_str_m {
     use core::arch::x86::_mm_cmpistrm;
     #[cfg(target_arch = "x86_64")]
     use core::arch::x86_64::_mm_cmpistrm;
-    unsafe { _mm_cmpistrm(a.0, b.0, IMM) }
-  }};
-}
-
-/// Returns 1 if the value is less than a full length string.
-///
-/// ```
-/// # use safe_arch::*;
-/// // full string for both data types.
-/// let x: m128i = m128i::from(*b"________________");
-/// assert_eq!(0, cmp_i_str_s!(x, u8));
-/// assert_eq!(0, cmp_i_str_s!(x, u16));
-///
-/// // full for `u16` purposes, but not a full `u8` string.
-/// let x: m128i = m128i::from(*b"_______________\0");
-/// assert_eq!(1, cmp_i_str_s!(x, u8));
-/// assert_eq!(0, cmp_i_str_s!(x, u16));
-///
-/// // not full for either data type.
-/// let x: m128i = m128i::from(*b"______________\0\0");
-/// assert_eq!(1, cmp_i_str_s!(x, u8));
-/// assert_eq!(1, cmp_i_str_s!(x, u16));
-/// ```
-#[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-macro_rules! cmp_i_str_s {
-  ($x:expr, $t:tt) => {{
-    $crate::cmp_i_str_s!(@ $x, $crate::str_cmp_type!(@ $t))
-  }};
-  ($x:expr, $t:tt, $neg:tt) => {{
-    $crate::cmp_i_str_s!(
-      @ $x, $crate::str_cmp_type!(@ $t) | $crate::str_negation!(@ $neg)
-    )
-  }};
-  (@ $x:expr, $imm:expr) => {{
-    let a: m128i = $x;
-    const IMM: i32 = $imm as i32;
-    #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_cmpistrs;
-    #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_cmpistrs;
-    unsafe { _mm_cmpistrs(a.0, a.0, IMM) }
+    m128i(unsafe { _mm_cmpistrm(a.0, b.0, IMM) })
   }};
 }
