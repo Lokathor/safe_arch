@@ -95,7 +95,8 @@ macro_rules! cmp_e_str_a {
   }};
 }
 
-/// TODO
+/// This expands the string comparison types you can use into the appropriate
+/// const.
 #[doc(hidden)]
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
@@ -133,7 +134,8 @@ macro_rules! str_cmp_type {
   };
 }
 
-/// TODO
+/// This expands the string comparison operations you can do into the
+/// appropriate const.
 #[doc(hidden)]
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
@@ -173,7 +175,8 @@ macro_rules! str_cmp_op {
   };
 }
 
-/// TODO
+/// This expands the string comparison negations you can do into the appropriate
+/// const.
 #[doc(hidden)]
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
@@ -196,6 +199,30 @@ macro_rules! str_negation {
     compile_error!(
       "legal str negations are: NegativePolarity, MaskedNegativePolarity"
     )
+  };
+}
+
+/// This expands the string comparison index types you can ask for.
+#[doc(hidden)]
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+macro_rules! str_index {
+  (@ LowIndex) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_LEAST_SIGNIFICANT;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_LEAST_SIGNIFICANT;
+    _SIDD_LEAST_SIGNIFICANT
+  }};
+  (@ HighIndex) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_MOST_SIGNIFICANT;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_MOST_SIGNIFICANT;
+    _SIDD_MOST_SIGNIFICANT
+  }};
+  (@ $unknown:tt) => {
+    compile_error!("legal str index args are: LowIndex, HighIndex")
   };
 }
 
@@ -272,16 +299,48 @@ macro_rules! cmp_e_str_c {
   }};
 }
 
-/// ?
+/// String comparison with the index of the match returned.
+///
+/// * Looks for `$needle` in `$haystack`, with explicit lengths for both.
+/// * `$t`: one of `u8`, `u16`, `i8`, `i16`
+/// * `$op`: one of `EqAny`, `CmpRanges`, `CmpEqEach`, `CmpEqOrdered`
+/// * `$i`: one of `LowIndex`, `HighIndex`
+/// * `$neg`: optional, one of `NegativePolarity`, `MaskedNegativePolarity`
 ///
 /// ```
 /// # use safe_arch::*;
-/// //
+/// let haystack: m128i = m128i::from(*b"some test words.");
+///
+/// // using `EqAny`
+/// let needle: m128i = m128i::from(*b"som_____________");
+/// assert_eq!(1, cmp_e_str_i!(needle, 3, haystack, 16, u8, EqAny, LowIndex));
+/// assert_eq!(1, cmp_e_str_i!(needle, 3, haystack, 16, u8, EqAny, HighIndex));
+///
+/// // TODO: CmpRanges
+/// // TODO: CmpEqEach
+/// // TODO: CmpEqOrdered
 /// ```
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 macro_rules! cmp_e_str_i {
-  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $imm:expr) => {{
+  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $t:tt, $op:tt, $i:tt) => {{
+    $crate::cmp_e_str_c!(
+      @ $needle, $len_needle, $haystack, $len_haystack,
+      $crate::str_cmp_type!(@ $t)
+      | $crate::str_cmp_op!(@ $op)
+      | $crate::str_index!(@ $i)
+    )
+  }};
+  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $t:tt, $op:tt, $i:tt, $neg:tt) => {{
+    $crate::cmp_e_str_c!(
+      @ $needle, $len_needle, $haystack, $len_haystack,
+      $crate::str_cmp_type!(@ $t)
+      | $crate::str_cmp_op!(@ $op)
+      | $crate::str_negation!(@ $neg)
+      | $crate::str_index!(@ $i)
+    )
+  }};
+  (@ $needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $imm:expr) => {{
     let a: m128i = $needle;
     let la: i32 = $len_needle;
     let b: m128i = $haystack;
