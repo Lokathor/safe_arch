@@ -230,8 +230,10 @@ pub mod intel {
   //! Types and functions for safe `x86` / `x86_64` intrinsic usage.
   //!
   //! `x86_64` is essentially a superset of `x86`, so we just lump it all into
-  //! one module.
+  //! one module. Anything not available on `x86` simply won't be in the build
+  //! on that arch.
   use super::*;
+
   #[cfg(target_arch = "x86")]
   use core::arch::x86::*;
   #[cfg(target_arch = "x86_64")]
@@ -240,13 +242,18 @@ pub mod intel {
   submodule!(pub m128_);
   submodule!(pub m128d_);
   submodule!(pub m128i_);
+
   submodule!(pub m256_);
   submodule!(pub m256d_);
   submodule!(pub m256i_);
-  // Note(Lokathor): We only include these sub-modules if the feature is enabled
-  // and we *also* cfg attribute on the inside of the modules as a
-  // double-verification of sorts. Technically either way on its own would also
-  // be fine.
+
+  // Note(Lokathor): We only include these sub-modules with the actual functions
+  // if the feature is enabled. Ae *also* have a cfg attribute on the inside of
+  // the modules as a "double-verification" of sorts. Technically either way on
+  // its own would also be fine.
+
+  // These CPU features follow a fairly clear and strict progression that's easy
+  // to remember. Most of them offer a fair pile of new functions.
   #[cfg(target_feature = "sse")]
   submodule!(pub sse);
   #[cfg(target_feature = "sse2")]
@@ -262,6 +269,8 @@ pub mod intel {
   #[cfg(target_feature = "avx")]
   submodule!(pub avx);
 
+  // These features aren't as easy to remember the progression of and they each
+  // only add a small handful of functions.
   #[cfg(target_feature = "adx")]
   submodule!(pub adx);
   #[cfg(target_feature = "aes")]
