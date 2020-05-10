@@ -1042,9 +1042,9 @@ macro_rules! shuffle_m128 {
     let a: m128 = $a;
     let b: m128 = $b;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_shuffle_ps;
+    use ::core::arch::x86::_mm_shuffle_ps;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_shuffle_ps;
+    use ::core::arch::x86_64::_mm_shuffle_ps;
     m128(unsafe { _mm_shuffle_ps(a.0, b.0, MASK) })
   }};
   ($a:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{

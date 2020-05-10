@@ -82,7 +82,7 @@ impl Default for m128 {
   #[must_use]
   #[inline(always)]
   fn default() -> Self {
-    zeroed_m128()
+    unsafe { core::mem::zeroed() }
   }
 }
 
