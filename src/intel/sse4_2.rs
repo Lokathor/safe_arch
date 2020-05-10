@@ -73,28 +73,6 @@ pub fn crc32_u64(crc: u64, v: u64) -> u64 {
   unsafe { _mm_crc32_u64(crc, v) }
 }
 
-/// ?
-///
-/// ```
-/// # use safe_arch::*;
-/// ```
-#[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-macro_rules! cmp_e_str_a {
-  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $imm:expr) => {{
-    let a: m128i = $needle;
-    let la: i32 = $len_needle;
-    let b: m128i = $haystack;
-    let lb: i32 = $len_haystack;
-    const IMM: i32 = $imm as i32;
-    #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_cmpestra;
-    #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_cmpestra;
-    unsafe { _mm_cmpestra(a.0, la, b.0, lb, IMM) }
-  }};
-}
-
 /// This expands the string comparison types you can use into the appropriate
 /// const.
 #[doc(hidden)]
@@ -226,6 +204,47 @@ macro_rules! str_index {
   };
 }
 
+/// This expands the string comparison mask types you can ask for.
+#[doc(hidden)]
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+macro_rules! str_mask {
+  (@ BitMask) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_BIT_MASK;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_BIT_MASK;
+    _SIDD_BIT_MASK
+  }};
+  (@ UnitMask) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_SIDD_UNIT_MASK;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_SIDD_UNIT_MASK;
+    _SIDD_UNIT_MASK
+  }};
+  (@ $unknown:tt) => {
+    compile_error!("legal str mask args are: BitMask, UnitMask")
+  };
+}
+
+// // // // //
+// Explicit Length
+// // // // //
+
+/// ?
+///
+/// ```
+/// # use safe_arch::*;
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+macro_rules! cmp_e_str_a {
+  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $imm:expr) => {{
+    todo!()
+  }};
+}
+
 /// String comparison with "was there any match at all?" output.
 ///
 /// * Looks for `$needle` in `$haystack`, with explicit lengths for both.
@@ -300,6 +319,8 @@ macro_rules! cmp_e_str_c {
 }
 
 /// String comparison with the index of the match returned.
+///
+/// You can get back the lowest or highest index where there was a match.
 ///
 /// If there's more than one needle you just get the index of the lowest or
 /// highest index of a match without knowing which thing matched.
@@ -402,16 +423,78 @@ macro_rules! cmp_e_str_i {
   }};
 }
 
-/// ?
+/// String comparison with the mask of the match returned.
+///
+/// The mask returned can be either in terms of bits or in terms of "units",
+/// where the unit size of the mask is the unit size of the input.
+///
+/// * Looks for `$needle` in `$haystack`, with explicit lengths for both.
+/// * `$t`: one of `u8`, `u16`, `i8`, `i16`
+/// * `$op`: one of `EqAny`, `CmpRanges`, `CmpEqEach`, `CmpEqOrdered`
+/// * `$m`: one of `BitMask`, `UnitMask`
+/// * `$neg`: optional, one of `NegativePolarity`, `MaskedNegativePolarity`
 ///
 /// ```
 /// # use safe_arch::*;
-/// //
-/// ```
+/// let haystack: m128i = m128i::from(*b"some test words.");
+///
+/// // using `EqAny` we can get a mask of every position that has
+/// // any of the needle values.
+/// let needle: m128i = m128i::from(*b"ew______________");
+/// let x: [i8;16] =
+///   cmp_e_str_m!(needle, 2, haystack, 16, u8, EqAny, UnitMask).into();
+/// assert_eq!(x, [0_i8, 0, 0, -1, 0, 0, -1, 0, 0, 0, -1, 0,0,0,0,0]);
+/// let x: u128 =
+///   cmp_e_str_m!(needle, 2, haystack, 16, u8, EqAny, BitMask).into();
+/// assert_eq!(x, 0b0000010001001000);
+///
+/// // using `CmpRanges` we can similarly find elements that are in a range.
+/// let needle: m128i = m128i::from(*b"vzef____________");
+/// let x: u128 =
+///   cmp_e_str_m!(needle, 4, haystack, 16, u8, CmpRanges, BitMask).into();
+/// assert_eq!(x, 0b0000010001001000);
+///
+/// // using `CmpEqEach`, we can find each haystack position that exactly
+/// // matches the same position of the needle.
+/// let needle: m128i = m128i::from(*b"_____test_______");
+/// let x: u128 =
+///   cmp_e_str_m!(needle, 16, haystack, 16, u8, CmpEqEach, BitMask).into();
+/// assert_eq!(x, 0b0000000111100000);
+///
+/// // using `CmpEqOrdered`, the mask is set at each position that marks
+/// // the start of a complete occurrence of the substring.
+/// let needle: m128i = m128i::from(*b"some____________");
+/// let x: u128 =
+///   cmp_e_str_m!(needle, 4, haystack, 16, u8, CmpEqOrdered, BitMask).into();
+/// assert_eq!(x, 0b0000000000000001);
+/// let x: u128 =
+///   cmp_e_str_m!(needle, 5, haystack, 16, u8, CmpEqOrdered, BitMask).into();
+/// assert_eq!(x, 0b0000000000000000);
+/// let needle: m128i = m128i::from(*b"test____________");
+/// let x: u128 =
+///   cmp_e_str_m!(needle, 4, haystack, 16, u8, CmpEqOrdered, BitMask).into();
+/// assert_eq!(x, 0b0000000000100000);
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 macro_rules! cmp_e_str_m {
-  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $imm:expr) => {{
+  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $t:tt, $op:tt, $m:tt) => {{
+    $crate::cmp_e_str_m!(
+      @ $needle, $len_needle, $haystack, $len_haystack,
+      $crate::str_cmp_type!(@ $t)
+      | $crate::str_cmp_op!(@ $op)
+      | $crate::str_mask!(@ $m)
+    )
+  }};
+  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $t:tt, $op:tt, $m:tt, $neg:tt) => {{
+    $crate::cmp_e_str_m!(
+      @ $needle, $len_needle, $haystack, $len_haystack,
+      $crate::str_cmp_type!(@ $t)
+      | $crate::str_cmp_op!(@ $op)
+      | $crate::str_negation!(@ $neg)
+      | $crate::str_mask!(@ $m)
+    )
+  }};
+  (@ $needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $imm:expr) => {{
     let a: m128i = $needle;
     let la: i32 = $len_needle;
     let b: m128i = $haystack;
@@ -425,74 +508,16 @@ macro_rules! cmp_e_str_m {
   }};
 }
 
-/// ?
-///
-/// ```
-/// # use safe_arch::*;
-/// //
-/// ```
-#[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-macro_rules! cmp_e_str_o {
-  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $imm:expr) => {{
-    let a: m128i = $needle;
-    let la: i32 = $len_needle;
-    let b: m128i = $haystack;
-    let lb: i32 = $len_haystack;
-    const IMM: i32 = $imm as i32;
-    #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_cmpestro;
-    #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_cmpestro;
-    unsafe { _mm_cmpestro(a.0, la, b.0, lb, IMM) }
-  }};
-}
+// Note(Lokathor): `_mm_cmpestrs` is skipped since it just returns if the needle
+// length is the full length or not, which is stupid. Same with `_mm_cmpestrz`,
+// which does the same thing for the haystack. We also don't have both
+// `_mm_cmpistrs` and `_mm_cmpistrz`, since they both just check if one of the
+// args is less than full length, so they're equivalent to each other with arg
+// order swapped.
 
-/// ?
-///
-/// ```
-/// # use safe_arch::*;
-/// //
-/// ```
-#[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-macro_rules! cmp_e_str_s {
-  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $imm:expr) => {{
-    let a: m128i = $needle;
-    let la: i32 = $len_needle;
-    let b: m128i = $haystack;
-    let lb: i32 = $len_haystack;
-    const IMM: i32 = $imm as i32;
-    #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_cmpestrs;
-    #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_cmpestrs;
-    unsafe { _mm_cmpestrs(a.0, la, b.0, lb, IMM) }
-  }};
-}
-
-/// ?
-///
-/// ```
-/// # use safe_arch::*;
-/// //
-/// ```
-#[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-macro_rules! cmp_e_str_z {
-  ($needle:expr, $len_needle:expr, $haystack:expr, $len_haystack:expr, $imm:expr) => {{
-    let a: m128i = $needle;
-    let la: i32 = $len_needle;
-    let b: m128i = $haystack;
-    let lb: i32 = $len_haystack;
-    const IMM: i32 = $imm as i32;
-    #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_cmpestrz;
-    #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_cmpestrz;
-    unsafe { _mm_cmpestrz(a.0, la, b.0, lb, IMM) }
-  }};
-}
+// // // // //
+// Implicit Length
+// // // // //
 
 /// ?
 ///
@@ -504,14 +529,7 @@ macro_rules! cmp_e_str_z {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 macro_rules! cmp_i_str_a {
   ($needle:expr, $haystack:expr, $imm:expr) => {{
-    let a: m128i = $needle;
-    let b: m128i = $haystack;
-    const IMM: i32 = $imm as i32;
-    #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_cmpistra;
-    #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_cmpistra;
-    unsafe { _mm_cmpistra(a.0, b.0, IMM) }
+    todo!()
   }};
 }
 
@@ -661,7 +679,24 @@ macro_rules! cmp_i_str_i {
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 macro_rules! cmp_i_str_m {
-  ($needle:expr, $haystack:expr, $imm:expr) => {{
+  ($needle:expr, $haystack:expr, $t:tt, $op:tt, $m:tt) => {{
+    $crate::cmp_i_str_m!(
+      @ $needle, $haystack,
+      $crate::str_cmp_type!(@ $t)
+      | $crate::str_cmp_op!(@ $op)
+      | $crate::str_index!(@ $m)
+    )
+  }};
+  ($needle:expr, $haystack:expr, $t:tt, $op:tt, $m:tt, $neg:tt) => {{
+    $crate::cmp_i_str_m!(
+      @ $needle, $haystack,
+      $crate::str_cmp_type!(@ $t)
+      | $crate::str_cmp_op!(@ $op)
+      | $crate::str_negation!(@ $neg)
+      | $crate::str_index!(@ $m)
+    )
+  }};
+  (@ $needle:expr, $haystack:expr, $imm:expr) => {{
     let a: m128i = $needle;
     let b: m128i = $haystack;
     const IMM: i32 = $imm as i32;
@@ -669,69 +704,47 @@ macro_rules! cmp_i_str_m {
     use core::arch::x86::_mm_cmpistrm;
     #[cfg(target_arch = "x86_64")]
     use core::arch::x86_64::_mm_cmpistrm;
-    m128i(unsafe { _mm_cmpistrm(a.0, b.0, IMM) })
+    unsafe { _mm_cmpistrm(a.0, b.0, IMM) }
   }};
 }
 
-/// ?
+/// Returns 1 if the value is less than a full length string.
 ///
 /// ```
 /// # use safe_arch::*;
-/// //
-/// ```
-#[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-macro_rules! cmp_i_str_o {
-  ($needle:expr, $haystack:expr, $imm:expr) => {{
-    let a: m128i = $needle;
-    let b: m128i = $haystack;
-    const IMM: i32 = $imm as i32;
-    #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_cmpistro;
-    #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_cmpistro;
-    unsafe { _mm_cmpistro(a.0, b.0, IMM) }
-  }};
-}
-
-/// ?
+/// // full string for both data types.
+/// let x: m128i = m128i::from(*b"________________");
+/// assert_eq!(0, cmp_i_str_s!(x, u8));
+/// assert_eq!(0, cmp_i_str_s!(x, u16));
 ///
-/// ```
-/// # use safe_arch::*;
-/// //
+/// // full for `u16` purposes, but not a full `u8` string.
+/// let x: m128i = m128i::from(*b"_______________\0");
+/// assert_eq!(1, cmp_i_str_s!(x, u8));
+/// assert_eq!(0, cmp_i_str_s!(x, u16));
+///
+/// // not full for either data type.
+/// let x: m128i = m128i::from(*b"______________\0\0");
+/// assert_eq!(1, cmp_i_str_s!(x, u8));
+/// assert_eq!(1, cmp_i_str_s!(x, u16));
 /// ```
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 macro_rules! cmp_i_str_s {
-  ($needle:expr, $haystack:expr, $imm:expr) => {{
-    let a: m128i = $needle;
-    let b: m128i = $haystack;
+  ($x:expr, $t:tt) => {{
+    $crate::cmp_i_str_s!(@ $x, $crate::str_cmp_type!(@ $t))
+  }};
+  ($x:expr, $t:tt, $neg:tt) => {{
+    $crate::cmp_i_str_s!(
+      @ $x, $crate::str_cmp_type!(@ $t) | $crate::str_negation!(@ $neg)
+    )
+  }};
+  (@ $x:expr, $imm:expr) => {{
+    let a: m128i = $x;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
     use core::arch::x86::_mm_cmpistrs;
     #[cfg(target_arch = "x86_64")]
     use core::arch::x86_64::_mm_cmpistrs;
-    unsafe { _mm_cmpistrs(a.0, b.0, IMM) }
-  }};
-}
-
-/// ?
-///
-/// ```
-/// # use safe_arch::*;
-/// //
-/// ```
-#[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-macro_rules! cmp_i_str_z {
-  ($needle:expr, $haystack:expr, $imm:expr) => {{
-    let a: m128i = $needle;
-    let b: m128i = $haystack;
-    const IMM: i32 = $imm as i32;
-    #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_cmpistrz;
-    #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_cmpistrz;
-    unsafe { _mm_cmpistrz(a.0, b.0, IMM) }
+    unsafe { _mm_cmpistrs(a.0, a.0, IMM) }
   }};
 }
