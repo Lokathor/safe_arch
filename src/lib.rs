@@ -222,11 +222,8 @@ macro_rules! submodule {
   };
 }
 
-// unlike with the `submodule!` macro, we _want_ to expose the existence these
-// arch-specific modules.
-
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-pub mod intel {
+submodule!(pub intel {
   //! Types and functions for safe `x86` / `x86_64` intrinsic usage.
   //!
   //! `x86_64` is essentially a superset of `x86`, so we just lump it all into
@@ -289,6 +286,4 @@ pub mod intel {
   submodule!(pub rdrand);
   #[cfg(target_feature = "rdseed")]
   submodule!(pub rdseed);
-}
-#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-pub use intel::*;
+});

@@ -296,26 +296,137 @@ pub fn cast_from_m256d_to_m256(a: m256d) -> m256 {
   m256(unsafe { _mm256_castpd_ps(a.0) })
 }
 
-//
-// _mm256_castpd_si256
-// _mm256_castpd128_pd256
-// _mm256_castpd256_pd128
-// _mm256_castps_pd
-// _mm256_castps_si256
-// _mm256_castps128_ps256
-// _mm256_castps256_ps128
-// _mm256_castsi128_si256
-// _mm256_castsi256_pd
-// _mm256_castsi256_ps
-// _mm256_castsi256_si128
-// _mm256_ceil_pd
-// _mm256_ceil_ps
+/// Bit-preserving cast from `m256d` to `m256i`.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = load_f64_splat_m256d(&1.0);
+/// let b: [u32; 8] = cast_from_m256d_to_m256i(a).into();
+/// assert_eq!(
+///   b,
+///   [0, 0x3FF0_0000, 0, 0x3FF0_0000, 0, 0x3FF0_0000, 0, 0x3FF0_0000]
+/// );
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn cast_from_m256d_to_m256i(a: m256d) -> m256i {
+  m256i(unsafe { _mm256_castpd_si256(a.0) })
+}
+
+/// Bit-preserving cast from `m256` to `m256i`.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = load_f32_splat_m256(&1.0);
+/// let b: [u64; 4] = cast_from_m256_to_m256d(a).to_bits();
+/// assert_eq!(
+///   b,
+///   [
+///     0x3f800000_3f800000,
+///     0x3f800000_3f800000,
+///     0x3f800000_3f800000,
+///     0x3f800000_3f800000,
+///   ]
+/// );
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn cast_from_m256_to_m256d(a: m256) -> m256d {
+  m256d(unsafe { _mm256_castps_pd(a.0) })
+}
+
+/// Bit-preserving cast from `m256` to `m256i`.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = load_f32_splat_m256(&1.0);
+/// let b: [u64; 4] = cast_from_m256_to_m256i(a).into();
+/// assert_eq!(
+///   b,
+///   [
+///     0x3f800000_3f800000,
+///     0x3f800000_3f800000,
+///     0x3f800000_3f800000,
+///     0x3f800000_3f800000,
+///   ]
+/// );
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn cast_from_m256_to_m256i(a: m256) -> m256i {
+  m256i(unsafe { _mm256_castps_si256(a.0) })
+}
+
+/// Bit-preserving cast from `m256i` to `m256d`.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([1.0_f64.to_bits(); 4]);
+/// let b = cast_from_m256i_to_m256d(a).to_array();
+/// assert_eq!(b, [1.0; 4]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn cast_from_m256i_to_m256d(a: m256i) -> m256d {
+  m256d(unsafe { _mm256_castsi256_pd(a.0) })
+}
+
+/// Bit-preserving cast from `m256i` to `m256`.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([1.0_f32.to_bits(); 8]);
+/// let b = cast_from_m256i_to_m256(a).to_array();
+/// assert_eq!(b, [1.0; 8]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn cast_from_m256i_to_m256(a: m256i) -> m256 {
+  m256(unsafe { _mm256_castsi256_ps(a.0) })
+}
+
+/// Round `f64` lanes towards positive infinity.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from([1.1, 2.5, 3.8, 5.0]);
+/// let b = ceil_m256d(a).to_array();
+/// assert_eq!(b, [2.0, 3.0, 4.0, 5.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn ceil_m256d(a: m256d) -> m256d {
+  m256d(unsafe { _mm256_ceil_pd(a.0) })
+}
+
+/// Round `f32` lanes towards positive infinity.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from([1.1, 2.5, 3.8, 5.0, -0.5, -1.1, -2.7, -3.0]);
+/// let b = ceil_m256(a).to_array();
+/// assert_eq!(b, [2.0, 3.0, 4.0, 5.0, 0.0, -1.0, -2.0, -3.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn ceil_m256(a: m256) -> m256 {
+  m256(unsafe { _mm256_ceil_ps(a.0) })
+}
+
 // _mm_cmp_pd
 // _mm256_cmp_pd
 // _mm_cmp_ps
 // _mm256_cmp_ps
 // _mm_cmp_sd
 // _mm_cmp_ss
+
 // _mm256_cvtepi32_pd
 // _mm256_cvtepi32_ps
 // _mm256_cvtpd_epi32
@@ -327,20 +438,27 @@ pub fn cast_from_m256d_to_m256(a: m256d) -> m256 {
 // _mm256_cvtss_f32
 // _mm256_cvttpd_epi32
 // _mm256_cvttps_epi32
+
 // _mm256_div_pd
 // _mm256_div_ps
+
 // _mm256_dp_ps
+
 // _mm256_extract_epi32
 // _mm256_extract_epi64
 // _mm256_extractf128_pd
 // _mm256_extractf128_ps
 // _mm256_extractf128_si256
+
 // _mm256_floor_pd
 // _mm256_floor_ps
+
 // _mm256_hadd_pd
 // _mm256_hadd_ps
+
 // _mm256_hsub_pd
 // _mm256_hsub_ps
+
 // _mm256_insert_epi16
 // _mm256_insert_epi32
 // _mm256_insert_epi64
@@ -348,52 +466,73 @@ pub fn cast_from_m256d_to_m256(a: m256d) -> m256 {
 // _mm256_insertf128_pd
 // _mm256_insertf128_ps
 // _mm256_insertf128_si256
+
 // _mm256_lddqu_si256
+
 // _mm256_load_pd
 // _mm256_load_ps
 // _mm256_load_si256
+
 // _mm256_loadu_pd
 // _mm256_loadu_ps
 // _mm256_loadu_si256
+
 // _mm256_loadu2_m128
 // _mm256_loadu2_m128d
 // _mm256_loadu2_m128i
+
 // _mm_maskload_pd
 // _mm256_maskload_pd
 // _mm_maskload_ps
 // _mm256_maskload_ps
+
 // _mm_maskstore_pd
 // _mm256_maskstore_pd
 // _mm_maskstore_ps
 // _mm256_maskstore_ps
+
 // _mm256_max_pd
 // _mm256_max_ps
+
 // _mm256_min_pd
 // _mm256_min_ps
+
 // _mm256_movedup_pd
+
 // _mm256_movehdup_ps
+
 // _mm256_moveldup_ps
+
 // _mm256_movemask_pd
 // _mm256_movemask_ps
+
 // _mm256_mul_pd
 // _mm256_mul_ps
+
 // _mm256_or_pd
 // _mm256_or_ps
+
 // _mm_permute_pd
 // _mm256_permute_pd
 // _mm_permute_ps
 // _mm256_permute_ps
+
 // _mm256_permute2f128_pd
 // _mm256_permute2f128_ps
 // _mm256_permute2f128_si256
+
 // _mm_permutevar_pd
 // _mm256_permutevar_pd
 // _mm_permutevar_ps
 // _mm256_permutevar_ps
+
 // _mm256_rcp_ps
+
 // _mm256_round_pd
 // _mm256_round_ps
+
 // _mm256_rsqrt_ps
+
 // _mm256_set_epi16
 // _mm256_set_epi32
 // _mm256_set_epi64x
@@ -403,12 +542,14 @@ pub fn cast_from_m256d_to_m256(a: m256d) -> m256 {
 // _mm256_set_m128i
 // _mm256_set_pd
 // _mm256_set_ps
+
 // _mm256_set1_epi16
 // _mm256_set1_epi32
 // _mm256_set1_epi64x
 // _mm256_set1_epi8
 // _mm256_set1_pd
 // _mm256_set1_ps
+
 // _mm256_setr_epi16
 // _mm256_setr_epi32
 // _mm256_setr_epi64x
@@ -418,53 +559,70 @@ pub fn cast_from_m256d_to_m256(a: m256d) -> m256 {
 // _mm256_setr_m128i
 // _mm256_setr_pd
 // _mm256_setr_ps
+
 // _mm256_setzero_pd
 // _mm256_setzero_ps
 // _mm256_setzero_si256
+
 // _mm256_shuffle_pd
 // _mm256_shuffle_ps
+
 // _mm256_sqrt_pd
 // _mm256_sqrt_ps
+
 // _mm256_store_pd
 // _mm256_store_ps
 // _mm256_store_si256
+
 // _mm256_storeu_pd
 // _mm256_storeu_ps
 // _mm256_storeu_si256
+
 // _mm256_storeu2_m128
 // _mm256_storeu2_m128d
 // _mm256_storeu2_m128i
+
 // _mm256_stream_pd
 // _mm256_stream_ps
 // _mm256_stream_si256
+
 // _mm256_sub_pd
 // _mm256_sub_ps
+
 // _mm_testc_pd
 // _mm256_testc_pd
 // _mm_testc_ps
 // _mm256_testc_ps
 // _mm256_testc_si256
+
 // _mm_testnzc_pd
 // _mm256_testnzc_pd
 // _mm_testnzc_ps
 // _mm256_testnzc_ps
 // _mm256_testnzc_si256
+
 // _mm_testz_pd
 // _mm256_testz_pd
 // _mm_testz_ps
 // _mm256_testz_ps
 // _mm256_testz_si256
+
 // _mm256_undefined_pd
 // _mm256_undefined_ps
 // _mm256_undefined_si256
+
 // _mm256_unpackhi_pd
 // _mm256_unpackhi_ps
+
 // _mm256_unpacklo_pd
 // _mm256_unpacklo_ps
+
 // _mm256_xor_pd
 // _mm256_xor_ps
+
 // _mm256_zeroall
 // _mm256_zeroupper
+
 // _mm256_zextpd128_pd256
 // _mm256_zextps128_ps256
 // _mm256_zextsi128_si256
