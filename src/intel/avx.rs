@@ -420,12 +420,319 @@ pub fn ceil_m256(a: m256) -> m256 {
   m256(unsafe { _mm256_ceil_ps(a.0) })
 }
 
-// _mm_cmp_pd
-// _mm256_cmp_pd
-// _mm_cmp_ps
-// _mm256_cmp_ps
-// _mm_cmp_sd
-// _mm_cmp_ss
+/// Turns a comparison operator token to the correct constant value.
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+macro_rules! comparison_operator_translation {
+  (EqualOrdered) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_CMP_EQ_OQ;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_CMP_EQ_OQ;
+    _CMP_EQ_OQ
+  }};
+  (EqualUnordered) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_CMP_EQ_UQ;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_CMP_EQ_UQ;
+    _CMP_EQ_UQ
+  }};
+  (False) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_CMP_FALSE_OQ;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_CMP_FALSE_OQ;
+    _CMP_FALSE_OQ
+  }};
+  (GreaterEqualOrdered) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_CMP_GE_OQ;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_CMP_GE_OQ;
+    _CMP_GE_OQ
+  }};
+  (GreaterThanOrdered) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_CMP_GT_OQ;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_CMP_GT_OQ;
+    _CMP_GT_OQ
+  }};
+  (LessEqualOrdered) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_CMP_LE_OQ;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_CMP_LE_OQ;
+    _CMP_LE_OQ
+  }};
+  (LessThanOrdered) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_CMP_LT_OQ;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_CMP_LT_OQ;
+    _CMP_LT_OQ
+  }};
+  (NotEqualOrdered) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_CMP_NEQ_OQ;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_CMP_NEQ_OQ;
+    _CMP_NEQ_OQ
+  }};
+  (NotEqualUnordered) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_CMP_NEQ_UQ;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_CMP_NEQ_UQ;
+    _CMP_NEQ_UQ
+  }};
+  (NotGreaterEqualUnordered) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_CMP_NGE_UQ;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_CMP_NGE_UQ;
+    _CMP_NGE_UQ
+  }};
+  (NotGreaterThanUnordered) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_CMP_NGT_UQ;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_CMP_NGT_UQ;
+    _CMP_NGT_UQ
+  }};
+  (NotLessEqualUnordered) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_CMP_NLE_UQ;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_CMP_NLE_UQ;
+    _CMP_NLE_UQ
+  }};
+  (NotLessThanUnordered) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_CMP_NLT_UQ;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_CMP_NLT_UQ;
+    _CMP_NLT_UQ
+  }};
+  (Ordered) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_CMP_ORD_Q;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_CMP_ORD_Q;
+    _CMP_ORD_Q
+  }};
+  (True) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_CMP_TRUE_UQ;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_CMP_TRUE_UQ;
+    _CMP_TRUE_UQ
+  }};
+  (Unordered) => {{
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_CMP_UNORD_Q;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_CMP_UNORD_Q;
+    _CMP_UNORD_Q
+  }};
+  ($unknown_op:tt) => {{
+    compile_error!("The operation name given is invalid.");
+  }};
+}
+
+/// Compare `f32` lanes according to the operation specified, mask output.
+///
+/// * Operators are according to the [`comparison_operator_translation`] macro.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128::from_array([2.0, 0.0, -2.0, 0.0]);
+/// let b = m128::from_array([1.0, 1.0, -1.0, -1.0]);
+/// let c = cmp_op_mask_m128!(a, GreaterThanOrdered, b).to_bits();
+/// assert_eq!(c, [u32::MAX, 0, 0, u32::MAX]);
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg(target_feature = "sse")]
+macro_rules! cmp_op_mask_m128 {
+  ($a:expr, $op:tt, $b:expr) => {{
+    $crate::cmp_op_mask_m128!(
+      @_raw_call $a, $b,
+      $crate::comparison_operator_translation!($op)
+    )
+  }};
+  (@_raw_call $a:expr, $b:expr, $imm:expr) => {{
+    let a: m128 = $a;
+    let b: m128 = $b;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_cmp_ps;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_cmp_ps;
+    m128(unsafe { _mm_cmp_ps(a.0, b.0, IMM) })
+  }};
+}
+
+/// Compare `f32` lanes according to the operation specified, mask output.
+///
+/// * Operators are according to the [`comparison_operator_translation`] macro.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128::from_array([2.0, 0.0, -2.0, 0.0]);
+/// let b = m128::from_array([1.0, 1.0, -1.0, -1.0]);
+/// let c = cmp_op_mask_m128_s!(a, GreaterThanOrdered, b).to_bits();
+/// assert_eq!(c, [u32::MAX, 0, (-2_f32).to_bits(), 0]);
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+macro_rules! cmp_op_mask_m128_s {
+  ($a:expr, $op:tt, $b:expr) => {{
+    $crate::cmp_op_mask_m128_s!(
+      @_raw_call $a, $b,
+      $crate::comparison_operator_translation!($op)
+    )
+  }};
+  (@_raw_call $a:expr, $b:expr, $imm:expr) => {{
+    let a: m128 = $a;
+    let b: m128 = $b;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_cmp_ss;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_cmp_ss;
+    m128(unsafe { _mm_cmp_ss(a.0, b.0, IMM) })
+  }};
+}
+
+/// Compare `f32` lanes according to the operation specified, mask output.
+///
+/// * Operators are according to the [`comparison_operator_translation`] macro.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([1.0, 5.0, 0.0, 7.0, 5.0, 6.0, 7.0, -20.0]);
+/// let b = m256::from_array([2.0, 1.0, 3.0, 4.0, 1.0, -2.0, -3.0, -4.0]);
+/// let c = cmp_op_mask_m256!(a, LessThanOrdered, b).to_bits();
+/// assert_eq!(c, [u32::MAX, 0, u32::MAX, 0, 0, 0, 0, u32::MAX]);
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+macro_rules! cmp_op_mask_m256 {
+  ($a:expr, $op:tt, $b:expr) => {{
+    $crate::cmp_op_mask_m256!(
+      @_raw_call $a, $b,
+      $crate::comparison_operator_translation!($op)
+    )
+  }};
+  (@_raw_call $a:expr, $b:expr, $imm:expr) => {{
+    let a: m256 = $a;
+    let b: m256 = $b;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm256_cmp_ps;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm256_cmp_ps;
+    m256(unsafe { _mm256_cmp_ps(a.0, b.0, IMM) })
+  }};
+}
+
+/// Compare `f64` lanes according to the operation specified, mask output.
+///
+/// * Operators are according to the [`comparison_operator_translation`] macro.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 0.0]);
+/// let b = m128d::from_array([1.0, 1.0]);
+/// let c = cmp_op_mask_m128d!(a, EqualOrdered, b).to_bits();
+/// assert_eq!(c, [u64::MAX, 0]);
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+macro_rules! cmp_op_mask_m128d {
+  ($a:expr, $op:tt, $b:expr) => {{
+    $crate::cmp_op_mask_m128d!(
+      @_raw_call $a, $b,
+      $crate::comparison_operator_translation!($op)
+    )
+  }};
+  (@_raw_call $a:expr, $b:expr, $imm:expr) => {{
+    let a: m128d = $a;
+    let b: m128d = $b;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_cmp_pd;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_cmp_pd;
+    m128d(unsafe { _mm_cmp_pd(a.0, b.0, IMM) })
+  }};
+}
+
+/// Compare `f64` lanes according to the operation specified, mask output.
+///
+/// * Operators are according to the [`comparison_operator_translation`] macro.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 7.0]);
+/// let b = m128d::from_array([1.0, 1.0]);
+/// let c = cmp_op_mask_m128d_s!(a, EqualOrdered, b).to_bits();
+/// assert_eq!(c, [u64::MAX, 7_f64.to_bits()]);
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+macro_rules! cmp_op_mask_m128d_s {
+  ($a:expr, $op:tt, $b:expr) => {{
+    $crate::cmp_op_mask_m128d_s!(
+      @_raw_call $a, $b,
+      $crate::comparison_operator_translation!($op)
+    )
+  }};
+  (@_raw_call $a:expr, $b:expr, $imm:expr) => {{
+    let a: m128d = $a;
+    let b: m128d = $b;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_cmp_sd;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_cmp_sd;
+    m128d(unsafe { _mm_cmp_sd(a.0, b.0, IMM) })
+  }};
+}
+
+/// Compare `f64` lanes according to the operation specified, mask output.
+///
+/// * Operators are according to the [`comparison_operator_translation`] macro.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from_array([1.0, 5.0, 0.0, 7.0]);
+/// let b = m256d::from_array([2.0, 1.0, 3.0, 4.0]);
+/// let c = cmp_op_mask_m256d!(a, LessThanOrdered, b).to_bits();
+/// assert_eq!(c, [u64::MAX, 0, u64::MAX, 0]);
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+macro_rules! cmp_op_mask_m256d {
+  ($a:expr, $op:tt, $b:expr) => {{
+    $crate::cmp_op_mask_m256d!(
+      @_raw_call $a, $b,
+      $crate::comparison_operator_translation!($op)
+    )
+  }};
+  (@_raw_call $a:expr, $b:expr, $imm:expr) => {{
+    let a: m256d = $a;
+    let b: m256d = $b;
+    const IMM: i32 = $imm as i32;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm256_cmp_pd;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm256_cmp_pd;
+    m256d(unsafe { _mm256_cmp_pd(a.0, b.0, IMM) })
+  }};
+}
 
 // _mm256_cvtepi32_pd
 // _mm256_cvtepi32_ps
