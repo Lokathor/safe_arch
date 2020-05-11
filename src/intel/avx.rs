@@ -554,7 +554,6 @@ macro_rules! comparison_operator_translation {
 /// ```
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-#[cfg(target_feature = "sse")]
 macro_rules! cmp_op_mask_m128 {
   ($a:expr, $op:tt, $b:expr) => {{
     $crate::cmp_op_mask_m128!(
@@ -933,3 +932,4 @@ macro_rules! cmp_op_mask_m256d {
 // _mm256_zextpd128_pd256
 // _mm256_zextps128_ps256
 // _mm256_zextsi128_si256
+// TODO: if we have these we should also include the lane truncate ops
