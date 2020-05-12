@@ -64,13 +64,14 @@
 //! * `splat`: Copy a value as many times as possible across the bits of a
 //!   register (works like `[1_i32; LEN]` array building).
 //! * `extract`: Get an individual lane out of a SIMD register (works like array
-//!   access).
+//!   access). The lane to get has to be a const value.
 //! * `insert`: Duplicate a register and then replace the value of a specific
-//!   lane (works like `let mut a2 = a.clone(); a2[i] = new;`).
-//! * `cast`: change data types while preserving the exact bit pattern (like how
+//!   lane (works like `let mut a2 = a.clone(); a2[i] = new;`). The lane to
+//!   overwrite has to be a const value.
+//! * `cast`: change data types while preserving the bit pattern (like how
 //!   `transmute` would do it).
-//! * `convert`: change the container and/or element type while trying to keep
-//!   each number's value as close as possible (like how `as` would do it).
+//! * `convert`: change data types while trying to preserve the numeric value
+//!   (which might change the bits, like how `as` would do it).
 //!
 //! **This crate is pre-1.0 and if you feel that an operation should have a
 //! better name to improve the crate's consistency please file an issue.**
