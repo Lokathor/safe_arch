@@ -1564,22 +1564,184 @@ pub fn load_masked_m256(a: &m256, mask: m256i) -> m256 {
   m256(unsafe { _mm256_maskload_ps(a as *const m256 as *const f32, mask.0) })
 }
 
-// _mm_maskstore_pd
-// _mm256_maskstore_pd
-// _mm_maskstore_ps
-// _mm256_maskstore_ps
+/// Store data from a register into memory according to a mask.
+///
+/// When the high bit of a mask lane isn't set that lane is not written.
+///
+/// ```
+/// # use safe_arch::*;
+/// let mut a = m128d::default();
+/// store_masked_m128d(
+///   &mut a,
+///   m128i::from([0_i64, -1]),
+///   m128d::from([8.0, 17.0]),
+/// );
+/// assert_eq!(a.to_array(), [0.0, 17.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn store_masked_m128d(addr: &mut m128d, mask: m128i, a: m128d) {
+  unsafe { _mm_maskstore_pd(addr as *mut m128d as *mut f64, mask.0, a.0) }
+}
 
-// _mm256_max_pd
-// _mm256_max_ps
+/// Store data from a register into memory according to a mask.
+///
+/// When the high bit of a mask lane isn't set that lane is not written.
+///
+/// ```
+/// # use safe_arch::*;
+/// let mut a = m256d::default();
+/// store_masked_m256d(
+///   &mut a,
+///   m256i::from([0_i64, -1, -1, 0]),
+///   m256d::from([8.0, 17.0, 16.0, 20.0]),
+/// );
+/// assert_eq!(a.to_array(), [0.0, 17.0, 16.0, 0.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn store_masked_m256d(addr: &mut m256d, mask: m256i, a: m256d) {
+  unsafe { _mm256_maskstore_pd(addr as *mut m256d as *mut f64, mask.0, a.0) }
+}
 
-// _mm256_min_pd
-// _mm256_min_ps
+/// Store data from a register into memory according to a mask.
+///
+/// When the high bit of a mask lane isn't set that lane is not written.
+///
+/// ```
+/// # use safe_arch::*;
+/// let mut a = m128::default();
+/// store_masked_m128(
+///   &mut a,
+///   m128i::from([0, -1, -1, 0]),
+///   m128::from([8.0, 17.0, 16.0, 20.0]),
+/// );
+/// assert_eq!(a.to_array(), [0.0, 17.0, 16.0, 0.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn store_masked_m128(addr: &mut m128, mask: m128i, a: m128) {
+  unsafe { _mm_maskstore_ps(addr as *mut m128 as *mut f32, mask.0, a.0) }
+}
 
-// _mm256_movedup_pd
+/// Store data from a register into memory according to a mask.
+///
+/// When the high bit of a mask lane isn't set that lane is not written.
+///
+/// ```
+/// # use safe_arch::*;
+/// let mut a = m256::default();
+/// store_masked_m256(
+///   &mut a,
+///   m256i::from([0, -1, -1, 0, -1, -1, 0, 0]),
+///   m256::from([8.0, 17.0, 16.0, 20.0, 80.0, 1.0, 2.0, 3.0]),
+/// );
+/// assert_eq!(a.to_array(), [0.0, 17.0, 16.0, 0.0, 80.0, 1.0, 0.0, 0.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn store_masked_m256(addr: &mut m256, mask: m256i, a: m256) {
+  unsafe { _mm256_maskstore_ps(addr as *mut m256 as *mut f32, mask.0, a.0) }
+}
 
-// _mm256_movehdup_ps
+/// Lanewise `max(a, b)`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from_array([1.0, 12.0, -1.0, 3.0]);
+/// let b = m256d::from_array([5.0, 6.0, -0.5, 2.2]);
+/// let c = max_m256d(a, b).to_array();
+/// assert_eq!(c, [5.0, 12.0, -0.5, 3.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn max_m256d(a: m256d, b: m256d) -> m256d {
+  m256d(unsafe { _mm256_max_pd(a.0, b.0) })
+}
 
-// _mm256_moveldup_ps
+/// Lanewise `max(a, b)`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([1.0, 12.0, -1.0, 3.0, 10.0, 0.0, 1.0, 2.0]);
+/// let b = m256::from_array([5.0, 6.0, -0.5, 2.2, 5.0, 6.0, 7.0, 8.0]);
+/// let c = max_m256(a, b).to_array();
+/// assert_eq!(c, [5.0, 12.0, -0.5, 3.0, 10.0, 6.0, 7.0, 8.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn max_m256(a: m256, b: m256) -> m256 {
+  m256(unsafe { _mm256_max_ps(a.0, b.0) })
+}
+
+/// Lanewise `min(a, b)`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from_array([1.0, 12.0, -1.0, 3.0]);
+/// let b = m256d::from_array([5.0, 6.0, -0.5, 2.2]);
+/// let c = min_m256d(a, b).to_array();
+/// assert_eq!(c, [1.0, 6.0, -1.0, 2.2]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn min_m256d(a: m256d, b: m256d) -> m256d {
+  m256d(unsafe { _mm256_min_pd(a.0, b.0) })
+}
+
+/// Lanewise `min(a, b)`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([1.0, 12.0, -1.0, 3.0, 10.0, 0.0, 1.0, 2.0]);
+/// let b = m256::from_array([5.0, 6.0, -0.5, 2.2, 5.0, 6.0, 7.0, 8.0]);
+/// let c = min_m256(a, b).to_array();
+/// assert_eq!(c, [1.0, 6.0, -1.0, 2.2, 5.0, 0.0, 1.0, 2.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn min_m256(a: m256, b: m256) -> m256 {
+  m256(unsafe { _mm256_min_ps(a.0, b.0) })
+}
+
+/// Duplicate the odd-indexed lanes to the even lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from_array([1.0, 12.0, -1.0, 3.0]);
+/// let c = duplicate_odd_lanes_m256d(a).to_array();
+/// assert_eq!(c, [1.0, 1.0, -1.0, -1.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn duplicate_odd_lanes_m256d(a: m256d) -> m256d {
+  m256d(unsafe { _mm256_movedup_pd(a.0) })
+}
+
+/// Duplicate the even-indexed lanes to the odd lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([1.0, 12.0, -1.0, 3.0, 0.0, 7.0, 2.0, 50.0]);
+/// let c = duplicate_even_lanes_m256(a).to_array();
+/// assert_eq!(c, [12.0, 12.0, 3.0, 3.0, 7.0, 7.0, 50.0, 50.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn duplicate_even_lanes_m256(a: m256) -> m256 {
+  m256(unsafe { _mm256_movehdup_ps(a.0) })
+}
+
+/// Duplicate the odd-indexed lanes to the even lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([1.0, 12.0, -1.0, 3.0, 0.0, 7.0, 2.0, 50.0]);
+/// let c = duplicate_odd_lanes_m256(a).to_array();
+/// assert_eq!(c, [1.0, 1.0, -1.0, -1.0, 0.0, 0.0, 2.0, 2.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+pub fn duplicate_odd_lanes_m256(a: m256) -> m256 {
+  m256(unsafe { _mm256_moveldup_ps(a.0) })
+}
 
 // _mm256_movemask_pd
 // _mm256_movemask_ps
@@ -1659,10 +1821,6 @@ pub fn load_masked_m256(a: &m256, mask: m256i) -> m256 {
 // _mm256_storeu2_m128
 // _mm256_storeu2_m128d
 // _mm256_storeu2_m128i
-
-// _mm256_stream_pd
-// _mm256_stream_ps
-// _mm256_stream_si256
 
 // _mm256_sub_pd
 // _mm256_sub_ps
