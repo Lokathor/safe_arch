@@ -1404,25 +1404,150 @@ pub fn load_unaligned_m256(a: &[f32; 8]) -> m256 {
 ///
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([8, 17, 6, 5, 4, 23, 2, 1]);
-/// let b = load_m256i(&a);
-/// assert_eq!(<[i32; 8]>::from(a), <[i32; 8]>::from(b));
+/// assert_eq!(<[i8; 32]>::from(load_unaligned_m256i(&[7_i8; 32])), [7_i8; 32]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn load_unaligned_m256i(a: &[i32; 8]) -> m256i {
-  m256i(unsafe { _mm256_loadu_si256(a as *const [i32; 8] as *const __m256i) })
+pub fn load_unaligned_m256i(a: &[i8; 32]) -> m256i {
+  m256i(unsafe { _mm256_loadu_si256(a as *const [i8; 32] as *const __m256i) })
 }
 
-// _mm256_loadu2_m128
-// _mm256_loadu2_m128d
-// _mm256_loadu2_m128i
+/// Load data from memory into a register.
+///
+/// ```
+/// # use safe_arch::*;
+/// assert_eq!(
+///   load_unaligned_hi_lo_m256d(&[3.0, 4.0], &[1.0, 2.0]).to_array(),
+///   [1.0, 2.0, 3.0, 4.0]
+/// );
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn load_unaligned_hi_lo_m256d(a: &[f64; 2], b: &[f64; 2]) -> m256d {
+  m256d(unsafe {
+    _mm256_loadu2_m128d(
+      a as *const [f64; 2] as *const f64,
+      b as *const [f64; 2] as *const f64,
+    )
+  })
+}
 
-// _mm_maskload_pd
-// _mm256_maskload_pd
-// _mm_maskload_ps
-// _mm256_maskload_ps
+/// Load data from memory into a register.
+///
+/// ```
+/// # use safe_arch::*;
+/// assert_eq!(
+///   load_unaligned_hi_lo_m256(&[5.0, 6.0, 7.0, 8.0], &[1.0, 2.0, 3.0, 4.0])
+///     .to_array(),
+///   [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]
+/// );
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn load_unaligned_hi_lo_m256(a: &[f32; 4], b: &[f32; 4]) -> m256 {
+  m256(unsafe {
+    _mm256_loadu2_m128(
+      a as *const [f32; 4] as *const f32,
+      b as *const [f32; 4] as *const f32,
+    )
+  })
+}
+
+/// Load data from memory into a register.
+///
+/// ```
+/// # use safe_arch::*;
+/// assert_eq!(
+///   <[i8; 32]>::from(load_unaligned_hi_lo_m256i(&[7_i8; 16], &[9_i8; 16])),
+///   [
+///     9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7, 7,
+///     7, 7, 7, 7, 7, 7, 7, 7,
+///   ]
+/// );
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn load_unaligned_hi_lo_m256i(a: &[i8; 16], b: &[i8; 16]) -> m256i {
+  m256i(unsafe {
+    _mm256_loadu2_m128i(
+      a as *const [i8; 16] as *const __m128i,
+      b as *const [i8; 16] as *const __m128i,
+    )
+  })
+}
+
+/// Load data from memory into a register according to a mask.
+///
+/// When the high bit of a mask lane isn't set the loaded lane will be zero.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from([8.0, 17.0]);
+/// let b = load_masked_m128d(&a, m128i::from([0_i64, -1])).to_array();
+/// assert_eq!(b, [0.0, 17.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn load_masked_m128d(a: &m128d, mask: m128i) -> m128d {
+  m128d(unsafe { _mm_maskload_pd(a as *const m128d as *const f64, mask.0) })
+}
+
+/// Load data from memory into a register according to a mask.
+///
+/// When the high bit of a mask lane isn't set the loaded lane will be zero.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from([8.0, 17.0, 16.0, 20.0]);
+/// let b = load_masked_m256d(&a, m256i::from([0_i64, -1, -1, 0])).to_array();
+/// assert_eq!(b, [0.0, 17.0, 16.0, 0.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn load_masked_m256d(a: &m256d, mask: m256i) -> m256d {
+  m256d(unsafe { _mm256_maskload_pd(a as *const m256d as *const f64, mask.0) })
+}
+
+/// Load data from memory into a register according to a mask.
+///
+/// When the high bit of a mask lane isn't set the loaded lane will be zero.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128::from([8.0, 17.0, 16.0, 12.0]);
+/// let b = load_masked_m128(&a, m128i::from([0, -1, -1, 0])).to_array();
+/// assert_eq!(b, [0.0, 17.0, 16.0, 0.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn load_masked_m128(a: &m128, mask: m128i) -> m128 {
+  m128(unsafe { _mm_maskload_ps(a as *const m128 as *const f32, mask.0) })
+}
+
+/// Load data from memory into a register according to a mask.
+///
+/// When the high bit of a mask lane isn't set the loaded lane will be zero.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from([8.0, 17.0, 16.0, 20.0, 80.0, 1.0, 2.0, 3.0]);
+/// let b =
+///   load_masked_m256(&a, m256i::from([0, -1, -1, 0, -1, -1, 0, 0])).to_array();
+/// assert_eq!(b, [0.0, 17.0, 16.0, 0.0, 80.0, 1.0, 0.0, 0.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn load_masked_m256(a: &m256, mask: m256i) -> m256 {
+  m256(unsafe { _mm256_maskload_ps(a as *const m256 as *const f32, mask.0) })
+}
 
 // _mm_maskstore_pd
 // _mm256_maskstore_pd
@@ -1544,10 +1669,6 @@ pub fn load_unaligned_m256i(a: &[i32; 8]) -> m256i {
 // _mm_testz_ps
 // _mm256_testz_ps
 // _mm256_testz_si256
-
-// _mm256_undefined_pd
-// _mm256_undefined_ps
-// _mm256_undefined_si256
 
 // _mm256_unpackhi_pd
 // _mm256_unpackhi_ps
