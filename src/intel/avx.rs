@@ -733,20 +733,202 @@ macro_rules! cmp_op_mask_m256d {
   }};
 }
 
-// _mm256_cvtepi32_pd
-// _mm256_cvtepi32_ps
-// _mm256_cvtpd_epi32
-// _mm256_cvtpd_ps
-// _mm256_cvtps_epi32
-// _mm256_cvtps_pd
-// _mm256_cvtsd_f64
-// _mm256_cvtsi256_si32
-// _mm256_cvtss_f32
-// _mm256_cvttpd_epi32
-// _mm256_cvttps_epi32
+/// Convert `i32` lanes to be `f64` lanes.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([4, 5, 6, 7]);
+/// let b = convert_to_m256d_from_i32_m128i(a).to_array();
+/// assert_eq!(b, [4.0, 5.0, 6.0, 7.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn convert_to_m256d_from_i32_m128i(a: m128i) -> m256d {
+  m256d(unsafe { _mm256_cvtepi32_pd(a.0) })
+}
 
-// _mm256_div_pd
-// _mm256_div_ps
+/// Convert `i32` lanes to be `f32` lanes.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([4, 5, 6, 7, 8, -9, 1, 0]);
+/// let b = convert_to_m256_from_i32_m256i(a).to_array();
+/// assert_eq!(b, [4.0, 5.0, 6.0, 7.0, 8.0, -9.0, 1.0, 0.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn convert_to_m256_from_i32_m256i(a: m256i) -> m256 {
+  m256(unsafe { _mm256_cvtepi32_ps(a.0) })
+}
+
+/// Convert `f64` lanes to be `i32` lanes.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from([4.0, 5.0, 6.0, 7.0]);
+/// let b: [i32; 4] = convert_to_m128i_from_m256d(a).into();
+/// assert_eq!(b, [4, 5, 6, 7]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn convert_to_m128i_from_m256d(a: m256d) -> m128i {
+  m128i(unsafe { _mm256_cvtpd_epi32(a.0) })
+}
+
+/// Convert `f64` lanes to be `f32` lanes.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from([4.0, 5.0, 6.0, 7.0]);
+/// let b = convert_to_m128_from_m256d(a).to_array();
+/// assert_eq!(b, [4.0, 5.0, 6.0, 7.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn convert_to_m128_from_m256d(a: m256d) -> m128 {
+  m128(unsafe { _mm256_cvtpd_ps(a.0) })
+}
+
+/// Convert `f32` lanes to be `i32` lanes.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from([4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0]);
+/// let b: [i32; 8] = convert_to_m256i_from_m256(a).into();
+/// assert_eq!(b, [4, 5, 6, 7, 8, 9, 10, 11]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn convert_to_m256i_from_m256(a: m256) -> m256i {
+  m256i(unsafe { _mm256_cvtps_epi32(a.0) })
+}
+
+/// Convert `f32` lanes to be `f64` lanes.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128::from([4.0, 5.0, 6.0, 7.0]);
+/// let b = convert_to_m256d_from_m128(a).to_array();
+/// assert_eq!(b, [4.0, 5.0, 6.0, 7.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn convert_to_m256d_from_m128(a: m128) -> m256d {
+  m256d(unsafe { _mm256_cvtps_pd(a.0) })
+}
+
+/// Convert the lowest `f64` lane to a single `f64`.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from([4.0, 5.0, 6.0, 7.0]);
+/// let b = convert_to_f64_from_m256d_s(a);
+/// assert_eq!(b, 4.0);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn convert_to_f64_from_m256d_s(a: m256d) -> f64 {
+  unsafe { _mm256_cvtsd_f64(a.0) }
+}
+
+/// Convert the lowest `f64` lane to a single `f64`.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([4, 5, 6, 7, 8, 9, 10, 11]);
+/// let b = convert_to_i32_from_m256i_s(a);
+/// assert_eq!(b, 4);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn convert_to_i32_from_m256i_s(a: m256i) -> i32 {
+  unsafe { _mm256_cvtsi256_si32(a.0) }
+}
+
+/// Convert the lowest `f64` lane to a single `f64`.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from([4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0]);
+/// let b = convert_to_f32_from_m256_s(a);
+/// assert_eq!(b, 4.0);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn convert_to_f32_from_m256_s(a: m256) -> f32 {
+  unsafe { _mm256_cvtss_f32(a.0) }
+}
+
+/// Convert `f64` lanes to `i32` lanes.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from([4.0, 5.0, 6.0, 7.0]);
+/// let b: [i32; 4] = convert_to_i32_m128i_from_m256d(a).into();
+/// assert_eq!(b, [4, 5, 6, 7]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn convert_to_i32_m128i_from_m256d(a: m256d) -> m128i {
+  m128i(unsafe { _mm256_cvttpd_epi32(a.0) })
+}
+
+/// Convert `f32` lanes to `i32` lanes.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from([4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0]);
+/// let b: [i32; 8] = convert_to_i32_m256i_from_m256(a).into();
+/// assert_eq!(b, [4, 5, 6, 7, 8, 9, 10, 11]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn convert_to_i32_m256i_from_m256(a: m256) -> m256i {
+  m256i(unsafe { _mm256_cvttps_epi32(a.0) })
+}
+
+/// Lanewise `a / b` with `f64`.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from([4.0, 5.0, 6.0, 7.0]);
+/// let b = m256d::from([2.0, 2.0, 3.0, 7.0]);
+/// let c = div_m256d(a, b).to_array();
+/// assert_eq!(c, [2.0, 2.5, 2.0, 1.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn div_m256d(a: m256d, b: m256d) -> m256d {
+  m256d(unsafe { _mm256_div_pd(a.0, b.0) })
+}
+
+/// Lanewise `a / b` with `f32`.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0]);
+/// let b = m256::from_array([2.0, 2.0, 3.0, 7.0, 2.0, 3.0, 4.0, 11.0]);
+/// let c = div_m256(a, b).to_array();
+/// assert_eq!(c, [2.0, 2.5, 2.0, 1.0, 4.0, 3.0, 2.5, 1.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn div_m256(a: m256, b: m256) -> m256 {
+  m256(unsafe { _mm256_div_ps(a.0, b.0) })
+}
 
 // _mm256_dp_ps
 

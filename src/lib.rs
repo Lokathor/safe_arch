@@ -55,16 +55,22 @@
 //!   argument, or something. Details vary.
 //!   * Eg: `sqrt_m128` (all lanes) and `sqrt_m128_s` (low lane only)
 //!
-//! Sometimes there's more than one name for essentially the same operation,
-//! because these intrinsics were added to the CPU slowly over a decade or more.
-//! Particularly for going into and out of SIMD form there's the following
-//! naming convention:
-//! * `load` reads from memory into a register.
-//! * `store` writes from a register into memory.
-//! * `set` packs non-SIMD data into a SIMD register.
-//! * `splat` copies a value as many times as it fits across a SIMD register.
-//! * `extract` picks a lane's value out of SIMD into a non-SIMD data type.
-//! * `insert` copies a register and replaces a particular lane's value.
+//! Of course, people can't even always agree on what words mean. The common
+//! verb names for this crate, and their conventions, are as follows:
+//! * `load`: Reads memory into a register (deref `&Foo` to `Foo`).
+//! * `store`: Writes a register to memory (writes `Foo` to a `&mut Foo`).
+//! * `set`: Packs values into a register (works like `[1, 2, 3, 4]` to build an
+//!   array).
+//! * `splat`: Copy a value as many times as possible across the bits of a
+//!   register (works like `[1_i32; LEN]` array building).
+//! * `extract`: Get an individual lane out of a SIMD register (works like array
+//!   access).
+//! * `insert`: Duplicate a register and then replace the value of a specific
+//!   lane (works like `let mut a2 = a.clone(); a2[i] = new;`).
+//! * `cast`: change data types while preserving the exact bit pattern (like how
+//!   `transmute` would do it).
+//! * `convert`: change the container and/or element type while trying to keep
+//!   each number's value as close as possible (like how `as` would do it).
 //!
 //! **This crate is pre-1.0 and if you feel that an operation should have a
 //! better name to improve the crate's consistency please file an issue.**
