@@ -944,6 +944,7 @@ pub fn div_m256(a: m256, b: m256) -> m256 {
 /// assert_eq!(c, [110.0, 110.0, 110.0, 110.0, 382.0, 382.0, 382.0, 382.0]);
 /// ```
 #[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! dot_product_m256 {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m256 = $a;
@@ -965,6 +966,7 @@ macro_rules! dot_product_m256 {
 /// assert_eq!(extract_i32_from_m256i!(a, 3), 12);
 /// ```
 #[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! extract_i32_from_m256i {
   ($a:expr, $imm:expr) => {{
     let a: m256i = $a;
@@ -985,6 +987,8 @@ macro_rules! extract_i32_from_m256i {
 /// assert_eq!(extract_i64_from_m256i!(a, 1), 10_i64);
 /// ```
 #[macro_export]
+#[cfg(target_arch = "x86_64")]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! extract_i64_from_m256i {
   ($a:expr, $imm:expr) => {{
     let a: m256i = $a;
@@ -1007,6 +1011,7 @@ macro_rules! extract_i64_from_m256i {
 /// assert_eq!(b, c);
 /// ```
 #[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! extract_m128d_from_m256d {
   ($a:expr, $imm:expr) => {{
     let a: m256d = $a;
@@ -1029,6 +1034,7 @@ macro_rules! extract_m128d_from_m256d {
 /// assert_eq!(b, c);
 /// ```
 #[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! extract_m128_from_m256 {
   ($a:expr, $imm:expr) => {{
     let a: m256 = $a;
@@ -1051,6 +1057,7 @@ macro_rules! extract_m128_from_m256 {
 /// assert_eq!(b, c);
 /// ```
 #[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! extract_m128i_from_m256i {
   ($a:expr, $imm:expr) => {{
     let a: m256i = $a;
@@ -1171,6 +1178,7 @@ pub fn sub_horizontal_m256(a: m256, b: m256) -> m256 {
 /// assert_eq!(b, c);
 /// ```
 #[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! insert_i8_to_m256i {
   ($a:expr, $i:expr, $imm:expr) => {{
     let a: m256i = $a;
@@ -1195,6 +1203,7 @@ macro_rules! insert_i8_to_m256i {
 /// assert_eq!(b, c);
 /// ```
 #[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! insert_i16_to_m256i {
   ($a:expr, $i:expr, $imm:expr) => {{
     let a: m256i = $a;
@@ -1218,6 +1227,7 @@ macro_rules! insert_i16_to_m256i {
 /// assert_eq!(b, c);
 /// ```
 #[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! insert_i32_to_m256i {
   ($a:expr, $i:expr, $imm:expr) => {{
     let a: m256i = $a;
@@ -1241,6 +1251,8 @@ macro_rules! insert_i32_to_m256i {
 /// assert_eq!(b, c);
 /// ```
 #[macro_export]
+#[cfg(target_arch = "x86_64")]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! insert_i64_to_m256i {
   ($a:expr, $i:expr, $imm:expr) => {{
     let a: m256i = $a;
@@ -1264,6 +1276,7 @@ macro_rules! insert_i64_to_m256i {
 /// assert_eq!(b, [0.0, 0.0, 3.0, 4.0]);
 /// ```
 #[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! insert_m128d_to_m256d {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m256d = $a;
@@ -1287,6 +1300,7 @@ macro_rules! insert_m128d_to_m256d {
 /// assert_eq!(b, [0.0, 0.0, 0.0, 0.0, 1.0, 2.0, 3.0, 4.0]);
 /// ```
 #[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! insert_m128_to_m256 {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m256 = $a;
@@ -1310,6 +1324,7 @@ macro_rules! insert_m128_to_m256 {
 /// assert_eq!(b, [0, 0, 0, 0, 1, 2, 3, 4]);
 /// ```
 #[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! insert_m128i_to_m256i {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m256i = $a;
