@@ -29,4 +29,4 @@ See the [crate docs](https://docs.rs/safe_arch) for more details.
 ## Additional Resources
 
 * [Intel Intrinsics Guide](https://software.intel.com/sites/landingpage/IntrinsicsGuide/)
-  * [Raw Xml Version](https://software.intel.com/sites/landingpage/IntrinsicsGuide/files/data-3.5.0.xml)
+  * [Raw Xml v3.5.0](https://software.intel.com/sites/landingpage/IntrinsicsGuide/files/data-3.5.0.xml) and you can check their [release notes](https://software.intel.com/sites/landingpage/IntrinsicsGuide/files/ReleaseNotes.html) to see if a later version has been put out since this readme file was last updated.
