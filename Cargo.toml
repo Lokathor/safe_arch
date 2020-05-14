@@ -1,6 +1,6 @@
 [package]
 name = "safe_arch"
-description = "Crate that exposes `core::arch` safely (via `#[cfg()]`)."
+description = "Crate that exposes `core::arch` safely via `#[cfg()]`."
 repository = "https://github.com/Lokathor/safe_arch"
 version = "0.3.0-alpha.0"
 authors = ["Lokathor <zefria@gmail.com>"]
