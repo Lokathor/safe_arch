@@ -909,11 +909,7 @@ pub fn convert_to_i32_m256i_from_m256(a: m256) -> m256i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg(feature = "license1")]
-#[cfg_attr(
-  docs_rs,
-  doc(cfg(all(target_feature = "avx", feature = "license1")))
-)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn div_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_div_pd(a.0, b.0) })
 }
@@ -929,11 +925,7 @@ pub fn div_m256d(a: m256d, b: m256d) -> m256d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg(feature = "license1")]
-#[cfg_attr(
-  docs_rs,
-  doc(cfg(all(target_feature = "avx", feature = "license1")))
-)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn div_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_div_ps(a.0, b.0) })
 }
@@ -952,11 +944,7 @@ pub fn div_m256(a: m256, b: m256) -> m256 {
 /// assert_eq!(c, [110.0, 110.0, 110.0, 110.0, 382.0, 382.0, 382.0, 382.0]);
 /// ```
 #[macro_export]
-#[cfg(feature = "license1")]
-#[cfg_attr(
-  docs_rs,
-  doc(cfg(all(target_feature = "avx", feature = "license1")))
-)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! dot_product_m256 {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m256 = $a;
@@ -1799,11 +1787,7 @@ pub fn move_mask_m256(a: m256) -> i32 {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg(feature = "license1")]
-#[cfg_attr(
-  docs_rs,
-  doc(cfg(all(target_feature = "avx", feature = "license1")))
-)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn mul_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_mul_pd(a.0, b.0) })
 }
@@ -1818,11 +1802,7 @@ pub fn mul_m256d(a: m256d, b: m256d) -> m256d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg(feature = "license1")]
-#[cfg_attr(
-  docs_rs,
-  doc(cfg(all(target_feature = "avx", feature = "license1")))
-)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn mul_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_mul_ps(a.0, b.0) })
 }
@@ -2411,89 +2391,901 @@ pub fn reciprocal_sqrt_m256(a: m256) -> m256 {
   m256(unsafe { _mm256_rsqrt_ps(a.0) })
 }
 
-// _mm256_set_epi16
-// _mm256_set_epi32
-// _mm256_set_epi64x
-// _mm256_set_epi8
-// _mm256_set_m128
-// _mm256_set_m128d
-// _mm256_set_m128i
-// _mm256_set_pd
-// _mm256_set_ps
+/// Set `i8` args into an `m256i` lane.
+/// ```
+/// # use safe_arch::*;
+/// let a: [i8; 32] =
+///   set_i8_m256i(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31).into();
+/// assert_eq!(a, [31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[rustfmt::skip]
+pub fn set_i8_m256i(
+  e31: i8, e30: i8, e29: i8, e28: i8, e27: i8, e26: i8, e25: i8, e24: i8, e23: i8, e22: i8, e21: i8, e20: i8, e19: i8, e18: i8, e17: i8, e16: i8, e15: i8, e14: i8, e13: i8, e12: i8, e11: i8, e10: i8, e9: i8, e8: i8, e7: i8, e6: i8, e5: i8, e4: i8, e3: i8, e2: i8, e1: i8, e0: i8
+) -> m256i {
+  m256i(unsafe {
+    _mm256_set_epi8(
+      e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0
+    )
+  })
+}
 
-// _mm256_set1_epi16
-// _mm256_set1_epi32
-// _mm256_set1_epi64x
-// _mm256_set1_epi8
-// _mm256_set1_pd
-// _mm256_set1_ps
+/// Set `i16` args into an `m256i` lane.
+/// ```
+/// # use safe_arch::*;
+/// let a: [i16; 16] =
+///   set_i16_m256i(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15).into();
+/// assert_eq!(a, [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[rustfmt::skip]
+pub fn set_i16_m256i(
+  e15: i16, e14: i16, e13: i16, e12: i16, e11: i16, e10: i16, e9: i16, e8: i16,
+  e7: i16, e6: i16, e5: i16, e4: i16, e3: i16, e2: i16, e1: i16, e0: i16,
+) -> m256i {
+  m256i(unsafe {
+    _mm256_set_epi16(
+      e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0,
+    )
+  })
+}
 
-// _mm256_setr_epi16
-// _mm256_setr_epi32
-// _mm256_setr_epi64x
-// _mm256_setr_epi8
-// _mm256_setr_m128
-// _mm256_setr_m128d
-// _mm256_setr_m128i
-// _mm256_setr_pd
-// _mm256_setr_ps
+/// Set `i32` args into an `m256i` lane.
+/// ```
+/// # use safe_arch::*;
+/// let a: [i32; 8] =
+///   set_i32_m256i(0, 1, 2, 3, 4, 5, 6, 7).into();
+/// assert_eq!(a, [7, 6, 5, 4, 3, 2, 1, 0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[rustfmt::skip]
+pub fn set_i32_m256i(
+  e7: i32, e6: i32, e5: i32, e4: i32, e3: i32, e2: i32, e1: i32, e0: i32,
+) -> m256i {
+  m256i(unsafe {
+    _mm256_set_epi32(e7, e6, e5, e4, e3, e2, e1, e0)
+  })
+}
 
-// _mm256_setzero_pd
-// _mm256_setzero_ps
-// _mm256_setzero_si256
+/// Set `i64` args into an `m256i` lane.
+/// ```
+/// # use safe_arch::*;
+/// let a: [i64; 4] = set_i64_m256i(0, 1, 2, 3).into();
+/// assert_eq!(a, [3, 2, 1, 0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg(target_arch="x86_86")]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[rustfmt::skip]
+pub fn set_i64_m256i(
+  e3: i64, e2: i64, e1: i64, e0: i64,
+) -> m256i {
+  m256i(unsafe { _mm256_set_epi64x(e3, e2, e1, e0) })
+}
 
-// _mm256_shuffle_pd
-// _mm256_shuffle_ps
+/// Set `m128` args into an `m256`.
+/// ```
+/// # use safe_arch::*;
+/// let a = set_m128_m256(
+///   m128::from([7.0, 6.0, 5.0, 4.0]),
+///   m128::from([3.0, 2.0, 1.0, 0.0]),
+/// ).to_array();
+/// assert_eq!(a, [7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0, 0.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg(target_arch="x86_86")]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[rustfmt::skip]
+pub fn set_m128_m256(
+  hi: m128, lo: m128
+) -> m256 {
+  m256(unsafe { _mm256_set_m128(hi.0, lo.0) })
+}
 
-// _mm256_sqrt_pd
-// _mm256_sqrt_ps
+/// Set `m128d` args into an `m256d`.
+/// ```
+/// # use safe_arch::*;
+/// let a = set_m128d_m256d(
+///   set_m128d(3.0, 2.0),
+///   set_m128d(1.0, 0.0),
+/// ).to_array();
+/// assert_eq!(a, [0.0, 1.0, 2.0, 3.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[rustfmt::skip]
+pub fn set_m128d_m256d(
+  hi: m128d, lo: m128d
+) -> m256d {
+  m256d(unsafe { _mm256_set_m128d(hi.0, lo.0) })
+}
 
-// _mm256_store_pd
-// _mm256_store_ps
-// _mm256_store_si256
+/// Set `m128i` args into an `m256i`.
+/// ```
+/// # use safe_arch::*;
+/// let a: [i64; 4] = set_m128i_m256i(
+///   set_i64_m128i(3_i64, 2),
+///   set_i64_m128i(1_i64, 0),
+/// ).into();
+/// assert_eq!(a, [0_i64, 1, 2, 3]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[rustfmt::skip]
+pub fn set_m128i_m256i(
+  hi: m128i, lo: m128i
+) -> m256i {
+  m256i(unsafe { _mm256_set_m128i(hi.0, lo.0) })
+}
 
-// _mm256_storeu_pd
-// _mm256_storeu_ps
-// _mm256_storeu_si256
+/// Set `f64` args into an `m256d` lane.
+/// ```
+/// # use safe_arch::*;
+/// let a = set_m256d(0.0, 1.0, 2.0, 3.0).to_array();
+/// assert_eq!(a, [3.0, 2.0, 1.0, 0.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[rustfmt::skip]
+pub fn set_m256d(
+  e3: f64, e2: f64, e1: f64, e0: f64,
+) -> m256d {
+  m256d(unsafe { _mm256_set_pd(e3, e2, e1, e0) })
+}
 
-// _mm256_storeu2_m128
-// _mm256_storeu2_m128d
-// _mm256_storeu2_m128i
+/// Set `f32` args into an `m256` lane.
+/// ```
+/// # use safe_arch::*;
+/// let a =
+///   set_m256(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0).to_array();
+/// assert_eq!(a, [7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0, 0.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[rustfmt::skip]
+pub fn set_m256(
+  e7: f32, e6: f32, e5: f32, e4: f32, e3: f32, e2: f32, e1: f32, e0: f32,
+) -> m256 {
+  m256(unsafe {
+    _mm256_set_ps(e7, e6, e5, e4, e3, e2, e1, e0)
+  })
+}
 
-// _mm256_sub_pd
-// _mm256_sub_ps
+/// Splat an `i8` arg into an `m256i` lane.
+/// ```
+/// # use safe_arch::*;
+/// let a: [i8; 32] = set_splat_i8_m256i(56).into();
+/// assert_eq!(a, [56_i8; 32]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn set_splat_i8_m256i(i: i8) -> m256i {
+  m256i(unsafe { _mm256_set1_epi8(i) })
+}
 
-// _mm_testc_pd
-// _mm256_testc_pd
-// _mm_testc_ps
-// _mm256_testc_ps
-// _mm256_testc_si256
+/// Splat an `i16` arg into an `m256i` lane.
+/// ```
+/// # use safe_arch::*;
+/// let a: [i16; 16] = set_splat_i16_m256i(56).into();
+/// assert_eq!(a, [56_i16; 16]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn set_splat_i16_m256i(i: i16) -> m256i {
+  m256i(unsafe { _mm256_set1_epi16(i) })
+}
 
-// _mm_testnzc_pd
-// _mm256_testnzc_pd
-// _mm_testnzc_ps
-// _mm256_testnzc_ps
-// _mm256_testnzc_si256
+/// Splat an `i32` arg into an `m256i` lane.
+/// ```
+/// # use safe_arch::*;
+/// let a: [i32; 8] = set_splat_i32_m256i(56).into();
+/// assert_eq!(a, [56_i32; 8]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn set_splat_i32_m256i(i: i32) -> m256i {
+  m256i(unsafe { _mm256_set1_epi32(i) })
+}
 
-// _mm_testz_pd
-// _mm256_testz_pd
-// _mm_testz_ps
-// _mm256_testz_ps
-// _mm256_testz_si256
+/// Splat an `i64` arg into an `m256i` lane.
+/// ```
+/// # use safe_arch::*;
+/// let a: [i64; 32] = set_splat_i64_m256i(56).into();
+/// assert_eq!(a, [56_i64; 4]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg(target_arch = "x86_86")]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn set_splat_i64_m256i(i: i64) -> m256i {
+  m256i(unsafe { _mm256_set1_epi64x(i) })
+}
 
-// _mm256_unpackhi_pd
-// _mm256_unpackhi_ps
+/// Splat an `f64` arg into an `m256d` lane.
+/// ```
+/// # use safe_arch::*;
+/// let a = set_splat_m256d(56.0).to_array();
+/// assert_eq!(a, [56.0; 4]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg(target_arch = "x86_86")]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn set_splat_m256d(f: f64) -> m256d {
+  m256d(unsafe { _mm256_set1_pd(f) })
+}
 
-// _mm256_unpacklo_pd
-// _mm256_unpacklo_ps
+/// Splat an `f32` arg into an `m256` lane.
+/// ```
+/// # use safe_arch::*;
+/// let a =
+///   set_splat_m256(56.0).to_array();
+/// assert_eq!(a, [56.0; 8]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[rustfmt::skip]
+pub fn set_splat_m256(
+  f: f32,
+) -> m256 {
+  m256(unsafe {
+    _mm256_set1_ps(f)
+  })
+}
 
-// _mm256_xor_pd
-// _mm256_xor_ps
+//
+//
+//
 
-// _mm256_zeroall
-// _mm256_zeroupper
+/// Set `i8` args into an `m256i` lane.
+/// ```
+/// # use safe_arch::*;
+/// let a: [i8; 32] =
+///   set_reversed_i8_m256i(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31).into();
+/// assert_eq!(a, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[rustfmt::skip]
+pub fn set_reversed_i8_m256i(
+  e31: i8, e30: i8, e29: i8, e28: i8, e27: i8, e26: i8, e25: i8, e24: i8, e23: i8, e22: i8, e21: i8, e20: i8, e19: i8, e18: i8, e17: i8, e16: i8, e15: i8, e14: i8, e13: i8, e12: i8, e11: i8, e10: i8, e9: i8, e8: i8, e7: i8, e6: i8, e5: i8, e4: i8, e3: i8, e2: i8, e1: i8, e0: i8
+) -> m256i {
+  m256i(unsafe {
+    _mm256_setr_epi8(
+      e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0
+    )
+  })
+}
 
-// _mm256_zextpd128_pd256
-// _mm256_zextps128_ps256
-// _mm256_zextsi128_si256
-// TODO: if we have these we should also include the lane truncate ops
+/// Set `i16` args into an `m256i` lane.
+/// ```
+/// # use safe_arch::*;
+/// let a: [i16; 16] =
+///   set_reversed_i16_m256i(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15).into();
+/// assert_eq!(a, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[rustfmt::skip]
+pub fn set_reversed_i16_m256i(
+  e15: i16, e14: i16, e13: i16, e12: i16, e11: i16, e10: i16, e9: i16, e8: i16,
+  e7: i16, e6: i16, e5: i16, e4: i16, e3: i16, e2: i16, e1: i16, e0: i16,
+) -> m256i {
+  m256i(unsafe {
+    _mm256_setr_epi16(
+      e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0,
+    )
+  })
+}
+
+/// Set `i32` args into an `m256i` lane.
+/// ```
+/// # use safe_arch::*;
+/// let a: [i32; 8] =
+///   set_reversed_i32_m256i(0, 1, 2, 3, 4, 5, 6, 7).into();
+/// assert_eq!(a, [0, 1, 2, 3, 4, 5, 6, 7]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[rustfmt::skip]
+pub fn set_reversed_i32_m256i(
+  e7: i32, e6: i32, e5: i32, e4: i32, e3: i32, e2: i32, e1: i32, e0: i32,
+) -> m256i {
+  m256i(unsafe {
+    _mm256_setr_epi32(e7, e6, e5, e4, e3, e2, e1, e0)
+  })
+}
+
+/// Set `i64` args into an `m256i` lane.
+/// ```
+/// # use safe_arch::*;
+/// let a: [i64; 4] = set_reversed_i64_m256i(0, 1, 2, 3).into();
+/// assert_eq!(a, [0, 1, 2, 3]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg(target_arch="x86_86")]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[rustfmt::skip]
+pub fn set_reversed_i64_m256i(
+  e3: i64, e2: i64, e1: i64, e0: i64,
+) -> m256i {
+  m256i(unsafe { _mm256_setr_epi64x(e3, e2, e1, e0) })
+}
+
+/// Set `m128` args into an `m256`.
+/// ```
+/// # use safe_arch::*;
+/// let a = set_reversed_m128_m256(
+///   set_reversed_m128(7.0, 6.0, 5.0, 4.0),
+///   set_reversed_m128(3.0, 2.0, 1.0, 0.0),
+/// ).to_array();
+/// assert_eq!(a, [7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0, 0.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg(target_arch="x86_86")]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[rustfmt::skip]
+pub fn set_reversed_m128_m256(
+  hi: m128, lo: m128
+) -> m256 {
+  m256(unsafe { _mm256_setr_m128(hi.0, lo.0) })
+}
+
+/// Set `m128d` args into an `m256d`.
+/// ```
+/// # use safe_arch::*;
+/// let a = set_reversed_m128d_m256d(
+///   set_reversed_m128d(3.0, 2.0),
+///   set_reversed_m128d(1.0, 0.0),
+/// ).to_array();
+/// assert_eq!(a, [3.0, 2.0, 1.0, 0.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[rustfmt::skip]
+pub fn set_reversed_m128d_m256d(
+  hi: m128d, lo: m128d
+) -> m256d {
+  m256d(unsafe { _mm256_setr_m128d(hi.0, lo.0) })
+}
+
+/// Set `m128i` args into an `m256i`.
+/// ```
+/// # use safe_arch::*;
+/// let a: [i64; 4] = set_reversed_m128i_m256i(
+///   m128i::from([0_i64, 1]),
+///   m128i::from([2_i64, 3]),
+/// ).into();
+/// assert_eq!(a, [0_i64, 1, 2, 3]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[rustfmt::skip]
+pub fn set_reversed_m128i_m256i(
+  hi: m128i, lo: m128i
+) -> m256i {
+  m256i(unsafe { _mm256_setr_m128i(hi.0, lo.0) })
+}
+
+/// Set `f64` args into an `m256d` lane.
+/// ```
+/// # use safe_arch::*;
+/// let a = set_reversed_m256d(0.0, 1.0, 2.0, 3.0).to_array();
+/// assert_eq!(a, [0.0, 1.0, 2.0, 3.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[rustfmt::skip]
+pub fn set_reversed_m256d(
+  e3: f64, e2: f64, e1: f64, e0: f64,
+) -> m256d {
+  m256d(unsafe { _mm256_setr_pd(e3, e2, e1, e0) })
+}
+
+/// Set `f32` args into an `m256` lane.
+/// ```
+/// # use safe_arch::*;
+/// let a =
+///   set_reversed_m256(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0).to_array();
+/// assert_eq!(a, [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[rustfmt::skip]
+pub fn set_reversed_m256(
+  e7: f32, e6: f32, e5: f32, e4: f32, e3: f32, e2: f32, e1: f32, e0: f32,
+) -> m256 {
+  m256(unsafe {
+    _mm256_setr_ps(e7, e6, e5, e4, e3, e2, e1, e0)
+  })
+}
+
+/// A zeroed `m256d`
+/// ```
+/// # use safe_arch::*;
+/// let a = zeroed_m256d().to_array();
+/// assert_eq!(a, [0.0; 4]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn zeroed_m256d() -> m256d {
+  m256d(unsafe { _mm256_setzero_pd() })
+}
+
+/// A zeroed `m256`
+/// ```
+/// # use safe_arch::*;
+/// let a = zeroed_m256().to_array();
+/// assert_eq!(a, [0.0; 8]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn zeroed_m256() -> m256 {
+  m256(unsafe { _mm256_setzero_ps() })
+}
+
+/// A zeroed `m256i`
+/// ```
+/// # use safe_arch::*;
+/// let a: [i32; 8] = zeroed_m256i().into();
+/// assert_eq!(a, [0; 8]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn zeroed_m256i() -> m256i {
+  m256i(unsafe { _mm256_setzero_si256() })
+}
+
+/// Shuffles the `f64` lanes around.
+///
+/// * args are 0 or 1 each, for "low" or "high" within that pairing.
+/// * a 0/1, b 0/1, a 2/3, b 2/3
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from_array([1.0, 2.0, 3.0, 4.0]);
+/// let b = m256d::from_array([5.0, 6.0, 7.0, 8.0]);
+/// //
+/// let c = shuffle_m256d!(a, b, 1, 0, 1, 0).to_array();
+/// assert_eq!(c, [2.0, 5.0, 4.0, 7.0]);
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+macro_rules! shuffle_m256d {
+  ($a:expr, $b:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
+    const MASK: i32 =
+      (($z & 0b1) | ($o & 0b1) << 1 | ($t & 0b1) << 2 | ($e & 0b1) << 3) as i32;
+    let a: m256d = $a;
+    let b: m256d = $b;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm256_shuffle_pd;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm256_shuffle_pd;
+    m256d(unsafe { _mm256_shuffle_pd(a.0, b.0, MASK) })
+  }};
+}
+
+/// Shuffles the `f32` lanes around.
+///
+/// * args are 0, 1, 2, 3 for which lane to use in the lower or upper half.
+/// * the same pattern is used for the four low lanes and the four high lanes.
+/// * a low, a low, b low, b low, a high, a high, b high, b high
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
+/// let b = m256::from_array([9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0]);
+/// //
+/// let c = shuffle_m256!(a, b, 1, 3, 2, 0).to_array();
+/// assert_eq!(c, [2.0, 4.0, 11.0, 9.0, 6.0, 8.0, 15.0, 13.0]);
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+macro_rules! shuffle_m256 {
+  ($a:expr, $b:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
+    const MASK: i32 =
+      (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($e & 0b11) << 6)
+        as i32;
+    let a: m256 = $a;
+    let b: m256 = $b;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm256_shuffle_ps;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm256_shuffle_ps;
+    m256(unsafe { _mm256_shuffle_ps(a.0, b.0, MASK) })
+  }};
+}
+
+/// Lanewise `sqrt` on `f64` lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from_array([1.0, 4.0, 9.0, 16.0]);
+/// let b = sqrt_m256d(a).to_array();
+/// assert_eq!(b, [1.0, 2.0, 3.0, 4.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn sqrt_m256d(a: m256d) -> m256d {
+  m256d(unsafe { _mm256_sqrt_pd(a.0) })
+}
+
+/// Lanewise `sqrt` on `f64` lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([1.0, 4.0, 9.0, 16.0, 25.0, 36.0, 0.0, 49.0]);
+/// let b = sqrt_m256(a).to_array();
+/// assert_eq!(b, [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 0.0, 7.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn sqrt_m256(a: m256) -> m256 {
+  m256(unsafe { _mm256_sqrt_ps(a.0) })
+}
+
+/// Store data from a register into memory.
+///
+/// ```
+/// # use safe_arch::*;
+/// let mut addr = m256d::from([0.0; 4]);
+/// store_m256d(&mut addr, m256d::from([1.0, 2.0, 3.0, 4.0]));
+/// assert_eq!(addr.to_array(), [1.0, 2.0, 3.0, 4.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn store_m256d(addr: &mut m256d, a: m256d) {
+  unsafe { _mm256_store_pd(addr as *mut m256d as *mut f64, a.0) }
+}
+
+/// Store data from a register into memory.
+///
+/// ```
+/// # use safe_arch::*;
+/// let mut addr = m256::from([0.0; 8]);
+/// store_m256(&mut addr, m256::from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]));
+/// assert_eq!(addr.to_array(), [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn store_m256(addr: &mut m256, a: m256) {
+  unsafe { _mm256_store_ps(addr as *mut m256 as *mut f32, a.0) }
+}
+
+/// Store data from a register into memory.
+///
+/// ```
+/// # use safe_arch::*;
+/// let mut addr = m256i::from([0_i32; 8]);
+/// store_m256i(&mut addr, m256i::from([1, 2, 3, 4, 5, 6, 7, 8]));
+/// assert_eq!(<[i32; 8]>::from(addr), [1, 2, 3, 4, 5, 6, 7, 8]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn store_m256i(addr: &mut m256i, a: m256i) {
+  unsafe { _mm256_store_si256(addr as *mut m256i as *mut __m256i, a.0) }
+}
+
+/// Store data from a register into memory.
+///
+/// ```
+/// # use safe_arch::*;
+/// let mut addr = [0.0; 4];
+/// store_unaligned_m256d(&mut addr, m256d::from([1.0, 2.0, 3.0, 4.0]));
+/// assert_eq!(addr, [1.0, 2.0, 3.0, 4.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn store_unaligned_m256d(addr: &mut [f64; 4], a: m256d) {
+  unsafe { _mm256_storeu_pd(addr.as_mut_ptr(), a.0) }
+}
+
+/// Store data from a register into memory.
+///
+/// ```
+/// # use safe_arch::*;
+/// let mut addr = [0.0; 8];
+/// store_unaligned_m256(
+///   &mut addr,
+///   m256::from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]),
+/// );
+/// assert_eq!(addr, [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn store_unaligned_m256(addr: &mut [f32; 8], a: m256) {
+  unsafe { _mm256_storeu_ps(addr.as_mut_ptr(), a.0) }
+}
+
+/// Store data from a register into memory.
+///
+/// ```
+/// # use safe_arch::*;
+/// let mut addr = [0_i8; 32];
+/// store_unaligned_m256i(&mut addr, m256i::from([12_i8; 32]));
+/// assert_eq!(addr, [12_i8; 32]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn store_unaligned_m256i(addr: &mut [i8; 32], a: m256i) {
+  unsafe { _mm256_storeu_si256(addr as *mut [i8; 32] as *mut __m256i, a.0) }
+}
+
+/// Store data from a register into memory.
+///
+/// ```
+/// # use safe_arch::*;
+/// let mut hi_addr = [0.0; 2];
+/// let mut lo_addr = [0.0; 2];
+/// store_unaligned_hi_lo_m256d(
+///   &mut hi_addr,
+///   &mut lo_addr,
+///   m256d::from([1.0, 2.0, 3.0, 4.0]),
+/// );
+/// assert_eq!(hi_addr, [3.0, 4.0]);
+/// assert_eq!(lo_addr, [1.0, 2.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn store_unaligned_hi_lo_m256d(
+  hi_addr: &mut [f64; 2],
+  lo_addr: &mut [f64; 2],
+  a: m256d,
+) {
+  unsafe {
+    _mm256_storeu2_m128d(hi_addr.as_mut_ptr(), lo_addr.as_mut_ptr(), a.0)
+  }
+}
+
+/// Store data from a register into memory.
+///
+/// ```
+/// # use safe_arch::*;
+/// let mut hi_addr = [0.0; 4];
+/// let mut lo_addr = [0.0; 4];
+/// store_unaligned_hi_lo_m256(
+///   &mut hi_addr,
+///   &mut lo_addr,
+///   m256::from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]),
+/// );
+/// assert_eq!(hi_addr, [5.0, 6.0, 7.0, 8.0]);
+/// assert_eq!(lo_addr, [1.0, 2.0, 3.0, 4.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn store_unaligned_hi_lo_m256(
+  hi_addr: &mut [f32; 4],
+  lo_addr: &mut [f32; 4],
+  a: m256,
+) {
+  unsafe {
+    _mm256_storeu2_m128(hi_addr.as_mut_ptr(), lo_addr.as_mut_ptr(), a.0)
+  }
+}
+
+/// Store data from a register into memory.
+///
+/// ```
+/// # use safe_arch::*;
+/// let mut hi_addr = [0_i8; 16];
+/// let mut lo_addr = [0_i8; 16];
+/// store_unaligned_hi_lo_m256i(
+///   &mut hi_addr,
+///   &mut lo_addr,
+///   m256i::from([56_i8; 32]),
+/// );
+/// assert_eq!(hi_addr, [56_i8; 16]);
+/// assert_eq!(lo_addr, [56_i8; 16]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn store_unaligned_hi_lo_m256i(
+  hi_addr: &mut [i8; 16],
+  lo_addr: &mut [i8; 16],
+  a: m256i,
+) {
+  unsafe {
+    _mm256_storeu2_m128i(
+      hi_addr.as_mut_ptr().cast(),
+      lo_addr.as_mut_ptr().cast(),
+      a.0,
+    )
+  }
+}
+
+/// Lanewise `a - b` with `f64` lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from_array([1.0, 2.0, 3.0, 4.0]);
+/// let b = m256d::from_array([5.0, 60.0, 712.0, 8.5]);
+/// let c = sub_m256d(a, b).to_array();
+/// assert_eq!(c, [-4.0, -58.0, -709.0, -4.5]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn sub_m256d(a: m256d, b: m256d) -> m256d {
+  m256d(unsafe { _mm256_sub_pd(a.0, b.0) })
+}
+
+/// Lanewise `a - b` with `f32` lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([1.0, 2.0, 3.0, 4.0, 20.0, 30.0, 40.0, 50.0]);
+/// let b = m256::from_array([59.0, 61.0, 79.0, 81.5, 90.0, 100.0, 110.0, 51.0]);
+/// let c = sub_m256(a, b).to_array();
+/// assert_eq!(c, [-58.0, -59.0, -76.0, -77.5, -70.0, -70.0, -70.0, -1.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn sub_m256(a: m256, b: m256) -> m256 {
+  m256(unsafe { _mm256_sub_ps(a.0, b.0) })
+}
+
+/// Unpack and interleave the high lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from_array([1.0, 2.0, 3.0, 4.0]);
+/// let b = m256d::from_array([59.0, 61.0, 79.0, 81.5]);
+/// let c = unpack_hi_m256d(a, b).to_array();
+/// assert_eq!(c, [2.0, 61.0, 4.0, 81.5]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn unpack_hi_m256d(a: m256d, b: m256d) -> m256d {
+  m256d(unsafe { _mm256_unpackhi_pd(a.0, b.0) })
+}
+
+/// Unpack and interleave the high lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([1.0, 2.0, 3.0, 4.0, 20.0, 30.0, 40.0, 50.0]);
+/// let b = m256::from_array([59.0, 61.0, 79.0, 81.5, 90.0, 100.0, 110.0, 51.0]);
+/// let c = unpack_hi_m256(a, b).to_array();
+/// assert_eq!(c, [3.0, 79.0, 4.0, 81.5, 40.0, 110.0, 50.0, 51.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn unpack_hi_m256(a: m256, b: m256) -> m256 {
+  m256(unsafe { _mm256_unpackhi_ps(a.0, b.0) })
+}
+
+/// Unpack and interleave the high lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from_array([1.0, 2.0, 3.0, 4.0]);
+/// let b = m256d::from_array([59.0, 61.0, 79.0, 81.5]);
+/// let c = unpack_lo_m256d(a, b).to_array();
+/// assert_eq!(c, [1.0, 59.0, 3.0, 79.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn unpack_lo_m256d(a: m256d, b: m256d) -> m256d {
+  m256d(unsafe { _mm256_unpacklo_pd(a.0, b.0) })
+}
+
+/// Unpack and interleave the high lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([1.0, 2.0, 3.0, 4.0, 20.0, 30.0, 40.0, 50.0]);
+/// let b = m256::from_array([59.0, 61.0, 79.0, 81.5, 90.0, 100.0, 110.0, 51.0]);
+/// let c = unpack_lo_m256(a, b).to_array();
+/// assert_eq!(c, [1.0, 59.0, 2.0, 61.0, 20.0, 90.0, 30.0, 100.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn unpack_lo_m256(a: m256, b: m256) -> m256 {
+  m256(unsafe { _mm256_unpacklo_ps(a.0, b.0) })
+}
+
+/// Bitwise `a ^ b`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from_array([1.0, 0.0, 1.0, 0.0]);
+/// let b = m256d::from_array([1.0, 1.0, 0.0, 0.0]);
+/// let c = xor_m256d(a, b).to_array();
+/// assert_eq!(c, [0.0, 1.0, 1.0, 0.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn xor_m256d(a: m256d, b: m256d) -> m256d {
+  m256d(unsafe { _mm256_xor_pd(a.0, b.0) })
+}
+
+/// Bitwise `a ^ b`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0]);
+/// let b = m256::from_array([1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0]);
+/// let c = xor_m256(a, b).to_array();
+/// assert_eq!(c, [0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn xor_m256(a: m256, b: m256) -> m256 {
+  m256(unsafe { _mm256_xor_ps(a.0, b.0) })
+}
+
+/// Zero extend an `m128d` to `m256d`
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = zero_extend_m128d(m128d::from_array([1.0, 2.0])).to_array();
+/// assert_eq!(a, [1.0, 2.0, 0.0, 0.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn zero_extend_m128d(a: m128d) -> m256d {
+  m256d(unsafe { _mm256_zextpd128_pd256(a.0) })
+}
+
+/// Zero extend an `m128` to `m256`
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = zero_extend_m128(m128::from_array([1.0, 2.0, 3.0, 4.0])).to_array();
+/// assert_eq!(a, [1.0, 2.0, 3.0, 4.0, 0.0, 0.0, 0.0, 0.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn zero_extend_m128(a: m128) -> m256 {
+  m256(unsafe { _mm256_zextps128_ps256(a.0) })
+}
+
+/// Zero extend an `m128i` to `m256i`
+///
+/// ```
+/// # use safe_arch::*;
+/// let a: [i32; 8] = zero_extend_m128i(m128i::from([1, 2, 3, 4])).into();
+/// assert_eq!(a, [1, 2, 3, 4, 0, 0, 0, 0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn zero_extend_m128i(a: m128i) -> m256i {
+  m256i(unsafe { _mm256_zextsi128_si256(a.0) })
+}

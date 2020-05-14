@@ -14,8 +14,6 @@ keywords = ["intrinsics", "simd"]
 bytemuck = {version = "1.2", optional = true}
 
 [features]
-license1 = []
-license2 = ["license1"]
 default = []
 
 [profile.test]
