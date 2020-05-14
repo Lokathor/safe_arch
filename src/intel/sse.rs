@@ -985,8 +985,6 @@ pub fn zeroed_m128() -> m128 {
 /// This is a macro because the shuffle pattern must be a compile time constant,
 /// and Rust doesn't currently support that for functions.
 ///
-/// ## Two `m128` Inputs
-/// You can provide two `m128` arguments, in which case:
 /// * The low lanes of the output come from `$a`, as picked by `$z` and `$o`
 ///   (Zero and One)
 /// * The high lanes of the output come from `$b`, as picked by `$t` and `$e`
@@ -1014,25 +1012,6 @@ pub fn zeroed_m128() -> m128 {
 /// let c = shuffle_m128!(a, b, 0, 2, 2, 1).to_array();
 /// assert_eq!(c, [1.0, 3.0, 7.0, 6.0]);
 /// ```
-///
-/// ## One `m128` Input
-/// You can provide one `m128` argument, in which case the above variant is
-/// called with `$a` as the input to both sides of the shuffle (note that any
-/// potential side effects of evaluating `$a` are executed only once).
-///
-/// ```
-/// # use safe_arch::*;
-/// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
-/// //
-/// let c = shuffle_m128!(a, 0, 0, 0, 0).to_array();
-/// assert_eq!(c, [1.0, 1.0, 1.0, 1.0]);
-/// //
-/// let c = shuffle_m128!(a, 0, 1, 2, 3).to_array();
-/// assert_eq!(c, [1.0, 2.0, 3.0, 4.0]);
-/// //
-/// let c = shuffle_m128!(a, 0, 2, 2, 1).to_array();
-/// assert_eq!(c, [1.0, 3.0, 3.0, 2.0]);
-/// ```
 #[cfg_attr(target_feature = "sse", macro_export)]
 macro_rules! shuffle_m128 {
   ($a:expr, $b:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
@@ -1046,13 +1025,6 @@ macro_rules! shuffle_m128 {
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_shuffle_ps;
     m128(unsafe { _mm_shuffle_ps(a.0, b.0, MASK) })
-  }};
-  ($a:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
-    // Note(Lokathor): this makes sure that any side-effecting expressions we
-    // get as input are only executed once, then that expression output goes
-    // into both sides of the shuffle.
-    let a: m128 = $a;
-    shuffle_m128!(a, a, $z, $o, $t, $e)
   }};
 }
 

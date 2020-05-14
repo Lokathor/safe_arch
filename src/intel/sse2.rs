@@ -2244,8 +2244,6 @@ macro_rules! shuffle_i32_m128i {
 /// This is a macro because the shuffle pattern must be a compile time constant,
 /// and Rust doesn't currently support that for functions.
 ///
-/// ## Two `m128d` Inputs
-/// You can provide two `m128d` arguments, in which case:
 /// * The lane lane of the output comes from `$a`, as picked by `$z` (Zero)
 /// * The high lane of the output comes from `$b`, as picked by `$o` (One)
 /// * `$a` and `$b` must obviously be `m128d` expressions.
@@ -2268,22 +2266,6 @@ macro_rules! shuffle_i32_m128i {
 /// let c = shuffle_m128d!(a, b, 0, 1).to_array();
 /// assert_eq!(c, [1.0, 4.0]);
 /// ```
-///
-/// ## One `m128` Input
-/// You can provide one `m128d` argument, in which case the above variant is
-/// called with `$a` as the input to both sides of the shuffle (note that any
-/// potential side effects of evaluating `$a` are executed only once).
-///
-/// ```
-/// # use safe_arch::*;
-/// let a = m128d::from_array([1.0, 2.0]);
-/// //
-/// let c = shuffle_m128d!(a, 0, 0).to_array();
-/// assert_eq!(c, [1.0, 1.0]);
-/// //
-/// let c = shuffle_m128d!(a, 0, 1).to_array();
-/// assert_eq!(c, [1.0, 2.0]);
-/// ```
 #[macro_export]
 macro_rules! shuffle_m128d {
   ($a:expr, $b:expr, $z:expr, $o:expr) => {{
@@ -2295,13 +2277,6 @@ macro_rules! shuffle_m128d {
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_shuffle_pd;
     m128d(unsafe { _mm_shuffle_pd(a.0, b.0, MASK) })
-  }};
-  ($a:expr, $z:expr, $o:expr) => {{
-    // Note(Lokathor): this makes sure that any side-effecting expressions we
-    // get as input are only executed once, then that expression output goes
-    // into both sides of the shuffle.
-    let a: m128d = $a;
-    shuffle_m128d!(a, a, $z, $o)
   }};
 }
 

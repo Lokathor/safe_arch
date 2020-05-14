@@ -909,7 +909,11 @@ pub fn convert_to_i32_m256i_from_m256(a: m256) -> m256i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg(feature = "license1")]
+#[cfg_attr(
+  docs_rs,
+  doc(cfg(all(target_feature = "avx", feature = "license1")))
+)]
 pub fn div_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_div_pd(a.0, b.0) })
 }
@@ -925,7 +929,11 @@ pub fn div_m256d(a: m256d, b: m256d) -> m256d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg(feature = "license1")]
+#[cfg_attr(
+  docs_rs,
+  doc(cfg(all(target_feature = "avx", feature = "license1")))
+)]
 pub fn div_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_div_ps(a.0, b.0) })
 }
@@ -944,7 +952,11 @@ pub fn div_m256(a: m256, b: m256) -> m256 {
 /// assert_eq!(c, [110.0, 110.0, 110.0, 110.0, 382.0, 382.0, 382.0, 382.0]);
 /// ```
 #[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg(feature = "license1")]
+#[cfg_attr(
+  docs_rs,
+  doc(cfg(all(target_feature = "avx", feature = "license1")))
+)]
 macro_rules! dot_product_m256 {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m256 = $a;
@@ -1658,6 +1670,7 @@ pub fn store_masked_m256(addr: &mut m256, mask: m256i, a: m256) {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn max_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_max_pd(a.0, b.0) })
 }
@@ -1672,6 +1685,7 @@ pub fn max_m256d(a: m256d, b: m256d) -> m256d {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn max_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_max_ps(a.0, b.0) })
 }
@@ -1686,6 +1700,7 @@ pub fn max_m256(a: m256, b: m256) -> m256 {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn min_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_min_pd(a.0, b.0) })
 }
@@ -1700,6 +1715,7 @@ pub fn min_m256d(a: m256d, b: m256d) -> m256d {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn min_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_min_ps(a.0, b.0) })
 }
@@ -1713,6 +1729,7 @@ pub fn min_m256(a: m256, b: m256) -> m256 {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn duplicate_odd_lanes_m256d(a: m256d) -> m256d {
   m256d(unsafe { _mm256_movedup_pd(a.0) })
 }
@@ -1726,6 +1743,7 @@ pub fn duplicate_odd_lanes_m256d(a: m256d) -> m256d {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn duplicate_even_lanes_m256(a: m256) -> m256 {
   m256(unsafe { _mm256_movehdup_ps(a.0) })
 }
@@ -1739,39 +1757,659 @@ pub fn duplicate_even_lanes_m256(a: m256) -> m256 {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn duplicate_odd_lanes_m256(a: m256) -> m256 {
   m256(unsafe { _mm256_moveldup_ps(a.0) })
 }
 
-// _mm256_movemask_pd
-// _mm256_movemask_ps
+/// Collects the sign bit of each lane into a 4-bit value.
+/// ```
+/// # use safe_arch::*;
+/// assert_eq!(0b0100, move_mask_m256d(m256d::from([1.0, 12.0, -1.0, 3.0])));
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn move_mask_m256d(a: m256d) -> i32 {
+  unsafe { _mm256_movemask_pd(a.0) }
+}
 
-// _mm256_mul_pd
-// _mm256_mul_ps
+/// Collects the sign bit of each lane into a 4-bit value.
+/// ```
+/// # use safe_arch::*;
+/// assert_eq!(
+///   0b00110100,
+///   move_mask_m256(m256::from([1.0, 12.0, -1.0, 3.0, -1.0, -2.0, 3.0, 4.0]))
+/// );
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn move_mask_m256(a: m256) -> i32 {
+  unsafe { _mm256_movemask_ps(a.0) }
+}
 
-// _mm256_or_pd
-// _mm256_or_ps
+/// Lanewise `a * b` with `f64` lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from_array([1.0, 2.0, 3.0, 4.0]);
+/// let b = m256d::from_array([5.0, 6.0, 7.0, 8.5]);
+/// let c = mul_m256d(a, b).to_array();
+/// assert_eq!(c, [5.0, 12.0, 21.0, 34.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg(feature = "license1")]
+#[cfg_attr(
+  docs_rs,
+  doc(cfg(all(target_feature = "avx", feature = "license1")))
+)]
+pub fn mul_m256d(a: m256d, b: m256d) -> m256d {
+  m256d(unsafe { _mm256_mul_pd(a.0, b.0) })
+}
 
-// _mm_permute_pd
-// _mm256_permute_pd
-// _mm_permute_ps
-// _mm256_permute_ps
+/// Lanewise `a * b` with `f32` lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([1.0, 2.0, 3.0, 4.0, 20.0, 30.0, 40.0, 50.0]);
+/// let b = m256::from_array([5.0, 6.0, 7.0, 8.5, 90.0, 100.0, 110.0, 51.0]);
+/// let c = mul_m256(a, b).to_array();
+/// assert_eq!(c, [5.0, 12.0, 21.0, 34.0, 1800.0, 3000.0, 4400.0, 2550.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg(feature = "license1")]
+#[cfg_attr(
+  docs_rs,
+  doc(cfg(all(target_feature = "avx", feature = "license1")))
+)]
+pub fn mul_m256(a: m256, b: m256) -> m256 {
+  m256(unsafe { _mm256_mul_ps(a.0, b.0) })
+}
 
-// _mm256_permute2f128_pd
-// _mm256_permute2f128_ps
-// _mm256_permute2f128_si256
+/// Bitwise `a | b`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from_array([1.0, 1.0, 0.0, 0.0]);
+/// let b = m256d::from_array([1.0, 0.0, 1.0, 0.0]);
+/// let c = or_m256d(a, b).to_array();
+/// assert_eq!(c, [1.0, 1.0, 1.0, 0.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn or_m256d(a: m256d, b: m256d) -> m256d {
+  m256d(unsafe { _mm256_or_pd(a.0, b.0) })
+}
 
-// _mm_permutevar_pd
-// _mm256_permutevar_pd
-// _mm_permutevar_ps
-// _mm256_permutevar_ps
+/// Bitwise `a | b`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0]);
+/// let b = m256::from_array([1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0]);
+/// let c = or_m256(a, b).to_array();
+/// assert_eq!(c, [1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn or_m256(a: m256, b: m256) -> m256 {
+  m256(unsafe { _mm256_or_ps(a.0, b.0) })
+}
 
-// _mm256_rcp_ps
+/// Permutes the lanes around.
+///
+/// * Different from "shuffle" because there is only one input.
+/// * Generally gives better overall performance than shuffle if it's available
+///   because it reduces register pressure.
+///
+/// This is a macro because the shuffle pattern must be a compile time constant,
+/// and Rust doesn't currently support that for functions.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([1.0, 2.0]);
+/// //
+/// let b = permute_m128d!(a, 0, 0).to_array();
+/// assert_eq!(b, [1.0, 1.0]);
+/// //
+/// let b = permute_m128d!(a, 0, 1).to_array();
+/// assert_eq!(b, [1.0, 2.0]);
+/// //
+/// let b = permute_m128d!(a, 1, 0).to_array();
+/// assert_eq!(b, [2.0, 1.0]);
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+macro_rules! permute_m128d {
+  ($a:expr, $z:expr, $o:expr) => {{
+    const MASK: i32 = (($z & 0b1) | ($o & 0b1) << 1) as i32;
+    let a: m128d = $a;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_permute_pd;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_permute_pd;
+    m128d(unsafe { _mm_permute_pd(a.0, MASK) })
+  }};
+}
 
-// _mm256_round_pd
-// _mm256_round_ps
+/// Permutes the lanes around.
+///
+/// * Different from "shuffle" because there is only one input.
+/// * You can't move values between the high and low 128-bit segments.
+/// * Each index is 0 or 1, and selects if you want the index 0 or index 1
+///   element from that 128-bit part of the overall 256 bits.
+/// * Generally gives better overall performance than shuffle if it can
+///   accomplish the movement that you want.
+/// * The shuffle pattern must be a const.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from_array([1.0, 2.0, 3.0, 4.0]);
+/// //
+/// let b = permute_m256d!(a, 0, 0, 0, 0).to_array();
+/// assert_eq!(b, [1.0, 1.0, 3.0, 3.0]);
+/// //
+/// let b = permute_m256d!(a, 0, 1, 0, 1).to_array();
+/// assert_eq!(b, [1.0, 2.0, 3.0, 4.0]);
+/// //
+/// let b = permute_m256d!(a, 1, 0, 1, 1).to_array();
+/// assert_eq!(b, [2.0, 1.0, 4.0, 4.0]);
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+macro_rules! permute_m256d {
+  ($a:expr, $z:expr, $o:expr, $t:expr, $h:expr) => {{
+    const MASK: i32 =
+      (($z & 0b1) | ($o & 0b1) << 1 | ($t & 0b1) << 2 | ($h & 0b1) << 3) as i32;
+    let a: m256d = $a;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm256_permute_pd;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm256_permute_pd;
+    m256d(unsafe { _mm256_permute_pd(a.0, MASK) })
+  }};
+}
 
-// _mm256_rsqrt_ps
+/// Permutes the lanes around.
+///
+/// * Different from "shuffle" because there is only one input.
+/// * Generally gives better overall performance than shuffle if it's available
+///   because it reduces register pressure.
+/// * The permute has to be a const.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
+/// //
+/// let b = permute_m128!(a, 0, 0, 0, 0).to_array();
+/// assert_eq!(b, [1.0, 1.0, 1.0, 1.0]);
+/// //
+/// let b = permute_m128!(a, 0, 1, 0, 3).to_array();
+/// assert_eq!(b, [1.0, 2.0, 1.0, 4.0]);
+/// //
+/// let b = permute_m128!(a, 0, 0, 2, 2).to_array();
+/// assert_eq!(b, [1.0, 1.0, 3.0, 3.0]);
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+macro_rules! permute_m128 {
+  ($a:expr, $z:expr, $o:expr, $t:expr, $h:expr) => {{
+    const MASK: i32 =
+      (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($h & 0b11) << 6)
+        as i32;
+    let a: m128 = $a;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm_permute_ps;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm_permute_ps;
+    m128(unsafe { _mm_permute_ps(a.0, MASK) })
+  }};
+}
+
+/// Permutes the lanes around.
+///
+/// * Different from "shuffle" because there is only one input.
+/// * You can't move values between the high and low 128-bit segments.
+/// * Each index is `0..=3`, and selects the index only from that 128-bit half
+///   of the overall 256 bits involved.
+/// * Generally gives better overall performance than shuffle if it can
+///   accomplish the movement that you want.
+/// * The shuffle pattern must be a const.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
+/// //
+/// let b = permute_m256!(a, 0, 0, 0, 0).to_array();
+/// assert_eq!(b, [1.0, 1.0, 1.0, 1.0, 5.0, 5.0, 5.0, 5.0]);
+/// //
+/// let b = permute_m256!(a, 0, 1, 0, 3).to_array();
+/// assert_eq!(b, [1.0, 2.0, 1.0, 4.0, 5.0, 6.0, 5.0, 8.0]);
+/// //
+/// let b = permute_m256!(a, 0, 0, 2, 2).to_array();
+/// assert_eq!(b, [1.0, 1.0, 3.0, 3.0, 5.0, 5.0, 7.0, 7.0]);
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+macro_rules! permute_m256 {
+  ($a:expr, $z:expr, $o:expr, $t:expr, $h:expr) => {{
+    const MASK: i32 =
+      (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($h & 0b11) << 6)
+        as i32;
+    let a: m256 = $a;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm256_permute_ps;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm256_permute_ps;
+    m256(unsafe { _mm256_permute_ps(a.0, MASK) })
+  }};
+}
+
+/// Permutes the lanes around.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from_array([1.0, 2.0, 3.0, 4.0]);
+/// let b = m256d::from_array([5.0, 6.0, 7.0, 8.0]);
+/// //
+/// let c = permute_f128_in_m256d!(a, b, 2, Clear).to_array();
+/// assert_eq!(c, [5.0, 6.0, 0.0, 0.0]);
+/// //
+/// let c = permute_f128_in_m256d!(a, b, 0, 1).to_array();
+/// assert_eq!(c, [1.0, 2.0, 3.0, 4.0]);
+/// //
+/// let c = permute_f128_in_m256d!(a, b, Clear, 3).to_array();
+/// assert_eq!(c, [0.0, 0.0, 7.0, 8.0]);
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+macro_rules! permute_f128_in_m256d {
+  ($a:expr, $b:expr, $low:tt, $high:tt) => {{
+    const MASK: i32 =
+      $crate::permute_f128_in_m256d!(@_convert_tt_to_select $low) |
+      ($crate::permute_f128_in_m256d!(@_convert_tt_to_select $high) << 4);
+    let a: m256d = $a;
+    let b: m256d = $b;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm256_permute2f128_pd;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm256_permute2f128_pd;
+    m256d(unsafe { _mm256_permute2f128_pd(a.0, b.0, MASK) })
+  }};
+  (@_convert_tt_to_select 0) => {
+    0
+  };
+  (@_convert_tt_to_select 1) => {
+    1
+  };
+  (@_convert_tt_to_select 2) => {
+    2
+  };
+  (@_convert_tt_to_select 3) => {
+    3
+  };
+  (@_convert_tt_to_select Clear) => {
+    0b1000
+  };
+  (@_convert_tt_to_select $unknown:tt) => {
+    compile_error!("Illegal select value, must be 0 ..= 3 or Clear.");
+  };
+}
+
+/// Permutes the lanes around.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
+/// let b = m256::from_array([9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0]);
+/// //
+/// let c = permute_f128_in_m256!(a, b, 2, Clear).to_array();
+/// assert_eq!(c, [9.0, 10.0, 11.0, 12.0, 0.0, 0.0, 0.0, 0.0]);
+/// //
+/// let c = permute_f128_in_m256!(a, b, 0, 1).to_array();
+/// assert_eq!(c, [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
+/// //
+/// let c = permute_f128_in_m256!(a, b, Clear, 3).to_array();
+/// assert_eq!(c, [0.0, 0.0, 0.0, 0.0, 13.0, 14.0, 15.0, 16.0]);
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+macro_rules! permute_f128_in_m256 {
+  ($a:expr, $b:expr, $low:tt, $high:tt) => {{
+  const MASK: i32 = $crate::permute_f128_in_m256!(@_convert_tt_to_select $low)
+    | ($crate::permute_f128_in_m256!(@_convert_tt_to_select $high) << 4);
+    let a: m256 = $a;
+    let b: m256 = $b;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm256_permute2f128_ps;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm256_permute2f128_ps;
+    m256(unsafe { _mm256_permute2f128_ps(a.0, b.0, MASK) })
+  }};
+  (@_convert_tt_to_select 0) => {
+    0
+  };
+  (@_convert_tt_to_select 1) => {
+    1
+  };
+  (@_convert_tt_to_select 2) => {
+    2
+  };
+  (@_convert_tt_to_select 3) => {
+    3
+  };
+  (@_convert_tt_to_select Clear) => {
+    0b1000
+  };
+  (@_convert_tt_to_select $unknown:tt) => {
+    compile_error!("Illegal select value, must be 0 ..= 3 or Clear.");
+  };
+}
+
+/// Permutes the lanes around.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([1, 2, 3, 4, 5, 6, 7, 8]);
+/// let b = m256i::from([9, 10, 11, 12, 13, 14, 15, 16]);
+/// //
+/// let c: [i32; 8] = permute_i128_in_m256i!(a, b, 2, Clear).into();
+/// assert_eq!(c, [9, 10, 11, 12, 0, 0, 0, 0]);
+/// //
+/// let c: [i32; 8] = permute_i128_in_m256i!(a, b, 0, 1).into();
+/// assert_eq!(c, [1, 2, 3, 4, 5, 6, 7, 8]);
+/// //
+/// let c: [i32; 8] = permute_i128_in_m256i!(a, b, Clear, 3).into();
+/// assert_eq!(c, [0, 0, 0, 0, 13, 14, 15, 16]);
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+macro_rules! permute_i128_in_m256i {
+  ($a:expr, $b:expr, $low:tt, $high:tt) => {{
+  const MASK: i32 = $crate::permute_i128_in_m256i!(@_convert_tt_to_select $low)
+    | ($crate::permute_i128_in_m256i!(@_convert_tt_to_select $high) << 4);
+    let a: m256i = $a;
+    let b: m256i = $b;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::_mm256_permute2f128_si256;
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::_mm256_permute2f128_si256;
+    m256i(unsafe { _mm256_permute2f128_si256(a.0, b.0, MASK) })
+  }};
+  (@_convert_tt_to_select 0) => {
+    0
+  };
+  (@_convert_tt_to_select 1) => {
+    1
+  };
+  (@_convert_tt_to_select 2) => {
+    2
+  };
+  (@_convert_tt_to_select 3) => {
+    3
+  };
+  (@_convert_tt_to_select Clear) => {
+    0b1000
+  };
+  (@_convert_tt_to_select $unknown:tt) => {
+    compile_error!("Illegal select value, must be 0 ..= 3 or Clear.");
+  };
+}
+
+/// Permute with a runtime varying pattern.
+///
+/// For whatever reason, **bit 1** in each `i64` lane is the selection bit.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128d::from_array([2.0, 3.0]);
+/// let b = m128i::from([1_i64 << 1, 0 << 1]);
+/// let c = permute_varying_m128d(a, b).to_array();
+/// assert_eq!(c, [3.0, 2.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn permute_varying_m128d(a: m128d, b: m128i) -> m128d {
+  m128d(unsafe { _mm_permutevar_pd(a.0, b.0) })
+}
+
+/// Permute with a runtime varying pattern.
+///
+/// For whatever reason, **bit 1** in each `i64` lane is the selection bit.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from_array([2.0, 3.0, 7.0, 8.0]);
+/// let b = m256i::from([1_i64 << 1, 0 << 1, 1 << 1, 1 << 1]);
+/// let c = permute_varying_m256d(a, b).to_array();
+/// assert_eq!(c, [3.0, 2.0, 8.0, 8.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn permute_varying_m256d(a: m256d, b: m256i) -> m256d {
+  m256d(unsafe { _mm256_permutevar_pd(a.0, b.0) })
+}
+
+/// Permute with a runtime varying pattern.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128::from_array([0.0, 1.0, 2.0, 3.0]);
+/// let b = m128i::from([0, 2, 3, 1]);
+/// let c = permute_varying_m128(a, b).to_array();
+/// assert_eq!(c, [0.0, 2.0, 3.0, 1.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn permute_varying_m128(a: m128, b: m128i) -> m128 {
+  m128(unsafe { _mm_permutevar_ps(a.0, b.0) })
+}
+
+/// Permute with a runtime varying pattern.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]);
+/// let b = m256i::from([0, 2, 3, 1, 0, 3, 2, 2]);
+/// let c = permute_varying_m256(a, b).to_array();
+/// assert_eq!(c, [0.0, 2.0, 3.0, 1.0, 4.0, 7.0, 6.0, 6.0]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn permute_varying_m256(a: m256, b: m256i) -> m256 {
+  m256(unsafe { _mm256_permutevar_ps(a.0, b.0) })
+}
+
+/// Reciprocal of `f32` lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([1.0, 2.0, 4.0, 8.0, 0.5, 2.0, 8.0, 16.0]);
+/// let b = reciprocal_m256(a).to_array();
+/// let expected = [1.0, 0.5, 0.25, 0.125, 2.0, 0.5, 0.125, 0.0625];
+/// for i in 0..4 {
+///   assert!((b[i] - expected[i]).abs() < 0.001);
+/// }
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn reciprocal_m256(a: m256) -> m256 {
+  m256(unsafe { _mm256_rcp_ps(a.0) })
+}
+
+/// Rounds each lane in the style specified.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from_array([-0.1, 1.6, 2.5, 3.1]);
+/// //
+/// assert_eq!(round_m256d!(a, Nearest).to_array(), [0.0, 2.0, 2.0, 3.0]);
+/// //
+/// assert_eq!(round_m256d!(a, NegInf).to_array(), [-1.0, 1.0, 2.0, 3.0]);
+/// //
+/// assert_eq!(round_m256d!(a, PosInf).to_array(), [0.0, 2.0, 3.0, 4.0]);
+/// //
+/// assert_eq!(round_m256d!(a, Zero).to_array(), [0.0, 1.0, 2.0, 3.0]);
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+macro_rules! round_m256d {
+  ($a:expr, Nearest) => {{
+    let a: m256d = $a;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::{
+      _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
+    };
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::{
+      _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
+    };
+    m256d(unsafe {
+      _mm256_round_pd(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEAREST_INT)
+    })
+  }};
+  ($a:expr, NegInf) => {{
+    let a: m256d = $a;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::{
+      _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
+    };
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::{
+      _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
+    };
+    m256d(unsafe {
+      _mm256_round_pd(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEG_INF)
+    })
+  }};
+  ($a:expr, PosInf) => {{
+    let a: m256d = $a;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::{
+      _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
+    };
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::{
+      _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
+    };
+    m256d(unsafe {
+      _mm256_round_pd(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_POS_INF)
+    })
+  }};
+  ($a:expr, Zero) => {{
+    let a: m256d = $a;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::{
+      _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
+    };
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::{
+      _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
+    };
+    m256d(unsafe {
+      _mm256_round_pd(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_ZERO)
+    })
+  }};
+}
+
+/// Rounds each lane in the style specified.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([-0.1, 1.6, 3.3, 4.5, 5.1, 6.5, 7.2, 8.0]);
+/// //
+/// assert_eq!(
+///   round_m256!(a, Nearest).to_array(),
+///   [0.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]
+/// );
+/// //
+/// assert_eq!(
+///   round_m256!(a, NegInf).to_array(),
+///   [-1.0, 1.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]
+/// );
+/// //
+/// assert_eq!(
+///   round_m256!(a, PosInf).to_array(),
+///   [0.0, 2.0, 4.0, 5.0, 6.0, 7.0, 8.0, 8.0]
+/// );
+/// //
+/// assert_eq!(
+///   round_m256!(a, Zero).to_array(),
+///   [0.0, 1.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]
+/// );
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+macro_rules! round_m256 {
+  ($a:expr, Nearest) => {{
+    let a: m256 = $a;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::{
+      _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
+    };
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::{
+      _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
+    };
+    m256(unsafe {
+      _mm256_round_ps(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEAREST_INT)
+    })
+  }};
+  ($a:expr, NegInf) => {{
+    let a: m256 = $a;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::{
+      _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
+    };
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::{
+      _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
+    };
+    m256(unsafe {
+      _mm256_round_ps(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEG_INF)
+    })
+  }};
+  ($a:expr, PosInf) => {{
+    let a: m256 = $a;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::{
+      _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
+    };
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::{
+      _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
+    };
+    m256(unsafe {
+      _mm256_round_ps(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_POS_INF)
+    })
+  }};
+  ($a:expr, Zero) => {{
+    let a: m256 = $a;
+    #[cfg(target_arch = "x86")]
+    use core::arch::x86::{
+      _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
+    };
+    #[cfg(target_arch = "x86_64")]
+    use core::arch::x86_64::{
+      _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
+    };
+    m256(unsafe {
+      _mm256_round_ps(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_ZERO)
+    })
+  }};
+}
+
+/// Reciprocal of `f32` lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([16.0, 9.0, 4.0, 25.0, 16.0, 9.0, 4.0, 25.0]);
+/// let b = reciprocal_sqrt_m256(a).to_array();
+/// let expected = [0.25, 0.33333, 0.5, 0.2, 0.25, 0.33333, 0.5, 0.2];
+/// for i in 0..8 {
+///   assert!((b[i] - expected[i]).abs() < 0.001);
+/// }
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn reciprocal_sqrt_m256(a: m256) -> m256 {
+  m256(unsafe { _mm256_rsqrt_ps(a.0) })
+}
 
 // _mm256_set_epi16
 // _mm256_set_epi32
