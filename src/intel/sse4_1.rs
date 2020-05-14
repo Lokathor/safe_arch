@@ -494,10 +494,10 @@ macro_rules! dot_product_m128 {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([5, 6, 7, 8]);
-/// assert_eq!(get_i32_immediate_m128i!(a, 1), 6);
+/// assert_eq!(extract_i32_immediate_m128i!(a, 1), 6);
 /// ```
 #[macro_export]
-macro_rules! get_i32_immediate_m128i {
+macro_rules! extract_i32_immediate_m128i {
   ($a:expr, $imm:expr) => {{
     let a: m128i = $a;
     const IMM: i32 = $imm as i32;
@@ -514,11 +514,11 @@ macro_rules! get_i32_immediate_m128i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([5_i64, 6]);
-/// assert_eq!(get_i64_immediate_m128i!(a, 1), 6_i64);
+/// assert_eq!(extract_i64_immediate_m128i!(a, 1), 6_i64);
 /// ```
 #[macro_export]
 #[cfg(target_arch = "x86_64")]
-macro_rules! get_i64_immediate_m128i {
+macro_rules! extract_i64_immediate_m128i {
   ($a:expr, $imm:expr) => {{
     let a: m128i = $a;
     const IMM: i32 = $imm as i32;
@@ -536,10 +536,10 @@ macro_rules! get_i64_immediate_m128i {
 /// # use safe_arch::*;
 /// let a =
 ///   m128i::from([0_i8, 1, 2, 3, 4, 5, 6, 101, 8, 9, 10, 11, 12, 13, 14, 15]);
-/// assert_eq!(get_i8_as_i32_immediate_m128i!(a, 7), 101_i32);
+/// assert_eq!(extract_i8_as_i32_immediate_m128i!(a, 7), 101_i32);
 /// ```
 #[macro_export]
-macro_rules! get_i8_as_i32_immediate_m128i {
+macro_rules! extract_i8_as_i32_immediate_m128i {
   ($a:expr, $imm:expr) => {{
     let a: m128i = $a;
     const IMM: i32 = $imm as i32;
@@ -556,10 +556,13 @@ macro_rules! get_i8_as_i32_immediate_m128i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([5.0, 6.0, 7.0, 8.0]);
-/// assert_eq!(get_f32_as_i32_bits_immediate_m128!(a, 3), 8_f32.to_bits() as i32);
+/// assert_eq!(
+///   extract_f32_as_i32_bits_immediate_m128!(a, 3),
+///   8_f32.to_bits() as i32
+/// );
 /// ```
 #[macro_export]
-macro_rules! get_f32_as_i32_bits_immediate_m128 {
+macro_rules! extract_f32_as_i32_bits_immediate_m128 {
   ($a:expr, $imm:expr) => {{
     let a: m128 = $a;
     const IMM: i32 = $imm as i32;
