@@ -77,7 +77,7 @@
 //! better name to improve the crate's consistency please file an issue.**
 //!
 //! ## Current Support
-//! * Intel (`x86` / `x86_64`)
+//! * Intel and AMD (`x86` / `x86_64`)
 //!   * 128-bit: `sse`, `sse2`, `sse3`, `ssse3`, `sse4.1`, `sse4.2`
 //!   * 256-bit: `avx`
 //!   * Other: `adx`, `aes`, `bmi1`, `bmi2`, `lzcnt`, `pclmulqdq`, `popcnt`,
