@@ -47,7 +47,10 @@
 //!   any adverbs go after that. This makes for slightly awkward English but
 //!   helps the list of all the functions sort a little better.
 //!   * Eg: `add_i32_m128i` and `add_i16_saturating_m128i`
-//! * Function names end with the register type they're most associated with.
+//! * Function names end with the register type they're most associated with. I
+//!   say "most" because while most operations only work with a single register
+//!   type at a time there are occasional operations that use more than one
+//!   register type.
 //!   * Eg: `and_m128` (for `m128`) and `and_m128d` (for `m128d`)
 //! * If a function operates on just the lowest data lane it generally has `_s`
 //!   after the register type, because it's a "scalar" operation. The higher
@@ -77,7 +80,7 @@
 //! better name to improve the crate's consistency please file an issue.**
 //!
 //! ## Current Support
-//! * Intel and AMD (`x86` / `x86_64`)
+//! * `x86` / `x86_64` (Intel, AMD, etc)
 //!   * 128-bit: `sse`, `sse2`, `sse3`, `ssse3`, `sse4.1`, `sse4.2`
 //!   * 256-bit: `avx`
 //!   * Other: `adx`, `aes`, `bmi1`, `bmi2`, `lzcnt`, `pclmulqdq`, `popcnt`,

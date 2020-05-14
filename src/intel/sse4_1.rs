@@ -225,7 +225,7 @@ pub fn convert_i16_lower4_to_i32_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepi16_epi32(a.0) })
 }
 
-/// Convert the lower two `i16` lanes to two `i32` lanes.
+/// Convert the lower two `i64` lanes to two `i32` lanes.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([0_i16, -1, 2, -3, 4, 5, 6, 7]);
