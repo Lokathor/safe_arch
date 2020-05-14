@@ -5,11 +5,20 @@
 
 # safe_arch
 
-Exposes arch-specific intrinsics as safe function (via cfg).
+Exposes arch-specific intrinsics as safe function.
 
-I don't like putting too much in the Readme and also in the crate docs, it can
-get out of sync. Just see the [crate docs](https://docs.rs/safe_arch) for more
-details.
+The crate aims to be _as minimal as possible_. Each intrinsic gets a function or
+macro so that you can safely use it as directly as possible. Essentially no
+additional abstractions are provided, that's not the point of this crate. The
+goal is only to provide safety while getting in the way as little as possible.
+
+All function and macro availability is done purely at compile time via
+`#[cfg()]` attributes on the various modules. If a CPU feature isn't enabled for
+the build then those functions or macros won't be available. If you'd like to
+determine what CPU features are available at runtime and then call different
+code accordingly, this crate is not for you.
+
+See the [crate docs](https://docs.rs/safe_arch) for more details.
 
 * **Minimum Rust:** The CI tests the crate against Stable 1.43.0. The doc-tests
   are known to require at least 1.43 because they use `u32::MAX`, `f32::NAN`,
