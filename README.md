@@ -25,3 +25,8 @@ See the [crate docs](https://docs.rs/safe_arch) for more details.
   and similar short names for the common consts. You can _probably_ build the
   crate without the doc tests on older compiler versions, possibly as far back
   as 1.31, but that's not officially supported.
+
+## Additional Resources
+
+* [Intel Intrinsics Guide](https://software.intel.com/sites/landingpage/IntrinsicsGuide/)
+  * [Raw Xml Version](https://software.intel.com/sites/landingpage/IntrinsicsGuide/files/data-3.5.0.xml)
