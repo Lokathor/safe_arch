@@ -6,7 +6,7 @@
 
 use super::*;
 
-/// The data for a 256-bit SSE register of four `f64` values.
+/// The data for a 256-bit AVX register of four `f64` values.
 ///
 /// * This is _very similar to_ having `[f64; 4]`. The main difference is that
 ///   it's aligned to 32 instead of just 4, and of course you can perform

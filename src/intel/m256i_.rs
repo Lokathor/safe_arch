@@ -6,7 +6,7 @@
 
 use super::*;
 
-/// The data for a 256-bit SSE register of integer data.
+/// The data for a 256-bit AVX register of integer data.
 ///
 /// * The exact layout to view the type as depends on the operation used.
 /// * `From` and `Into` impls are provided for all the relevant signed integer
