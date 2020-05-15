@@ -1,4 +1,4 @@
-#![cfg(target_feature = "sse4.1")]
+#![cfg(target_feature = "sse4.2")]
 
 use super::*;
 
@@ -14,7 +14,7 @@ use super::*;
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.2")))]
 pub fn cmp_gt_mask_i64_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_cmpgt_epi64(a.0, b.0) })
 }
@@ -26,7 +26,7 @@ pub fn cmp_gt_mask_i64_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.2")))]
 pub fn crc32_u8(crc: u32, v: u8) -> u32 {
   unsafe { _mm_crc32_u8(crc, v) }
 }
@@ -38,7 +38,7 @@ pub fn crc32_u8(crc: u32, v: u8) -> u32 {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.2")))]
 pub fn crc32_u16(crc: u32, v: u16) -> u32 {
   unsafe { _mm_crc32_u16(crc, v) }
 }
@@ -50,7 +50,7 @@ pub fn crc32_u16(crc: u32, v: u16) -> u32 {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.2")))]
 pub fn crc32_u32(crc: u32, v: u32) -> u32 {
   unsafe { _mm_crc32_u32(crc, v) }
 }
@@ -68,7 +68,7 @@ pub fn crc32_u32(crc: u32, v: u32) -> u32 {
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.2")))]
 pub fn crc32_u64(crc: u64, v: u64) -> u64 {
   unsafe { _mm_crc32_u64(crc, v) }
 }
@@ -162,7 +162,7 @@ pub fn crc32_u64(crc: u64, v: u64) -> u64 {
 /// assert_eq!(i, 10); // This is where the "words" substring begins
 /// ```
 #[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.2")))]
 macro_rules! string_search_for_index {
   ([$needle:expr, $needle_len:expr], [$haystack:expr, $haystack_len:expr], $char_type:tt, $search_op:tt, $index_end:tt) => {{
     $crate::string_search_for_index!(
@@ -394,7 +394,7 @@ macro_rules! string_search_for_index {
 /// assert_eq!(i, 0b00000010000000000); // one bit at the start of the match
 /// ```
 #[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.2")))]
 macro_rules! string_search_for_mask {
   ([$needle:expr, $needle_len:expr], [$haystack:expr, $haystack_len:expr], $char_type:tt, $search_op:tt, $mask_style:tt) => {{
     $crate::string_search_for_mask!(
