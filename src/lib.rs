@@ -244,4 +244,15 @@ submodule!(pub x86_x64 {
   submodule!(pub rdrand);
   #[cfg(target_feature = "rdseed")]
   submodule!(pub rdseed);
+
+  /// Reads the CPU's timestamp counter value.
+  ///
+  /// This is a monotonically increasing time-stamp that goes up every clock
+  /// cycle of the CPU. However, since modern CPUs are variable clock rate
+  /// depending on demand this can't actually be used for telling the time. It
+  /// also does _not_ fully serialize all operations, so previous instructions
+  /// might still be in progress when this reads the timestamp.
+  pub fn read_timestamp_counter() -> u64 {
+    unsafe { _rdtsc() }
+  }
 });
