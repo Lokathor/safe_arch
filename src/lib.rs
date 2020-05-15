@@ -13,8 +13,8 @@
 //! this crate is sadly not for you.
 //!
 //! SIMD register types are "newtype'd" so that better trait impls can be given
-//! to them, but the inner value is a `pub` field so feel to just grab it out if
-//! you need to. Trait impls of the newtypes include: `Default` (zeroed),
+//! to them, but the inner value is a `pub` field so feel free to just grab it
+//! out if you need to. Trait impls of the newtypes include: `Default` (zeroed),
 //! `From`/`Into` of appropriate data types, and appropriate operator
 //! overloading.
 //!
