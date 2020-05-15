@@ -27,7 +27,6 @@ pub fn add_sub_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#![cfg(target_feature = "sse3")]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse3")))]
 pub fn add_sub_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_addsub_ps(a.0, b.0) })
