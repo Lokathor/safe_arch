@@ -192,30 +192,30 @@ macro_rules! string_search_for_index {
 
   (@_char_type u8) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_UBYTE_OPS;
+    use ::core::arch::x86::_SIDD_UBYTE_OPS;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_UBYTE_OPS;
+    use ::core::arch::x86_64::_SIDD_UBYTE_OPS;
     _SIDD_UBYTE_OPS
   }};
   (@_char_type u16) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_UWORD_OPS;
+    use ::core::arch::x86::_SIDD_UWORD_OPS;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_UWORD_OPS;
+    use ::core::arch::x86_64::_SIDD_UWORD_OPS;
     _SIDD_UWORD_OPS
   }};
   (@_char_type i8) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_SBYTE_OPS;
+    use ::core::arch::x86::_SIDD_SBYTE_OPS;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_SBYTE_OPS;
+    use ::core::arch::x86_64::_SIDD_SBYTE_OPS;
     _SIDD_SBYTE_OPS
   }};
   (@_char_type i16) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_SWORD_OPS;
+    use ::core::arch::x86::_SIDD_SWORD_OPS;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_SWORD_OPS;
+    use ::core::arch::x86_64::_SIDD_SWORD_OPS;
     _SIDD_SWORD_OPS
   }};
   (@_char_type $unknown:tt) => {
@@ -226,30 +226,30 @@ macro_rules! string_search_for_index {
 
   (@_search_op EqAny) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_CMP_EQUAL_ANY;
+    use ::core::arch::x86::_SIDD_CMP_EQUAL_ANY;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_CMP_EQUAL_ANY;
+    use ::core::arch::x86_64::_SIDD_CMP_EQUAL_ANY;
     _SIDD_CMP_EQUAL_ANY
   }};
   (@_search_op CmpRanges) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_CMP_RANGES;
+    use ::core::arch::x86::_SIDD_CMP_RANGES;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_CMP_RANGES;
+    use ::core::arch::x86_64::_SIDD_CMP_RANGES;
     _SIDD_CMP_RANGES
   }};
   (@_search_op CmpEqEach) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_CMP_EQUAL_EACH;
+    use ::core::arch::x86::_SIDD_CMP_EQUAL_EACH;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_CMP_EQUAL_EACH;
+    use ::core::arch::x86_64::_SIDD_CMP_EQUAL_EACH;
     _SIDD_CMP_EQUAL_EACH
   }};
   (@_search_op CmpEqOrdered) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_CMP_EQUAL_ORDERED;
+    use ::core::arch::x86::_SIDD_CMP_EQUAL_ORDERED;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_CMP_EQUAL_ORDERED;
+    use ::core::arch::x86_64::_SIDD_CMP_EQUAL_ORDERED;
     _SIDD_CMP_EQUAL_ORDERED
   }};
   (@_search_op $unknown:tt) => {
@@ -262,16 +262,16 @@ macro_rules! string_search_for_index {
 
   (@_index_end FirstMatch) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_LEAST_SIGNIFICANT;
+    use ::core::arch::x86::_SIDD_LEAST_SIGNIFICANT;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_LEAST_SIGNIFICANT;
+    use ::core::arch::x86_64::_SIDD_LEAST_SIGNIFICANT;
     _SIDD_LEAST_SIGNIFICANT
   }};
   (@_index_end LastMatch) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_MOST_SIGNIFICANT;
+    use ::core::arch::x86::_SIDD_MOST_SIGNIFICANT;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_MOST_SIGNIFICANT;
+    use ::core::arch::x86_64::_SIDD_MOST_SIGNIFICANT;
     _SIDD_MOST_SIGNIFICANT
   }};
   (@_index_end $unknown:tt) => {
@@ -287,9 +287,9 @@ macro_rules! string_search_for_index {
     let lb: i32 = $haystack_len;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_cmpestri;
+    use ::core::arch::x86::_mm_cmpestri;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_cmpestri;
+    use ::core::arch::x86_64::_mm_cmpestri;
     unsafe { _mm_cmpestri(a.0, la, b.0, lb, IMM) }
   }};
 
@@ -298,9 +298,9 @@ macro_rules! string_search_for_index {
     let b: m128i = $haystack;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_cmpistri;
+    use ::core::arch::x86::_mm_cmpistri;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_cmpistri;
+    use ::core::arch::x86_64::_mm_cmpistri;
     unsafe { _mm_cmpistri(a.0, b.0, IMM) }
   }};
 }
@@ -424,30 +424,30 @@ macro_rules! string_search_for_mask {
 
   (@_char_type u8) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_UBYTE_OPS;
+    use ::core::arch::x86::_SIDD_UBYTE_OPS;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_UBYTE_OPS;
+    use ::core::arch::x86_64::_SIDD_UBYTE_OPS;
     _SIDD_UBYTE_OPS
   }};
   (@_char_type u16) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_UWORD_OPS;
+    use ::core::arch::x86::_SIDD_UWORD_OPS;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_UWORD_OPS;
+    use ::core::arch::x86_64::_SIDD_UWORD_OPS;
     _SIDD_UWORD_OPS
   }};
   (@_char_type i8) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_SBYTE_OPS;
+    use ::core::arch::x86::_SIDD_SBYTE_OPS;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_SBYTE_OPS;
+    use ::core::arch::x86_64::_SIDD_SBYTE_OPS;
     _SIDD_SBYTE_OPS
   }};
   (@_char_type i16) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_SWORD_OPS;
+    use ::core::arch::x86::_SIDD_SWORD_OPS;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_SWORD_OPS;
+    use ::core::arch::x86_64::_SIDD_SWORD_OPS;
     _SIDD_SWORD_OPS
   }};
   (@_char_type $unknown:tt) => {
@@ -458,30 +458,30 @@ macro_rules! string_search_for_mask {
 
   (@_search_op EqAny) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_CMP_EQUAL_ANY;
+    use ::core::arch::x86::_SIDD_CMP_EQUAL_ANY;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_CMP_EQUAL_ANY;
+    use ::core::arch::x86_64::_SIDD_CMP_EQUAL_ANY;
     _SIDD_CMP_EQUAL_ANY
   }};
   (@_search_op CmpRanges) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_CMP_RANGES;
+    use ::core::arch::x86::_SIDD_CMP_RANGES;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_CMP_RANGES;
+    use ::core::arch::x86_64::_SIDD_CMP_RANGES;
     _SIDD_CMP_RANGES
   }};
   (@_search_op CmpEqEach) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_CMP_EQUAL_EACH;
+    use ::core::arch::x86::_SIDD_CMP_EQUAL_EACH;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_CMP_EQUAL_EACH;
+    use ::core::arch::x86_64::_SIDD_CMP_EQUAL_EACH;
     _SIDD_CMP_EQUAL_EACH
   }};
   (@_search_op CmpEqOrdered) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_CMP_EQUAL_ORDERED;
+    use ::core::arch::x86::_SIDD_CMP_EQUAL_ORDERED;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_CMP_EQUAL_ORDERED;
+    use ::core::arch::x86_64::_SIDD_CMP_EQUAL_ORDERED;
     _SIDD_CMP_EQUAL_ORDERED
   }};
   (@_search_op $unknown:tt) => {
@@ -494,16 +494,16 @@ macro_rules! string_search_for_mask {
 
   (@_mask_style BitMask) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_BIT_MASK;
+    use ::core::arch::x86::_SIDD_BIT_MASK;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_BIT_MASK;
+    use ::core::arch::x86_64::_SIDD_BIT_MASK;
     _SIDD_BIT_MASK
   }};
   (@_mask_style UnitMask) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_SIDD_UNIT_MASK;
+    use ::core::arch::x86::_SIDD_UNIT_MASK;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_SIDD_UNIT_MASK;
+    use ::core::arch::x86_64::_SIDD_UNIT_MASK;
     _SIDD_UNIT_MASK
   }};
   (@_mask_style $unknown:tt) => {
@@ -519,9 +519,9 @@ macro_rules! string_search_for_mask {
     let lb: i32 = $haystack_len;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_cmpestrm;
+    use ::core::arch::x86::_mm_cmpestrm;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_cmpestrm;
+    use ::core::arch::x86_64::_mm_cmpestrm;
     m128i(unsafe { _mm_cmpestrm(a.0, la, b.0, lb, IMM) })
   }};
 
@@ -530,9 +530,9 @@ macro_rules! string_search_for_mask {
     let b: m128i = $haystack;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_cmpistrm;
+    use ::core::arch::x86::_mm_cmpistrm;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_cmpistrm;
+    use ::core::arch::x86_64::_mm_cmpistrm;
     m128i(unsafe { _mm_cmpistrm(a.0, b.0, IMM) })
   }};
 }
