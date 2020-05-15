@@ -223,6 +223,8 @@ submodule!(pub x86_x64 {
   submodule!(pub sse4_2);
   #[cfg(target_feature = "avx")]
   submodule!(pub avx);
+  #[cfg(target_feature = "avx2")]
+  submodule!(pub avx2);
 
   // These features aren't as easy to remember the progression of and they each
   // only add a small handful of functions.
