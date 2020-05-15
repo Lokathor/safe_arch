@@ -180,6 +180,18 @@ macro_rules! submodule {
   };
 }
 
+// Note(Lokathor): Stupid as it sounds, we need to put the imports here at the
+// crate root because the arch-specific macros that we define in our inner
+// modules are actually "scoped" to also be at the crate root. We want the
+// rustdoc generation of the macros to "see" these imports so that the docs link
+// over to the `core::arch` module correctly.
+// https://github.com/rust-lang/rust/issues/72243
+
+#[cfg(target_arch = "x86")]
+use core::arch::x86::*;
+#[cfg(target_arch = "x86_64")]
+use core::arch::x86_64::*;
+
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 submodule!(pub x86_x64 {
   //! Types and functions for safe `x86` / `x86_64` intrinsic usage.
@@ -188,11 +200,6 @@ submodule!(pub x86_x64 {
   //! one module. Anything not available on `x86` simply won't be in the build
   //! on that arch.
   use super::*;
-
-  #[cfg(target_arch = "x86")]
-  use core::arch::x86::*;
-  #[cfg(target_arch = "x86_64")]
-  use core::arch::x86_64::*;
 
   submodule!(pub m128_);
   submodule!(pub m128d_);

@@ -16,7 +16,7 @@ use super::*;
 /// let c: [i32; 4] = blend_i32_m128i!(a, b, 0b0110).into();
 /// assert_eq!(c, [10, 200, 300, 40]);
 /// ```
-/// * **Intrinsic:** `_mm_blend_epi32`
+/// * **Intrinsic:** [`_mm_blend_epi32`]
 /// * **Assembly:** `vpblendd xmm, xmm, xmm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
@@ -40,7 +40,7 @@ macro_rules! blend_i32_m128i {
 /// let b: [i8; 16] = splat_i8_m128i_s_m128i(a).into();
 /// assert_eq!(b, [0x77_i8; 16]);
 /// ```
-/// * **Intrinsic:** `_mm_broadcastb_epi8`
+/// * **Intrinsic:** [`_mm_broadcastb_epi8`]
 /// * **Assembly:** `vpbroadcastb xmm, xmm`
 #[must_use]
 #[inline(always)]
@@ -56,7 +56,7 @@ pub fn splat_i8_m128i_s_m128i(a: m128i) -> m128i {
 /// let b: [i32; 4] = splat_i32_m128i_s_m128i(a).into();
 /// assert_eq!(b, [0x77; 4]);
 /// ```
-/// * **Intrinsic:** `_mm_broadcastd_epi32`
+/// * **Intrinsic:** [`_mm_broadcastd_epi32`]
 /// * **Assembly:** `vpbroadcastd xmm, xmm`
 #[must_use]
 #[inline(always)]
@@ -72,7 +72,7 @@ pub fn splat_i32_m128i_s_m128i(a: m128i) -> m128i {
 /// let b: [i64; 2] = splat_i64_m128i_s_m128i(a).into();
 /// assert_eq!(b, [0x77_i64; 2]);
 /// ```
-/// * **Intrinsic:** `_mm_broadcastq_epi64`
+/// * **Intrinsic:** [`_mm_broadcastq_epi64`]
 /// * **Assembly:** `vpbroadcastq xmm, xmm`
 #[must_use]
 #[inline(always)]
@@ -88,7 +88,7 @@ pub fn splat_i64_m128i_s_m128i(a: m128i) -> m128i {
 /// let b = splat_m128d_s_m128d(a).to_array();
 /// assert_eq!(b, [1.0, 1.0]);
 /// ```
-/// * **Intrinsic:** `_mm_broadcastsd_pd`
+/// * **Intrinsic:** [`_mm_broadcastsd_pd`]
 /// * **Assembly:** `movddup xmm, xmm`
 #[must_use]
 #[inline(always)]
