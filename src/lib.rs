@@ -244,4 +244,60 @@ submodule!(pub x86_x64 {
   submodule!(pub rdrand);
   #[cfg(target_feature = "rdseed")]
   submodule!(pub rdseed);
+
+  /// Reads the CPU's timestamp counter value.
+  ///
+  /// This is a monotonically increasing time-stamp that goes up every clock
+  /// cycle of the CPU. However, since modern CPUs are variable clock rate
+  /// depending on demand this can't actually be used for telling the time. It
+  /// also does _not_ fully serialize all operations, so previous instructions
+  /// might still be in progress when this reads the timestamp.
+  ///
+  /// * **Intrinsic:** `_rdtsc`
+  /// * **Assembly:** `rdtsc`
+  pub fn read_timestamp_counter() -> u64 {
+    unsafe { _rdtsc() }
+  }
+
+  /// Reads the CPU's timestamp counter value and store the processor signature.
+  ///
+  /// This works similar to [`read_timestamp_counter`] with two main
+  /// differences:
+  /// * It and also stores the `IA32_TSC_AUX MSR` value to the reference given.
+  /// * It waits on all previous instructions to finish before reading the
+  ///   timestamp (though it doesn't prevent other instructions from starting).
+  ///
+  /// As with `read_timestamp_counter`, you can't actually use this to tell the
+  /// time.
+  ///
+  /// * **Intrinsic:** `__rdtscp`
+  /// * **Assembly:** `rdtscp`
+  pub fn read_timestamp_counter_p(aux: &mut u32) -> u64 {
+    unsafe { __rdtscp(aux) }
+  }
+
+  /// Swap the bytes of the given 32-bit value.
+  ///
+  /// ```
+  /// # use safe_arch::*;
+  /// assert_eq!(byte_swap_i32(0x0A123456), 0x5634120A);
+  /// ```
+  /// * **Intrinsic:** `_bswap`
+  /// * **Assembly:** `bswap r32`
+  pub fn byte_swap_i32(i: i32) -> i32 {
+    unsafe { _bswap(i) }
+  }
+
+  /// Swap the bytes of the given 64-bit value.
+  ///
+  /// ```
+  /// # use safe_arch::*;
+  /// assert_eq!(byte_swap_i64(0x0A123456_789ABC01), 0x01BC9A78_5634120A);
+  /// ```
+  /// * **Intrinsic:** `_bswap64`
+  /// * **Assembly:** `bswap r64`
+  #[cfg(target_arch="x86_64")]
+  pub fn byte_swap_i64(i: i64) -> i64 {
+    unsafe { _bswap64(i) }
+  }
 });
