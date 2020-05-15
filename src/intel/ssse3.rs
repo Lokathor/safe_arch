@@ -78,9 +78,9 @@ macro_rules! combined_byte_shift_right_immediate_m128i {
     let b: m128i = $b;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_alignr_epi8;
+    use ::core::arch::x86::_mm_alignr_epi8;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_alignr_epi8;
+    use ::core::arch::x86_64::_mm_alignr_epi8;
     m128i(unsafe { _mm_alignr_epi8(a.0, b.0, IMM) })
   }};
 }
