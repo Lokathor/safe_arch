@@ -296,6 +296,7 @@ submodule!(pub x86_x64 {
   /// ```
   /// * **Intrinsic:** `_bswap64`
   /// * **Assembly:** `bswap r64`
+  #[cfg(target_arch="x86_64")]
   pub fn byte_swap_i64(i: i64) -> i64 {
     unsafe { _bswap64(i) }
   }
