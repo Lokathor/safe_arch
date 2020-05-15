@@ -275,4 +275,28 @@ submodule!(pub x86_x64 {
   pub fn read_timestamp_counter_p(aux: &mut u32) -> u64 {
     unsafe { __rdtscp(aux) }
   }
+
+  /// Swap the bytes of the given 32-bit value.
+  ///
+  /// ```
+  /// # use safe_arch::*;
+  /// assert_eq!(byte_swap_i32(0x0A123456), 0x5634120A);
+  /// ```
+  /// * **Intrinsic:** `_bswap`
+  /// * **Assembly:** `bswap r32`
+  pub fn byte_swap_i32(i: i32) -> i32 {
+    unsafe { _bswap(i) }
+  }
+
+  /// Swap the bytes of the given 64-bit value.
+  ///
+  /// ```
+  /// # use safe_arch::*;
+  /// assert_eq!(byte_swap_i64(0x0A123456_789ABC01), 0x01BC9A78_5634120A);
+  /// ```
+  /// * **Intrinsic:** `_bswap64`
+  /// * **Assembly:** `bswap r64`
+  pub fn byte_swap_i64(i: i64) -> i64 {
+    unsafe { _bswap64(i) }
+  }
 });
