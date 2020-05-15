@@ -49,6 +49,22 @@ pub fn splat_i8_m128i_s_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_broadcastb_epi8(a.0) })
 }
 
+/// Splat the lowest 16-bit lane across the entire 128 bits.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from(0x77_i128);
+/// let b: [i16; 8] = splat_i16_m128i_s_m128i(a).into();
+/// assert_eq!(b, [0x77_i16; 8]);
+/// ```
+/// * **Intrinsic:** [`_mm_broadcastw_epi16`]
+/// * **Assembly:** `vpbroadcastw xmm, xmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn splat_i16_m128i_s_m128i(a: m128i) -> m128i {
+  m128i(unsafe { _mm_broadcastw_epi16(a.0) })
+}
+
 /// Splat the lowest 32-bit lane across the entire 128 bits.
 /// ```
 /// # use safe_arch::*;
@@ -97,25 +113,38 @@ pub fn splat_m128d_s_m128d(a: m128d) -> m128d {
   m128d(unsafe { _mm_broadcastsd_pd(a.0) })
 }
 
-// _mm_broadcastsi128_si256
-// _mm_broadcastss_ps
-// _mm_broadcastw_epi16
-// _mm_i32gather_epi32
-// _mm_i32gather_epi64
-// _mm_i32gather_pd
-// _mm_i32gather_ps
-// _mm_i64gather_epi32
-// _mm_i64gather_epi64
-// _mm_i64gather_pd
-// _mm_i64gather_ps
-// _mm_mask_i32gather_epi32
-// _mm_mask_i32gather_epi64
-// _mm_mask_i32gather_pd
-// _mm_mask_i32gather_ps
-// _mm_mask_i64gather_epi32
-// _mm_mask_i64gather_epi64
-// _mm_mask_i64gather_pd
-// _mm_mask_i64gather_ps
+/// Splat the 128-bits across 256-bits.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from(1_i128);
+/// let b: [i128; 2] = splat_m128i_m256i(a).into();
+/// assert_eq!(b, [1_i128, 1]);
+/// ```
+/// * **Intrinsic:** [`_mm256_broadcastsi128_si256`]
+/// * **Assembly:** `vbroadcasti128 ymm, m128`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn splat_m128i_m256i(a: m128i) -> m256i {
+  m256i(unsafe { _mm256_broadcastsi128_si256(a.0) })
+}
+
+/// Splat the lowest `f32` across all four lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = set_m128_s(1.0);
+/// let b = splat_m128_s_m128(a).to_array();
+/// assert_eq!(b, [1.0, 1.0, 1.0, 1.0]);
+/// ```
+/// * **Intrinsic:** [`_mm_broadcastss_ps`]
+/// * **Assembly:** `vbroadcastss xmm, xmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn splat_m128_s_m128(a: m128) -> m128 {
+  m128(unsafe { _mm_broadcastss_ps(a.0) })
+}
+
 // _mm_maskload_epi32
 // _mm_maskload_epi64
 // _mm_maskstore_epi32
@@ -148,7 +177,6 @@ pub fn splat_m128d_s_m128d(a: m128d) -> m128d {
 // _mm256_broadcastd_epi32
 // _mm256_broadcastq_epi64
 // _mm256_broadcastsd_pd
-// _mm256_broadcastsi128_si256
 // _mm256_broadcastss_ps
 // _mm256_broadcastw_epi16
 // _mm256_bslli_epi128
@@ -182,25 +210,9 @@ pub fn splat_m128d_s_m128d(a: m128d) -> m128d {
 // _mm256_hsub_epi16
 // _mm256_hsub_epi32
 // _mm256_hsubs_epi16
-// _mm256_i32gather_epi32
-// _mm256_i32gather_epi64
-// _mm256_i32gather_pd
-// _mm256_i32gather_ps
-// _mm256_i64gather_epi32
-// _mm256_i64gather_epi64
-// _mm256_i64gather_pd
-// _mm256_i64gather_ps
 // _mm256_inserti128_si256
 // _mm256_madd_epi16
 // _mm256_maddubs_epi16
-// _mm256_mask_i32gather_epi32
-// _mm256_mask_i32gather_epi64
-// _mm256_mask_i32gather_pd
-// _mm256_mask_i32gather_ps
-// _mm256_mask_i64gather_epi32
-// _mm256_mask_i64gather_epi64
-// _mm256_mask_i64gather_pd
-// _mm256_mask_i64gather_ps
 // _mm256_maskload_epi32
 // _mm256_maskload_epi64
 // _mm256_maskstore_epi32
