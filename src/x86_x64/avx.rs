@@ -143,9 +143,9 @@ macro_rules! blend_imm_m256d {
     let b: m256d = $b;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_blend_pd;
+    use ::core::arch::x86::_mm256_blend_pd;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_blend_pd;
+    use ::core::arch::x86_64::_mm256_blend_pd;
     m256d(unsafe { _mm256_blend_pd(a.0, b.0, IMM) })
   }};
 }
@@ -172,9 +172,9 @@ macro_rules! blend_imm_m256 {
     let b: m256 = $b;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_blend_ps;
+    use ::core::arch::x86::_mm256_blend_ps;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_blend_ps;
+    use ::core::arch::x86_64::_mm256_blend_ps;
     m256(unsafe { _mm256_blend_ps(a.0, b.0, IMM) })
   }};
 }
@@ -426,114 +426,114 @@ pub fn ceil_m256(a: m256) -> m256 {
 macro_rules! comparison_operator_translation {
   (EqualOrdered) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_CMP_EQ_OQ;
+    use ::core::arch::x86::_CMP_EQ_OQ;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_CMP_EQ_OQ;
+    use ::core::arch::x86_64::_CMP_EQ_OQ;
     _CMP_EQ_OQ
   }};
   (EqualUnordered) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_CMP_EQ_UQ;
+    use ::core::arch::x86::_CMP_EQ_UQ;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_CMP_EQ_UQ;
+    use ::core::arch::x86_64::_CMP_EQ_UQ;
     _CMP_EQ_UQ
   }};
   (False) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_CMP_FALSE_OQ;
+    use ::core::arch::x86::_CMP_FALSE_OQ;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_CMP_FALSE_OQ;
+    use ::core::arch::x86_64::_CMP_FALSE_OQ;
     _CMP_FALSE_OQ
   }};
   (GreaterEqualOrdered) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_CMP_GE_OQ;
+    use ::core::arch::x86::_CMP_GE_OQ;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_CMP_GE_OQ;
+    use ::core::arch::x86_64::_CMP_GE_OQ;
     _CMP_GE_OQ
   }};
   (GreaterThanOrdered) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_CMP_GT_OQ;
+    use ::core::arch::x86::_CMP_GT_OQ;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_CMP_GT_OQ;
+    use ::core::arch::x86_64::_CMP_GT_OQ;
     _CMP_GT_OQ
   }};
   (LessEqualOrdered) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_CMP_LE_OQ;
+    use ::core::arch::x86::_CMP_LE_OQ;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_CMP_LE_OQ;
+    use ::core::arch::x86_64::_CMP_LE_OQ;
     _CMP_LE_OQ
   }};
   (LessThanOrdered) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_CMP_LT_OQ;
+    use ::core::arch::x86::_CMP_LT_OQ;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_CMP_LT_OQ;
+    use ::core::arch::x86_64::_CMP_LT_OQ;
     _CMP_LT_OQ
   }};
   (NotEqualOrdered) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_CMP_NEQ_OQ;
+    use ::core::arch::x86::_CMP_NEQ_OQ;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_CMP_NEQ_OQ;
+    use ::core::arch::x86_64::_CMP_NEQ_OQ;
     _CMP_NEQ_OQ
   }};
   (NotEqualUnordered) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_CMP_NEQ_UQ;
+    use ::core::arch::x86::_CMP_NEQ_UQ;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_CMP_NEQ_UQ;
+    use ::core::arch::x86_64::_CMP_NEQ_UQ;
     _CMP_NEQ_UQ
   }};
   (NotGreaterEqualUnordered) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_CMP_NGE_UQ;
+    use ::core::arch::x86::_CMP_NGE_UQ;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_CMP_NGE_UQ;
+    use ::core::arch::x86_64::_CMP_NGE_UQ;
     _CMP_NGE_UQ
   }};
   (NotGreaterThanUnordered) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_CMP_NGT_UQ;
+    use ::core::arch::x86::_CMP_NGT_UQ;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_CMP_NGT_UQ;
+    use ::core::arch::x86_64::_CMP_NGT_UQ;
     _CMP_NGT_UQ
   }};
   (NotLessEqualUnordered) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_CMP_NLE_UQ;
+    use ::core::arch::x86::_CMP_NLE_UQ;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_CMP_NLE_UQ;
+    use ::core::arch::x86_64::_CMP_NLE_UQ;
     _CMP_NLE_UQ
   }};
   (NotLessThanUnordered) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_CMP_NLT_UQ;
+    use ::core::arch::x86::_CMP_NLT_UQ;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_CMP_NLT_UQ;
+    use ::core::arch::x86_64::_CMP_NLT_UQ;
     _CMP_NLT_UQ
   }};
   (Ordered) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_CMP_ORD_Q;
+    use ::core::arch::x86::_CMP_ORD_Q;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_CMP_ORD_Q;
+    use ::core::arch::x86_64::_CMP_ORD_Q;
     _CMP_ORD_Q
   }};
   (True) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_CMP_TRUE_UQ;
+    use ::core::arch::x86::_CMP_TRUE_UQ;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_CMP_TRUE_UQ;
+    use ::core::arch::x86_64::_CMP_TRUE_UQ;
     _CMP_TRUE_UQ
   }};
   (Unordered) => {{
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_CMP_UNORD_Q;
+    use ::core::arch::x86::_CMP_UNORD_Q;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_CMP_UNORD_Q;
+    use ::core::arch::x86_64::_CMP_UNORD_Q;
     _CMP_UNORD_Q
   }};
   ($unknown_op:tt) => {{
@@ -566,9 +566,9 @@ macro_rules! cmp_op_mask_m128 {
     let b: m128 = $b;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_cmp_ps;
+    use ::core::arch::x86::_mm_cmp_ps;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_cmp_ps;
+    use ::core::arch::x86_64::_mm_cmp_ps;
     m128(unsafe { _mm_cmp_ps(a.0, b.0, IMM) })
   }};
 }
@@ -598,9 +598,9 @@ macro_rules! cmp_op_mask_m128_s {
     let b: m128 = $b;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_cmp_ss;
+    use ::core::arch::x86::_mm_cmp_ss;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_cmp_ss;
+    use ::core::arch::x86_64::_mm_cmp_ss;
     m128(unsafe { _mm_cmp_ss(a.0, b.0, IMM) })
   }};
 }
@@ -630,9 +630,9 @@ macro_rules! cmp_op_mask_m256 {
     let b: m256 = $b;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_cmp_ps;
+    use ::core::arch::x86::_mm256_cmp_ps;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_cmp_ps;
+    use ::core::arch::x86_64::_mm256_cmp_ps;
     m256(unsafe { _mm256_cmp_ps(a.0, b.0, IMM) })
   }};
 }
@@ -662,9 +662,9 @@ macro_rules! cmp_op_mask_m128d {
     let b: m128d = $b;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_cmp_pd;
+    use ::core::arch::x86::_mm_cmp_pd;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_cmp_pd;
+    use ::core::arch::x86_64::_mm_cmp_pd;
     m128d(unsafe { _mm_cmp_pd(a.0, b.0, IMM) })
   }};
 }
@@ -694,9 +694,9 @@ macro_rules! cmp_op_mask_m128d_s {
     let b: m128d = $b;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_cmp_sd;
+    use ::core::arch::x86::_mm_cmp_sd;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_cmp_sd;
+    use ::core::arch::x86_64::_mm_cmp_sd;
     m128d(unsafe { _mm_cmp_sd(a.0, b.0, IMM) })
   }};
 }
@@ -726,9 +726,9 @@ macro_rules! cmp_op_mask_m256d {
     let b: m256d = $b;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_cmp_pd;
+    use ::core::arch::x86::_mm256_cmp_pd;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_cmp_pd;
+    use ::core::arch::x86_64::_mm256_cmp_pd;
     m256d(unsafe { _mm256_cmp_pd(a.0, b.0, IMM) })
   }};
 }
@@ -951,9 +951,9 @@ macro_rules! dot_product_m256 {
     let b: m256 = $b;
     const IMM: i32 = $imm as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_dp_ps;
+    use ::core::arch::x86::_mm256_dp_ps;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_dp_ps;
+    use ::core::arch::x86_64::_mm256_dp_ps;
     m256(unsafe { _mm256_dp_ps(a.0, b.0, IMM) })
   }};
 }
@@ -972,9 +972,9 @@ macro_rules! extract_i32_from_m256i {
     let a: m256i = $a;
     const IMM: i32 = ($imm & 0b111) as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_extract_epi32;
+    use ::core::arch::x86::_mm256_extract_epi32;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_extract_epi32;
+    use ::core::arch::x86_64::_mm256_extract_epi32;
     unsafe { _mm256_extract_epi32(a.0, IMM) }
   }};
 }
@@ -994,9 +994,9 @@ macro_rules! extract_i64_from_m256i {
     let a: m256i = $a;
     const IMM: i32 = ($imm & 0b111) as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_extract_epi64;
+    use ::core::arch::x86::_mm256_extract_epi64;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_extract_epi64;
+    use ::core::arch::x86_64::_mm256_extract_epi64;
     unsafe { _mm256_extract_epi64(a.0, IMM) }
   }};
 }
@@ -1017,9 +1017,9 @@ macro_rules! extract_m128d_from_m256d {
     let a: m256d = $a;
     const IMM: i32 = ($imm & 0b111) as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_extractf128_pd;
+    use ::core::arch::x86::_mm256_extractf128_pd;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_extractf128_pd;
+    use ::core::arch::x86_64::_mm256_extractf128_pd;
     m128d(unsafe { _mm256_extractf128_pd(a.0, IMM) })
   }};
 }
@@ -1040,9 +1040,9 @@ macro_rules! extract_m128_from_m256 {
     let a: m256 = $a;
     const IMM: i32 = ($imm & 0b111) as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_extractf128_ps;
+    use ::core::arch::x86::_mm256_extractf128_ps;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_extractf128_ps;
+    use ::core::arch::x86_64::_mm256_extractf128_ps;
     m128(unsafe { _mm256_extractf128_ps(a.0, IMM) })
   }};
 }
@@ -1063,9 +1063,9 @@ macro_rules! extract_m128i_from_m256i {
     let a: m256i = $a;
     const IMM: i32 = ($imm & 0b111) as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_extractf128_si256;
+    use ::core::arch::x86::_mm256_extractf128_si256;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_extractf128_si256;
+    use ::core::arch::x86_64::_mm256_extractf128_si256;
     m128i(unsafe { _mm256_extractf128_si256(a.0, IMM) })
   }};
 }
@@ -1185,9 +1185,9 @@ macro_rules! insert_i8_to_m256i {
     let i: i8 = $i;
     const IMM: i32 = ($imm & 0b11111) as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_insert_epi8;
+    use ::core::arch::x86::_mm256_insert_epi8;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_insert_epi8;
+    use ::core::arch::x86_64::_mm256_insert_epi8;
     m256i(unsafe { _mm256_insert_epi8(a.0, i, IMM) })
   }};
 }
@@ -1210,9 +1210,9 @@ macro_rules! insert_i16_to_m256i {
     let i: i16 = $i;
     const IMM: i32 = ($imm & 0b1111) as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_insert_epi16;
+    use ::core::arch::x86::_mm256_insert_epi16;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_insert_epi16;
+    use ::core::arch::x86_64::_mm256_insert_epi16;
     m256i(unsafe { _mm256_insert_epi16(a.0, i, IMM) })
   }};
 }
@@ -1234,9 +1234,9 @@ macro_rules! insert_i32_to_m256i {
     let i: i32 = $i;
     const IMM: i32 = ($imm & 0b111) as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_insert_epi32;
+    use ::core::arch::x86::_mm256_insert_epi32;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_insert_epi32;
+    use ::core::arch::x86_64::_mm256_insert_epi32;
     m256i(unsafe { _mm256_insert_epi32(a.0, i, IMM) })
   }};
 }
@@ -1259,9 +1259,9 @@ macro_rules! insert_i64_to_m256i {
     let i: i64 = $i;
     const IMM: i32 = ($imm & 0b11) as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_insert_epi64;
+    use ::core::arch::x86::_mm256_insert_epi64;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_insert_epi64;
+    use ::core::arch::x86_64::_mm256_insert_epi64;
     m256i(unsafe { _mm256_insert_epi64(a.0, i, IMM) })
   }};
 }
@@ -1283,9 +1283,9 @@ macro_rules! insert_m128d_to_m256d {
     let b: m128d = $b;
     const IMM: i32 = ($imm & 0b1) as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_insertf128_pd;
+    use ::core::arch::x86::_mm256_insertf128_pd;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_insertf128_pd;
+    use ::core::arch::x86_64::_mm256_insertf128_pd;
     m256d(unsafe { _mm256_insertf128_pd(a.0, b.0, IMM) })
   }};
 }
@@ -1307,9 +1307,9 @@ macro_rules! insert_m128_to_m256 {
     let b: m128 = $b;
     const IMM: i32 = ($imm & 0b1) as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_insertf128_ps;
+    use ::core::arch::x86::_mm256_insertf128_ps;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_insertf128_ps;
+    use ::core::arch::x86_64::_mm256_insertf128_ps;
     m256(unsafe { _mm256_insertf128_ps(a.0, b.0, IMM) })
   }};
 }
@@ -1331,9 +1331,9 @@ macro_rules! insert_m128i_to_m256i {
     let b: m128i = $b;
     const IMM: i32 = ($imm & 0b1) as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_insertf128_si256;
+    use ::core::arch::x86::_mm256_insertf128_si256;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_insertf128_si256;
+    use ::core::arch::x86_64::_mm256_insertf128_si256;
     m256i(unsafe { _mm256_insertf128_si256(a.0, b.0, IMM) })
   }};
 }
@@ -1866,9 +1866,9 @@ macro_rules! permute_m128d {
     const MASK: i32 = (($z & 0b1) | ($o & 0b1) << 1) as i32;
     let a: m128d = $a;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_permute_pd;
+    use ::core::arch::x86::_mm_permute_pd;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_permute_pd;
+    use ::core::arch::x86_64::_mm_permute_pd;
     m128d(unsafe { _mm_permute_pd(a.0, MASK) })
   }};
 }
@@ -1903,9 +1903,9 @@ macro_rules! permute_m256d {
       (($z & 0b1) | ($o & 0b1) << 1 | ($t & 0b1) << 2 | ($h & 0b1) << 3) as i32;
     let a: m256d = $a;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_permute_pd;
+    use ::core::arch::x86::_mm256_permute_pd;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_permute_pd;
+    use ::core::arch::x86_64::_mm256_permute_pd;
     m256d(unsafe { _mm256_permute_pd(a.0, MASK) })
   }};
 }
@@ -1938,9 +1938,9 @@ macro_rules! permute_m128 {
         as i32;
     let a: m128 = $a;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_permute_ps;
+    use ::core::arch::x86::_mm_permute_ps;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_permute_ps;
+    use ::core::arch::x86_64::_mm_permute_ps;
     m128(unsafe { _mm_permute_ps(a.0, MASK) })
   }};
 }
@@ -1976,9 +1976,9 @@ macro_rules! permute_m256 {
         as i32;
     let a: m256 = $a;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_permute_ps;
+    use ::core::arch::x86::_mm256_permute_ps;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_permute_ps;
+    use ::core::arch::x86_64::_mm256_permute_ps;
     m256(unsafe { _mm256_permute_ps(a.0, MASK) })
   }};
 }
@@ -2008,9 +2008,9 @@ macro_rules! permute_f128_in_m256d {
     let a: m256d = $a;
     let b: m256d = $b;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_permute2f128_pd;
+    use ::core::arch::x86::_mm256_permute2f128_pd;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_permute2f128_pd;
+    use ::core::arch::x86_64::_mm256_permute2f128_pd;
     m256d(unsafe { _mm256_permute2f128_pd(a.0, b.0, MASK) })
   }};
   (@_convert_tt_to_select 0) => {
@@ -2057,9 +2057,9 @@ macro_rules! permute_f128_in_m256 {
     let a: m256 = $a;
     let b: m256 = $b;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_permute2f128_ps;
+    use ::core::arch::x86::_mm256_permute2f128_ps;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_permute2f128_ps;
+    use ::core::arch::x86_64::_mm256_permute2f128_ps;
     m256(unsafe { _mm256_permute2f128_ps(a.0, b.0, MASK) })
   }};
   (@_convert_tt_to_select 0) => {
@@ -2106,9 +2106,9 @@ macro_rules! permute_i128_in_m256i {
     let a: m256i = $a;
     let b: m256i = $b;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_permute2f128_si256;
+    use ::core::arch::x86::_mm256_permute2f128_si256;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_permute2f128_si256;
+    use ::core::arch::x86_64::_mm256_permute2f128_si256;
     m256i(unsafe { _mm256_permute2f128_si256(a.0, b.0, MASK) })
   }};
   (@_convert_tt_to_select 0) => {
@@ -2232,11 +2232,11 @@ macro_rules! round_m256d {
   ($a:expr, Nearest) => {{
     let a: m256d = $a;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::{
+    use ::core::arch::x86::{
       _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
     };
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::{
+    use ::core::arch::x86_64::{
       _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
     };
     m256d(unsafe {
@@ -2246,11 +2246,11 @@ macro_rules! round_m256d {
   ($a:expr, NegInf) => {{
     let a: m256d = $a;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::{
+    use ::core::arch::x86::{
       _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
     };
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::{
+    use ::core::arch::x86_64::{
       _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
     };
     m256d(unsafe {
@@ -2260,11 +2260,11 @@ macro_rules! round_m256d {
   ($a:expr, PosInf) => {{
     let a: m256d = $a;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::{
+    use ::core::arch::x86::{
       _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
     };
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::{
+    use ::core::arch::x86_64::{
       _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
     };
     m256d(unsafe {
@@ -2274,11 +2274,11 @@ macro_rules! round_m256d {
   ($a:expr, Zero) => {{
     let a: m256d = $a;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::{
+    use ::core::arch::x86::{
       _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
     };
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::{
+    use ::core::arch::x86_64::{
       _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
     };
     m256d(unsafe {
@@ -2319,11 +2319,11 @@ macro_rules! round_m256 {
   ($a:expr, Nearest) => {{
     let a: m256 = $a;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::{
+    use ::core::arch::x86::{
       _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
     };
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::{
+    use ::core::arch::x86_64::{
       _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
     };
     m256(unsafe {
@@ -2333,11 +2333,11 @@ macro_rules! round_m256 {
   ($a:expr, NegInf) => {{
     let a: m256 = $a;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::{
+    use ::core::arch::x86::{
       _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
     };
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::{
+    use ::core::arch::x86_64::{
       _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
     };
     m256(unsafe {
@@ -2347,11 +2347,11 @@ macro_rules! round_m256 {
   ($a:expr, PosInf) => {{
     let a: m256 = $a;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::{
+    use ::core::arch::x86::{
       _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
     };
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::{
+    use ::core::arch::x86_64::{
       _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
     };
     m256(unsafe {
@@ -2361,11 +2361,11 @@ macro_rules! round_m256 {
   ($a:expr, Zero) => {{
     let a: m256 = $a;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::{
+    use ::core::arch::x86::{
       _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
     };
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::{
+    use ::core::arch::x86_64::{
       _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
     };
     m256(unsafe {
@@ -2885,9 +2885,9 @@ macro_rules! shuffle_m256d {
     let a: m256d = $a;
     let b: m256d = $b;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_shuffle_pd;
+    use ::core::arch::x86::_mm256_shuffle_pd;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_shuffle_pd;
+    use ::core::arch::x86_64::_mm256_shuffle_pd;
     m256d(unsafe { _mm256_shuffle_pd(a.0, b.0, MASK) })
   }};
 }
@@ -2915,9 +2915,9 @@ macro_rules! shuffle_m256 {
     let a: m256 = $a;
     let b: m256 = $b;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm256_shuffle_ps;
+    use ::core::arch::x86::_mm256_shuffle_ps;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm256_shuffle_ps;
+    use ::core::arch::x86_64::_mm256_shuffle_ps;
     m256(unsafe { _mm256_shuffle_ps(a.0, b.0, MASK) })
   }};
 }
