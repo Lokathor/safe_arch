@@ -556,10 +556,7 @@ macro_rules! extract_i8_as_i32_imm_m128i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([5.0, 6.0, 7.0, 8.0]);
-/// assert_eq!(
-///   extract_f32_as_i32_bits_imm_m128!(a, 3),
-///   8_f32.to_bits() as i32
-/// );
+/// assert_eq!(extract_f32_as_i32_bits_imm_m128!(a, 3), 8_f32.to_bits() as i32);
 /// ```
 #[macro_export]
 macro_rules! extract_f32_as_i32_bits_imm_m128 {
@@ -1315,9 +1312,9 @@ pub fn test_all_zeroes_m128i(a: m128i, mask: m128i) -> i32 {
 
 /// Returns if, among the masked bits, there's both 0s and 1s
 ///
-/// * if `(a & mask) as u128 == 0`: Zero Flag
-/// * if `((!a) & mask) as u128 == 0`: Compliment Flag
-/// * Return `ZeroFlag == 0 && Compliment Flag == 0`
+/// * Zero Flag = `(a & mask) as u128 == 0`
+/// * Carry Flag = `((!a) & mask) as u128 == 0`
+/// * Return `ZeroFlag == 0 && Carry Flag == 0`
 ///
 /// ```
 /// # use safe_arch::*;
