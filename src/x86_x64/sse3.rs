@@ -12,6 +12,7 @@ use super::*;
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse3")))]
 pub fn add_sub_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_addsub_pd(a.0, b.0) })
 }
@@ -26,6 +27,8 @@ pub fn add_sub_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
+#![cfg(target_feature = "sse3")]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse3")))]
 pub fn add_sub_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_addsub_ps(a.0, b.0) })
 }
@@ -40,6 +43,7 @@ pub fn add_sub_m128(a: m128, b: m128) -> m128 {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse3")))]
 pub fn add_horizontal_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_hadd_pd(a.0, b.0) })
 }
@@ -54,6 +58,7 @@ pub fn add_horizontal_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse3")))]
 pub fn add_horizontal_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_hadd_ps(a.0, b.0) })
 }
@@ -68,6 +73,7 @@ pub fn add_horizontal_m128(a: m128, b: m128) -> m128 {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse3")))]
 pub fn sub_horizontal_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_hsub_pd(a.0, b.0) })
 }
@@ -82,6 +88,7 @@ pub fn sub_horizontal_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse3")))]
 pub fn sub_horizontal_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_hsub_ps(a.0, b.0) })
 }
@@ -95,6 +102,7 @@ pub fn sub_horizontal_m128(a: m128, b: m128) -> m128 {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse3")))]
 pub fn duplicate_low_lane_m128d_s(a: m128d) -> m128d {
   m128d(unsafe { _mm_movedup_pd(a.0) })
 }
@@ -108,6 +116,7 @@ pub fn duplicate_low_lane_m128d_s(a: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse3")))]
 pub fn duplicate_odd_lanes_m128(a: m128) -> m128 {
   m128(unsafe { _mm_movehdup_ps(a.0) })
 }
@@ -121,6 +130,7 @@ pub fn duplicate_odd_lanes_m128(a: m128) -> m128 {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse3")))]
 pub fn duplicate_even_lanes_m128(a: m128) -> m128 {
   m128(unsafe { _mm_moveldup_ps(a.0) })
 }

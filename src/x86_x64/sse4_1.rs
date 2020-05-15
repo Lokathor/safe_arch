@@ -100,6 +100,7 @@ macro_rules! blend_imm_m128 {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn blend_varying_i8_m128i(a: m128i, b: m128i, mask: m128i) -> m128i {
   m128i(unsafe { _mm_blendv_epi8(a.0, b.0, mask.0) })
 }
@@ -119,6 +120,7 @@ pub fn blend_varying_i8_m128i(a: m128i, b: m128i, mask: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn blend_varying_m128d(a: m128d, b: m128d, mask: m128d) -> m128d {
   m128d(unsafe { _mm_blendv_pd(a.0, b.0, mask.0) })
 }
@@ -138,6 +140,7 @@ pub fn blend_varying_m128d(a: m128d, b: m128d, mask: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn blend_varying_m128(a: m128, b: m128, mask: m128) -> m128 {
   m128(unsafe { _mm_blendv_ps(a.0, b.0, mask.0) })
 }
@@ -151,6 +154,7 @@ pub fn blend_varying_m128(a: m128, b: m128, mask: m128) -> m128 {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn ceil_m128d(a: m128d) -> m128d {
   m128d(unsafe { _mm_ceil_pd(a.0) })
 }
@@ -164,6 +168,7 @@ pub fn ceil_m128d(a: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn ceil_m128(a: m128) -> m128 {
   m128(unsafe { _mm_ceil_ps(a.0) })
 }
@@ -178,6 +183,7 @@ pub fn ceil_m128(a: m128) -> m128 {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn ceil_m128d_s(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_ceil_sd(a.0, b.0) })
 }
@@ -192,6 +198,7 @@ pub fn ceil_m128d_s(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn ceil_m128_s(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_ceil_ss(a.0, b.0) })
 }
@@ -208,6 +215,7 @@ pub fn ceil_m128_s(a: m128, b: m128) -> m128 {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn cmp_eq_mask_i64_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_cmpeq_epi64(a.0, b.0) })
 }
@@ -221,6 +229,7 @@ pub fn cmp_eq_mask_i64_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn convert_i16_lower4_to_i32_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepi16_epi32(a.0) })
 }
@@ -234,6 +243,7 @@ pub fn convert_i16_lower4_to_i32_m128i(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn convert_i16_lower2_to_i64_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepi16_epi64(a.0) })
 }
@@ -247,6 +257,7 @@ pub fn convert_i16_lower2_to_i64_m128i(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn convert_i32_lower2_to_i64_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepi32_epi64(a.0) })
 }
@@ -261,6 +272,7 @@ pub fn convert_i32_lower2_to_i64_m128i(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn convert_i8_lower8_to_i16_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepi8_epi16(a.0) })
 }
@@ -275,6 +287,7 @@ pub fn convert_i8_lower8_to_i16_m128i(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn convert_i8_lower4_to_i32_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepi8_epi32(a.0) })
 }
@@ -289,6 +302,7 @@ pub fn convert_i8_lower4_to_i32_m128i(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn convert_i8_lower2_to_i64_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepi8_epi64(a.0) })
 }
@@ -302,6 +316,7 @@ pub fn convert_i8_lower2_to_i64_m128i(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn convert_u16_lower4_to_u32_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepu16_epi32(a.0) })
 }
@@ -315,6 +330,7 @@ pub fn convert_u16_lower4_to_u32_m128i(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn convert_u16_lower2_to_u64_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepu16_epi64(a.0) })
 }
@@ -328,6 +344,7 @@ pub fn convert_u16_lower2_to_u64_m128i(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn convert_u32_lower2_to_u64_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepu32_epi64(a.0) })
 }
@@ -342,6 +359,7 @@ pub fn convert_u32_lower2_to_u64_m128i(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn convert_u8_lower8_to_u16_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepu8_epi16(a.0) })
 }
@@ -356,6 +374,7 @@ pub fn convert_u8_lower8_to_u16_m128i(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn convert_u8_lower4_to_u32_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepu8_epi32(a.0) })
 }
@@ -370,6 +389,7 @@ pub fn convert_u8_lower4_to_u32_m128i(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn convert_u8_lower2_to_u64_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepu8_epi64(a.0) })
 }
@@ -580,6 +600,7 @@ macro_rules! extract_f32_as_i32_bits_imm_m128 {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn floor_m128d(a: m128d) -> m128d {
   m128d(unsafe { _mm_floor_pd(a.0) })
 }
@@ -593,6 +614,7 @@ pub fn floor_m128d(a: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn floor_m128(a: m128) -> m128 {
   m128(unsafe { _mm_floor_ps(a.0) })
 }
@@ -607,6 +629,7 @@ pub fn floor_m128(a: m128) -> m128 {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn floor_m128d_s(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_floor_sd(a.0, b.0) })
 }
@@ -621,6 +644,7 @@ pub fn floor_m128d_s(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn floor_m128_s(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_floor_ss(a.0, b.0) })
 }
@@ -738,6 +762,7 @@ macro_rules! insert_f32_imm_m128 {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn max_i32_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_max_epi32(a.0, b.0) })
 }
@@ -755,6 +780,7 @@ pub fn max_i32_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn max_i8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_max_epi8(a.0, b.0) })
 }
@@ -769,6 +795,7 @@ pub fn max_i8_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn max_u16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_max_epu16(a.0, b.0) })
 }
@@ -783,6 +810,7 @@ pub fn max_u16_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn max_u32_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_max_epu32(a.0, b.0) })
 }
@@ -797,6 +825,7 @@ pub fn max_u32_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn min_i32_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_min_epi32(a.0, b.0) })
 }
@@ -817,6 +846,7 @@ pub fn min_i32_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn min_i8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_min_epi8(a.0, b.0) })
 }
@@ -831,6 +861,7 @@ pub fn min_i8_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn min_u16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_min_epu16(a.0, b.0) })
 }
@@ -845,6 +876,7 @@ pub fn min_u16_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn min_u32_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_min_epu32(a.0, b.0) })
 }
@@ -864,6 +896,7 @@ pub fn min_u32_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn min_position_u16_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_minpos_epu16(a.0) })
 }
@@ -936,6 +969,7 @@ macro_rules! multi_packed_sum_abs_diff_u8_m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn mul_i64_widen_low_bits_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_mul_epi32(a.0, b.0) })
 }
@@ -951,6 +985,7 @@ pub fn mul_i64_widen_low_bits_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn mul_i32_keep_low_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_mullo_epi32(a.0, b.0) })
 }
@@ -965,6 +1000,7 @@ pub fn mul_i32_keep_low_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn pack_i32_to_u16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_packus_epi32(a.0, b.0) })
 }
@@ -1284,6 +1320,7 @@ macro_rules! round_m128_s {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn test_all_ones_m128i(a: m128i) -> i32 {
   unsafe { _mm_test_all_ones(a.0) }
 }
@@ -1306,6 +1343,7 @@ pub fn test_all_ones_m128i(a: m128i) -> i32 {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn test_all_zeroes_m128i(a: m128i, mask: m128i) -> i32 {
   unsafe { _mm_test_all_zeros(a.0, mask.0) }
 }
@@ -1336,6 +1374,7 @@ pub fn test_all_zeroes_m128i(a: m128i, mask: m128i) -> i32 {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn test_mixed_ones_and_zeroes_m128i(a: m128i, mask: m128i) -> i32 {
   unsafe { _mm_test_mix_ones_zeros(a.0, mask.0) }
 }

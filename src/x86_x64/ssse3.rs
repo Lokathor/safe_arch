@@ -15,6 +15,7 @@ use super::*;
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "ssse3")))]
 pub fn abs_i8_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_abs_epi8(a.0) })
 }
@@ -30,6 +31,7 @@ pub fn abs_i8_m128i(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "ssse3")))]
 pub fn abs_i16_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_abs_epi16(a.0) })
 }
@@ -45,6 +47,7 @@ pub fn abs_i16_m128i(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "ssse3")))]
 pub fn abs_i32_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_abs_epi32(a.0) })
 }
@@ -95,6 +98,7 @@ macro_rules! combined_byte_shr_imm_m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "ssse3")))]
 pub fn add_horizontal_i16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_hadd_epi16(a.0, b.0) })
 }
@@ -109,6 +113,7 @@ pub fn add_horizontal_i16_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "ssse3")))]
 pub fn add_horizontal_i32_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_hadd_epi32(a.0, b.0) })
 }
@@ -124,6 +129,7 @@ pub fn add_horizontal_i32_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "ssse3")))]
 pub fn add_horizontal_saturating_i16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_hadds_epi16(a.0, b.0) })
 }
@@ -138,6 +144,7 @@ pub fn add_horizontal_saturating_i16_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "ssse3")))]
 pub fn sub_horizontal_i16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_hsub_epi16(a.0, b.0) })
 }
@@ -152,6 +159,7 @@ pub fn sub_horizontal_i16_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "ssse3")))]
 pub fn sub_horizontal_i32_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_hsub_epi32(a.0, b.0) })
 }
@@ -167,6 +175,7 @@ pub fn sub_horizontal_i32_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "ssse3")))]
 pub fn sub_horizontal_saturating_i16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_hsubs_epi16(a.0, b.0) })
 }
@@ -190,6 +199,7 @@ pub fn sub_horizontal_saturating_i16_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "ssse3")))]
 pub fn mul_u8i8_add_horizontal_saturating_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_maddubs_epi16(a.0, b.0) })
 }
@@ -208,6 +218,7 @@ pub fn mul_u8i8_add_horizontal_saturating_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "ssse3")))]
 pub fn mul_i16_scale_round_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_mulhrs_epi16(a.0, b.0) })
 }
@@ -227,6 +238,7 @@ pub fn mul_i16_scale_round_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "ssse3")))]
 pub fn shuffle_i8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_shuffle_epi8(a.0, b.0) })
 }
@@ -246,6 +258,7 @@ pub fn shuffle_i8_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "ssse3")))]
 pub fn sign_apply_i8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_sign_epi8(a.0, b.0) })
 }
@@ -264,6 +277,7 @@ pub fn sign_apply_i8_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "ssse3")))]
 pub fn sign_apply_i16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_sign_epi16(a.0, b.0) })
 }
@@ -282,6 +296,7 @@ pub fn sign_apply_i16_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "ssse3")))]
 pub fn sign_apply_i32_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_sign_epi32(a.0, b.0) })
 }
