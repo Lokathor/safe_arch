@@ -252,7 +252,27 @@ submodule!(pub x86_x64 {
   /// depending on demand this can't actually be used for telling the time. It
   /// also does _not_ fully serialize all operations, so previous instructions
   /// might still be in progress when this reads the timestamp.
+  ///
+  /// * **Intrinsic:** `_rdtsc`
+  /// * **Assembly:** `rdtsc`
   pub fn read_timestamp_counter() -> u64 {
     unsafe { _rdtsc() }
+  }
+
+  /// Reads the CPU's timestamp counter value and store the processor signature.
+  ///
+  /// This works similar to [`read_timestamp_counter`] with two main
+  /// differences:
+  /// * It and also stores the `IA32_TSC_AUX MSR` value to the reference given.
+  /// * It waits on all previous instructions to finish before reading the
+  ///   timestamp (though it doesn't prevent other instructions from starting).
+  ///
+  /// As with `read_timestamp_counter`, you can't actually use this to tell the
+  /// time.
+  ///
+  /// * **Intrinsic:** `__rdtscp`
+  /// * **Assembly:** `rdtscp`
+  pub fn read_timestamp_counter_p(aux: &mut u32) -> u64 {
+    unsafe { __rdtscp(aux) }
   }
 });
