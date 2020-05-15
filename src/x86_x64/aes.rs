@@ -68,9 +68,9 @@ macro_rules! aes_key_gen_assist_m128i {
     let a: m128i = $a;
     const IMM: i32 = ($imm & 0b1111_1111) as i32;
     #[cfg(target_arch = "x86")]
-    use core::arch::x86::_mm_aeskeygenassist_si128;
+    use ::core::arch::x86::_mm_aeskeygenassist_si128;
     #[cfg(target_arch = "x86_64")]
-    use core::arch::x86_64::_mm_aeskeygenassist_si128;
+    use ::core::arch::x86_64::_mm_aeskeygenassist_si128;
     m128i(unsafe { _mm_aeskeygenassist_si128(a.0, IMM) })
   }};
 }
