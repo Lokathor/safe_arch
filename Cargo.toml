@@ -23,3 +23,4 @@ opt-level = 3
 # This makes docs.rs build with all features enabled and
 # also it will indicate what fn needs what cpu feature.
 rustdoc-args = ["-C","target-cpu=native","--cfg","docs_rs"]
+all-features = true
