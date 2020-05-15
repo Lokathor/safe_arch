@@ -62,17 +62,17 @@ pub fn abs_i32_m128i(a: m128i) -> m128i {
 ///   16_i8, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
 /// ]);
 /// // `a` bytes come in to the high indexes because these are LE bytes.
-/// let c: [i8; 16] = combined_byte_shift_right_immediate_m128i!(a, b, 3).into();
+/// let c: [i8; 16] = combined_byte_shr_imm_m128i!(a, b, 3).into();
 /// assert_eq!(
 ///   c,
 ///   [19_i8, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 0, 1, 2]
 /// );
 /// // If you feed the same register to both sides it becomes a rotate
-/// let c: [i8; 16] = combined_byte_shift_right_immediate_m128i!(a, a, 3).into();
+/// let c: [i8; 16] = combined_byte_shr_imm_m128i!(a, a, 3).into();
 /// assert_eq!(c, [3_i8, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0, 1, 2,]);
 /// ```
 #[macro_export]
-macro_rules! combined_byte_shift_right_immediate_m128i {
+macro_rules! combined_byte_shr_imm_m128i {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m128i = $a;
     let b: m128i = $b;

@@ -132,12 +132,12 @@ pub fn andnot_m256(a: m256, b: m256) -> m256 {
 /// let a = m256d::from_array([10.0, 20.0, 30.0, 40.0]);
 /// let b = m256d::from_array([100.0, 200.0, 300.0, 400.0]);
 /// //
-/// let c = blend_immediate_m256d!(a, b, 0b0110).to_array();
+/// let c = blend_imm_m256d!(a, b, 0b0110).to_array();
 /// assert_eq!(c, [10.0, 200.0, 300.0, 40.0]);
 /// ```
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! blend_immediate_m256d {
+macro_rules! blend_imm_m256d {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m256d = $a;
     let b: m256d = $b;
@@ -161,12 +161,12 @@ macro_rules! blend_immediate_m256d {
 /// let b =
 ///   m256::from_array([100.0, 200.0, 300.0, 400.0, 500.0, 600.0, 700.0, 800.0]);
 /// //
-/// let c = blend_immediate_m256!(a, b, 0b0011_0110).to_array();
+/// let c = blend_imm_m256!(a, b, 0b0011_0110).to_array();
 /// assert_eq!(c, [10.0, 200.0, 300.0, 40.0, 500.0, 600.0, 70.0, 80.0]);
 /// ```
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! blend_immediate_m256 {
+macro_rules! blend_imm_m256 {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m256 = $a;
     let b: m256 = $b;

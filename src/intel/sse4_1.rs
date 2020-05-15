@@ -12,11 +12,11 @@ use super::*;
 /// let a = m128i::from([0_i16, 1, 2, 3, 4, 5, 6, 7]);
 /// let b = m128i::from([0_i16, -1, -2, -3, -4, -5, -6, -7]);
 /// //
-/// let c: [i16; 8] = blend_immediate_i16_m128i!(a, b, 0b1111_0110).into();
+/// let c: [i16; 8] = blend_imm_i16_m128i!(a, b, 0b1111_0110).into();
 /// assert_eq!(c, [0_i16, -1, -2, 3, -4, -5, -6, -7]);
 /// ```
 #[macro_export]
-macro_rules! blend_immediate_i16_m128i {
+macro_rules! blend_imm_i16_m128i {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m128i = $a;
     let b: m128i = $b;
@@ -38,11 +38,11 @@ macro_rules! blend_immediate_i16_m128i {
 /// # use safe_arch::*;
 /// let a = m128d::from_array([0.0, 1.0]);
 /// let b = m128d::from_array([2.0, 3.0]);
-/// let c = blend_immediate_m128d!(a, b, 0b10).to_array();
+/// let c = blend_imm_m128d!(a, b, 0b10).to_array();
 /// assert_eq!(c, [0.0, 3.0]);
 /// ```
 #[macro_export]
-macro_rules! blend_immediate_m128d {
+macro_rules! blend_imm_m128d {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m128d = $a;
     let b: m128d = $b;
@@ -64,11 +64,11 @@ macro_rules! blend_immediate_m128d {
 /// # use safe_arch::*;
 /// let a = m128::from_array([0.0, 1.0, 2.0, 3.0]);
 /// let b = m128::from_array([4.0, 5.0, 6.0, 7.0]);
-/// let c = blend_immediate_m128!(a, b, 0b0110).to_array();
+/// let c = blend_imm_m128!(a, b, 0b0110).to_array();
 /// assert_eq!(c, [0.0, 5.0, 6.0, 3.0]);
 /// ```
 #[macro_export]
-macro_rules! blend_immediate_m128 {
+macro_rules! blend_imm_m128 {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m128 = $a;
     let b: m128 = $b;
@@ -494,10 +494,10 @@ macro_rules! dot_product_m128 {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([5, 6, 7, 8]);
-/// assert_eq!(extract_i32_immediate_m128i!(a, 1), 6);
+/// assert_eq!(extract_i32_imm_m128i!(a, 1), 6);
 /// ```
 #[macro_export]
-macro_rules! extract_i32_immediate_m128i {
+macro_rules! extract_i32_imm_m128i {
   ($a:expr, $imm:expr) => {{
     let a: m128i = $a;
     const IMM: i32 = $imm as i32;
@@ -514,11 +514,11 @@ macro_rules! extract_i32_immediate_m128i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([5_i64, 6]);
-/// assert_eq!(extract_i64_immediate_m128i!(a, 1), 6_i64);
+/// assert_eq!(extract_i64_imm_m128i!(a, 1), 6_i64);
 /// ```
 #[macro_export]
 #[cfg(target_arch = "x86_64")]
-macro_rules! extract_i64_immediate_m128i {
+macro_rules! extract_i64_imm_m128i {
   ($a:expr, $imm:expr) => {{
     let a: m128i = $a;
     const IMM: i32 = $imm as i32;
@@ -536,10 +536,10 @@ macro_rules! extract_i64_immediate_m128i {
 /// # use safe_arch::*;
 /// let a =
 ///   m128i::from([0_i8, 1, 2, 3, 4, 5, 6, 101, 8, 9, 10, 11, 12, 13, 14, 15]);
-/// assert_eq!(extract_i8_as_i32_immediate_m128i!(a, 7), 101_i32);
+/// assert_eq!(extract_i8_as_i32_imm_m128i!(a, 7), 101_i32);
 /// ```
 #[macro_export]
-macro_rules! extract_i8_as_i32_immediate_m128i {
+macro_rules! extract_i8_as_i32_imm_m128i {
   ($a:expr, $imm:expr) => {{
     let a: m128i = $a;
     const IMM: i32 = $imm as i32;
@@ -557,12 +557,12 @@ macro_rules! extract_i8_as_i32_immediate_m128i {
 /// # use safe_arch::*;
 /// let a = m128::from_array([5.0, 6.0, 7.0, 8.0]);
 /// assert_eq!(
-///   extract_f32_as_i32_bits_immediate_m128!(a, 3),
+///   extract_f32_as_i32_bits_imm_m128!(a, 3),
 ///   8_f32.to_bits() as i32
 /// );
 /// ```
 #[macro_export]
-macro_rules! extract_f32_as_i32_bits_immediate_m128 {
+macro_rules! extract_f32_as_i32_bits_imm_m128 {
   ($a:expr, $imm:expr) => {{
     let a: m128 = $a;
     const IMM: i32 = $imm as i32;
@@ -633,11 +633,11 @@ pub fn floor_m128_s(a: m128, b: m128) -> m128 {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([5, 6, 7, 8]);
-/// let b: [i32; 4] = insert_i32_immediate_m128i!(a, 23, 1).into();
+/// let b: [i32; 4] = insert_i32_imm_m128i!(a, 23, 1).into();
 /// assert_eq!(b, [5, 23, 7, 8]);
 /// ```
 #[macro_export]
-macro_rules! insert_i32_immediate_m128i {
+macro_rules! insert_i32_imm_m128i {
   ($a:expr, $new:expr, $imm:expr) => {{
     let a: m128i = $a;
     let new: i32 = $new;
@@ -655,12 +655,12 @@ macro_rules! insert_i32_immediate_m128i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([5_i64, 6]);
-/// let b: [i64; 2] = insert_i64_immediate_m128i!(a, 23, 1).into();
+/// let b: [i64; 2] = insert_i64_imm_m128i!(a, 23, 1).into();
 /// assert_eq!(b, [5_i64, 23]);
 /// ```
 #[macro_export]
 #[cfg(target_arch = "x86_64")]
-macro_rules! insert_i64_immediate_m128i {
+macro_rules! insert_i64_imm_m128i {
   ($a:expr, $new:expr, $imm:expr) => {{
     let a: m128i = $a;
     let new: i64 = $new;
@@ -679,11 +679,11 @@ macro_rules! insert_i64_immediate_m128i {
 /// # use safe_arch::*;
 /// let a =
 ///   m128i::from([0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-/// let b: [i8; 16] = insert_i8_immediate_m128i!(a, 23, 1).into();
+/// let b: [i8; 16] = insert_i8_imm_m128i!(a, 23, 1).into();
 /// assert_eq!(b, [0_i8, 23, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
 /// ```
 #[macro_export]
-macro_rules! insert_i8_immediate_m128i {
+macro_rules! insert_i8_imm_m128i {
   ($a:expr, $new:expr, $imm:expr) => {{
     let a: m128i = $a;
     let new: i32 = $new;
@@ -706,14 +706,14 @@ macro_rules! insert_i8_immediate_m128i {
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([5.0, 6.0, 7.0, 8.0]);
 /// //
-/// let c = insert_f32_immediate_m128!(a, b, from 0, to 3).to_array();
+/// let c = insert_f32_imm_m128!(a, b, from 0, to 3).to_array();
 /// assert_eq!(c, [1.0, 2.0, 3.0, 5.0]);
 /// //
-/// let c = insert_f32_immediate_m128!(a, b, from 0, to 3, mask 0b0110).to_array();
+/// let c = insert_f32_imm_m128!(a, b, from 0, to 3, mask 0b0110).to_array();
 /// assert_eq!(c, [1.0, 0.0, 0.0, 5.0]);
 /// ```
 #[macro_export]
-macro_rules! insert_f32_immediate_m128 {
+macro_rules! insert_f32_imm_m128 {
   ($a:expr, $b:expr, from $b_lane_src:expr, to $a_lane_dest:expr, mask $clear_lanes:expr) => {{
     let a: m128 = $a;
     let b: m128 = $b;
@@ -727,7 +727,7 @@ macro_rules! insert_f32_immediate_m128 {
     m128(unsafe { _mm_insert_ps(a.0, b.0, IMM) })
   }};
   ($a:expr, $b:expr, from $b_lane_src:expr, to $a_lane_dest:expr) => {{
-    insert_f32_immediate_m128!($a, $b, from $b_lane_src, to $a_lane_dest, mask 0)
+    insert_f32_imm_m128!($a, $b, from $b_lane_src, to $a_lane_dest, mask 0)
   }};
 }
 
