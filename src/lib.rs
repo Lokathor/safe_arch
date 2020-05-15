@@ -181,7 +181,7 @@ macro_rules! submodule {
 }
 
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-submodule!(pub intel {
+submodule!(pub x86_x64 {
   //! Types and functions for safe `x86` / `x86_64` intrinsic usage.
   //!
   //! `x86_64` is essentially a superset of `x86`, so we just lump it all into
