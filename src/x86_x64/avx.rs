@@ -2624,7 +2624,7 @@ pub fn set_splat_i64_m256i(i: i64) -> m256i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg(target_arch = "x86_86")]
+//#[cfg(target_arch = "x86_86")]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn set_splat_m256d(f: f64) -> m256d {
   m256d(unsafe { _mm256_set1_pd(f) })
@@ -3289,3 +3289,282 @@ pub fn zero_extend_m128(a: m128) -> m256 {
 pub fn zero_extend_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_zextsi128_si256(a.0) })
 }
+
+impl Add for m256d {
+    type Output = Self;
+    #[must_use]
+    #[inline(always)]
+    fn add(self, rhs: Self) -> Self {
+        add_m256d(self, rhs)
+    }
+}
+impl AddAssign for m256d {
+    #[inline(always)]
+    fn add_assign(&mut self, rhs: Self) {
+        *self = *self + rhs;
+    }
+}
+
+impl BitAnd for m256d {
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn bitand(self, rhs: Self) -> Self {
+    and_m256d(self, rhs)
+  }
+}
+impl BitAndAssign for m256d {
+  #[inline(always)]
+  fn bitand_assign(&mut self, rhs: Self) {
+    *self = *self & rhs;
+  }
+}
+
+impl BitOr for m256d {
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn bitor(self, rhs: Self) -> Self {
+    or_m256d(self, rhs)
+  }
+}
+impl BitOrAssign for m256d {
+  #[inline(always)]
+  fn bitor_assign(&mut self, rhs: Self) {
+    *self = *self | rhs;
+  }
+}
+
+impl BitXor for m256d {
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn bitxor(self, rhs: Self) -> Self {
+    xor_m256d(self, rhs)
+  }
+}
+impl BitXorAssign for m256d {
+  #[inline(always)]
+  fn bitxor_assign(&mut self, rhs: Self) {
+    *self = *self ^ rhs;
+  }
+}
+
+impl Div for m256d {
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn div(self, rhs: Self) -> Self {
+    div_m256d(self, rhs)
+  }
+}
+impl DivAssign for m256d {
+  #[inline(always)]
+  fn div_assign(&mut self, rhs: Self) {
+    *self = *self / rhs;
+  }
+}
+
+impl Mul for m256d {
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn mul(self, rhs: Self) -> Self {
+    mul_m256d(self, rhs)
+  }
+}
+impl MulAssign for m256d {
+  #[inline(always)]
+  fn mul_assign(&mut self, rhs: Self) {
+    *self = *self * rhs;
+  }
+}
+
+impl Neg for m256d {
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn neg(self) -> Self {
+    sub_m256d(zeroed_m256d(), self)
+  }
+}
+
+impl Not for m256d {
+  type Output = Self;
+  /// Not a direct intrinsic, but it's very useful and the implementation is
+  /// simple enough.
+  ///
+  /// Negates the bits by performing an `xor` with an all-1s bit pattern.
+  #[must_use]
+  #[inline(always)]
+  fn not(self) -> Self {
+    let all_bits = set_splat_m256d(f64::from_bits(u64::MAX));
+    self ^ all_bits
+  }
+}
+
+impl Sub for m256d {
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn sub(self, rhs: Self) -> Self {
+    sub_m256d(self, rhs)
+  }
+}
+impl SubAssign for m256d {
+  #[inline(always)]
+  fn sub_assign(&mut self, rhs: Self) {
+    *self = *self - rhs;
+  }
+}
+
+/*
+// TODO
+impl PartialEq for m256d {
+  #[must_use]
+  #[inline(always)]
+  fn eq(&self, other: &Self) -> bool {
+    move_mask_m256d(cmp_op_mask_m256d!(*self, EqualOrdered, *other)) == 0b1111
+  }
+}
+*/
+
+impl Add for m256 {
+    type Output = Self;
+    #[must_use]
+    #[inline(always)]
+    fn add(self, rhs: Self) -> Self {
+        add_m256(self, rhs)
+    }
+}
+impl AddAssign for m256 {
+    #[inline(always)]
+    fn add_assign(&mut self, rhs: Self) {
+        *self = *self + rhs;
+    }
+}
+
+impl BitAnd for m256 {
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn bitand(self, rhs: Self) -> Self {
+    and_m256(self, rhs)
+  }
+}
+impl BitAndAssign for m256 {
+  #[inline(always)]
+  fn bitand_assign(&mut self, rhs: Self) {
+    *self = *self & rhs;
+  }
+}
+
+impl BitOr for m256 {
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn bitor(self, rhs: Self) -> Self {
+    or_m256(self, rhs)
+  }
+}
+impl BitOrAssign for m256 {
+  #[inline(always)]
+  fn bitor_assign(&mut self, rhs: Self) {
+    *self = *self | rhs;
+  }
+}
+
+impl BitXor for m256 {
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn bitxor(self, rhs: Self) -> Self {
+    xor_m256(self, rhs)
+  }
+}
+impl BitXorAssign for m256 {
+  #[inline(always)]
+  fn bitxor_assign(&mut self, rhs: Self) {
+    *self = *self ^ rhs;
+  }
+}
+
+impl Div for m256 {
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn div(self, rhs: Self) -> Self {
+    div_m256(self, rhs)
+  }
+}
+impl DivAssign for m256 {
+  #[inline(always)]
+  fn div_assign(&mut self, rhs: Self) {
+    *self = *self / rhs;
+  }
+}
+
+impl Mul for m256 {
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn mul(self, rhs: Self) -> Self {
+    mul_m256(self, rhs)
+  }
+}
+impl MulAssign for m256 {
+  #[inline(always)]
+  fn mul_assign(&mut self, rhs: Self) {
+    *self = *self * rhs;
+  }
+}
+
+impl Neg for m256 {
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn neg(self) -> Self {
+    sub_m256(zeroed_m256(), self)
+  }
+}
+
+impl Not for m256 {
+  type Output = Self;
+  /// Not a direct intrinsic, but it's very useful and the implementation is
+  /// simple enough.
+  ///
+  /// Negates the bits by performing an `xor` with an all-1s bit pattern.
+  #[must_use]
+  #[inline(always)]
+  fn not(self) -> Self {
+    let all_bits = set_splat_m256(f32::from_bits(u32::MAX));
+    self ^ all_bits
+  }
+}
+
+impl Sub for m256 {
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn sub(self, rhs: Self) -> Self {
+    sub_m256(self, rhs)
+  }
+}
+impl SubAssign for m256 {
+  #[inline(always)]
+  fn sub_assign(&mut self, rhs: Self) {
+    *self = *self - rhs;
+  }
+}
+
+/*
+// TODO
+impl PartialEq for m256 {
+  #[must_use]
+  #[inline(always)]
+  fn eq(&self, other: &Self) -> bool {
+    move_mask_m256(cmp_op_mask_m256!(*self, EqualOrdered, *other)) == 0b1111
+  }
+}
+*/
+
