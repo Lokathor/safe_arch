@@ -2,6 +2,77 @@
 
 use super::*;
 
+/*
+
+TODO: uncomment these and call the correct functions before finalizing this PR.
+
+impl Not for m256i {
+  type Output = Self;
+  /// Not a direct intrinsic, but it's very useful and the implementation is
+  /// simple enough.
+  ///
+  /// Negates the bits by performing an `xor` with an all-1s bit pattern.
+  #[must_use]
+  #[inline(always)]
+  fn not(self) -> Self {
+    let all_bits = set_splat_m256(f32::from_bits(u32::MAX));
+    let result = cast_from_m256i_to_m256(self) ^ all_bits;
+    cast_from_m256_to_m256i(result)
+  }
+}
+
+impl BitAnd for m256i {
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn bitand(self, rhs: Self) -> Self {
+    let rhs = cast_from_m256i_to_m256(rhs);
+    let result = and_m256(cast_from_m256i_to_m256(self), rhs);
+    cast_from_m256_to_m256i(result)
+  }
+}
+impl BitAndAssign for m256i {
+  #[inline(always)]
+  fn bitand_assign(&mut self, rhs: Self) {
+    *self = *self & rhs;
+  }
+}
+
+impl BitOr for m256i {
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn bitor(self, rhs: Self) -> Self {
+    let rhs = cast_from_m256i_to_m256(rhs);
+    let result = or_m256(cast_from_m256i_to_m256(self), rhs);
+    cast_from_m256_to_m256i(result)
+  }
+}
+impl BitOrAssign for m256i {
+  #[inline(always)]
+  fn bitor_assign(&mut self, rhs: Self) {
+      *self = *self | rhs;
+  }
+}
+
+impl BitXor for m256i {
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn bitxor(self, rhs: Self) -> Self {
+    let rhs = cast_from_m256i_to_m256(rhs);
+    let result = xor_m256(cast_from_m256i_to_m256(self), rhs);
+    cast_from_m256_to_m256i(result)
+  }
+}
+impl BitXorAssign for m256i {
+  #[inline(always)]
+  fn bitxor_assign(&mut self, rhs: Self) {
+    *self = *self ^ rhs;
+  }
+}
+*/
+
 /// Blends the `i32` lanes in `$a` and `$b` into a single value.
 ///
 /// * The blend is controlled by an immediate mask value (an `i32`).

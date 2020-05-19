@@ -3290,18 +3290,18 @@ pub fn zero_extend_m128i(a: m128i) -> m256i {
 }
 
 impl Add for m256d {
-    type Output = Self;
-    #[must_use]
-    #[inline(always)]
-    fn add(self, rhs: Self) -> Self {
-        add_m256d(self, rhs)
-    }
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn add(self, rhs: Self) -> Self {
+    add_m256d(self, rhs)
+  }
 }
 impl AddAssign for m256d {
-    #[inline(always)]
-    fn add_assign(&mut self, rhs: Self) {
-        *self = *self + rhs;
-    }
+  #[inline(always)]
+  fn add_assign(&mut self, rhs: Self) {
+    *self = *self + rhs;
+  }
 }
 
 impl BitAnd for m256d {
@@ -3417,30 +3417,35 @@ impl SubAssign for m256d {
   }
 }
 
-/*
-// TODO
 impl PartialEq for m256d {
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m256d::from([1.0, 2.0, 3.0, 4.0]);
+  /// let b = m256d::from([5.0, 6.0, 7.0, 8.0]);
+  /// assert!(a == a);
+  /// assert!(a != b);
+  /// ```
   #[must_use]
   #[inline(always)]
   fn eq(&self, other: &Self) -> bool {
-    move_mask_m256d(cmp_op_mask_m256d!(*self, EqualOrdered, *other)) == 0b1111
+    let mask = m256d(unsafe { _mm256_cmp_pd(self.0, other.0, _CMP_EQ_OQ) });
+    move_mask_m256d(mask) == 0b1111
   }
 }
-*/
 
 impl Add for m256 {
-    type Output = Self;
-    #[must_use]
-    #[inline(always)]
-    fn add(self, rhs: Self) -> Self {
-        add_m256(self, rhs)
-    }
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn add(self, rhs: Self) -> Self {
+    add_m256(self, rhs)
+  }
 }
 impl AddAssign for m256 {
-    #[inline(always)]
-    fn add_assign(&mut self, rhs: Self) {
-        *self = *self + rhs;
-    }
+  #[inline(always)]
+  fn add_assign(&mut self, rhs: Self) {
+    *self = *self + rhs;
+  }
 }
 
 impl BitAnd for m256 {
@@ -3556,80 +3561,18 @@ impl SubAssign for m256 {
   }
 }
 
-/*
-// TODO
 impl PartialEq for m256 {
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m256::from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
+  /// let b = m256::from([9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0]);
+  /// assert!(a == a);
+  /// assert!(a != b);
+  /// ```
   #[must_use]
   #[inline(always)]
   fn eq(&self, other: &Self) -> bool {
-    move_mask_m256(cmp_op_mask_m256!(*self, EqualOrdered, *other)) == 0b1111
+    let mask = m256(unsafe { _mm256_cmp_ps(self.0, other.0, _CMP_EQ_OQ) });
+    move_mask_m256(mask) == 0b1111_1111
   }
 }
-*/
-
-impl Not for m256i {
-  type Output = Self;
-  /// Not a direct intrinsic, but it's very useful and the implementation is
-  /// simple enough.
-  ///
-  /// Negates the bits by performing an `xor` with an all-1s bit pattern.
-  #[must_use]
-  #[inline(always)]
-  fn not(self) -> Self {
-    let all_bits = set_splat_m256(f32::from_bits(u32::MAX));
-    let result = cast_from_m256i_to_m256(self) ^ all_bits;
-    cast_from_m256_to_m256i(result)
-  }
-}
-
-impl BitAnd for m256i {
-  type Output = Self;
-  #[must_use]
-  #[inline(always)]
-  fn bitand(self, rhs: Self) -> Self {
-    let rhs = cast_from_m256i_to_m256(rhs);
-    let result = and_m256(cast_from_m256i_to_m256(self), rhs);
-    cast_from_m256_to_m256i(result)
-  }
-}
-impl BitAndAssign for m256i {
-  #[inline(always)]
-  fn bitand_assign(&mut self, rhs: Self) {
-    *self = *self & rhs;
-  }
-}
-
-impl BitOr for m256i {
-  type Output = Self;
-  #[must_use]
-  #[inline(always)]
-  fn bitor(self, rhs: Self) -> Self {
-    let rhs = cast_from_m256i_to_m256(rhs);
-    let result = or_m256(cast_from_m256i_to_m256(self), rhs);
-    cast_from_m256_to_m256i(result)
-  }
-}
-impl BitOrAssign for m256i {
-  #[inline(always)]
-  fn bitor_assign(&mut self, rhs: Self) {
-      *self = *self | rhs;
-  }
-}
-
-impl BitXor for m256i {
-  type Output = Self;
-  #[must_use]
-  #[inline(always)]
-  fn bitxor(self, rhs: Self) -> Self {
-    let rhs = cast_from_m256i_to_m256(rhs);
-    let result = xor_m256(cast_from_m256i_to_m256(self), rhs);
-    cast_from_m256_to_m256i(result)
-  }
-}
-impl BitXorAssign for m256i {
-  #[inline(always)]
-  fn bitxor_assign(&mut self, rhs: Self) {
-    *self = *self ^ rhs;
-  }
-}
-
