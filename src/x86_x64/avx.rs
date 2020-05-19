@@ -3612,7 +3612,7 @@ impl BitOr for m256i {
 impl BitOrAssign for m256i {
   #[inline(always)]
   fn bitor_assign(&mut self, rhs: Self) {
-      *self = *self ^ rhs;
+      *self = *self | rhs;
   }
 }
 
