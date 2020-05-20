@@ -216,10 +216,88 @@ pub fn splat_m128_s_m128(a: m128) -> m128 {
   m128(unsafe { _mm_broadcastss_ps(a.0) })
 }
 
-// _mm_maskload_epi32
-// _mm_maskload_epi64
-// _mm_maskstore_epi32
-// _mm_maskstore_epi64
+/// Loads the reference given and zeroes any `i32` lanes not in the mask.
+///
+/// * A lane is "in" the mask if that lane's mask value is set in the high bit
+///   (aka "if the lane's value is negative").
+/// ```
+/// # use safe_arch::*;
+/// let a = splat_i32_m128i(5);
+/// let b = load_masked_i32_m128i(&a, m128i::from([-1_i32, 0, 0, -1]));
+/// assert_eq!(<[i32; 4]>::from(b), [5, 0, 0, 5]);
+/// ```
+/// * **Intrinsic:** [`_mm_maskload_epi32`]
+/// * **Assembly:** `vpmaskmovd xmm, xmm, m128`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn load_masked_i32_m128i(a: &m128i, mask: m128i) -> m128i {
+  m128i(unsafe { _mm_maskload_epi32(a as *const m128i as *const i32, mask.0) })
+}
+
+/// Loads the reference given and zeroes any `i64` lanes not in the mask.
+///
+/// * A lane is "in" the mask if that lane's mask value is set in the high bit
+///   (aka "if the lane's value is negative").
+/// ```
+/// # use safe_arch::*;
+/// let a = splat_i64_m128i(5);
+/// let b = load_masked_i64_m128i(&a, m128i::from([0_i64, -1]));
+/// assert_eq!(<[i64; 2]>::from(b), [0_i64, 5]);
+/// ```
+/// * **Intrinsic:** [`_mm_maskload_epi64`]
+/// * **Assembly:** `vpmaskmovq xmm, xmm, m128`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn load_masked_i64_m128i(a: &m128i, mask: m128i) -> m128i {
+  m128i(unsafe { _mm_maskload_epi64(a as *const m128i as *const i64, mask.0) })
+}
+
+/// Stores the `i32` masked lanes given to the reference.
+///
+/// * A lane is "in" the mask if that lane's mask value is set in the high bit
+///   (aka "if the lane's value is negative").
+/// * Lanes not in the mask are not modified.
+/// ```
+/// # use safe_arch::*;
+/// let mut a = m128i::default();
+/// store_masked_i32_m128i(
+///   &mut a,
+///   m128i::from([-1_i32, 0, 0, -1]),
+///   splat_i32_m128i(5),
+/// );
+/// assert_eq!(<[i32; 4]>::from(a), [5, 0, 0, 5]);
+/// ```
+/// * **Intrinsic:** [`_mm_maskstore_epi32`]
+/// * **Assembly:** `vpmaskmovd m128, xmm, xmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn store_masked_i32_m128i(addr: &mut m128i, mask: m128i, a: m128i) {
+  unsafe { _mm_maskstore_epi32(addr as *mut m128i as *mut i32, mask.0, a.0) };
+}
+
+/// Stores the `i32` masked lanes given to the reference.
+///
+/// * A lane is "in" the mask if that lane's mask value is set in the high bit
+///   (aka "if the lane's value is negative").
+/// * Lanes not in the mask are not modified.
+/// ```
+/// # use safe_arch::*;
+/// let mut a = m128i::default();
+/// store_masked_i64_m128i(&mut a, m128i::from([0_i64, -1]), splat_i64_m128i(5));
+/// assert_eq!(<[i64; 2]>::from(a), [0, 5]);
+/// ```
+/// * **Intrinsic:** [`_mm_maskstore_epi64`]
+/// * **Assembly:** `vpmaskmovq m128, xmm, xmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn store_masked_i64_m128i(addr: &mut m128i, mask: m128i, a: m128i) {
+  unsafe { _mm_maskstore_epi64(addr as *mut m128i as *mut i64, mask.0, a.0) };
+}
+
 // _mm_sllv_epi32
 // _mm_sllv_epi64
 // _mm_srav_epi32
