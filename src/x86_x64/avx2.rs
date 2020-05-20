@@ -298,18 +298,115 @@ pub fn store_masked_i64_m128i(addr: &mut m128i, mask: m128i, a: m128i) {
   unsafe { _mm_maskstore_epi64(addr as *mut m128i as *mut i64, mask.0, a.0) };
 }
 
-// _mm_sllv_epi32
-// _mm_sllv_epi64
-// _mm_srav_epi32
-// _mm_srlv_epi32
-// _mm_srlv_epi64
+/// Shift `u32` values to the left by `count` bits.
+///
+/// * Each `u32` lane in `a` is shifted by the same indexed `u32` lane in
+///   `count`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1, 2, 3, 4]);
+/// let count = m128i::from([5, 6, 7, 8]);
+/// let out: [u32; 4] = shl_u32_each_m128i(a, count).into();
+/// assert_eq!(out, [1 << 5, 2 << 6, 3 << 7, 4 << 8]);
+/// ```
+/// * **Intrinsic:** [`_mm_sllv_epi32`]
+/// * **Assembly:** `vpsllvd xmm, xmm, xmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn shl_u32_each_m128i(a: m128i, count: m128i) -> m128i {
+  m128i(unsafe { _mm_sllv_epi32(a.0, count.0) })
+}
+
+/// Shift `u64` values to the left by `count` bits.
+///
+/// * Each `u64` lane in `a` is shifted by the same indexed `u64` lane in
+///   `count`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([1_u64, 2]);
+/// let count = m128i::from([3_u64, 4]);
+/// let out: [u64; 2] = shl_u64_each_m128i(a, count).into();
+/// assert_eq!(out, [1_u64 << 3, 2 << 4]);
+/// ```
+/// * **Intrinsic:** [`_mm_sllv_epi64`]
+/// * **Assembly:** `vpsllvq xmm, xmm, xmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn shl_u64_each_m128i(a: m128i, count: m128i) -> m128i {
+  m128i(unsafe { _mm_sllv_epi64(a.0, count.0) })
+}
+
+/// Shift `i32` values to the right by `count` bits.
+///
+/// * Each `i32` lane in `a` is shifted by the same indexed `u32` lane in
+///   `count`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([100, 110, 120, -130]);
+/// let count = m128i::from([1, 2, 3, 4]);
+/// let out: [i32; 4] = shr_i32_each_m128i(a, count).into();
+/// assert_eq!(out, [100 >> 1, 110 >> 2, 120 >> 3, (-130) >> 4]);
+/// ```
+/// * **Intrinsic:** [`_mm_srav_epi32`]
+/// * **Assembly:** `vpsravd xmm, xmm, xmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn shr_i32_each_m128i(a: m128i, count: m128i) -> m128i {
+  m128i(unsafe { _mm_srav_epi32(a.0, count.0) })
+}
+
+/// Shift `u32` values to the left by `count` bits.
+///
+/// * Each `u32` lane in `a` is shifted by the same indexed `u32` lane in
+///   `count`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([100, 110, 120, 130]);
+/// let count = m128i::from([1, 2, 3, 4]);
+/// let out: [u32; 4] = shr_u32_each_m128i(a, count).into();
+/// assert_eq!(out, [100 >> 1, 110 >> 2, 120 >> 3, 130 >> 4]);
+/// ```
+/// * **Intrinsic:** [`_mm_srlv_epi32`]
+/// * **Assembly:** `vpsrlvd xmm, xmm, xmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn shr_u32_each_m128i(a: m128i, count: m128i) -> m128i {
+  m128i(unsafe { _mm_srlv_epi32(a.0, count.0) })
+}
+
+/// Shift `u64` values to the left by `count` bits.
+///
+/// * Each `u64` lane in `a` is shifted by the same indexed `u64` lane in
+///   `count`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([100_u64, 110]);
+/// let count = m128i::from([1_u64, 2]);
+/// let out: [u64; 2] = shr_u64_each_m128i(a, count).into();
+/// assert_eq!(out, [100_u64 >> 1, 110 >> 2]);
+/// ```
+/// * **Intrinsic:** [`_mm_srlv_epi64`]
+/// * **Assembly:** `vpsrlvq xmm, xmm, xmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn shr_u64_each_m128i(a: m128i, count: m128i) -> m128i {
+  m128i(unsafe { _mm_srlv_epi64(a.0, count.0) })
+}
+
 // _mm256_abs_epi16
 // _mm256_abs_epi32
 // _mm256_abs_epi8
+
 // _mm256_add_epi16
 // _mm256_add_epi32
 // _mm256_add_epi64
 // _mm256_add_epi8
+
 // _mm256_adds_epi16
 // _mm256_adds_epi8
 // _mm256_adds_epu16
