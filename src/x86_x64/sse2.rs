@@ -293,8 +293,8 @@ pub fn average_u16_m128i(a: m128i, b: m128i) -> m128i {
 /// # use safe_arch::*;
 /// let a = m128i::from(0x0000000B_0000000A_0000000F_11111111_u128);
 /// //
-/// let c: u128 = byte_shl_u128_imm_m128i!(a, 1).into();
-/// assert_eq!(c, 0x00000B00_00000A00_00000F11_11111100);
+/// let b: u128 = byte_shl_u128_imm_m128i!(a, 1).into();
+/// assert_eq!(b, 0x00000B00_00000A00_00000F11_11111100);
 /// ```
 #[macro_export]
 macro_rules! byte_shl_u128_imm_m128i {
