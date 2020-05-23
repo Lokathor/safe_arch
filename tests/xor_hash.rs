@@ -1,3 +1,4 @@
+#![cfg(target_feature = "avx")]
 #![cfg(feature = "bytemuck")]
 
 use safe_arch::*;
