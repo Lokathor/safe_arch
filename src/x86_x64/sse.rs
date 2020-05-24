@@ -1007,14 +1007,14 @@ pub fn set_m128_s(low: f32) -> m128 {
 /// Splats the value to all lanes.
 /// ```
 /// # use safe_arch::*;
-/// let a = splat_m128(1.0).to_array();
+/// let a = set_splat_m128(1.0).to_array();
 /// let b = m128::from_array([1.0, 1.0, 1.0, 1.0]).to_array();
 /// assert_eq!(a, b);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse")))]
-pub fn splat_m128(all: f32) -> m128 {
+pub fn set_splat_m128(all: f32) -> m128 {
   m128(unsafe { _mm_set1_ps(all) })
 }
 
@@ -1416,7 +1416,7 @@ impl Not for m128 {
   #[must_use]
   #[inline(always)]
   fn not(self) -> Self {
-    let all_bits = splat_m128(f32::from_bits(u32::MAX));
+    let all_bits = set_splat_m128(f32::from_bits(u32::MAX));
     self ^ all_bits
   }
 }

@@ -64,7 +64,7 @@
 //! * `store`: Writes a register to memory (writes `Foo` to a `&mut Foo`).
 //! * `set`: Packs values into a register (works like `[1, 2, 3, 4]` to build an
 //!   array).
-//! * `splat`: Copy a value as many times as possible across the bits of a
+//! * `set_splat`: Copy a value as many times as possible across the bits of a
 //!   register (works like `[1_i32; LEN]` array building).
 //! * `extract`: Get an individual lane out of a SIMD register (works like array
 //!   access). The lane to get has to be a const value.
