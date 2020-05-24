@@ -2150,7 +2150,7 @@ pub fn set_m128d_s(a: f64) -> m128d {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128d::from_array([1.0, 1.0]);
-/// let b = splat_m128d(1.0);
+/// let b = set_splat_m128d(1.0);
 /// assert_eq!(a.to_array(), b.to_array());
 /// ```
 #[must_use]
@@ -2164,7 +2164,7 @@ pub fn set_splat_m128d(a: f64) -> m128d {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([1_i8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
-/// let b = splat_i8_m128i(1);
+/// let b = set_splat_i8_m128i(1);
 /// assert_eq!(<[i8; 16]>::from(a), <[i8; 16]>::from(a));
 /// ```
 #[must_use]
@@ -2178,7 +2178,7 @@ pub fn set_splat_i8_m128i(i: i8) -> m128i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([1_i16, 1, 1, 1, 1, 1, 1, 1]);
-/// let b = splat_i16_m128i(1);
+/// let b = set_splat_i16_m128i(1);
 /// assert_eq!(<[i16; 8]>::from(a), <[i16; 8]>::from(a));
 /// ```
 #[must_use]
@@ -2192,7 +2192,7 @@ pub fn set_splat_i16_m128i(i: i16) -> m128i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([1, 1, 1, 1]);
-/// let b = splat_i32_m128i(1);
+/// let b = set_splat_i32_m128i(1);
 /// assert_eq!(<[i32; 4]>::from(a), <[i32; 4]>::from(a));
 /// ```
 #[must_use]
@@ -2206,7 +2206,7 @@ pub fn set_splat_i32_m128i(i: i32) -> m128i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([1_i64, 1]);
-/// let b = splat_i64_m128i(1);
+/// let b = set_splat_i64_m128i(1);
 /// assert_eq!(<[i64; 2]>::from(a), <[i64; 2]>::from(a));
 /// ```
 #[must_use]
@@ -3481,7 +3481,7 @@ impl Not for m128d {
   #[must_use]
   #[inline(always)]
   fn not(self) -> Self {
-    let all_bits = splat_m128d(f64::from_bits(u64::MAX));
+    let all_bits = set_splat_m128d(f64::from_bits(u64::MAX));
     self ^ all_bits
   }
 }
@@ -3569,7 +3569,7 @@ impl Not for m128i {
   #[must_use]
   #[inline(always)]
   fn not(self) -> Self {
-    let all_bits = splat_i32_m128i(-1);
+    let all_bits = set_splat_i32_m128i(-1);
     self ^ all_bits
   }
 }
