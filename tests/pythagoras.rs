@@ -1,4 +1,4 @@
-#![cfg(target_feature = "sse")]
+#![cfg(target_feature = "sse3")]
 #![cfg(feature = "bytemuck")]
 
 use bytemuck;
