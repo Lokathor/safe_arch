@@ -1014,7 +1014,7 @@ pub fn set_m128_s(low: f32) -> m128 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse")))]
-pub fn splat_m128(all: f32) -> m128 {
+pub fn set_splat_m128(all: f32) -> m128 {
   m128(unsafe { _mm_set1_ps(all) })
 }
 

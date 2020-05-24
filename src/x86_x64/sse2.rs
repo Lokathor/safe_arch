@@ -2156,7 +2156,7 @@ pub fn set_m128d_s(a: f64) -> m128d {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn splat_m128d(a: f64) -> m128d {
+pub fn set_splat_m128d(a: f64) -> m128d {
   m128d(unsafe { _mm_set1_pd(a) })
 }
 
@@ -2170,7 +2170,7 @@ pub fn splat_m128d(a: f64) -> m128d {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn splat_i8_m128i(i: i8) -> m128i {
+pub fn set_splat_i8_m128i(i: i8) -> m128i {
   m128i(unsafe { _mm_set1_epi8(i) })
 }
 
@@ -2184,7 +2184,7 @@ pub fn splat_i8_m128i(i: i8) -> m128i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn splat_i16_m128i(i: i16) -> m128i {
+pub fn set_splat_i16_m128i(i: i16) -> m128i {
   m128i(unsafe { _mm_set1_epi16(i) })
 }
 
@@ -2198,7 +2198,7 @@ pub fn splat_i16_m128i(i: i16) -> m128i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn splat_i32_m128i(i: i32) -> m128i {
+pub fn set_splat_i32_m128i(i: i32) -> m128i {
   m128i(unsafe { _mm_set1_epi32(i) })
 }
 
@@ -2212,7 +2212,7 @@ pub fn splat_i32_m128i(i: i32) -> m128i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn splat_i64_m128i(i: i64) -> m128i {
+pub fn set_splat_i64_m128i(i: i64) -> m128i {
   m128i(unsafe { _mm_set1_epi64x(i) })
 }
 
