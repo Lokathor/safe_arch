@@ -234,6 +234,8 @@ submodule!(pub x86_x64 {
   submodule!(pub bmi1);
   #[cfg(target_feature = "bmi2")]
   submodule!(pub bmi2);
+  #[cfg(target_feature = "fma")]
+  submodule!(pub fma);
   #[cfg(target_feature = "lzcnt")]
   submodule!(pub lzcnt);
   #[cfg(target_feature = "pclmulqdq")]
