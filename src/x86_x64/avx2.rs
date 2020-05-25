@@ -2,9 +2,7 @@
 
 use super::*;
 
-/*
-
-TODO: uncomment these and call the correct functions before finalizing this PR.
+// TODO: directly call the correct functions before finalizing this PR.
 
 impl Not for m256i {
   type Output = Self;
@@ -51,7 +49,7 @@ impl BitOr for m256i {
 impl BitOrAssign for m256i {
   #[inline(always)]
   fn bitor_assign(&mut self, rhs: Self) {
-      *self = *self | rhs;
+    *self = *self | rhs;
   }
 }
 
@@ -71,7 +69,6 @@ impl BitXorAssign for m256i {
     *self = *self ^ rhs;
   }
 }
-*/
 
 /// Blends the `i32` lanes in `$a` and `$b` into a single value.
 ///
@@ -222,7 +219,7 @@ pub fn splat_m128_s_m128(a: m128) -> m128 {
 ///   (aka "if the lane's value is negative").
 /// ```
 /// # use safe_arch::*;
-/// let a = splat_i32_m128i(5);
+/// let a = set_splat_i32_m128i(5);
 /// let b = load_masked_i32_m128i(&a, m128i::from([-1_i32, 0, 0, -1]));
 /// assert_eq!(<[i32; 4]>::from(b), [5, 0, 0, 5]);
 /// ```
@@ -241,7 +238,7 @@ pub fn load_masked_i32_m128i(a: &m128i, mask: m128i) -> m128i {
 ///   (aka "if the lane's value is negative").
 /// ```
 /// # use safe_arch::*;
-/// let a = splat_i64_m128i(5);
+/// let a = set_splat_i64_m128i(5);
 /// let b = load_masked_i64_m128i(&a, m128i::from([0_i64, -1]));
 /// assert_eq!(<[i64; 2]>::from(b), [0_i64, 5]);
 /// ```
@@ -265,7 +262,7 @@ pub fn load_masked_i64_m128i(a: &m128i, mask: m128i) -> m128i {
 /// store_masked_i32_m128i(
 ///   &mut a,
 ///   m128i::from([-1_i32, 0, 0, -1]),
-///   splat_i32_m128i(5),
+///   set_splat_i32_m128i(5),
 /// );
 /// assert_eq!(<[i32; 4]>::from(a), [5, 0, 0, 5]);
 /// ```
@@ -286,7 +283,11 @@ pub fn store_masked_i32_m128i(addr: &mut m128i, mask: m128i, a: m128i) {
 /// ```
 /// # use safe_arch::*;
 /// let mut a = m128i::default();
-/// store_masked_i64_m128i(&mut a, m128i::from([0_i64, -1]), splat_i64_m128i(5));
+/// store_masked_i64_m128i(
+///   &mut a,
+///   m128i::from([0_i64, -1]),
+///   set_splat_i64_m128i(5),
+/// );
 /// assert_eq!(<[i64; 2]>::from(a), [0, 5]);
 /// ```
 /// * **Intrinsic:** [`_mm_maskstore_epi64`]
