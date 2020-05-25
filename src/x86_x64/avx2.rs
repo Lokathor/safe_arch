@@ -1541,31 +1541,452 @@ pub fn sub_horizontal_saturating_i16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_hsubs_epi16(a.0, b.0) })
 }
 
-// _mm256_inserti128_si256
+/// Multiply `i16` lanes producing `i32` values, horizontal add pairs of `i32`
+/// values to produce the final output.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([
+///   1_i16, 2, 3, 4, -1, -2, -3, -4, 12, 13, -14, -15, 100, 200, 300, -400,
+/// ]);
+/// let b = m256i::from([
+///   5_i16, 6, 7, 8, -15, -26, -37, 48, 50, 60, 70, -80, 90, 100, 12, -80,
+/// ]);
+/// let c: [i32; 8] = mul_i16_horizontal_add_m256i(a, b).into();
+/// assert_eq!(c, [17, 53, 67, -81, 1380, 220, 29000, 35600]);
+/// ```
+/// * **Intrinsic:** [`_mm256_madd_epi16`]
+/// * **Assembly:** `vpmaddwd ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn mul_i16_horizontal_add_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_madd_epi16(a.0, b.0) })
+}
 
-// _mm256_madd_epi16
+/// This is dumb and weird.
+///
+/// * Vertically multiplies each `u8` lane from `a` with an `i8` lane from `b`,
+///   producing an `i16` intermediate value.
+/// * These intermediate `i16` values are horizontally added with saturation.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([
+///   255_u8, 255, 0, 0, 255, 255, 1, 1, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+///   18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+/// ]);
+/// let b = m256i::from([
+///   127_i8, 127, 0, 0, -127, -127, 1, 1, 24, 25, 26, 27, 28, 29, 30, 31, 16,
+///   17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+/// ]);
+/// let c: [i16; 16] = mul_u8i8_add_horizontal_saturating_m256i(a, b).into();
+/// assert_eq!(
+///   c,
+///   [i16::MAX, 0, i16::MIN, 2, 417, 557, 713, 885,
+///   545, 685, 841, 1013, 1201, 1405, 1625, 1861]
+/// );
+/// ```
+/// * **Intrinsic:** [`_mm256_maddubs_epi16`]
+/// * **Assembly:** `vpmaddubsw ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[rustfmt::skip]
+pub fn mul_u8i8_add_horizontal_saturating_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_maddubs_epi16(a.0, b.0) })
+}
 
-// _mm256_maddubs_epi16
+/// Loads the reference given and zeroes any `i32` lanes not in the mask.
+///
+/// * A lane is "in" the mask if that lane's mask value is set in the high bit
+///   (aka "if the lane's value is negative").
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([5_i32; 8]);
+/// let b =
+///   load_masked_i32_m256i(&a, m256i::from([-1_i32, 0, 0, -1, -1, -1, 0, 0]));
+/// assert_eq!(<[i32; 8]>::from(b), [5, 0, 0, 5, 5, 5, 0, 0]);
+/// ```
+/// * **Intrinsic:** [`_mm256_maskload_epi32`]
+/// * **Assembly:** `vpmaskmovd ymm, ymm, m256`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn load_masked_i32_m256i(a: &m256i, mask: m256i) -> m256i {
+  m256i(unsafe {
+    _mm256_maskload_epi32(a as *const m256i as *const i32, mask.0)
+  })
+}
 
-// _mm256_maskload_epi32
-// _mm256_maskload_epi64
+/// Loads the reference given and zeroes any `i64` lanes not in the mask.
+///
+/// * A lane is "in" the mask if that lane's mask value is set in the high bit
+///   (aka "if the lane's value is negative").
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([5_i64; 4]);
+/// let b = load_masked_i64_m256i(&a, m256i::from([0_i64, -1, -1, 0]));
+/// assert_eq!(<[i64; 4]>::from(b), [0_i64, 5, 5, 0]);
+/// ```
+/// * **Intrinsic:** [`_mm256_maskload_epi64`]
+/// * **Assembly:** `vpmaskmovq ymm, ymm, m256`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn load_masked_i64_m256i(a: &m256i, mask: m256i) -> m256i {
+  m256i(unsafe {
+    _mm256_maskload_epi64(a as *const m256i as *const i64, mask.0)
+  })
+}
 
-// _mm256_maskstore_epi32
-// _mm256_maskstore_epi64
+/// Stores the `i32` masked lanes given to the reference.
+///
+/// * A lane is "in" the mask if that lane's mask value is set in the high bit
+///   (aka "if the lane's value is negative").
+/// * Lanes not in the mask are not modified.
+/// ```
+/// # use safe_arch::*;
+/// let mut a = m256i::default();
+/// store_masked_i32_m256i(
+///   &mut a,
+///   m256i::from([-1_i32, 0, 0, -1, -1, -1, 0, 0]),
+///   m256i::from([5_i32; 8]),
+/// );
+/// assert_eq!(<[i32; 8]>::from(a), [5, 0, 0, 5, 5, 5, 0, 0]);
+/// ```
+/// * **Intrinsic:** [`_mm256_maskstore_epi32`]
+/// * **Assembly:** `vpmaskmovd m256, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn store_masked_i32_m256i(addr: &mut m256i, mask: m256i, a: m256i) {
+  unsafe {
+    _mm256_maskstore_epi32(addr as *mut m256i as *mut i32, mask.0, a.0)
+  };
+}
 
-// _mm256_max_epi8
-// _mm256_max_epi16
-// _mm256_max_epi32
-// _mm256_max_epu8
-// _mm256_max_epu16
-// _mm256_max_epu32
+/// Stores the `i32` masked lanes given to the reference.
+///
+/// * A lane is "in" the mask if that lane's mask value is set in the high bit
+///   (aka "if the lane's value is negative").
+/// * Lanes not in the mask are not modified.
+/// ```
+/// # use safe_arch::*;
+/// let mut a = m256i::default();
+/// store_masked_i64_m256i(
+///   &mut a,
+///   m256i::from([0_i64, -1, -1, 0]),
+///   m256i::from([5_i64; 4]),
+/// );
+/// assert_eq!(<[i64; 4]>::from(a), [0, 5, 5, 0]);
+/// ```
+/// * **Intrinsic:** [`_mm256_maskstore_epi64`]
+/// * **Assembly:** `vpmaskmovq m256, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn store_masked_i64_m256i(addr: &mut m256i, mask: m256i, a: m256i) {
+  unsafe {
+    _mm256_maskstore_epi64(addr as *mut m256i as *mut i64, mask.0, a.0)
+  };
+}
 
-// _mm256_min_epi8
-// _mm256_min_epi16
-// _mm256_min_epi32
-// _mm256_min_epu8
-// _mm256_min_epu16
-// _mm256_min_epu32
+/// Inserts an `m128i` to an `m256i` at the high or low position.
+///
+/// * First arg: the `m256i` register to insert to
+/// * Second arg: the `m128i` register to be inserted
+/// * Third arg: 0 or 1 to target either the low or high half for insertion.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([0_i32; 8]);
+/// let b: [i32; 8] =
+///   insert_m128i_to_m256i!(a, m128i::from([1, 2, 3, 4]), 1).into();
+/// assert_eq!(b, [0, 0, 0, 0, 1, 2, 3, 4]);
+/// ```
+/// * **Intrinsic:** [`_mm256_inserti128_si256`]
+/// * **Assembly:** `vinserti128 ymm, ymm, xmm, imm8`
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+macro_rules! insert_m128i_to_m256i {
+  ($a:expr, $b:expr, $imm:expr) => {{
+    let a: m256i = $a;
+    let b: m128i = $b;
+    const IMM: i32 = ($imm & 0b1) as i32;
+    #[cfg(target_arch = "x86")]
+    use ::core::arch::x86::_mm256_inserti128_si256;
+    #[cfg(target_arch = "x86_64")]
+    use ::core::arch::x86_64::_mm256_inserti128_si256;
+    m256i(unsafe { _mm256_inserti128_si256(a.0, b.0, IMM) })
+  }};
+}
+
+/// Lanewise `max(a, b)` with lanes as `i8`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([
+///   0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127, 1, 3, 5, 7, 2, 3,
+///   5, 12, 13, 16, 27, 28, 29, 30, 31, 32,
+/// ]);
+/// let b = m256i::from([
+///   0_i8, 11, 2, -13, 4, 15, 6, -17, -8, 19, -20, 21, 22, -23, 24, 127, 0, -1,
+///   3, 4, 5, 1, -2, -4, -8, 12, 13, 14, 29, 30, -31, -32,
+/// ]);
+/// let c: [i8; 32] = max_i8_m256i(a, b).into();
+/// assert_eq!(
+///   c,
+///   [
+///     0, 11, 2, 3, 4, 15, 6, 7, 8, 19, 10, 21, 22, 13, 24, 127, 1, 3, 5, 7, 5,
+///     3, 5, 12, 13, 16, 27, 28, 29, 30, 31, 32
+///   ]
+/// );
+/// ```
+/// * **Intrinsic:** [`_mm256_max_epi8`]
+/// * **Assembly:** `vpmaxsb ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn max_i8_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_max_epi8(a.0, b.0) })
+}
+
+/// Lanewise `max(a, b)` with lanes as `i16`.
+/// ```
+/// # use safe_arch::*;
+/// let a =
+///   m256i::from([0_i16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127]);
+/// let b = m256i::from([
+///   0_i16, 11, 2, -13, 4, 15, 6, -17, -8, 19, -20, 21, 22, -23, -24, 25,
+/// ]);
+/// let c: [i16; 16] = max_i16_m256i(a, b).into();
+/// assert_eq!(c, [0, 11, 2, 3, 4, 15, 6, 7, 8, 19, 10, 21, 22, 13, 14, 127]);
+/// ```
+/// * **Intrinsic:** [`_mm256_max_epi16`]
+/// * **Assembly:** `vpmaxsw ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn max_i16_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_max_epi16(a.0, b.0) })
+}
+
+/// Lanewise `max(a, b)` with lanes as `i32`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([0_i32, 1, 2, 3, 4, 5, 6, 7]);
+/// let b = m256i::from([0_i32, 11, 2, -13, 4, 15, 6, -17]);
+/// let c: [i32; 8] = max_i32_m256i(a, b).into();
+/// assert_eq!(c, [0, 11, 2, 3, 4, 15, 6, 7]);
+/// ```
+/// * **Intrinsic:** [`_mm256_max_epi32`]
+/// * **Assembly:** `vpmaxsd ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn max_i32_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_max_epi32(a.0, b.0) })
+}
+
+/// Lanewise `max(a, b)` with lanes as `u8`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([
+///   0_u8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127, 1, 3, 5, 7, 2, 3,
+///   5, 12, 13, 16, 27, 28, 29, 30, 31, 32,
+/// ]);
+/// let b = m256i::from([
+///   0_u8, 255, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127, 0, 1, 3, 4,
+///   5, 1, 2, 4, 8, 12, 13, 14, 29, 30, 31, 32,
+/// ]);
+/// let c: [u8; 32] = max_u8_m256i(a, b).into();
+/// assert_eq!(
+///   c,
+///   [
+///     0, 255, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127, 1, 3, 5, 7,
+///     5, 3, 5, 12, 13, 16, 27, 28, 29, 30, 31, 32
+///   ]
+/// );
+/// ```
+/// * **Intrinsic:** [`_mm256_max_epu8`]
+/// * **Assembly:** `vpmaxub ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn max_u8_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_max_epu8(a.0, b.0) })
+}
+
+/// Lanewise `max(a, b)` with lanes as `u16`.
+/// ```
+/// # use safe_arch::*;
+/// let a =
+///   m256i::from([0_u16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127]);
+/// let b = m256i::from([
+///   0_u16, 65535, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 25,
+/// ]);
+/// let c: [u16; 16] = max_u16_m256i(a, b).into();
+/// assert_eq!(
+///   c,
+///   [0, 65535, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127]
+/// );
+/// ```
+/// * **Intrinsic:** [`_mm256_max_epu16`]
+/// * **Assembly:** `vpmaxuw ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn max_u16_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_max_epu16(a.0, b.0) })
+}
+
+/// Lanewise `max(a, b)` with lanes as `u32`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([0_u32, 1, 2, 3, 4, 5, 6, 7]);
+/// let b = m256i::from([0_u32, 11, 2, 13, 4, 15, 6, 17]);
+/// let c: [u32; 8] = max_u32_m256i(a, b).into();
+/// assert_eq!(c, [0, 11, 2, 13, 4, 15, 6, 17]);
+/// ```
+/// * **Intrinsic:** [`_mm256_max_epu32`]
+/// * **Assembly:** `vpmaxud ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn max_u32_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_max_epu32(a.0, b.0) })
+}
+
+/// Lanewise `min(a, b)` with lanes as `i8`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([
+///   0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127, 1, 3, 5, 7, 2, 3,
+///   5, 12, 13, 16, 27, 28, 29, 30, 31, 32,
+/// ]);
+/// let b = m256i::from([
+///   0_i8, 11, 2, -13, 4, 15, 6, -17, -8, 19, -20, 21, 22, -23, 24, 127, 0, -1,
+///   3, 4, 5, 1, -2, -4, -8, 12, 13, 14, 29, 30, -31, -32,
+/// ]);
+/// let c: [i8; 32] = min_i8_m256i(a, b).into();
+/// assert_eq!(
+///   c,
+///   [
+///     0, 1, 2, -13, 4, 5, 6, -17, -8, 9, -20, 11, 12, -23, 14, 127, 0, -1, 3,
+///     4, 2, 1, -2, -4, -8, 12, 13, 14, 29, 30, -31, -32
+///   ]
+/// );
+/// ```
+/// * **Intrinsic:** [`_mm256_min_epi8`]
+/// * **Assembly:** `vpminsb ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn min_i8_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_min_epi8(a.0, b.0) })
+}
+
+/// Lanewise `min(a, b)` with lanes as `i16`.
+/// ```
+/// # use safe_arch::*;
+/// let a =
+///   m256i::from([0_i16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127]);
+/// let b = m256i::from([
+///   0_i16, 11, 2, -13, 4, 15, 6, -17, -8, 19, -20, 21, 22, -23, -24, 25,
+/// ]);
+/// let c: [i16; 16] = min_i16_m256i(a, b).into();
+/// assert_eq!(c, [0, 1, 2, -13, 4, 5, 6, -17, -8, 9, -20, 11, 12, -23, -24, 25]);
+/// ```
+/// * **Intrinsic:** [`_mm256_min_epi16`]
+/// * **Assembly:** `vpminsw ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn min_i16_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_min_epi16(a.0, b.0) })
+}
+
+/// Lanewise `min(a, b)` with lanes as `i32`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([0_i32, 1, 2, 3, 4, 5, 6, 7]);
+/// let b = m256i::from([0_i32, 11, 2, -13, 4, 15, 6, -17]);
+/// let c: [i32; 8] = min_i32_m256i(a, b).into();
+/// assert_eq!(c, [0, 1, 2, -13, 4, 5, 6, -17]);
+/// ```
+/// * **Intrinsic:** [`_mm256_min_epi32`]
+/// * **Assembly:** `vpminsd ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn min_i32_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_min_epi32(a.0, b.0) })
+}
+
+/// Lanewise `min(a, b)` with lanes as `u8`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([
+///   0_u8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127, 1, 3, 5, 7, 2, 3,
+///   5, 12, 13, 16, 27, 28, 29, 30, 31, 32,
+/// ]);
+/// let b = m256i::from([
+///   0_u8, 255, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127, 0, 1, 3, 4,
+///   5, 1, 2, 4, 8, 12, 13, 14, 29, 30, 31, 32,
+/// ]);
+/// let c: [u8; 32] = min_u8_m256i(a, b).into();
+/// assert_eq!(
+///   c,
+///   [
+///     0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127, 0, 1, 3, 4, 2, 1,
+///     2, 4, 8, 12, 13, 14, 29, 30, 31, 32
+///   ]
+/// );
+/// ```
+/// * **Intrinsic:** [`_mm256_min_epu8`]
+/// * **Assembly:** `vpminub ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn min_u8_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_min_epu8(a.0, b.0) })
+}
+
+/// Lanewise `min(a, b)` with lanes as `u16`.
+/// ```
+/// # use safe_arch::*;
+/// let a =
+///   m256i::from([0_u16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127]);
+/// let b = m256i::from([
+///   0_u16, 65535, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 25,
+/// ]);
+/// let c: [u16; 16] = min_u16_m256i(a, b).into();
+/// assert_eq!(c, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 25]);
+/// ```
+/// * **Intrinsic:** [`_mm256_min_epu16`]
+/// * **Assembly:** `vpminuw ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn min_u16_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_min_epu16(a.0, b.0) })
+}
+
+/// Lanewise `min(a, b)` with lanes as `u32`.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([0_u32, 1, 2, 3, 4, 5, 6, 7]);
+/// let b = m256i::from([0_u32, 11, 2, 13, 4, 15, 6, 17]);
+/// let c: [u32; 8] = min_u32_m256i(a, b).into();
+/// assert_eq!(c, [0, 1, 2, 3, 4, 5, 6, 7]);
+/// ```
+/// * **Intrinsic:** [`_mm256_min_epu32`]
+/// * **Assembly:** `vpminud ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn min_u32_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_min_epu32(a.0, b.0) })
+}
 
 // _mm256_movemask_epi8
 
@@ -1575,6 +1996,7 @@ pub fn sub_horizontal_saturating_i16_m256i(a: m256i, b: m256i) -> m256i {
 // _mm256_mul_epu32
 
 // _mm256_mulhi_epi16
+
 // _mm256_mulhi_epu16
 
 // _mm256_mulhrs_epi16

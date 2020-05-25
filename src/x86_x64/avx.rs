@@ -1314,18 +1314,22 @@ macro_rules! insert_m128_to_m256 {
   }};
 }
 
-/// Inserts an `m128i` to `m256i`
+/// Slowly inserts an `m128i` to `m256i`.
+///
+/// This is a "historical artifact" that was potentially useful if you have AVX
+/// but not AVX2. If you plan on having AVX2 available please use
+/// [`insert_m128i_to_m256i`], it will do the same task with better performance.
 ///
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([0_i32; 8]);
 /// let b: [i32; 8] =
-///   insert_m128i_to_m256i!(a, m128i::from([1, 2, 3, 4]), 1).into();
+///   insert_m128i_to_m256i_slow_avx!(a, m128i::from([1, 2, 3, 4]), 1).into();
 /// assert_eq!(b, [0, 0, 0, 0, 1, 2, 3, 4]);
 /// ```
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! insert_m128i_to_m256i {
+macro_rules! insert_m128i_to_m256i_slow_avx {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m256i = $a;
     let b: m128i = $b;
