@@ -64,7 +64,7 @@
 //! * `store`: Writes a register to memory (writes `Foo` to a `&mut Foo`).
 //! * `set`: Packs values into a register (works like `[1, 2, 3, 4]` to build an
 //!   array).
-//! * `splat`: Copy a value as many times as possible across the bits of a
+//! * `set_splat`: Copy a value as many times as possible across the bits of a
 //!   register (works like `[1_i32; LEN]` array building).
 //! * `extract`: Get an individual lane out of a SIMD register (works like array
 //!   access). The lane to get has to be a const value.
@@ -243,6 +243,8 @@ submodule!(pub x86_x64 {
   submodule!(pub bmi1);
   #[cfg(target_feature = "bmi2")]
   submodule!(pub bmi2);
+  #[cfg(target_feature = "fma")]
+  submodule!(pub fma);
   #[cfg(target_feature = "lzcnt")]
   submodule!(pub lzcnt);
   #[cfg(target_feature = "pclmulqdq")]
