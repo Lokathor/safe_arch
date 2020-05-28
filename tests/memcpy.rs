@@ -1,3 +1,4 @@
+#![cfg(feature = "nightly")]
 #![cfg(target_feature = "avx")]
 #![cfg(feature = "bytemuck")]
 #![feature(test)]

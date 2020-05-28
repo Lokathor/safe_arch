@@ -1,6 +1,6 @@
 #![cfg(target_feature = "avx")]
 #![cfg(feature = "bytemuck")]
-#![feature(test)]
+#[cfg_attr(feature = "nightly", feature(test))]
 
 #[allow(unused_must_use)]
 #[allow(unused_variables)]
@@ -183,6 +183,7 @@ pub mod testutils {
   }
 }
 
+#[cfg(feature = "nightly")]
 #[cfg(test)]
 mod benches {
   const N: usize = 1 << 20;

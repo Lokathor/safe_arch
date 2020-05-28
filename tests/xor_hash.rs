@@ -1,6 +1,6 @@
 #![cfg(target_feature = "avx")]
 #![cfg(feature = "bytemuck")]
-#![feature(test)]
+#[cfg_attr(feature = "nightly", feature(test))]
 
 use bytemuck;
 #[allow(unused_must_use)]
@@ -57,6 +57,7 @@ mod tests {
   }
 }
 
+#[cfg(feature = "nightly")]
 #[cfg(test)]
 mod benches {
   const BYTES: usize = 1 << 20;
