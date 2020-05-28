@@ -1,5 +1,9 @@
 #![cfg(target_feature = "avx")]
 #![cfg(feature = "bytemuck")]
+#![feature(test)]
+
+#[allow(unused_must_use)]
+#[allow(unused_variables)]
 
 use safe_arch::*;
 use bytemuck;
@@ -50,11 +54,45 @@ fn simd_xor_hash(s: &[u64]) -> u64 {
     return ret;
 }
 
-#[test]
-fn test_xor_hash() {
-    let bytes = random_bytes(1024 * 1024 * 16 + 1);
-    let a = simple_xor_hash(&bytes);
-    let b = simd_xor_hash(&bytes);
-    assert_eq!(a, b);
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_xor_hash() {
+        let bytes = random_bytes(1024 * 1024 * 16 + 1);
+        let a = simple_xor_hash(&bytes);
+        let b = simd_xor_hash(&bytes);
+        assert_eq!(a, b);
+    }
+}
+
+#[cfg(test)]
+mod benches {
+    const BYTES: usize = 1 << 20;
+
+    extern crate test;
+    use test::{Bencher, black_box};
+    use super::*;
+
+    #[bench]
+    fn bench_xor_hash_simd(b: &mut Bencher) {
+        let bytes = random_bytes(BYTES);
+        b.iter(|| {
+            let mut x = black_box(0);
+            x ^= simd_xor_hash(&bytes);
+            let _n = black_box(x);
+        });
+    }
+
+    #[bench]
+    fn bench_xor_hash_simple(b: &mut Bencher) {
+        let bytes = random_bytes(BYTES);
+        b.iter(|| {
+            let mut x = black_box(0);
+            x ^= simple_xor_hash(&bytes);
+            let _n = black_box(x);
+        });
+    }
 }
 

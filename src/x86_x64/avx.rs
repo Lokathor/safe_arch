@@ -1578,7 +1578,6 @@ pub fn load_masked_m256(a: &m256, mask: m256i) -> m256 {
 /// );
 /// assert_eq!(a.to_array(), [0.0, 17.0]);
 /// ```
-#[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn store_masked_m128d(addr: &mut m128d, mask: m128i, a: m128d) {
@@ -1599,7 +1598,6 @@ pub fn store_masked_m128d(addr: &mut m128d, mask: m128i, a: m128d) {
 /// );
 /// assert_eq!(a.to_array(), [0.0, 17.0, 16.0, 0.0]);
 /// ```
-#[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn store_masked_m256d(addr: &mut m256d, mask: m256i, a: m256d) {
@@ -1620,7 +1618,6 @@ pub fn store_masked_m256d(addr: &mut m256d, mask: m256i, a: m256d) {
 /// );
 /// assert_eq!(a.to_array(), [0.0, 17.0, 16.0, 0.0]);
 /// ```
-#[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn store_masked_m128(addr: &mut m128, mask: m128i, a: m128) {
@@ -1641,7 +1638,6 @@ pub fn store_masked_m128(addr: &mut m128, mask: m128i, a: m128) {
 /// );
 /// assert_eq!(a.to_array(), [0.0, 17.0, 16.0, 0.0, 80.0, 1.0, 0.0, 0.0]);
 /// ```
-#[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn store_masked_m256(addr: &mut m256, mask: m256i, a: m256) {
@@ -2957,7 +2953,6 @@ pub fn sqrt_m256(a: m256) -> m256 {
 /// store_m256d(&mut addr, m256d::from([1.0, 2.0, 3.0, 4.0]));
 /// assert_eq!(addr.to_array(), [1.0, 2.0, 3.0, 4.0]);
 /// ```
-#[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn store_m256d(addr: &mut m256d, a: m256d) {
@@ -2972,7 +2967,6 @@ pub fn store_m256d(addr: &mut m256d, a: m256d) {
 /// store_m256(&mut addr, m256::from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]));
 /// assert_eq!(addr.to_array(), [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
 /// ```
-#[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn store_m256(addr: &mut m256, a: m256) {
@@ -2987,7 +2981,6 @@ pub fn store_m256(addr: &mut m256, a: m256) {
 /// store_m256i(&mut addr, m256i::from([1, 2, 3, 4, 5, 6, 7, 8]));
 /// assert_eq!(<[i32; 8]>::from(addr), [1, 2, 3, 4, 5, 6, 7, 8]);
 /// ```
-#[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn store_m256i(addr: &mut m256i, a: m256i) {
@@ -3002,7 +2995,6 @@ pub fn store_m256i(addr: &mut m256i, a: m256i) {
 /// store_unaligned_m256d(&mut addr, m256d::from([1.0, 2.0, 3.0, 4.0]));
 /// assert_eq!(addr, [1.0, 2.0, 3.0, 4.0]);
 /// ```
-#[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn store_unaligned_m256d(addr: &mut [f64; 4], a: m256d) {
@@ -3020,7 +3012,6 @@ pub fn store_unaligned_m256d(addr: &mut [f64; 4], a: m256d) {
 /// );
 /// assert_eq!(addr, [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
 /// ```
-#[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn store_unaligned_m256(addr: &mut [f32; 8], a: m256) {
@@ -3035,7 +3026,6 @@ pub fn store_unaligned_m256(addr: &mut [f32; 8], a: m256) {
 /// store_unaligned_m256i(&mut addr, m256i::from([12_i8; 32]));
 /// assert_eq!(addr, [12_i8; 32]);
 /// ```
-#[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn store_unaligned_m256i(addr: &mut [i8; 32], a: m256i) {
@@ -3056,7 +3046,6 @@ pub fn store_unaligned_m256i(addr: &mut [i8; 32], a: m256i) {
 /// assert_eq!(hi_addr, [3.0, 4.0]);
 /// assert_eq!(lo_addr, [1.0, 2.0]);
 /// ```
-#[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn store_unaligned_hi_lo_m256d(
@@ -3083,7 +3072,6 @@ pub fn store_unaligned_hi_lo_m256d(
 /// assert_eq!(hi_addr, [5.0, 6.0, 7.0, 8.0]);
 /// assert_eq!(lo_addr, [1.0, 2.0, 3.0, 4.0]);
 /// ```
-#[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn store_unaligned_hi_lo_m256(
@@ -3110,7 +3098,6 @@ pub fn store_unaligned_hi_lo_m256(
 /// assert_eq!(hi_addr, [56_i8; 16]);
 /// assert_eq!(lo_addr, [56_i8; 16]);
 /// ```
-#[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn store_unaligned_hi_lo_m256i(
