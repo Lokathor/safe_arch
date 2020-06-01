@@ -1989,7 +1989,23 @@ pub fn min_u32_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_min_epu32(a.0, b.0) })
 }
 
-// _mm256_movemask_epi8
+/// Create an `i32` mask of each sign bit in the `i8` lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([
+///   0_i8, 11, 2, -13, 4, 15, 6, -17, -8, 19, -20, 21, 22, -23, 24, 127, 0, -1,
+///   3, 4, 5, 1, -2, -4, -8, 12, 13, 14, 29, 30, -31, 32,
+/// ]);
+/// assert_eq!(0b01000001110000100010010110001000, move_mask_m256i(a));
+/// ```
+/// * **Intrinsic:** [`_mm256_movemask_epi8`]
+/// * **Assembly:** `vpmovmskb r32, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn move_mask_m256i(a: m256i) -> i32 {
+  unsafe { _mm256_movemask_epi8(a.0) }
+}
 
 // _mm256_mpsadbw_epu8
 
