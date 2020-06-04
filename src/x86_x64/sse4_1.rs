@@ -948,7 +948,7 @@ macro_rules! multi_packed_sum_abs_diff_u8_m128i {
   ($a:expr, $b:expr, a $a_pick:expr, b $b_pick:expr) => {{
     let a: m128i = $a;
     let b: m128i = $b;
-    const IMM: i32 = (($a_pick & 0b1) << 2) | ($b_pick & 0b11) as i32;
+    const IMM: i32 = ((($a_pick & 0b1) << 2) | ($b_pick & 0b11)) as i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_mpsadbw_epu8;
     #[cfg(target_arch = "x86_64")]

@@ -2007,7 +2007,42 @@ pub fn move_mask_m256i(a: m256i) -> i32 {
   unsafe { _mm256_movemask_epi8(a.0) }
 }
 
-// _mm256_mpsadbw_epu8
+/// Computes eight `u16` "sum of absolute difference" values according to the
+/// bytes selected.
+///
+/// * This essentially works like two [`multi_packed_sum_abs_diff_u8_m128i`]
+///   uses happening at once, the "low" portion works on the lower 128 bits, and
+///   the "high" portion works on the upper 128 bits.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a =
+///   m256i::from([5_u8; 32]);
+/// let b =
+///   m256i::from([7_u8; 32]);
+/// //
+/// let c: [u16; 16] = multi_packed_sum_abs_diff_u8_m256i!(a, b, low a 0, low b 0, high a 1, high b 1).into();
+/// assert_eq!(c, [8_u16; 16]);
+/// ```
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+// TODO: better test example? We'll probably fix this as part of giving the
+// macro overall a better interface some day.
+macro_rules! multi_packed_sum_abs_diff_u8_m256i {
+  ($a:expr, $b:expr, low a $la_pick:expr, low b $lb_pick:expr, high a $ha_pick:expr, high b $hb_pick:expr) => {{
+    let a: $crate::m256i = $a;
+    let b: $crate::m256i = $b;
+    const IMM: i32 = ((($la_pick & 0b1) << 2)
+      | ($lb_pick & 0b11)
+      | (($ha_pick & 0b1) << 5)
+      | ($hb_pick & 0b11) << 3) as i32;
+    #[cfg(target_arch = "x86")]
+    use ::core::arch::x86::_mm256_mpsadbw_epu8;
+    #[cfg(target_arch = "x86_64")]
+    use ::core::arch::x86_64::_mm256_mpsadbw_epu8;
+    m256i(unsafe { _mm256_mpsadbw_epu8(a.0, b.0, IMM) })
+  }};
+}
 
 // _mm256_mul_epi32
 // _mm256_mul_epu32
