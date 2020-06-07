@@ -2,74 +2,6 @@
 
 use super::*;
 
-// TODO: directly call the correct functions before finalizing this PR.
-
-impl Not for m256i {
-  type Output = Self;
-  /// Not a direct intrinsic, but it's very useful and the implementation is
-  /// simple enough.
-  ///
-  /// Negates the bits by performing an `xor` with an all-1s bit pattern.
-  #[must_use]
-  #[inline(always)]
-  fn not(self) -> Self {
-    let all_bits = set_splat_m256(f32::from_bits(u32::MAX));
-    let result = cast_from_m256i_to_m256(self) ^ all_bits;
-    cast_from_m256_to_m256i(result)
-  }
-}
-
-impl BitAnd for m256i {
-  type Output = Self;
-  #[must_use]
-  #[inline(always)]
-  fn bitand(self, rhs: Self) -> Self {
-    let rhs = cast_from_m256i_to_m256(rhs);
-    let result = and_m256(cast_from_m256i_to_m256(self), rhs);
-    cast_from_m256_to_m256i(result)
-  }
-}
-impl BitAndAssign for m256i {
-  #[inline(always)]
-  fn bitand_assign(&mut self, rhs: Self) {
-    *self = *self & rhs;
-  }
-}
-
-impl BitOr for m256i {
-  type Output = Self;
-  #[must_use]
-  #[inline(always)]
-  fn bitor(self, rhs: Self) -> Self {
-    let rhs = cast_from_m256i_to_m256(rhs);
-    let result = or_m256(cast_from_m256i_to_m256(self), rhs);
-    cast_from_m256_to_m256i(result)
-  }
-}
-impl BitOrAssign for m256i {
-  #[inline(always)]
-  fn bitor_assign(&mut self, rhs: Self) {
-    *self = *self | rhs;
-  }
-}
-
-impl BitXor for m256i {
-  type Output = Self;
-  #[must_use]
-  #[inline(always)]
-  fn bitxor(self, rhs: Self) -> Self {
-    let rhs = cast_from_m256i_to_m256(rhs);
-    let result = xor_m256(cast_from_m256i_to_m256(self), rhs);
-    cast_from_m256_to_m256i(result)
-  }
-}
-impl BitXorAssign for m256i {
-  #[inline(always)]
-  fn bitxor_assign(&mut self, rhs: Self) {
-    *self = *self ^ rhs;
-  }
-}
-
 /// Blends the `i32` lanes in `$a` and `$b` into a single value.
 ///
 /// * The blend is controlled by an immediate mask value (an `i32`).
@@ -2044,19 +1976,163 @@ macro_rules! multi_packed_sum_abs_diff_u8_m256i {
   }};
 }
 
-// _mm256_mul_epi32
-// _mm256_mul_epu32
+/// Multiply the lower `i32` within each `i64` lane, `i64` output.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([1_i64, 2, 3, 4]);
+/// let b = m256i::from([5_i64, 6, 7, -8]);
+/// let c: [i64; 4] = mul_i64_low_bits_m256i(a, b).into();
+/// assert_eq!(c, [5_i64, 12, 21, -32]);
+/// ```
+/// * **Intrinsic:** [`_mm256_mul_epi32`]
+/// * **Assembly:** `vpmuldq ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn mul_i64_low_bits_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_mul_epi32(a.0, b.0) })
+}
 
-// _mm256_mulhi_epi16
+/// Multiply the lower `u32` within each `u64` lane, `u64` output.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([1_u64, 2, 3, 4]);
+/// let b = m256i::from([5_u64, 6, 7, 8]);
+/// let c: [u64; 4] = mul_u64_low_bits_m256i(a, b).into();
+/// assert_eq!(c, [5_u64, 12, 21, 32]);
+/// ```
+/// * **Intrinsic:** [`_mm256_mul_epu32`]
+/// * **Assembly:** `vpmuludq ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn mul_u64_low_bits_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_mul_epu32(a.0, b.0) })
+}
 
-// _mm256_mulhi_epu16
+/// Multiply the `i16` lanes and keep the high half of each 32-bit output.
+/// ```
+/// # use safe_arch::*;
+/// let a =
+///   m256i::from([5_i16, 6, 2, 5, 4, 3, 1, 0, -12, 13, 56, 21, 8, 7, 6, 5]);
+/// let b = m256i::from([
+///   12000_i16, 13000, -2, -8, 0, 1, 2, 3, 8, 7, 6, 5, 234, 654, 123, 978,
+/// ]);
+/// let c: [i16; 16] = mul_i16_keep_high_m256i(a, b).into();
+/// assert_eq!(c, [0_i16, 1, -1, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0]);
+/// ```
+/// * **Intrinsic:** [`_mm256_mulhi_epi16`]
+/// * **Assembly:** `vpmulhw ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn mul_i16_keep_high_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_mulhi_epi16(a.0, b.0) })
+}
 
-// _mm256_mulhrs_epi16
+/// Multiply the `u16` lanes and keep the high half of each 32-bit output.
+/// ```
+/// # use safe_arch::*;
+/// let a =
+///   m256i::from([5_u16, 6, 2, 5, 4, 3, 1, 0, 12000, 13, 56, 21, 8, 7, 6, 5]);
+/// let b = m256i::from([
+///   12000_u16, 13000, 2000, 800, 0, 1, 2, 3, 8, 7, 6, 5, 234, 654, 123, 978,
+/// ]);
+/// let c: [u16; 16] = mul_u16_keep_high_m256i(a, b).into();
+/// assert_eq!(c, [0_u16, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]);
+/// ```
+/// * **Intrinsic:** [`_mm256_mulhi_epu16`]
+/// * **Assembly:** `vpmulhuw ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn mul_u16_keep_high_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_mulhi_epu16(a.0, b.0) })
+}
 
-// _mm256_mullo_epi16
-// _mm256_mullo_epi32
+/// Multiply `i16` lanes into `i32` intermediates, keep the high 18 bits, round
+/// by adding 1, right shift by 1.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([
+///   0_i16, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300,
+///   1400, 1500,
+/// ]);
+/// let b = m256i::from([
+///   800_i16, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900,
+///   2000, 2100, 2200, 2300,
+/// ]);
+/// let c: [i16; 16] = mul_i16_scale_round_m256i(a, b).into();
+/// assert_eq!(
+///   c,
+///   [0_i16, 3, 6, 10, 15, 20, 26, 32, 39, 47, 55, 64, 73, 83, 94, 105]
+/// );
+/// ```
+/// * **Intrinsic:** [`_mm256_mulhrs_epi16`]
+/// * **Assembly:** `vpmulhrsw ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn mul_i16_scale_round_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_mulhrs_epi16(a.0, b.0) })
+}
 
-// _mm256_or_si256
+/// Multiply the `i16` lanes and keep the low half of each 32-bit output.
+/// ```
+/// # use safe_arch::*;
+/// let a =
+///   m256i::from([5_i16, 6, 2, 5, 4, 3, 1, 0, -12, 13, 56, 21, 8, 7, 6, 5]);
+/// let b = m256i::from([
+///   -1_i16, 13000, -2, -8, 0, 1, 2, 3, 8, 7, 6, 5, 234, 654, 123, 978,
+/// ]);
+/// let c: [i16; 16] = mul_i16_keep_low_m256i(a, b).into();
+/// assert_eq!(
+///   c,
+///   [-5, 12464, -4, -40, 0, 3, 2, 0, -96, 91, 336, 105, 1872, 4578, 738, 4890]
+/// );
+/// ```
+/// * **Intrinsic:** [`_mm256_mullo_epi16`]
+/// * **Assembly:** `vpmullw ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn mul_i16_keep_low_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_mullo_epi16(a.0, b.0) })
+}
+
+/// Multiply the `i32` lanes and keep the low half of each 64-bit output.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([0_i32, 1, 2, 3, 4, 5, 6, 7]);
+/// let b = m256i::from([0_i32, 11, 2, -13, 4, 15, 6, -17]);
+/// let c: [i32; 8] = mul_i32_keep_low_m256i(a, b).into();
+/// assert_eq!(c, [0, 11, 4, -39, 16, 75, 36, -119]);
+/// ```
+/// * **Intrinsic:** [`_mm256_mullo_epi32`]
+/// * **Assembly:** `vpmulld ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn mul_i32_keep_low_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_mullo_epi32(a.0, b.0) })
+}
+
+/// Bitwise `a | b`
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([0_i64, 0, 1, 1]);
+/// let b = m256i::from([0_i64, 1, 0, 1]);
+/// let c: [i64; 4] = or_256i(a, b).into();
+/// assert_eq!(c, [0_i64, 1, 1, 1]);
+/// ```
+/// * **Intrinsic:** [`_mm256_or_si256`]
+/// * **Assembly:** `vpor ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn or_256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_or_si256(a.0, b.0) })
+}
 
 // _mm256_packs_epi16
 // _mm256_packs_epi32
@@ -2137,3 +2213,71 @@ macro_rules! multi_packed_sum_abs_diff_u8_m256i {
 // _mm256_unpacklo_epi64
 
 // _mm256_xor_si256
+
+// TODO: directly call the correct functions before finalizing this PR.
+
+impl Not for m256i {
+  type Output = Self;
+  /// Not a direct intrinsic, but it's very useful and the implementation is
+  /// simple enough.
+  ///
+  /// Negates the bits by performing an `xor` with an all-1s bit pattern.
+  #[must_use]
+  #[inline(always)]
+  fn not(self) -> Self {
+    let all_bits = set_splat_m256(f32::from_bits(u32::MAX));
+    let result = cast_from_m256i_to_m256(self) ^ all_bits;
+    cast_from_m256_to_m256i(result)
+  }
+}
+
+impl BitAnd for m256i {
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn bitand(self, rhs: Self) -> Self {
+    let rhs = cast_from_m256i_to_m256(rhs);
+    let result = and_m256(cast_from_m256i_to_m256(self), rhs);
+    cast_from_m256_to_m256i(result)
+  }
+}
+impl BitAndAssign for m256i {
+  #[inline(always)]
+  fn bitand_assign(&mut self, rhs: Self) {
+    *self = *self & rhs;
+  }
+}
+
+impl BitOr for m256i {
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn bitor(self, rhs: Self) -> Self {
+    let rhs = cast_from_m256i_to_m256(rhs);
+    let result = or_m256(cast_from_m256i_to_m256(self), rhs);
+    cast_from_m256_to_m256i(result)
+  }
+}
+impl BitOrAssign for m256i {
+  #[inline(always)]
+  fn bitor_assign(&mut self, rhs: Self) {
+    *self = *self | rhs;
+  }
+}
+
+impl BitXor for m256i {
+  type Output = Self;
+  #[must_use]
+  #[inline(always)]
+  fn bitxor(self, rhs: Self) -> Self {
+    let rhs = cast_from_m256i_to_m256(rhs);
+    let result = xor_m256(cast_from_m256i_to_m256(self), rhs);
+    cast_from_m256_to_m256i(result)
+  }
+}
+impl BitXorAssign for m256i {
+  #[inline(always)]
+  fn bitxor_assign(&mut self, rhs: Self) {
+    *self = *self ^ rhs;
+  }
+}
