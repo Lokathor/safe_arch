@@ -7,10 +7,24 @@
 
 Exposes arch-specific intrinsics as safe function.
 
-The crate aims to be _as minimal as possible_. Each intrinsic gets a function or
-macro so that you can safely use it as directly as possible. Essentially no
-additional abstractions are provided, that's not the point of this crate. The
-goal is only to provide safety while getting in the way as little as possible.
+## Design
+
+The crate aims to be _as minimal as possible_.
+
+* SIMD types are newtype'd (with a `pub` field) and given appropriate trait
+  impls such as `From`, `Into`, `Default`, etc.
+* Each intrinsic gets either a function or macro so that you can safely use it
+  as directly as possible.
+  * Functions are used when all arguments are runtime arguments.
+  * Macros are used when one of the arguments must be a compile time constant,
+    because Rust doesn't let you "pass through" compile time constants.
+* There's hundreds and hundreds of intrinsics, so the names of functions and
+  macros tend to be very long and specific because there's often many similar
+  ways to do nearly the same thing.
+  * This crate isn't really intended for "everyday users". It is intended to be
+    an "unopinionated" middle layer crate that just provides the safety. Higher
+    level abstractions should mostly come from some other crate that wraps over
+    this crate.
 
 All function and macro availability is done purely at compile time via
 `#[cfg()]` attributes on the various modules. If a CPU feature isn't enabled for
@@ -20,11 +34,13 @@ code accordingly, this crate is not for you.
 
 See the [crate docs](https://docs.rs/safe_arch) for more details.
 
-* **Minimum Rust:** The CI tests the crate against Stable 1.43.0. The doc-tests
-  are known to require at least 1.43 because they use `u32::MAX`, `f32::NAN`,
-  and similar short names for the common consts. You can _probably_ build the
-  crate without the doc tests on older compiler versions, possibly as far back
-  as 1.31, but that's not officially supported.
+## Minimum Rust Version.
+
+The CI tests the crate against Stable 1.43.0. The doc-tests
+are known to require at least 1.43 because they use `u32::MAX`, `f32::NAN`,
+and similar short names for the common consts. You can _probably_ build the
+crate without the doc tests on older compiler versions, possibly as far back
+as 1.31, but that's not officially supported.
 
 ## Additional Resources
 

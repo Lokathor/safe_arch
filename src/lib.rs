@@ -64,17 +64,18 @@
 //! * `store`: Writes a register to memory (writes `Foo` to a `&mut Foo`).
 //! * `set`: Packs values into a register (works like `[1, 2, 3, 4]` to build an
 //!   array).
-//! * `set_splat`: Copy a value as many times as possible across the bits of a
-//!   register (works like `[1_i32; LEN]` array building).
-//! * `extract`: Get an individual lane out of a SIMD register (works like array
-//!   access). The lane to get has to be a const value.
+//! * `splat`: Modifies either a "load" or set". The input is copied as many
+//!   times as possible across the bits of the output register size (works like
+//!   `[1_i32; LEN]` array building).
+//! * `extract`: Get an individual lane out of a SIMD register (works like
+//!   `reg[i]`). The lane to get has to be a const value.
 //! * `insert`: Duplicate a register and then replace the value of a specific
-//!   lane (works like `let mut a2 = a.clone(); a2[i] = new;`). The lane to
-//!   overwrite has to be a const value.
+//!   lane (works like `let mut reg2 = reg.copied(); reg[i] = new;`). The lane
+//!   to overwrite has to be a const value.
 //! * `cast`: change data types while preserving the bit pattern (like how
 //!   `transmute` would do it).
-//! * `convert`: change data types while trying to preserve the numeric value
-//!   (which might change the bits, like how `as` would do it).
+//! * `convert`: change data types while trying to stick close to the numeric
+//!   value (which might change the bits, like how `as` would do it).
 //!
 //! **This crate is pre-1.0 and if you feel that an operation should have a
 //! better name to improve the crate's consistency please file an issue.**
@@ -82,9 +83,9 @@
 //! ## Current Support
 //! * `x86` / `x86_64` (Intel, AMD, etc)
 //!   * 128-bit: `sse`, `sse2`, `sse3`, `ssse3`, `sse4.1`, `sse4.2`
-//!   * 256-bit: `avx`
-//!   * Other: `adx`, `aes`, `bmi1`, `bmi2`, `lzcnt`, `pclmulqdq`, `popcnt`,
-//!     `rdrand`, `rdseed`
+//!   * 256-bit: `avx`, `avx2`
+//!   * Other: `adx`, `aes`, `bmi1`, `bmi2`, `fma`, `lzcnt`, `pclmulqdq`,
+//!     `popcnt`, `rdrand`, `rdseed`
 //!
 //! ## Compile Time CPU Target Features
 //!
@@ -180,6 +181,18 @@ macro_rules! submodule {
   };
 }
 
+// Note(Lokathor): Stupid as it sounds, we need to put the imports here at the
+// crate root because the arch-specific macros that we define in our inner
+// modules are actually "scoped" to also be at the crate root. We want the
+// rustdoc generation of the macros to "see" these imports so that the docs link
+// over to the `core::arch` module correctly.
+// https://github.com/rust-lang/rust/issues/72243
+
+#[cfg(target_arch = "x86")]
+use core::arch::x86::*;
+#[cfg(target_arch = "x86_64")]
+use core::arch::x86_64::*;
+
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 submodule!(pub x86_x64 {
   //! Types and functions for safe `x86` / `x86_64` intrinsic usage.
@@ -188,11 +201,6 @@ submodule!(pub x86_x64 {
   //! one module. Anything not available on `x86` simply won't be in the build
   //! on that arch.
   use super::*;
-
-  #[cfg(target_arch = "x86")]
-  use core::arch::x86::*;
-  #[cfg(target_arch = "x86_64")]
-  use core::arch::x86_64::*;
 
   submodule!(pub m128_);
   submodule!(pub m128d_);
@@ -223,6 +231,8 @@ submodule!(pub x86_x64 {
   submodule!(pub sse4_2);
   #[cfg(target_feature = "avx")]
   submodule!(pub avx);
+  #[cfg(target_feature = "avx2")]
+  submodule!(pub avx2);
 
   // These features aren't as easy to remember the progression of and they each
   // only add a small handful of functions.
