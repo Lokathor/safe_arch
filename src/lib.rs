@@ -83,7 +83,7 @@
 //! ## Current Support
 //! * `x86` / `x86_64` (Intel, AMD, etc)
 //!   * 128-bit: `sse`, `sse2`, `sse3`, `ssse3`, `sse4.1`, `sse4.2`
-//!   * 256-bit: `avx`
+//!   * 256-bit: `avx`, `avx2`
 //!   * Other: `adx`, `aes`, `bmi1`, `bmi2`, `fma`, `lzcnt`, `pclmulqdq`,
 //!     `popcnt`, `rdrand`, `rdseed`
 //!
