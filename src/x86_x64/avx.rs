@@ -1879,29 +1879,24 @@ macro_rules! permute_m128d {
 
 /// Permutes the lanes around.
 ///
-/// * Different from "shuffle" because there is only one input.
-/// * You can't move values between the high and low 128-bit segments.
-/// * Each index is 0 or 1, and selects if you want the index 0 or index 1
-///   element from that 128-bit part of the overall 256 bits.
-/// * Generally gives better overall performance than shuffle if it can
-///   accomplish the movement that you want.
-/// * The shuffle pattern must be a const.
+/// * Each index is 0 or 1, picking the low or high lane of the associated
+///   128-bit portion of that index.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256d::from_array([1.0, 2.0, 3.0, 4.0]);
 /// //
-/// let b = permute_m256d!(a, 0, 0, 0, 0).to_array();
+/// let b = permute_within_m128d_m256d!(a, 0, 0, 0, 0).to_array();
 /// assert_eq!(b, [1.0, 1.0, 3.0, 3.0]);
 /// //
-/// let b = permute_m256d!(a, 0, 1, 0, 1).to_array();
+/// let b = permute_within_m128d_m256d!(a, 0, 1, 0, 1).to_array();
 /// assert_eq!(b, [1.0, 2.0, 3.0, 4.0]);
 /// //
-/// let b = permute_m256d!(a, 1, 0, 1, 1).to_array();
+/// let b = permute_within_m128d_m256d!(a, 1, 0, 1, 1).to_array();
 /// assert_eq!(b, [2.0, 1.0, 4.0, 4.0]);
 /// ```
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! permute_m256d {
+macro_rules! permute_within_m128d_m256d {
   ($a:expr, $z:expr, $o:expr, $t:expr, $h:expr) => {{
     const MASK: i32 =
       (($z & 0b1) | ($o & 0b1) << 1 | ($t & 0b1) << 2 | ($h & 0b1) << 3) as i32;

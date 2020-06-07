@@ -2134,19 +2134,276 @@ pub fn or_256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_or_si256(a.0, b.0) })
 }
 
-// _mm256_packs_epi16
-// _mm256_packs_epi32
+/// Saturating convert `i16` to `i8`, and pack the values.
+///
+/// * The values are packed 128 bits at a time: `a_low`, `b_low`, `a_high`,
+///   `b_high`
+/// ```
+/// # use safe_arch::*;
+/// let a =
+///   m256i::from([1_i16, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
+/// let b = m256i::from([
+///   17_i16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
+/// ]);
+/// let c: [i8; 32] = pack_i16_to_i8_m256i(a, b).into();
+/// assert_eq!(
+///   c,
+///   [
+///     1_i8, 2, 3, 4, 5, 6, 7, 8, 17, 18, 19, 20, 21, 22, 23, 24, 9, 10, 11, 12,
+///     13, 14, 15, 16, 25, 26, 27, 28, 29, 30, 31, 32
+///   ]
+/// );
+/// ```
+/// * **Intrinsic:** [`_mm256_packs_epi16`]
+/// * **Assembly:** `vpacksswb ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn pack_i16_to_i8_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_packs_epi16(a.0, b.0) })
+}
 
-// _mm256_packus_epi16
-// _mm256_packus_epi32
+/// Saturating convert `i32` to `i16`, and pack the values.
+///
+/// * The values are packed 128 bits at a time: `a_low`, `b_low`, `a_high`,
+///   `b_high`
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([1_i32, 2, 3, 4, 5, 6, 7, 8]);
+/// let b = m256i::from([9_i32, 10, 11, 12, 13, 14, 15, 16]);
+/// let c: [i16; 16] = pack_i32_to_i16_m256i(a, b).into();
+/// assert_eq!(c, [1_i16, 2, 3, 4, 9, 10, 11, 12, 5, 6, 7, 8, 13, 14, 15, 16]);
+/// ```
+/// * **Intrinsic:** [`_mm256_packs_epi32`]
+/// * **Assembly:** `vpackssdw ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn pack_i32_to_i16_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_packs_epi32(a.0, b.0) })
+}
 
-// _mm256_permute2x128_si256
-// _mm256_permute4x64_epi64
-// _mm256_permute4x64_pd
-// _mm256_permutevar8x32_epi32
-// _mm256_permutevar8x32_ps
+/// Saturating convert `i16` to `u8`, and pack the values.
+///
+/// * The values are packed 128 bits at a time: `a_low`, `b_low`, `a_high`,
+///   `b_high`
+/// ```
+/// # use safe_arch::*;
+/// let a =
+///   m256i::from([1_i16, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
+/// let b = m256i::from([
+///   17_i16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
+/// ]);
+/// let c: [u8; 32] = pack_i16_to_u8_m256i(a, b).into();
+/// assert_eq!(
+///   c,
+///   [
+///     1_u8, 2, 3, 4, 5, 6, 7, 8, 17, 18, 19, 20, 21, 22, 23, 24, 9, 10, 11, 12,
+///     13, 14, 15, 16, 25, 26, 27, 28, 29, 30, 31, 32
+///   ]
+/// );
+/// ```
+/// * **Intrinsic:** [`_mm256_packus_epi16`]
+/// * **Assembly:** `vpackuswb ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn pack_i16_to_u8_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_packus_epi16(a.0, b.0) })
+}
 
-// _mm256_sad_epu8
+/// Saturating convert `i32` to `u16`, and pack the values.
+///
+/// * The values are packed 128 bits at a time: `a_low`, `b_low`, `a_high`,
+///   `b_high`
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([1_i32, 2, 3, 4, 5, 6, 7, 8]);
+/// let b = m256i::from([9_i32, 10, 11, 12, 13, 14, 15, 16]);
+/// let c: [u16; 16] = pack_i32_to_u16_m256i(a, b).into();
+/// assert_eq!(c, [1_u16, 2, 3, 4, 9, 10, 11, 12, 5, 6, 7, 8, 13, 14, 15, 16]);
+/// ```
+/// * **Intrinsic:** [`_mm256_packus_epi32`]
+/// * **Assembly:** `vpackusdw ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn pack_i32_to_u16_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_packs_epi32(a.0, b.0) })
+}
+
+/// Selects the output style of a [`permute_2x128_m256i`] usage.
+#[repr(i32)]
+#[allow(non_camel_case_types)]
+pub enum Permute_2x128_m256i {
+  /// Select the lower 128 bits from `$a`
+  ALow = 0,
+  /// Select the higher 128 bits from `$a`
+  AHigh = 1,
+  /// Select the lower 128 bits from `$b`
+  BLow = 2,
+  /// Select the higher 128 bits from `$b`
+  BHigh = 3,
+  /// Zero the bits.
+  Zeroed = 0b1000,
+}
+
+/// Permutes the lanes around.
+///
+/// * `$a` and `$b` must be [`m256i`] values.
+/// * `$low` and `$high` must be [`Permute_2x128_m256i`] constants.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([1_i128, 2]);
+/// let b = m256i::from([3_i128, 4]);
+/// //
+/// use Permute_2x128_m256i::*;
+/// let c: [i128; 2] =
+///   permute_2x128_m256i!(a, b, low = ALow, high = BHigh).into();
+/// assert_eq!(c, [1_i128, 4]);
+///
+/// let d: [i128; 2] =
+///   permute_2x128_m256i!(a, b, low = Zeroed, high = BLow).into();
+/// assert_eq!(d, [0_i128, 3]);
+/// ```
+/// * **Intrinsic:** [`_mm256_permute2x128_si256`]
+/// * **Assembly:** `vperm2i128 ymm, ymm, ymm, imm8`
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+macro_rules! permute_2x128_m256i {
+  ($a:expr, $b:expr, low=$low:expr, high=$high:expr) => {{
+    let a: $crate::m256i = $a;
+    let b: $crate::m256i = $b;
+    const LOW: $crate::Permute_2x128_m256i = $low;
+    const HIGH: $crate::Permute_2x128_m256i = $high;
+    const IMM: ::core::primitive::i32 =
+      LOW as ::core::primitive::i32 | ((HIGH as ::core::primitive::i32) << 4);
+    #[cfg(target_arch = "x86")]
+    use ::core::arch::x86::_mm256_permute2x128_si256;
+    #[cfg(target_arch = "x86_64")]
+    use ::core::arch::x86_64::_mm256_permute2x128_si256;
+    $crate::m256i(unsafe { _mm256_permute2x128_si256(a.0, b.0, IMM) })
+  }};
+}
+
+/// Permutes the lanes around.
+///
+/// * `$a` must be [`m256i`]
+/// * `$z`, `$o`, `$t`, `$h` are all `i32` index constants (2 bits each).
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([5_i64, 6, 7, 8]);
+/// let b: [i64; 4] = permute_i64_m256i!(a, 3, 2, 1, 0).into();
+/// assert_eq!(b, [8_i64, 7, 6, 5]);
+/// ```
+/// * **Intrinsic:** [`_mm256_permute4x64_epi64`]
+/// * **Assembly:** `vpermq ymm, ymm, imm8`
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+macro_rules! permute_i64_m256i {
+  ($a:expr, $z:expr, $o:expr, $t:expr, $h:expr) => {{
+    let a: $crate::m256i = $a;
+    const ZERO: ::core::primitive::i32 = $z & 0b11;
+    const ONE: ::core::primitive::i32 = $o & 0b11;
+    const TWO: ::core::primitive::i32 = $t & 0b11;
+    const THREE: ::core::primitive::i32 = $h & 0b11;
+    const IMM: ::core::primitive::i32 = ZERO | ONE << 2 | TWO << 4 | THREE << 6;
+    #[cfg(target_arch = "x86")]
+    use ::core::arch::x86::_mm256_permute4x64_epi64;
+    #[cfg(target_arch = "x86_64")]
+    use ::core::arch::x86_64::_mm256_permute4x64_epi64;
+    $crate::m256i(unsafe { _mm256_permute4x64_epi64(a.0, IMM) })
+  }};
+}
+
+/// Permutes the lanes around.
+///
+/// * `$a` must be [`m256d`]
+/// * `$z`, `$o`, `$t`, `$h` are all `i32` index constants (2 bits each).
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from_array([5.0, 6.0, 7.0, 8.0]);
+/// let b: [f64; 4] = permute_m256d!(a, 3, 2, 1, 0).to_array();
+/// assert_eq!(b, [8.0, 7.0, 6.0, 5.0]);
+/// ```
+/// * **Intrinsic:** [`_mm256_permute4x64_pd`]
+/// * **Assembly:** `vpermpd ymm, ymm, imm8`
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+macro_rules! permute_m256d {
+  ($a:expr, $z:expr, $o:expr, $t:expr, $h:expr) => {{
+    let a: $crate::m256d = $a;
+    const ZERO: ::core::primitive::i32 = $z & 0b11;
+    const ONE: ::core::primitive::i32 = $o & 0b11;
+    const TWO: ::core::primitive::i32 = $t & 0b11;
+    const THREE: ::core::primitive::i32 = $h & 0b11;
+    const IMM: ::core::primitive::i32 = ZERO | ONE << 2 | TWO << 4 | THREE << 6;
+    #[cfg(target_arch = "x86")]
+    use ::core::arch::x86::_mm256_permute4x64_pd;
+    #[cfg(target_arch = "x86_64")]
+    use ::core::arch::x86_64::_mm256_permute4x64_pd;
+    $crate::m256d(unsafe { _mm256_permute4x64_pd(a.0, IMM) })
+  }};
+}
+
+/// Permutes the 32-bit integer lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([8, 9, 10, 11, 12, 13, 14, 15]);
+/// let indexes = m256i::from([7, 6, 5, 5, 3, 2, 2, 0]);
+/// let c: [i32; 8] = permute_i32_m256i(a, indexes).into();
+/// assert_eq!(c, [15, 14, 13, 13, 11, 10, 10, 8]);
+/// ```
+/// * **Intrinsic:** [`_mm256_permutevar8x32_epi32`]
+/// * **Assembly:** `vpermd ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn permute_i32_m256i(a: m256i, indexes: m256i) -> m256i {
+  m256i(unsafe { _mm256_permutevar8x32_epi32(a.0, indexes.0) })
+}
+
+/// Permutes the `f32` lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from_array([8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0]);
+/// let indexes = m256i::from([7, 6, 5, 5, 3, 2, 2, 0]);
+/// let c: [f32; 8] = permute_m256(a, indexes).to_array();
+/// assert_eq!(c, [15.0, 14.0, 13.0, 13.0, 11.0, 10.0, 10.0, 8.0]);
+/// ```
+/// * **Intrinsic:** [`_mm256_permutevar8x32_ps`]
+/// * **Assembly:** `vpermps ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn permute_m256(a: m256, indexes: m256i) -> m256 {
+  m256(unsafe { _mm256_permutevar8x32_ps(a.0, indexes.0) })
+}
+
+/// Compute "sum of `u8` absolute differences".
+///
+/// * `u8` lanewise `abs(a - b)`, producing `u8` intermediate values.
+/// * Sum the first eight and second eight values.
+/// * Place into the low 16 bits of four `u64` lanes.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([
+///   0_u8, 11, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127, 0, 11, 2,
+///   13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127,
+/// ]);
+/// let b = m256i::from([
+///   20_u8, 110, 250, 103, 34, 105, 60, 217, 8, 19, 210, 201, 202, 203, 204,
+///   127, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+/// ]);
+/// let c: [u64; 4] = sum_of_u8_abs_diff_m256i(a, b).into();
+/// assert_eq!(c, [831_u64, 910, 40, 160]);
+/// ```
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn sum_of_u8_abs_diff_m256i(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_sad_epu8(a.0, b.0) })
+}
 
 // _mm256_shuffle_epi32
 // _mm256_shuffle_epi8
