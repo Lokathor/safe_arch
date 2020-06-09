@@ -1,0 +1,755 @@
+pub fn abs_i16_m128i(a: m128i) -> m128i
+pub fn abs_i16_m256i(a: m256i) -> m256i
+pub fn abs_i32_m128i(a: m128i) -> m128i
+pub fn abs_i32_m256i(a: m256i) -> m256i
+pub fn abs_i8_m128i(a: m128i) -> m128i
+pub fn abs_i8_m256i(a: m256i) -> m256i
+pub fn add_carry_u32(c_in: u8, a: u32, b: u32, out: &mut u32) -> u8
+pub fn add_carry_u64(c_in: u8, a: u64, b: u64, out: &mut u64) -> u8
+pub fn add_horizontal_i16_m128i(a: m128i, b: m128i) -> m128i
+pub fn add_horizontal_i16_m256i(a: m256i, b: m256i) -> m256i
+pub fn add_horizontal_i32_m128i(a: m128i, b: m128i) -> m128i
+pub fn add_horizontal_i32_m256i(a: m256i, b: m256i) -> m256i
+pub fn add_horizontal_m128(a: m128, b: m128) -> m128
+pub fn add_horizontal_m128d(a: m128d, b: m128d) -> m128d
+pub fn add_horizontal_m256(a: m256, b: m256) -> m256
+pub fn add_horizontal_m256d(a: m256d, b: m256d) -> m256d
+pub fn add_horizontal_saturating_i16_m128i(a: m128i, b: m128i) -> m128i
+pub fn add_horizontal_saturating_i16_m256i(a: m256i, b: m256i) -> m256i
+pub fn add_i16_m128i(a: m128i, b: m128i) -> m128i
+pub fn add_i16_m256i(a: m256i, b: m256i) -> m256i
+pub fn add_i32_m128i(a: m128i, b: m128i) -> m128i
+pub fn add_i32_m256i(a: m256i, b: m256i) -> m256i
+pub fn add_i64_m128i(a: m128i, b: m128i) -> m128i
+pub fn add_i64_m256i(a: m256i, b: m256i) -> m256i
+pub fn add_i8_m128i(a: m128i, b: m128i) -> m128i
+pub fn add_i8_m256i(a: m256i, b: m256i) -> m256i
+pub fn add_m128(a: m128, b: m128) -> m128
+pub fn add_m128_s(a: m128, b: m128) -> m128
+pub fn add_m128d(a: m128d, b: m128d) -> m128d
+pub fn add_m128d_s(a: m128d, b: m128d) -> m128d
+pub fn add_m256(a: m256, b: m256) -> m256
+pub fn add_m256d(a: m256d, b: m256d) -> m256d
+pub fn add_saturating_i16_m128i(a: m128i, b: m128i) -> m128i
+pub fn add_saturating_i16_m256i(a: m256i, b: m256i) -> m256i
+pub fn add_saturating_i8_m128i(a: m128i, b: m128i) -> m128i
+pub fn add_saturating_i8_m256i(a: m256i, b: m256i) -> m256i
+pub fn add_saturating_u16_m128i(a: m128i, b: m128i) -> m128i
+pub fn add_saturating_u16_m256i(a: m256i, b: m256i) -> m256i
+pub fn add_saturating_u8_m128i(a: m128i, b: m128i) -> m128i
+pub fn add_saturating_u8_m256i(a: m256i, b: m256i) -> m256i
+pub fn add_sub_m128(a: m128, b: m128) -> m128
+pub fn add_sub_m128d(a: m128d, b: m128d) -> m128d
+pub fn add_sub_m256(a: m256, b: m256) -> m256
+pub fn add_sub_m256d(a: m256d, b: m256d) -> m256d
+pub fn aes_decrypt_last_m128i(a: m128i, round_key: m128i) -> m128i
+pub fn aes_decrypt_m128i(a: m128i, round_key: m128i) -> m128i
+pub fn aes_encrypt_last_m128i(a: m128i, round_key: m128i) -> m128i
+pub fn aes_encrypt_m128i(a: m128i, round_key: m128i) -> m128i
+pub fn aes_inv_mix_columns_m128i(a: m128i) -> m128i
+pub fn and_m128(a: m128, b: m128) -> m128
+pub fn and_m128d(a: m128d, b: m128d) -> m128d
+pub fn and_m128i(a: m128i, b: m128i) -> m128i
+pub fn and_m256(a: m256, b: m256) -> m256
+pub fn and_m256d(a: m256d, b: m256d) -> m256d
+pub fn and_m256i(a: m256i, b: m256i) -> m256i
+pub fn andnot_m128(a: m128, b: m128) -> m128
+pub fn andnot_m128d(a: m128d, b: m128d) -> m128d
+pub fn andnot_m128i(a: m128i, b: m128i) -> m128i
+pub fn andnot_m256(a: m256, b: m256) -> m256
+pub fn andnot_m256d(a: m256d, b: m256d) -> m256d
+pub fn andnot_m256i(a: m256i, b: m256i) -> m256i
+pub fn andnot_u32(a: u32, b: u32) -> u32
+pub fn andnot_u64(a: u64, b: u64) -> u64
+pub fn average_u16_m128i(a: m128i, b: m128i) -> m128i
+pub fn average_u16_m256i(a: m256i, b: m256i) -> m256i
+pub fn average_u8_m128i(a: m128i, b: m128i) -> m128i
+pub fn average_u8_m256i(a: m256i, b: m256i) -> m256i
+pub fn bit_extract2_u32(a: u32, control: u32) -> u32
+pub fn bit_extract2_u64(a: u64, control: u64) -> u64
+pub fn bit_extract_u32(a: u32, start: u32, len: u32) -> u32
+pub fn bit_extract_u64(a: u64, start: u32, len: u32) -> u64
+pub fn bit_lowest_set_mask_u32(a: u32) -> u32
+pub fn bit_lowest_set_mask_u64(a: u64) -> u64
+pub fn bit_lowest_set_reset_u32(a: u32) -> u32
+pub fn bit_lowest_set_reset_u64(a: u64) -> u64
+pub fn bit_lowest_set_value_u32(a: u32) -> u32
+pub fn bit_lowest_set_value_u64(a: u64) -> u64
+pub fn bit_zero_high_index_u32(a: u32, index: u32) -> u32
+pub fn bit_zero_high_index_u64(a: u64, index: u32) -> u64
+pub fn blend_varying_i8_m128i(a: m128i, b: m128i, mask: m128i) -> m128i
+pub fn blend_varying_i8_m256i(a: m256i, b: m256i, mask: m256i) -> m256i
+pub fn blend_varying_m128(a: m128, b: m128, mask: m128) -> m128
+pub fn blend_varying_m128d(a: m128d, b: m128d, mask: m128d) -> m128d
+pub fn blend_varying_m256(a: m256, b: m256, mask: m256) -> m256
+pub fn blend_varying_m256d(a: m256d, b: m256d, mask: m256d) -> m256d
+pub fn byte_swap_i32(i: i32) -> i32
+pub fn byte_swap_i64(i: i64) -> i64
+pub fn cast_from_m256_to_m256d(a: m256) -> m256d
+pub fn cast_from_m256_to_m256i(a: m256) -> m256i
+pub fn cast_from_m256d_to_m256(a: m256d) -> m256
+pub fn cast_from_m256d_to_m256i(a: m256d) -> m256i
+pub fn cast_from_m256i_to_m256(a: m256i) -> m256
+pub fn cast_from_m256i_to_m256d(a: m256i) -> m256d
+pub fn cast_to_m128_from_m128d(a: m128d) -> m128
+pub fn cast_to_m128_from_m128i(a: m128i) -> m128
+pub fn cast_to_m128d_from_m128(a: m128) -> m128d
+pub fn cast_to_m128d_from_m128i(a: m128i) -> m128d
+pub fn cast_to_m128i_from_m128(a: m128) -> m128i
+pub fn cast_to_m128i_from_m128d(a: m128d) -> m128i
+pub fn ceil_m128(a: m128) -> m128
+pub fn ceil_m128_s(a: m128, b: m128) -> m128
+pub fn ceil_m128d(a: m128d) -> m128d
+pub fn ceil_m128d_s(a: m128d, b: m128d) -> m128d
+pub fn ceil_m256(a: m256) -> m256
+pub fn ceil_m256d(a: m256d) -> m256d
+pub fn cmp_eq_i32_m128_s(a: m128, b: m128) -> i32
+pub fn cmp_eq_i32_m128d_s(a: m128d, b: m128d) -> i32
+pub fn cmp_eq_mask_i16_m128i(a: m128i, b: m128i) -> m128i
+pub fn cmp_eq_mask_i16_m256i(a: m256i, b: m256i) -> m256i
+pub fn cmp_eq_mask_i32_m128i(a: m128i, b: m128i) -> m128i
+pub fn cmp_eq_mask_i32_m256i(a: m256i, b: m256i) -> m256i
+pub fn cmp_eq_mask_i64_m128i(a: m128i, b: m128i) -> m128i
+pub fn cmp_eq_mask_i64_m256i(a: m256i, b: m256i) -> m256i
+pub fn cmp_eq_mask_i8_m128i(a: m128i, b: m128i) -> m128i
+pub fn cmp_eq_mask_i8_m256i(a: m256i, b: m256i) -> m256i
+pub fn cmp_eq_mask_m128(a: m128, b: m128) -> m128
+pub fn cmp_eq_mask_m128_s(a: m128, b: m128) -> m128
+pub fn cmp_eq_mask_m128d(a: m128d, b: m128d) -> m128d
+pub fn cmp_eq_mask_m128d_s(a: m128d, b: m128d) -> m128d
+pub fn cmp_ge_i32_m128_s(a: m128, b: m128) -> i32
+pub fn cmp_ge_i32_m128d_s(a: m128d, b: m128d) -> i32
+pub fn cmp_ge_mask_m128(a: m128, b: m128) -> m128
+pub fn cmp_ge_mask_m128_s(a: m128, b: m128) -> m128
+pub fn cmp_ge_mask_m128d(a: m128d, b: m128d) -> m128d
+pub fn cmp_ge_mask_m128d_s(a: m128d, b: m128d) -> m128d
+pub fn cmp_gt_i32_m128_s(a: m128, b: m128) -> i32
+pub fn cmp_gt_i32_m128d_s(a: m128d, b: m128d) -> i32
+pub fn cmp_gt_mask_i16_m128i(a: m128i, b: m128i) -> m128i
+pub fn cmp_gt_mask_i16_m256i(a: m256i, b: m256i) -> m256i
+pub fn cmp_gt_mask_i32_m128i(a: m128i, b: m128i) -> m128i
+pub fn cmp_gt_mask_i32_m256i(a: m256i, b: m256i) -> m256i
+pub fn cmp_gt_mask_i64_m128i(a: m128i, b: m128i) -> m128i
+pub fn cmp_gt_mask_i64_m256i(a: m256i, b: m256i) -> m256i
+pub fn cmp_gt_mask_i8_m128i(a: m128i, b: m128i) -> m128i
+pub fn cmp_gt_mask_i8_m256i(a: m256i, b: m256i) -> m256i
+pub fn cmp_gt_mask_m128(a: m128, b: m128) -> m128
+pub fn cmp_gt_mask_m128_s(a: m128, b: m128) -> m128
+pub fn cmp_gt_mask_m128d(a: m128d, b: m128d) -> m128d
+pub fn cmp_gt_mask_m128d_s(a: m128d, b: m128d) -> m128d
+pub fn cmp_le_i32_m128_s(a: m128, b: m128) -> i32
+pub fn cmp_le_i32_m128d_s(a: m128d, b: m128d) -> i32
+pub fn cmp_le_mask_m128(a: m128, b: m128) -> m128
+pub fn cmp_le_mask_m128_s(a: m128, b: m128) -> m128
+pub fn cmp_le_mask_m128d(a: m128d, b: m128d) -> m128d
+pub fn cmp_le_mask_m128d_s(a: m128d, b: m128d) -> m128d
+pub fn cmp_lt_i32_m128_s(a: m128, b: m128) -> i32
+pub fn cmp_lt_i32_m128d_s(a: m128d, b: m128d) -> i32
+pub fn cmp_lt_mask_i16_m128i(a: m128i, b: m128i) -> m128i
+pub fn cmp_lt_mask_i32_m128i(a: m128i, b: m128i) -> m128i
+pub fn cmp_lt_mask_i8_m128i(a: m128i, b: m128i) -> m128i
+pub fn cmp_lt_mask_m128(a: m128, b: m128) -> m128
+pub fn cmp_lt_mask_m128_s(a: m128, b: m128) -> m128
+pub fn cmp_lt_mask_m128d(a: m128d, b: m128d) -> m128d
+pub fn cmp_lt_mask_m128d_s(a: m128d, b: m128d) -> m128d
+pub fn cmp_neq_i32_m128_s(a: m128, b: m128) -> i32
+pub fn cmp_neq_i32_m128d_s(a: m128d, b: m128d) -> i32
+pub fn cmp_neq_mask_m128(a: m128, b: m128) -> m128
+pub fn cmp_neq_mask_m128_s(a: m128, b: m128) -> m128
+pub fn cmp_neq_mask_m128d(a: m128d, b: m128d) -> m128d
+pub fn cmp_neq_mask_m128d_s(a: m128d, b: m128d) -> m128d
+pub fn cmp_nge_mask_m128(a: m128, b: m128) -> m128
+pub fn cmp_nge_mask_m128_s(a: m128, b: m128) -> m128
+pub fn cmp_nge_mask_m128d(a: m128d, b: m128d) -> m128d
+pub fn cmp_nge_mask_m128d_s(a: m128d, b: m128d) -> m128d
+pub fn cmp_ngt_mask_m128(a: m128, b: m128) -> m128
+pub fn cmp_ngt_mask_m128_s(a: m128, b: m128) -> m128
+pub fn cmp_ngt_mask_m128d(a: m128d, b: m128d) -> m128d
+pub fn cmp_ngt_mask_m128d_s(a: m128d, b: m128d) -> m128d
+pub fn cmp_nle_mask_m128(a: m128, b: m128) -> m128
+pub fn cmp_nle_mask_m128_s(a: m128, b: m128) -> m128
+pub fn cmp_nle_mask_m128d(a: m128d, b: m128d) -> m128d
+pub fn cmp_nle_mask_m128d_s(a: m128d, b: m128d) -> m128d
+pub fn cmp_nlt_mask_m128(a: m128, b: m128) -> m128
+pub fn cmp_nlt_mask_m128_s(a: m128, b: m128) -> m128
+pub fn cmp_nlt_mask_m128d(a: m128d, b: m128d) -> m128d
+pub fn cmp_nlt_mask_m128d_s(a: m128d, b: m128d) -> m128d
+pub fn cmp_ordinary_mask_m128(a: m128, b: m128) -> m128
+pub fn cmp_ordinary_mask_m128_s(a: m128, b: m128) -> m128
+pub fn cmp_ordinary_mask_m128d(a: m128d, b: m128d) -> m128d
+pub fn cmp_ordinary_mask_m128d_s(a: m128d, b: m128d) -> m128d
+pub fn cmp_unord_mask_m128(a: m128, b: m128) -> m128
+pub fn cmp_unord_mask_m128_s(a: m128, b: m128) -> m128
+pub fn cmp_unord_mask_m128d(a: m128d, b: m128d) -> m128d
+pub fn cmp_unord_mask_m128d_s(a: m128d, b: m128d) -> m128d
+pub fn convert_i16_lower2_to_i64_m128i(a: m128i) -> m128i
+pub fn convert_i16_lower4_to_i32_m128i(a: m128i) -> m128i
+pub fn convert_i16_m128i_lower4_m256i(a: m128i) -> m256i
+pub fn convert_i16_m128i_m256i(a: m128i) -> m256i
+pub fn convert_i32_lower2_to_i64_m128i(a: m128i) -> m128i
+pub fn convert_i32_m128i_m256i(a: m128i) -> m256i
+pub fn convert_i32_replace_m128_s(a: m128, i: i32) -> m128
+pub fn convert_i32_replace_m128d_s(a: m128d, i: i32) -> m128d
+pub fn convert_i64_replace_m128_s(a: m128, i: i64) -> m128
+pub fn convert_i64_replace_m128d_s(a: m128d, i: i64) -> m128d
+pub fn convert_i8_lower2_to_i64_m128i(a: m128i) -> m128i
+pub fn convert_i8_lower4_to_i32_m128i(a: m128i) -> m128i
+pub fn convert_i8_lower8_to_i16_m128i(a: m128i) -> m128i
+pub fn convert_i8_m128i_lower4_m256i(a: m128i) -> m256i
+pub fn convert_i8_m128i_lower8_m256i(a: m128i) -> m256i
+pub fn convert_i8_m128i_m256i(a: m128i) -> m256i
+pub fn convert_m128_s_replace_m128d_s(a: m128d, b: m128) -> m128d
+pub fn convert_m128d_s_replace_m128_s(a: m128, b: m128d) -> m128
+pub fn convert_to_f32_from_m256_s(a: m256) -> f32
+pub fn convert_to_f64_from_m256d_s(a: m256d) -> f64
+pub fn convert_to_i32_from_m256i_s(a: m256i) -> i32
+pub fn convert_to_i32_m128i_from_m256d(a: m256d) -> m128i
+pub fn convert_to_i32_m256i_from_m256(a: m256) -> m256i
+pub fn convert_to_m128_from_m128d(a: m128d) -> m128
+pub fn convert_to_m128_from_m128i(a: m128i) -> m128
+pub fn convert_to_m128_from_m256d(a: m256d) -> m128
+pub fn convert_to_m128d_from_m128(a: m128) -> m128d
+pub fn convert_to_m128d_from_m128i(a: m128i) -> m128d
+pub fn convert_to_m128i_from_m128(a: m128) -> m128i
+pub fn convert_to_m128i_from_m128d(a: m128d) -> m128i
+pub fn convert_to_m128i_from_m256d(a: m256d) -> m128i
+pub fn convert_to_m256_from_i32_m256i(a: m256i) -> m256
+pub fn convert_to_m256d_from_i32_m128i(a: m128i) -> m256d
+pub fn convert_to_m256d_from_m128(a: m128) -> m256d
+pub fn convert_to_m256i_from_m256(a: m256) -> m256i
+pub fn convert_u16_lower2_to_u64_m128i(a: m128i) -> m128i
+pub fn convert_u16_lower4_to_u32_m128i(a: m128i) -> m128i
+pub fn convert_u16_m128i_lower4_m256i(a: m128i) -> m256i
+pub fn convert_u16_m128i_m256i(a: m128i) -> m256i
+pub fn convert_u32_lower2_to_u64_m128i(a: m128i) -> m128i
+pub fn convert_u32_m128i_m256i(a: m128i) -> m256i
+pub fn convert_u8_lower2_to_u64_m128i(a: m128i) -> m128i
+pub fn convert_u8_lower4_to_u32_m128i(a: m128i) -> m128i
+pub fn convert_u8_lower8_to_u16_m128i(a: m128i) -> m128i
+pub fn convert_u8_m128i_lower4_m256i(a: m128i) -> m256i
+pub fn convert_u8_m128i_lower8_m256i(a: m128i) -> m256i
+pub fn convert_u8_m128i_m256i(a: m128i) -> m256i
+pub fn copy_i64_m128i_s(a: m128i) -> m128i
+pub fn copy_replace_low_f64_m128d(a: m128d, b: m128d) -> m128d
+pub fn crc32_u16(crc: u32, v: u16) -> u32
+pub fn crc32_u32(crc: u32, v: u32) -> u32
+pub fn crc32_u64(crc: u64, v: u64) -> u64
+pub fn crc32_u8(crc: u32, v: u8) -> u32
+pub fn div_m128(a: m128, b: m128) -> m128
+pub fn div_m128_s(a: m128, b: m128) -> m128
+pub fn div_m128d(a: m128d, b: m128d) -> m128d
+pub fn div_m128d_s(a: m128d, b: m128d) -> m128d
+pub fn div_m256(a: m256, b: m256) -> m256
+pub fn div_m256d(a: m256d, b: m256d) -> m256d
+pub fn duplicate_even_lanes_m128(a: m128) -> m128
+pub fn duplicate_even_lanes_m256(a: m256) -> m256
+pub fn duplicate_low_lane_m128d_s(a: m128d) -> m128d
+pub fn duplicate_odd_lanes_m128(a: m128) -> m128
+pub fn duplicate_odd_lanes_m256(a: m256) -> m256
+pub fn duplicate_odd_lanes_m256d(a: m256d) -> m256d
+pub fn floor_m128(a: m128) -> m128
+pub fn floor_m128_s(a: m128, b: m128) -> m128
+pub fn floor_m128d(a: m128d) -> m128d
+pub fn floor_m128d_s(a: m128d, b: m128d) -> m128d
+pub fn floor_m256(a: m256) -> m256
+pub fn floor_m256d(a: m256d) -> m256d
+pub fn fused_mul_add_m128(a: m128, b: m128, c: m128) -> m128
+pub fn fused_mul_add_m128_s(a: m128, b: m128, c: m128) -> m128
+pub fn fused_mul_add_m128d(a: m128d, b: m128d, c: m128d) -> m128d
+pub fn fused_mul_add_m128d_s(a: m128d, b: m128d, c: m128d) -> m128d
+pub fn fused_mul_add_m256(a: m256, b: m256, c: m256) -> m256
+pub fn fused_mul_add_m256d(a: m256d, b: m256d, c: m256d) -> m256d
+pub fn fused_mul_addsub_m128(a: m128, b: m128, c: m128) -> m128
+pub fn fused_mul_addsub_m128d(a: m128d, b: m128d, c: m128d) -> m128d
+pub fn fused_mul_addsub_m256(a: m256, b: m256, c: m256) -> m256
+pub fn fused_mul_addsub_m256d(a: m256d, b: m256d, c: m256d) -> m256d
+pub fn fused_mul_neg_add_m128(a: m128, b: m128, c: m128) -> m128
+pub fn fused_mul_neg_add_m128_s(a: m128, b: m128, c: m128) -> m128
+pub fn fused_mul_neg_add_m128d(a: m128d, b: m128d, c: m128d) -> m128d
+pub fn fused_mul_neg_add_m128d_s(a: m128d, b: m128d, c: m128d) -> m128d
+pub fn fused_mul_neg_add_m256(a: m256, b: m256, c: m256) -> m256
+pub fn fused_mul_neg_add_m256d(a: m256d, b: m256d, c: m256d) -> m256d
+pub fn fused_mul_neg_sub_m128(a: m128, b: m128, c: m128) -> m128
+pub fn fused_mul_neg_sub_m128_s(a: m128, b: m128, c: m128) -> m128
+pub fn fused_mul_neg_sub_m128d(a: m128d, b: m128d, c: m128d) -> m128d
+pub fn fused_mul_neg_sub_m128d_s(a: m128d, b: m128d, c: m128d) -> m128d
+pub fn fused_mul_neg_sub_m256(a: m256, b: m256, c: m256) -> m256
+pub fn fused_mul_neg_sub_m256d(a: m256d, b: m256d, c: m256d) -> m256d
+pub fn fused_mul_sub_m128(a: m128, b: m128, c: m128) -> m128
+pub fn fused_mul_sub_m128_s(a: m128, b: m128, c: m128) -> m128
+pub fn fused_mul_sub_m128d(a: m128d, b: m128d, c: m128d) -> m128d
+pub fn fused_mul_sub_m128d_s(a: m128d, b: m128d, c: m128d) -> m128d
+pub fn fused_mul_sub_m256(a: m256, b: m256, c: m256) -> m256
+pub fn fused_mul_sub_m256d(a: m256d, b: m256d, c: m256d) -> m256d
+pub fn fused_mul_subadd_m128(a: m128, b: m128, c: m128) -> m128
+pub fn fused_mul_subadd_m128d(a: m128d, b: m128d, c: m128d) -> m128d
+pub fn fused_mul_subadd_m256(a: m256, b: m256, c: m256) -> m256
+pub fn fused_mul_subadd_m256d(a: m256d, b: m256d, c: m256d) -> m256d
+pub fn get_f32_from_m128_s(a: m128) -> f32
+pub fn get_f64_from_m128d_s(a: m128d) -> f64
+pub fn get_i32_from_m128_s(a: m128) -> i32
+pub fn get_i32_from_m128d_s(a: m128d) -> i32
+pub fn get_i32_from_m128i_s(a: m128i) -> i32
+pub fn get_i64_from_m128_s(a: m128) -> i64
+pub fn get_i64_from_m128d_s(a: m128d) -> i64
+pub fn get_i64_from_m128i_s(a: m128i) -> i64
+pub fn leading_zero_count_u32(a: u32) -> u32
+pub fn leading_zero_count_u64(a: u64) -> u64
+pub fn load_f32_m128_s(a: &f32) -> m128
+pub fn load_f32_splat_m128(a: &f32) -> m128
+pub fn load_f32_splat_m256(a: &f32) -> m256
+pub fn load_f64_m128d_s(a: &f64) -> m128d
+pub fn load_f64_splat_m128d(a: &f64) -> m128d
+pub fn load_f64_splat_m256d(a: &f64) -> m256d
+pub fn load_i64_m128i_s(a: &m128i) -> m128i
+pub fn load_m128(a: &m128) -> m128
+pub fn load_m128_splat_m256(a: &m128) -> m256
+pub fn load_m128d(a: &m128d) -> m128d
+pub fn load_m128d_splat_m256d(a: &m128d) -> m256d
+pub fn load_m128i(a: &m128i) -> m128i
+pub fn load_m256(a: &m256) -> m256
+pub fn load_m256d(a: &m256d) -> m256d
+pub fn load_m256i(a: &m256i) -> m256i
+pub fn load_masked_i32_m128i(a: &m128i, mask: m128i) -> m128i
+pub fn load_masked_i32_m256i(a: &m256i, mask: m256i) -> m256i
+pub fn load_masked_i64_m128i(a: &m128i, mask: m128i) -> m128i
+pub fn load_masked_i64_m256i(a: &m256i, mask: m256i) -> m256i
+pub fn load_masked_m128(a: &m128, mask: m128i) -> m128
+pub fn load_masked_m128d(a: &m128d, mask: m128i) -> m128d
+pub fn load_masked_m256(a: &m256, mask: m256i) -> m256
+pub fn load_masked_m256d(a: &m256d, mask: m256i) -> m256d
+pub fn load_replace_high_m128d(a: m128d, b: &f64) -> m128d
+pub fn load_replace_low_m128d(a: m128d, b: &f64) -> m128d
+pub fn load_reverse_m128(a: &m128) -> m128
+pub fn load_reverse_m128d(a: &m128d) -> m128d
+pub fn load_unaligned_hi_lo_m256(a: &[f32; 4], b: &[f32; 4]) -> m256
+pub fn load_unaligned_hi_lo_m256d(a: &[f64; 2], b: &[f64; 2]) -> m256d
+pub fn load_unaligned_hi_lo_m256i(a: &[i8; 16], b: &[i8; 16]) -> m256i
+pub fn load_unaligned_m128(a: &[f32; 4]) -> m128
+pub fn load_unaligned_m128d(a: &[f64; 2]) -> m128d
+pub fn load_unaligned_m128i(a: &[u8; 16]) -> m128i
+pub fn load_unaligned_m256(a: &[f32; 8]) -> m256
+pub fn load_unaligned_m256d(a: &[f64; 4]) -> m256d
+pub fn load_unaligned_m256i(a: &[i8; 32]) -> m256i
+pub fn max_i16_m128i(a: m128i, b: m128i) -> m128i
+pub fn max_i16_m256i(a: m256i, b: m256i) -> m256i
+pub fn max_i32_m128i(a: m128i, b: m128i) -> m128i
+pub fn max_i32_m256i(a: m256i, b: m256i) -> m256i
+pub fn max_i8_m128i(a: m128i, b: m128i) -> m128i
+pub fn max_i8_m256i(a: m256i, b: m256i) -> m256i
+pub fn max_m128(a: m128, b: m128) -> m128
+pub fn max_m128_s(a: m128, b: m128) -> m128
+pub fn max_m128d(a: m128d, b: m128d) -> m128d
+pub fn max_m128d_s(a: m128d, b: m128d) -> m128d
+pub fn max_m256(a: m256, b: m256) -> m256
+pub fn max_m256d(a: m256d, b: m256d) -> m256d
+pub fn max_u16_m128i(a: m128i, b: m128i) -> m128i
+pub fn max_u16_m256i(a: m256i, b: m256i) -> m256i
+pub fn max_u32_m128i(a: m128i, b: m128i) -> m128i
+pub fn max_u32_m256i(a: m256i, b: m256i) -> m256i
+pub fn max_u8_m128i(a: m128i, b: m128i) -> m128i
+pub fn max_u8_m256i(a: m256i, b: m256i) -> m256i
+pub fn min_i16_m128i(a: m128i, b: m128i) -> m128i
+pub fn min_i16_m256i(a: m256i, b: m256i) -> m256i
+pub fn min_i32_m128i(a: m128i, b: m128i) -> m128i
+pub fn min_i32_m256i(a: m256i, b: m256i) -> m256i
+pub fn min_i8_m128i(a: m128i, b: m128i) -> m128i
+pub fn min_i8_m256i(a: m256i, b: m256i) -> m256i
+pub fn min_m128(a: m128, b: m128) -> m128
+pub fn min_m128_s(a: m128, b: m128) -> m128
+pub fn min_m128d(a: m128d, b: m128d) -> m128d
+pub fn min_m128d_s(a: m128d, b: m128d) -> m128d
+pub fn min_m256(a: m256, b: m256) -> m256
+pub fn min_m256d(a: m256d, b: m256d) -> m256d
+pub fn min_position_u16_m128i(a: m128i) -> m128i
+pub fn min_u16_m128i(a: m128i, b: m128i) -> m128i
+pub fn min_u16_m256i(a: m256i, b: m256i) -> m256i
+pub fn min_u32_m128i(a: m128i, b: m128i) -> m128i
+pub fn min_u32_m256i(a: m256i, b: m256i) -> m256i
+pub fn min_u8_m128i(a: m128i, b: m128i) -> m128i
+pub fn min_u8_m256i(a: m256i, b: m256i) -> m256i
+pub fn move_high_low_m128(a: m128, b: m128) -> m128
+pub fn move_low_high_m128(a: m128, b: m128) -> m128
+pub fn move_m128_s(a: m128, b: m128) -> m128
+pub fn move_mask_i8_m128i(a: m128i) -> i32
+pub fn move_mask_m128(a: m128) -> i32
+pub fn move_mask_m128d(a: m128d) -> i32
+pub fn move_mask_m256(a: m256) -> i32
+pub fn move_mask_m256d(a: m256d) -> i32
+pub fn move_mask_m256i(a: m256i) -> i32
+pub fn mul_extended_u32(a: u32, b: u32, extra: &mut u32) -> u32
+pub fn mul_extended_u64(a: u64, b: u64, extra: &mut u64) -> u64
+pub fn mul_i16_horizontal_add_m128i(a: m128i, b: m128i) -> m128i
+pub fn mul_i16_horizontal_add_m256i(a: m256i, b: m256i) -> m256i
+pub fn mul_i16_keep_high_m128i(a: m128i, b: m128i) -> m128i
+pub fn mul_i16_keep_high_m256i(a: m256i, b: m256i) -> m256i
+pub fn mul_i16_keep_low_m128i(a: m128i, b: m128i) -> m128i
+pub fn mul_i16_keep_low_m256i(a: m256i, b: m256i) -> m256i
+pub fn mul_i16_scale_round_m128i(a: m128i, b: m128i) -> m128i
+pub fn mul_i16_scale_round_m256i(a: m256i, b: m256i) -> m256i
+pub fn mul_i32_keep_low_m128i(a: m128i, b: m128i) -> m128i
+pub fn mul_i32_keep_low_m256i(a: m256i, b: m256i) -> m256i
+pub fn mul_i64_low_bits_m256i(a: m256i, b: m256i) -> m256i
+pub fn mul_i64_widen_low_bits_m128i(a: m128i, b: m128i) -> m128i
+pub fn mul_m128(a: m128, b: m128) -> m128
+pub fn mul_m128_s(a: m128, b: m128) -> m128
+pub fn mul_m128d(a: m128d, b: m128d) -> m128d
+pub fn mul_m128d_s(a: m128d, b: m128d) -> m128d
+pub fn mul_m256(a: m256, b: m256) -> m256
+pub fn mul_m256d(a: m256d, b: m256d) -> m256d
+pub fn mul_u16_keep_high_m128i(a: m128i, b: m128i) -> m128i
+pub fn mul_u16_keep_high_m256i(a: m256i, b: m256i) -> m256i
+pub fn mul_u64_low_bits_m256i(a: m256i, b: m256i) -> m256i
+pub fn mul_u64_widen_low_bits_m128i(a: m128i, b: m128i) -> m128i
+pub fn mul_u8i8_add_horizontal_saturating_m128i(a: m128i, b: m128i) -> m128i
+pub fn mul_u8i8_add_horizontal_saturating_m256i(a: m256i, b: m256i) -> m256i
+pub fn or_m128(a: m128, b: m128) -> m128
+pub fn or_m128d(a: m128d, b: m128d) -> m128d
+pub fn or_m128i(a: m128i, b: m128i) -> m128i
+pub fn or_m256(a: m256, b: m256) -> m256
+pub fn or_m256d(a: m256d, b: m256d) -> m256d
+pub fn or_m256i(a: m256i, b: m256i) -> m256i
+pub fn pack_i16_to_i8_m128i(a: m128i, b: m128i) -> m128i
+pub fn pack_i16_to_i8_m256i(a: m256i, b: m256i) -> m256i
+pub fn pack_i16_to_u8_m128i(a: m128i, b: m128i) -> m128i
+pub fn pack_i16_to_u8_m256i(a: m256i, b: m256i) -> m256i
+pub fn pack_i32_to_i16_m128i(a: m128i, b: m128i) -> m128i
+pub fn pack_i32_to_i16_m256i(a: m256i, b: m256i) -> m256i
+pub fn pack_i32_to_u16_m128i(a: m128i, b: m128i) -> m128i
+pub fn pack_i32_to_u16_m256i(a: m256i, b: m256i) -> m256i
+pub fn permute_i32_m256i(a: m256i, indexes: m256i) -> m256i
+pub fn permute_m256(a: m256, indexes: m256i) -> m256
+pub fn permute_varying_m128(a: m128, b: m128i) -> m128
+pub fn permute_varying_m128d(a: m128d, b: m128i) -> m128d
+pub fn permute_varying_m256(a: m256, b: m256i) -> m256
+pub fn permute_varying_m256d(a: m256d, b: m256i) -> m256d
+pub fn population_count_i32(a: i32) -> i32
+pub fn population_count_i64(a: i64) -> i32
+pub fn population_deposit_u32(a: u32, index: u32) -> u32
+pub fn population_deposit_u64(a: u64, index: u64) -> u64
+pub fn population_extract_u32(a: u32, index: u32) -> u32
+pub fn population_extract_u64(a: u64, index: u64) -> u64
+pub fn rdrand_u16(out: &mut u16) -> i32
+pub fn rdrand_u32(out: &mut u32) -> i32
+pub fn rdrand_u64(out: &mut u64) -> i32
+pub fn rdseed_u16(out: &mut u16) -> i32
+pub fn rdseed_u32(out: &mut u32) -> i32
+pub fn rdseed_u64(out: &mut u64) -> i32
+pub fn read_timestamp_counter() -> u64
+pub fn read_timestamp_counter_p(aux: &mut u32) -> u64
+pub fn reciprocal_m128(a: m128) -> m128
+pub fn reciprocal_m128_s(a: m128) -> m128
+pub fn reciprocal_m256(a: m256) -> m256
+pub fn reciprocal_sqrt_m128(a: m128) -> m128
+pub fn reciprocal_sqrt_m128_s(a: m128) -> m128
+pub fn reciprocal_sqrt_m256(a: m256) -> m256
+pub fn set_i16_m128i(
+pub fn set_i16_m256i(
+pub fn set_i32_m128i(a: i32, b: i32, c: i32, d: i32) -> m128i
+pub fn set_i32_m128i_s(i: i32) -> m128i
+pub fn set_i32_m256i(
+pub fn set_i64_m128i(a: i64, b: i64) -> m128i
+pub fn set_i64_m128i_s(i: i64) -> m128i
+pub fn set_i64_m256i(
+pub fn set_i8_m128i(
+pub fn set_i8_m256i(
+pub fn set_m128(three: f32, two: f32, one: f32, zero: f32) -> m128
+pub fn set_m128_m256(
+pub fn set_m128_s(low: f32) -> m128
+pub fn set_m128d(a: f64, b: f64) -> m128d
+pub fn set_m128d_m256d(
+pub fn set_m128d_s(a: f64) -> m128d
+pub fn set_m128i_m256i(
+pub fn set_m256(
+pub fn set_m256d(
+pub fn set_reversed_i16_m128i(
+pub fn set_reversed_i16_m256i(
+pub fn set_reversed_i32_m128i(a: i32, b: i32, c: i32, d: i32) -> m128i
+pub fn set_reversed_i32_m256i(
+pub fn set_reversed_i64_m256i(
+pub fn set_reversed_i8_m128i(
+pub fn set_reversed_i8_m256i(
+pub fn set_reversed_m128(zero: f32, one: f32, two: f32, three: f32) -> m128
+pub fn set_reversed_m128_m256(
+pub fn set_reversed_m128d(a: f64, b: f64) -> m128d
+pub fn set_reversed_m128d_m256d(
+pub fn set_reversed_m128i_m256i(
+pub fn set_reversed_m256(
+pub fn set_reversed_m256d(
+pub fn set_splat_i16_m128i(i: i16) -> m128i
+pub fn set_splat_i16_m128i_s_m256i(a: m128i) -> m256i
+pub fn set_splat_i16_m256i(i: i16) -> m256i
+pub fn set_splat_i32_m128i(i: i32) -> m128i
+pub fn set_splat_i32_m128i_s_m256i(a: m128i) -> m256i
+pub fn set_splat_i32_m256i(i: i32) -> m256i
+pub fn set_splat_i64_m128i(i: i64) -> m128i
+pub fn set_splat_i64_m128i_s_m256i(a: m128i) -> m256i
+pub fn set_splat_i64_m256i(i: i64) -> m256i
+pub fn set_splat_i8_m128i(i: i8) -> m128i
+pub fn set_splat_i8_m128i_s_m256i(a: m128i) -> m256i
+pub fn set_splat_i8_m256i(i: i8) -> m256i
+pub fn set_splat_m128(all: f32) -> m128
+pub fn set_splat_m128_s_m256(a: m128) -> m256
+pub fn set_splat_m128d(a: f64) -> m128d
+pub fn set_splat_m128d_s_m256d(a: m128d) -> m256d
+pub fn set_splat_m256(
+pub fn set_splat_m256d(f: f64) -> m256d
+pub fn shl_i16_m128i(a: m128i, count: m128i) -> m128i
+pub fn shl_i16_m256i(a: m256i, count: m128i) -> m256i
+pub fn shl_i32_each_m256i(a: m256i, count: m256i) -> m256i
+pub fn shl_i32_m128i(a: m128i, count: m128i) -> m128i
+pub fn shl_i32_m256i(a: m256i, count: m128i) -> m256i
+pub fn shl_i64_each_m256i(a: m256i, count: m256i) -> m256i
+pub fn shl_i64_m128i(a: m128i, count: m128i) -> m128i
+pub fn shl_i64_m256i(a: m256i, count: m128i) -> m256i
+pub fn shl_u32_each_m128i(a: m128i, count: m128i) -> m128i
+pub fn shl_u64_each_m128i(a: m128i, count: m128i) -> m128i
+pub fn shr_i16_m128i(a: m128i, count: m128i) -> m128i
+pub fn shr_i16_m256i(a: m256i, count: m128i) -> m256i
+pub fn shr_i32_each_m128i(a: m128i, count: m128i) -> m128i
+pub fn shr_i32_each_m256i(a: m256i, count: m256i) -> m256i
+pub fn shr_i32_m128i(a: m128i, count: m128i) -> m128i
+pub fn shr_i32_m256i(a: m256i, count: m128i) -> m256i
+pub fn shr_u16_m128i(a: m128i, count: m128i) -> m128i
+pub fn shr_u16_m256i(a: m256i, count: m128i) -> m256i
+pub fn shr_u32_each_m128i(a: m128i, count: m128i) -> m128i
+pub fn shr_u32_each_m256i(a: m256i, count: m256i) -> m256i
+pub fn shr_u32_m128i(a: m128i, count: m128i) -> m128i
+pub fn shr_u32_m256i(a: m256i, count: m128i) -> m256i
+pub fn shr_u64_each_m128i(a: m128i, count: m128i) -> m128i
+pub fn shr_u64_each_m256i(a: m256i, count: m256i) -> m256i
+pub fn shr_u64_m128i(a: m128i, count: m128i) -> m128i
+pub fn shr_u64_m256i(a: m256i, count: m128i) -> m256i
+pub fn shuffle_i8_m128i(a: m128i, b: m128i) -> m128i
+pub fn shuffle_i8_m256i(a: m256i, control: m256i) -> m256i
+pub fn sign_apply_i16_m128i(a: m128i, b: m128i) -> m128i
+pub fn sign_apply_i16_m256i(a: m256i, b: m256i) -> m256i
+pub fn sign_apply_i32_m128i(a: m128i, b: m128i) -> m128i
+pub fn sign_apply_i32_m256i(a: m256i, b: m256i) -> m256i
+pub fn sign_apply_i8_m128i(a: m128i, b: m128i) -> m128i
+pub fn sign_apply_i8_m256i(a: m256i, b: m256i) -> m256i
+pub fn splat_i16_m128i_s_m128i(a: m128i) -> m128i
+pub fn splat_i32_m128i_s_m128i(a: m128i) -> m128i
+pub fn splat_i64_m128i_s_m128i(a: m128i) -> m128i
+pub fn splat_i8_m128i_s_m128i(a: m128i) -> m128i
+pub fn splat_m128_s_m128(a: m128) -> m128
+pub fn splat_m128d_s_m128d(a: m128d) -> m128d
+pub fn splat_m128i_m256i(a: m128i) -> m256i
+pub fn sqrt_m128(a: m128) -> m128
+pub fn sqrt_m128_s(a: m128) -> m128
+pub fn sqrt_m128d(a: m128d) -> m128d
+pub fn sqrt_m128d_s(a: m128d, b: m128d) -> m128d
+pub fn sqrt_m256(a: m256) -> m256
+pub fn sqrt_m256d(a: m256d) -> m256d
+pub fn store_high_m128d_s(r: &mut f64, a: m128d)
+pub fn store_i64_m128i_s(r: &mut i64, a: m128i)
+pub fn store_m128(r: &mut m128, a: m128)
+pub fn store_m128_s(r: &mut f32, a: m128)
+pub fn store_m128d(r: &mut m128d, a: m128d)
+pub fn store_m128d_s(r: &mut f64, a: m128d)
+pub fn store_m128i(r: &mut m128i, a: m128i)
+pub fn store_m256(addr: &mut m256, a: m256)
+pub fn store_m256d(addr: &mut m256d, a: m256d)
+pub fn store_m256i(addr: &mut m256i, a: m256i)
+pub fn store_masked_i32_m128i(addr: &mut m128i, mask: m128i, a: m128i)
+pub fn store_masked_i32_m256i(addr: &mut m256i, mask: m256i, a: m256i)
+pub fn store_masked_i64_m128i(addr: &mut m128i, mask: m128i, a: m128i)
+pub fn store_masked_i64_m256i(addr: &mut m256i, mask: m256i, a: m256i)
+pub fn store_masked_m128(addr: &mut m128, mask: m128i, a: m128)
+pub fn store_masked_m128d(addr: &mut m128d, mask: m128i, a: m128d)
+pub fn store_masked_m256(addr: &mut m256, mask: m256i, a: m256)
+pub fn store_masked_m256d(addr: &mut m256d, mask: m256i, a: m256d)
+pub fn store_reverse_m128(r: &mut m128, a: m128)
+pub fn store_reversed_m128d(r: &mut m128d, a: m128d)
+pub fn store_splat_m128(r: &mut m128, a: m128)
+pub fn store_splat_m128d(r: &mut m128d, a: m128d)
+pub fn store_unaligned_hi_lo_m256(
+pub fn store_unaligned_hi_lo_m256d(
+pub fn store_unaligned_hi_lo_m256i(
+pub fn store_unaligned_m128(r: &mut [f32; 4], a: m128)
+pub fn store_unaligned_m128d(r: &mut [f64; 2], a: m128d)
+pub fn store_unaligned_m128i(r: &mut [u8; 16], a: m128i)
+pub fn store_unaligned_m256(addr: &mut [f32; 8], a: m256)
+pub fn store_unaligned_m256d(addr: &mut [f64; 4], a: m256d)
+pub fn store_unaligned_m256i(addr: &mut [i8; 32], a: m256i)
+pub fn sub_horizontal_i16_m128i(a: m128i, b: m128i) -> m128i
+pub fn sub_horizontal_i16_m256i(a: m256i, b: m256i) -> m256i
+pub fn sub_horizontal_i32_m128i(a: m128i, b: m128i) -> m128i
+pub fn sub_horizontal_i32_m256i(a: m256i, b: m256i) -> m256i
+pub fn sub_horizontal_m128(a: m128, b: m128) -> m128
+pub fn sub_horizontal_m128d(a: m128d, b: m128d) -> m128d
+pub fn sub_horizontal_m256(a: m256, b: m256) -> m256
+pub fn sub_horizontal_m256d(a: m256d, b: m256d) -> m256d
+pub fn sub_horizontal_saturating_i16_m128i(a: m128i, b: m128i) -> m128i
+pub fn sub_horizontal_saturating_i16_m256i(a: m256i, b: m256i) -> m256i
+pub fn sub_i16_m128i(a: m128i, b: m128i) -> m128i
+pub fn sub_i16_m256i(a: m256i, b: m256i) -> m256i
+pub fn sub_i32_m128i(a: m128i, b: m128i) -> m128i
+pub fn sub_i32_m256i(a: m256i, b: m256i) -> m256i
+pub fn sub_i64_m128i(a: m128i, b: m128i) -> m128i
+pub fn sub_i64_m256i(a: m256i, b: m256i) -> m256i
+pub fn sub_i8_m128i(a: m128i, b: m128i) -> m128i
+pub fn sub_i8_m256i(a: m256i, b: m256i) -> m256i
+pub fn sub_m128(a: m128, b: m128) -> m128
+pub fn sub_m128_s(a: m128, b: m128) -> m128
+pub fn sub_m128d(a: m128d, b: m128d) -> m128d
+pub fn sub_m128d_s(a: m128d, b: m128d) -> m128d
+pub fn sub_m256(a: m256, b: m256) -> m256
+pub fn sub_m256d(a: m256d, b: m256d) -> m256d
+pub fn sub_saturating_i16_m128i(a: m128i, b: m128i) -> m128i
+pub fn sub_saturating_i16_m256i(a: m256i, b: m256i) -> m256i
+pub fn sub_saturating_i8_m128i(a: m128i, b: m128i) -> m128i
+pub fn sub_saturating_i8_m256i(a: m256i, b: m256i) -> m256i
+pub fn sub_saturating_u16_m128i(a: m128i, b: m128i) -> m128i
+pub fn sub_saturating_u16_m256i(a: m256i, b: m256i) -> m256i
+pub fn sub_saturating_u8_m128i(a: m128i, b: m128i) -> m128i
+pub fn sub_saturating_u8_m256i(a: m256i, b: m256i) -> m256i
+pub fn sum_of_u8_abs_diff_m128i(a: m128i, b: m128i) -> m128i
+pub fn sum_of_u8_abs_diff_m256i(a: m256i, b: m256i) -> m256i
+pub fn test_all_ones_m128i(a: m128i) -> i32
+pub fn test_all_zeroes_m128i(a: m128i, mask: m128i) -> i32
+pub fn test_mixed_ones_and_zeroes_m128i(a: m128i, mask: m128i) -> i32
+pub fn trailing_zero_count_u32(a: u32) -> u32
+pub fn trailing_zero_count_u64(a: u64) -> u64
+pub fn transpose_four_m128(
+pub fn truncate_m128_to_m128i(a: m128) -> m128i
+pub fn truncate_m128d_to_m128i(a: m128d) -> m128i
+pub fn truncate_to_i32_m128d_s(a: m128d) -> i32
+pub fn truncate_to_i64_m128d_s(a: m128d) -> i64
+pub fn unpack_hi_m256(a: m256, b: m256) -> m256
+pub fn unpack_hi_m256d(a: m256d, b: m256d) -> m256d
+pub fn unpack_high_i16_m128i(a: m128i, b: m128i) -> m128i
+pub fn unpack_high_i16_m256i(a: m256i, b: m256i) -> m256i
+pub fn unpack_high_i32_m128i(a: m128i, b: m128i) -> m128i
+pub fn unpack_high_i32_m256i(a: m256i, b: m256i) -> m256i
+pub fn unpack_high_i64_m128i(a: m128i, b: m128i) -> m128i
+pub fn unpack_high_i64_m256i(a: m256i, b: m256i) -> m256i
+pub fn unpack_high_i8_m128i(a: m128i, b: m128i) -> m128i
+pub fn unpack_high_i8_m256i(a: m256i, b: m256i) -> m256i
+pub fn unpack_high_m128(a: m128, b: m128) -> m128
+pub fn unpack_high_m128d(a: m128d, b: m128d) -> m128d
+pub fn unpack_lo_m256(a: m256, b: m256) -> m256
+pub fn unpack_lo_m256d(a: m256d, b: m256d) -> m256d
+pub fn unpack_low_i16_m128i(a: m128i, b: m128i) -> m128i
+pub fn unpack_low_i16_m256i(a: m256i, b: m256i) -> m256i
+pub fn unpack_low_i32_m128i(a: m128i, b: m128i) -> m128i
+pub fn unpack_low_i32_m256i(a: m256i, b: m256i) -> m256i
+pub fn unpack_low_i64_m128i(a: m128i, b: m128i) -> m128i
+pub fn unpack_low_i64_m256i(a: m256i, b: m256i) -> m256i
+pub fn unpack_low_i8_m128i(a: m128i, b: m128i) -> m128i
+pub fn unpack_low_i8_m256i(a: m256i, b: m256i) -> m256i
+pub fn unpack_low_m128(a: m128, b: m128) -> m128
+pub fn unpack_low_m128d(a: m128d, b: m128d) -> m128d
+pub fn xor_m128(a: m128, b: m128) -> m128
+pub fn xor_m128d(a: m128d, b: m128d) -> m128d
+pub fn xor_m128i(a: m128i, b: m128i) -> m128i
+pub fn xor_m256(a: m256, b: m256) -> m256
+pub fn xor_m256d(a: m256d, b: m256d) -> m256d
+pub fn xor_m256i(a: m256i, b: m256i) -> m256i
+pub fn zero_extend_m128(a: m128) -> m256
+pub fn zero_extend_m128d(a: m128d) -> m256d
+pub fn zero_extend_m128i(a: m128i) -> m256i
+pub fn zeroed_m128() -> m128
+pub fn zeroed_m128d() -> m128d
+pub fn zeroed_m128i() -> m128i
+pub fn zeroed_m256() -> m256
+pub fn zeroed_m256d() -> m256d
+pub fn zeroed_m256i() -> m256i
+macro_rules! aes_key_gen_assist_m128i
+macro_rules! blend_i32_m128i
+macro_rules! blend_imm_i16_m128i
+macro_rules! blend_imm_i16_m256i
+macro_rules! blend_imm_i32_m256i
+macro_rules! blend_imm_m128
+macro_rules! blend_imm_m128d
+macro_rules! blend_imm_m256
+macro_rules! blend_imm_m256d
+macro_rules! byte_shl_u128_imm_m128i
+macro_rules! byte_shl_u128_imm_m256i
+macro_rules! byte_shr_u128_imm_m128i
+macro_rules! byte_shr_u128_imm_m256i
+macro_rules! cmp_op_mask_m128
+macro_rules! cmp_op_mask_m128_s
+macro_rules! cmp_op_mask_m128d
+macro_rules! cmp_op_mask_m128d_s
+macro_rules! cmp_op_mask_m256
+macro_rules! cmp_op_mask_m256d
+macro_rules! combined_byte_shr_imm_m128i
+macro_rules! combined_byte_shr_imm_m256i
+macro_rules! comparison_operator_translation
+macro_rules! dot_product_m128
+macro_rules! dot_product_m128d
+macro_rules! dot_product_m256
+macro_rules! extract_f32_as_i32_bits_imm_m128
+macro_rules! extract_i16_as_i32_m128i
+macro_rules! extract_i16_as_i32_m256i
+macro_rules! extract_i32_from_m256i
+macro_rules! extract_i32_imm_m128i
+macro_rules! extract_i64_from_m256i
+macro_rules! extract_i64_imm_m128i
+macro_rules! extract_i8_as_i32_imm_m128i
+macro_rules! extract_i8_as_i32_m256i
+macro_rules! extract_m128_from_m256
+macro_rules! extract_m128d_from_m256d
+macro_rules! extract_m128i_from_m256i
+macro_rules! extract_m128i_m256i
+macro_rules! insert_f32_imm_m128
+macro_rules! insert_i16_from_i32_m128i
+macro_rules! insert_i16_to_m256i
+macro_rules! insert_i32_imm_m128i
+macro_rules! insert_i32_to_m256i
+macro_rules! insert_i64_imm_m128i
+macro_rules! insert_i64_to_m256i
+macro_rules! insert_i8_imm_m128i
+macro_rules! insert_i8_to_m256i
+macro_rules! insert_m128_to_m256
+macro_rules! insert_m128d_to_m256d
+macro_rules! insert_m128i_to_m256i
+macro_rules! insert_m128i_to_m256i_slow_avx
+macro_rules! mul_i64_carryless_m128i
+macro_rules! multi_packed_sum_abs_diff_u8_m128i
+macro_rules! multi_packed_sum_abs_diff_u8_m256i
+macro_rules! permute_2x128_m256i
+macro_rules! permute_f128_in_m256
+macro_rules! permute_f128_in_m256d
+macro_rules! permute_i128_in_m256i
+macro_rules! permute_i64_m256i
+macro_rules! permute_m128
+macro_rules! permute_m128d
+macro_rules! permute_m256
+macro_rules! permute_m256d
+macro_rules! permute_within_m128d_m256d
+macro_rules! round_m128
+macro_rules! round_m128_s
+macro_rules! round_m128d
+macro_rules! round_m128d_s
+macro_rules! round_m256
+macro_rules! round_m256d
+macro_rules! shl_i16_imm_m128i
+macro_rules! shl_i16_imm_m256i
+macro_rules! shl_i32_imm_m128i
+macro_rules! shl_i32_imm_m256i
+macro_rules! shl_i64_imm_m128i
+macro_rules! shl_i64_imm_m256i
+macro_rules! shr_i16_imm_m128i
+macro_rules! shr_i16_imm_m256i
+macro_rules! shr_i32_imm_m128i
+macro_rules! shr_i32_imm_m256i
+macro_rules! shr_u16_imm_m128i
+macro_rules! shr_u16_imm_m256i
+macro_rules! shr_u32_imm_m128i
+macro_rules! shr_u32_imm_m256i
+macro_rules! shr_u64_imm_m128i
+macro_rules! shr_u64_imm_m256i
+macro_rules! shuffle_i16_high_lanes_m128i
+macro_rules! shuffle_i16_high_m256i
+macro_rules! shuffle_i16_low_lanes_m128i
+macro_rules! shuffle_i16_low_m256i
+macro_rules! shuffle_i32_m128i
+macro_rules! shuffle_i32_m256i
+macro_rules! shuffle_m128
+macro_rules! shuffle_m128d
+macro_rules! shuffle_m256
+macro_rules! shuffle_m256d
+macro_rules! string_search_for_index
+macro_rules! string_search_for_mask
