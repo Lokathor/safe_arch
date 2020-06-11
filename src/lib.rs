@@ -38,47 +38,13 @@
 //!   something if you want to do that.
 //!
 //! ## Naming Conventions
-//! The actual names for each intrinsic are generally a flaming dumpster of
-//! letters that only make sense _after_ you've learned all the names. They're
-//! very bad for learning what things do. Accordingly, `safe_arch` uses very
-//! verbose naming that (hopefully) improves the new-user experience.
+//! The `safe_arch` crate does not simply use the "official" names for each
+//! intrinsic, because the official names are generally poor. Instead, the
+//! operations have been given better names that makes things hopefully easier
+//! to understand then you're reading the code.
 //!
-//! * Function names start with the primary "verb" of the operation, and then
-//!   any adverbs go after that. This makes for slightly awkward English but
-//!   helps the list of all the functions sort a little better.
-//!   * Eg: `add_i32_m128i` and `add_i16_saturating_m128i`
-//! * Function names end with the register type they're most associated with. I
-//!   say "most" because while most operations only work with a single register
-//!   type at a time there are occasional operations that use more than one
-//!   register type.
-//!   * Eg: `and_m128` (for `m128`) and `and_m128d` (for `m128d`)
-//! * If a function operates on just the lowest data lane it generally has `_s`
-//!   after the register type, because it's a "scalar" operation. The higher
-//!   lanes are generally just copied forward, or taken from a secondary
-//!   argument, or something. Details vary.
-//!   * Eg: `sqrt_m128` (all lanes) and `sqrt_m128_s` (low lane only)
-//!
-//! Of course, people can't even always agree on what words mean. The common
-//! verb names for this crate, and their conventions, are as follows:
-//! * `load`: Reads memory into a register (deref `&Foo` to `Foo`).
-//! * `store`: Writes a register to memory (writes `Foo` to a `&mut Foo`).
-//! * `set`: Packs values into a register (works like `[1, 2, 3, 4]` to build an
-//!   array).
-//! * `splat`: Modifies either a "load" or set". The input is copied as many
-//!   times as possible across the bits of the output register size (works like
-//!   `[1_i32; LEN]` array building).
-//! * `extract`: Get an individual lane out of a SIMD register (works like
-//!   `reg[i]`). The lane to get has to be a const value.
-//! * `insert`: Duplicate a register and then replace the value of a specific
-//!   lane (works like `let mut reg2 = reg.copied(); reg[i] = new;`). The lane
-//!   to overwrite has to be a const value.
-//! * `cast`: change data types while preserving the bit pattern (like how
-//!   `transmute` would do it).
-//! * `convert`: change data types while trying to stick close to the numeric
-//!   value (which might change the bits, like how `as` would do it).
-//!
-//! **This crate is pre-1.0 and if you feel that an operation should have a
-//! better name to improve the crate's consistency please file an issue.**
+//! For a full explanation of the naming used, see the [Naming
+//! Conventions](crate::naming_conventions) page.
 //!
 //! ## Current Support
 //! * `x86` / `x86_64` (Intel, AMD, etc)
@@ -168,6 +134,8 @@ use core::{
     BitXorAssign, Div, DivAssign, Mul, MulAssign, Neg, Not, Sub, SubAssign,
   },
 };
+
+pub mod naming_conventions;
 
 /// Declares a private mod and then a glob `use` with the visibility specified.
 macro_rules! submodule {
