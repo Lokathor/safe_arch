@@ -7,13 +7,13 @@ use super::*;
 /// # use safe_arch::*;
 /// let a = m128d::from_array([10.0, 50.0]);
 /// let b = m128d::from_array([100.0, 500.0]);
-/// let c = add_sub_m128d(a, b).to_array();
+/// let c = addsub_m128d(a, b).to_array();
 /// assert_eq!(c, [-90.0, 550.0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse3")))]
-pub fn add_sub_m128d(a: m128d, b: m128d) -> m128d {
+pub fn addsub_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_addsub_pd(a.0, b.0) })
 }
 
@@ -22,13 +22,13 @@ pub fn add_sub_m128d(a: m128d, b: m128d) -> m128d {
 /// # use safe_arch::*;
 /// let a = m128::from_array([10.0, 20.0, 30.0, 40.0]);
 /// let b = m128::from_array([100.0, 200.0, 300.0, 400.0]);
-/// let c = add_sub_m128(a, b).to_array();
+/// let c = addsub_m128(a, b).to_array();
 /// assert_eq!(c, [-90.0, 220.0, -270.0, 440.0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse3")))]
-pub fn add_sub_m128(a: m128, b: m128) -> m128 {
+pub fn addsub_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_addsub_ps(a.0, b.0) })
 }
 
