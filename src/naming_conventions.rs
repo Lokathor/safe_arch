@@ -37,12 +37,15 @@
 //! * Horizontal: `out[0] = a[0] + a[1]`, `out[1] = b[0] + b[1]`
 //!
 //! ## Operation Glossary
-//! Here follows the list of all the operations and their explanations.
+//! Here follows the list of all the main operations and their explanations.
 //!
 //! * `abs`: Absolute value (wrapping).
 //! * `add`: Addition (wrapping by default).
 //! * `and`: Bitwise `&`
-//! * `andnot`: Bitwise `(!a) & b`
+//! * `andnot`: Bitwise `(!a) & b`. This seems a little funny at first but it's
+//!   useful for clearing bits. The output will be based on the `b` side's bit
+//!   pattern, but with all bits in `a` cleared: `andnot(0b0010, 0b1011) ==
+//!   0b1001`
 //! * `average`: Averages the two inputs.
 //! * `blend`: TODO
 //! * `cast`: Convert between data types while preserving the exact bit
@@ -53,3 +56,5 @@
 //!   with all the bits in a "true" lane as 1 and all the bits in a "false" lane
 //!   as 0. Remember that with floating point values all 1s bits is a `NaN`, and
 //!   with signed integers all 1s bits is `-1`.
+//! * `convert`: TODO
+//! * `div`: Division.
