@@ -120,6 +120,8 @@
 //! * `shl`: Bit shift left. New bits shifted in are always 0. Because the shift
 //!   is the same for both signed and unsigned values, this crate simply marks
 //!   left shift as always being an unsigned operation.
+//!   * You can shift by an immediate value ("imm"), all lanes by the same value
+//!     ("all"), or each lane by its own value ("each").
 //! * `shr`: Bit shift right. This comes in two forms: "Arithmetic" shifts shift
 //!   in the starting sign bit (which preserves the sign of the value), and
 //!   "Logical" shifts shift in 0 regardless of the starting sign bit (so the
@@ -127,6 +129,8 @@
 //!   use arithmetic shifts and unsigned integers use logical shifts, so these
 //!   functions are marked as being for signed or unsigned integers
 //!   appropriately.
+//!   * As with `shl`, you can shift by an immediate value ("imm"), all lanes by
+//!     the same value ("all"), or each lane by its own value ("each").
 //! * `sign_apply`: Multiplies one set of values by the signum (1, 0, or -1) of
 //!   another set of values.
 //! * `sqrt`: Square Root.
