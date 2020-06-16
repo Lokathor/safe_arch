@@ -239,7 +239,7 @@ pub fn store_masked_i64_m128i(addr: &mut m128i, mask: m128i, a: m128i) {
 /// # use safe_arch::*;
 /// let a = m128i::from([1, 2, 3, 4]);
 /// let count = m128i::from([5, 6, 7, 8]);
-/// let out: [u32; 4] = shl_u32_each_m128i(a, count).into();
+/// let out: [u32; 4] = shl_each_u32_m128i(a, count).into();
 /// assert_eq!(out, [1 << 5, 2 << 6, 3 << 7, 4 << 8]);
 /// ```
 /// * **Intrinsic:** [`_mm_sllv_epi32`]
@@ -247,7 +247,7 @@ pub fn store_masked_i64_m128i(addr: &mut m128i, mask: m128i, a: m128i) {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn shl_u32_each_m128i(a: m128i, count: m128i) -> m128i {
+pub fn shl_each_u32_m128i(a: m128i, count: m128i) -> m128i {
   m128i(unsafe { _mm_sllv_epi32(a.0, count.0) })
 }
 
@@ -259,7 +259,7 @@ pub fn shl_u32_each_m128i(a: m128i, count: m128i) -> m128i {
 /// # use safe_arch::*;
 /// let a = m128i::from([1_u64, 2]);
 /// let count = m128i::from([3_u64, 4]);
-/// let out: [u64; 2] = shl_u64_each_m128i(a, count).into();
+/// let out: [u64; 2] = shl_each_u64_m128i(a, count).into();
 /// assert_eq!(out, [1_u64 << 3, 2 << 4]);
 /// ```
 /// * **Intrinsic:** [`_mm_sllv_epi64`]
@@ -267,7 +267,7 @@ pub fn shl_u32_each_m128i(a: m128i, count: m128i) -> m128i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn shl_u64_each_m128i(a: m128i, count: m128i) -> m128i {
+pub fn shl_each_u64_m128i(a: m128i, count: m128i) -> m128i {
   m128i(unsafe { _mm_sllv_epi64(a.0, count.0) })
 }
 
@@ -279,7 +279,7 @@ pub fn shl_u64_each_m128i(a: m128i, count: m128i) -> m128i {
 /// # use safe_arch::*;
 /// let a = m128i::from([100, 110, 120, -130]);
 /// let count = m128i::from([1, 2, 3, 4]);
-/// let out: [i32; 4] = shr_i32_each_m128i(a, count).into();
+/// let out: [i32; 4] = shr_each_i32_m128i(a, count).into();
 /// assert_eq!(out, [100 >> 1, 110 >> 2, 120 >> 3, (-130) >> 4]);
 /// ```
 /// * **Intrinsic:** [`_mm_srav_epi32`]
@@ -287,7 +287,7 @@ pub fn shl_u64_each_m128i(a: m128i, count: m128i) -> m128i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn shr_i32_each_m128i(a: m128i, count: m128i) -> m128i {
+pub fn shr_each_i32_m128i(a: m128i, count: m128i) -> m128i {
   m128i(unsafe { _mm_srav_epi32(a.0, count.0) })
 }
 
@@ -299,7 +299,7 @@ pub fn shr_i32_each_m128i(a: m128i, count: m128i) -> m128i {
 /// # use safe_arch::*;
 /// let a = m128i::from([100, 110, 120, 130]);
 /// let count = m128i::from([1, 2, 3, 4]);
-/// let out: [u32; 4] = shr_u32_each_m128i(a, count).into();
+/// let out: [u32; 4] = shr_each_u32_m128i(a, count).into();
 /// assert_eq!(out, [100 >> 1, 110 >> 2, 120 >> 3, 130 >> 4]);
 /// ```
 /// * **Intrinsic:** [`_mm_srlv_epi32`]
@@ -307,7 +307,7 @@ pub fn shr_i32_each_m128i(a: m128i, count: m128i) -> m128i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn shr_u32_each_m128i(a: m128i, count: m128i) -> m128i {
+pub fn shr_each_u32_m128i(a: m128i, count: m128i) -> m128i {
   m128i(unsafe { _mm_srlv_epi32(a.0, count.0) })
 }
 
@@ -319,7 +319,7 @@ pub fn shr_u32_each_m128i(a: m128i, count: m128i) -> m128i {
 /// # use safe_arch::*;
 /// let a = m128i::from([100_u64, 110]);
 /// let count = m128i::from([1_u64, 2]);
-/// let out: [u64; 2] = shr_u64_each_m128i(a, count).into();
+/// let out: [u64; 2] = shr_each_u64_m128i(a, count).into();
 /// assert_eq!(out, [100_u64 >> 1, 110 >> 2]);
 /// ```
 /// * **Intrinsic:** [`_mm_srlv_epi64`]
@@ -327,7 +327,7 @@ pub fn shr_u32_each_m128i(a: m128i, count: m128i) -> m128i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn shr_u64_each_m128i(a: m128i, count: m128i) -> m128i {
+pub fn shr_each_u64_m128i(a: m128i, count: m128i) -> m128i {
   m128i(unsafe { _mm_srlv_epi64(a.0, count.0) })
 }
 
@@ -811,14 +811,14 @@ pub fn set_splat_m128_s_m256(a: m128) -> m256 {
 /// # use safe_arch::*;
 /// let a = m256i::from([0x0000000B_0000000A_0000000F_11111111_u128; 2]);
 /// //
-/// let b: [u128; 2] = byte_shl_u128_imm_m256i!(a, 1).into();
+/// let b: [u128; 2] = byte_shl_imm_u128_m256i!(a, 1).into();
 /// assert_eq!(b, [0x00000B00_00000A00_00000F11_11111100_u128; 2]);
 /// ```
 /// * **Intrinsic:** [`_mm256_bslli_epi128`]
 /// * **Assembly:** `vpslldq ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! byte_shl_u128_imm_m256i {
+macro_rules! byte_shl_imm_u128_m256i {
   ($a:expr, $imm:expr) => {{
     let a: $crate::m256i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
@@ -836,14 +836,14 @@ macro_rules! byte_shl_u128_imm_m256i {
 /// # use safe_arch::*;
 /// let a = m256i::from([0x0000000B_0000000A_0000000F_11111111_u128; 2]);
 /// //
-/// let b: [u128; 2] = byte_shr_u128_imm_m256i!(a, 1).into();
+/// let b: [u128; 2] = byte_shr_imm_u128_m256i!(a, 1).into();
 /// assert_eq!(b, [0x00000000_0B000000_0A000000_0F111111; 2]);
 /// ```
 /// * **Intrinsic:** [`_mm256_bsrli_epi128`]
 /// * **Assembly:** `vpsrldq ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! byte_shr_u128_imm_m256i {
+macro_rules! byte_shr_imm_u128_m256i {
   ($a:expr, $imm:expr) => {{
     let a: $crate::m256i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
@@ -2647,72 +2647,70 @@ pub fn sign_apply_i32_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_sign_epi32(a.0, b.0) })
 }
 
-/// Lanewise `i16` shift left by the lower `i64` lane of `count`.
+/// Lanewise `u16` shift left by the lower `u64` lane of `count`.
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([5_i16, 6, 2, 5, 4, 3, 1, 0, -12, 13, 56, 21, 8, 7, 6, 5]);
-/// let count = m128i::from(1_i128);
-/// let b: [i16; 16] = shl_i16_m256i(a, count).into();
-/// assert_eq!(b, [10, 12, 4, 10, 8, 6, 2, 0, -24, 26, 112, 42, 16, 14, 12, 10]);
+/// let a = m256i::from([5_u16, 6, 2, 5, 4, 3, 1, 0, 12, 13, 56, 21, 8, 7, 6, 5]);
+/// let count = m128i::from(1_u128);
+/// let b: [u16; 16] = shl_all_u16_m256i(a, count).into();
+/// assert_eq!(b, [10, 12, 4, 10, 8, 6, 2, 0, 24, 26, 112, 42, 16, 14, 12, 10]);
 /// ```
 /// * **Intrinsic:** [`_mm256_sll_epi16`]
 /// * **Assembly:** `vpsllw ymm, ymm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn shl_i16_m256i(a: m256i, count: m128i) -> m256i {
+pub fn shl_all_u16_m256i(a: m256i, count: m128i) -> m256i {
   m256i(unsafe { _mm256_sll_epi16(a.0, count.0) })
 }
 
-/// Lanewise `i32` shift left by the lower `i64` lane of `count`.
+/// Shift all `u32` lanes left by the lower `u64` lane of `count`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([0_i32, 1, -2, -13, 4, 15, 6, -17]);
-/// let count = m128i::from(1_i128);
-/// let b: [i32; 8] = shl_i32_m256i(a, count).into();
-/// assert_eq!(b, [0, 2, -4, -26, 8, 30, 12, -34]);
+/// let a = m256i::from([0_u32, 1, 2, 13, 4, 15, 6, 17]);
+/// let count = m128i::from(1_u128);
+/// let b: [u32; 8] = shl_all_u32_m256i(a, count).into();
+/// assert_eq!(b, [0, 2, 4, 26, 8, 30, 12, 34]);
 /// ```
 /// * **Intrinsic:** [`_mm256_sll_epi32`]
 /// * **Assembly:** `vpslld ymm, ymm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn shl_i32_m256i(a: m256i, count: m128i) -> m256i {
+pub fn shl_all_u32_m256i(a: m256i, count: m128i) -> m256i {
   m256i(unsafe { _mm256_sll_epi32(a.0, count.0) })
 }
 
-/// Lanewise `i64` shift left by the lower `i64` lane of `count`.
+/// Shift all `u64` lanes left by the lower `u64` lane of `count`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([0_i64, 1, -2, -13]);
-/// let count = m128i::from(1_i128);
-/// let b: [i64; 4] = shl_i64_m256i(a, count).into();
-/// assert_eq!(b, [0, 2, -4, -26]);
+/// let a = m256i::from([0_u64, 1, 2, 13]);
+/// let count = m128i::from(1_u128);
+/// let b: [u64; 4] = shl_all_u64_m256i(a, count).into();
+/// assert_eq!(b, [0, 2, 4, 26]);
 /// ```
 /// * **Intrinsic:** [`_mm256_sll_epi64`]
 /// * **Assembly:** `vpsllq ymm, ymm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn shl_i64_m256i(a: m256i, count: m128i) -> m256i {
+pub fn shl_all_u64_m256i(a: m256i, count: m128i) -> m256i {
   m256i(unsafe { _mm256_sll_epi64(a.0, count.0) })
 }
 
-/// Shifts all `i16` lanes left by an immediate.
+/// Shifts all `u16` lanes left by an immediate.
 ///
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([1_i16, 2, 3, 4, -1, -2, -3, -4, 1, 2, 3, 4, -1, -2, -3, -4]);
-/// let c: [i16; 16] = shl_i16_imm_m256i!(a, 1).into();
-/// assert_eq!(c, [2, 4, 6, 8, -2, -4, -6, -8, 2, 4, 6, 8, -2, -4, -6, -8]);
+/// let a = m256i::from([1_u16, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4]);
+/// let c: [u16; 16] = shl_imm_u16_m256i!(a, 1).into();
+/// assert_eq!(c, [2, 4, 6, 8, 2, 4, 6, 8, 2, 4, 6, 8, 2, 4, 6, 8]);
 /// ```
 /// * **Intrinsic:** [`_mm256_slli_epi16`]
 /// * **Assembly:** `vpsllw ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shl_i16_imm_m256i {
+macro_rules! shl_imm_u16_m256i {
   ($a:expr, $imm:expr) => {{
     let a: $crate::m256i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
@@ -2724,22 +2722,22 @@ macro_rules! shl_i16_imm_m256i {
   }};
 }
 
-/// Shifts all `i32` lanes left by an immediate.
+/// Shifts all `u32` lanes left by an immediate.
 ///
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([1_i32, 2, 3, 4, -1, -2, -3, -4]);
-/// let c: [i32; 8] = shl_i32_imm_m256i!(a, 1).into();
+/// let a = m256i::from([1_u32, 2, 3, 4, 1, 2, 3, 4]);
+/// let c: [u32; 8] = shl_imm_u32_m256i!(a, 1).into();
 /// assert_eq!(
 ///   c,
-///   [1_i32 << 1, 2 << 1, 3 << 1, 4 << 1, -1 << 1, -2 << 1, -3 << 1, -4 << 1,]
+///   [1_u32 << 1, 2 << 1, 3 << 1, 4 << 1, 1 << 1, 2 << 1, 3 << 1, 4 << 1]
 /// );
 /// ```
 /// * **Intrinsic:** [`_mm256_slli_epi32`]
 /// * **Assembly:** `vpslld ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shl_i32_imm_m256i {
+macro_rules! shl_imm_u32_m256i {
   ($a:expr, $imm:expr) => {{
     let a: $crate::m256i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
@@ -2751,19 +2749,19 @@ macro_rules! shl_i32_imm_m256i {
   }};
 }
 
-/// Shifts all `i64` lanes left by an immediate.
+/// Shifts all `u64` lanes left by an immediate.
 ///
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([1_i64, 2, -3, -4]);
-/// let c: [i64; 4] = shl_i64_imm_m256i!(a, 1).into();
-/// assert_eq!(c, [1_i64 << 1, 2 << 1, -3 << 1, -4 << 1,]);
+/// let a = m256i::from([1_u64, 2, 3, 4]);
+/// let c: [u64; 4] = shl_imm_u64_m256i!(a, 1).into();
+/// assert_eq!(c, [1_u64 << 1, 2 << 1, 3 << 1, 4 << 1,]);
 /// ```
 /// * **Intrinsic:** [`_mm256_slli_epi64`]
 /// * **Assembly:** `vpsllq ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shl_i64_imm_m256i {
+macro_rules! shl_imm_u64_m256i {
   ($a:expr, $imm:expr) => {{
     let a: $crate::m256i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
@@ -2775,37 +2773,37 @@ macro_rules! shl_i64_imm_m256i {
   }};
 }
 
-/// Lanewise `i32` shift left by the matching `i32` lane in `count`.
+/// Lanewise `u32` shift left by the matching `i32` lane in `count`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([0_i32, 1, -2, -13, 5, 6, 7, -1]);
-/// let count = m256i::from([1_i32, 2, 3, 4, 5, 6, 7, 1]);
-/// let b: [i32; 8] = shl_i32_each_m256i(a, count).into();
-/// assert_eq!(b, [0, 4, -16, -208, 160, 384, 896, -2]);
+/// let a = m256i::from([0_u32, 1, 2, 13, 5, 6, 7, 1]);
+/// let count = m256i::from([1_u32, 2, 3, 4, 5, 6, 7, 1]);
+/// let b: [u32; 8] = shl_each_u32_m256i(a, count).into();
+/// assert_eq!(b, [0, 4, 16, 208, 160, 384, 896, 2]);
 /// ```
 /// * **Intrinsic:** [`_mm256_sllv_epi32`]
 /// * **Assembly:** `vpsllvd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn shl_i32_each_m256i(a: m256i, count: m256i) -> m256i {
+pub fn shl_each_u32_m256i(a: m256i, count: m256i) -> m256i {
   m256i(unsafe { _mm256_sllv_epi32(a.0, count.0) })
 }
 
-/// Lanewise `i64` shift left by the matching `i64` lane in `count`.
+/// Lanewise `u64` shift left by the matching `u64` lane in `count`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([0_i64, 1, -2, -13]);
-/// let count = m256i::from([1_i64, 2, 3, 4]);
-/// let b: [i64; 4] = shl_i64_each_m256i(a, count).into();
-/// assert_eq!(b, [0, 4, -16, -208]);
+/// let a = m256i::from([0_u64, 1, 2, 13]);
+/// let count = m256i::from([1_u64, 2, 3, 4]);
+/// let b: [u64; 4] = shl_each_u64_m256i(a, count).into();
+/// assert_eq!(b, [0, 4, 16, 208]);
 /// ```
 /// * **Intrinsic:** [`_mm256_sllv_epi64`]
 /// * **Assembly:** `vpsllvq ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn shl_i64_each_m256i(a: m256i, count: m256i) -> m256i {
+pub fn shl_each_u64_m256i(a: m256i, count: m256i) -> m256i {
   m256i(unsafe { _mm256_sllv_epi64(a.0, count.0) })
 }
 
@@ -2815,7 +2813,7 @@ pub fn shl_i64_each_m256i(a: m256i, count: m256i) -> m256i {
 /// let a =
 ///   m256i::from([5_i16, 6, 2, 5, 4, 3, 1, 0, -12, 13, 56, 21, 8, 7, 6, 5]);
 /// let count = m128i::from(1_i128);
-/// let b: [i16; 16] = shr_i16_m256i(a, count).into();
+/// let b: [i16; 16] = shr_all_i16_m256i(a, count).into();
 /// assert_eq!(b, [2, 3, 1, 2, 2, 1, 0, 0, -6, 6, 28, 10, 4, 3, 3, 2]);
 /// ```
 /// * **Intrinsic:** [`_mm256_sra_epi16`]
@@ -2823,7 +2821,7 @@ pub fn shl_i64_each_m256i(a: m256i, count: m256i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn shr_i16_m256i(a: m256i, count: m128i) -> m256i {
+pub fn shr_all_i16_m256i(a: m256i, count: m128i) -> m256i {
   m256i(unsafe { _mm256_sra_epi16(a.0, count.0) })
 }
 
@@ -2832,7 +2830,7 @@ pub fn shr_i16_m256i(a: m256i, count: m128i) -> m256i {
 /// # use safe_arch::*;
 /// let a = m256i::from([0_i32, 1, -2, -13, 4, 15, 6, -17]);
 /// let count = m128i::from(1_i128);
-/// let b: [i32; 8] = shr_i32_m256i(a, count).into();
+/// let b: [i32; 8] = shr_all_i32_m256i(a, count).into();
 /// assert_eq!(b, [0, 0, -1, -7, 2, 7, 3, -9]);
 /// ```
 /// * **Intrinsic:** [`_mm256_sra_epi32`]
@@ -2840,7 +2838,7 @@ pub fn shr_i16_m256i(a: m256i, count: m128i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn shr_i32_m256i(a: m256i, count: m128i) -> m256i {
+pub fn shr_all_i32_m256i(a: m256i, count: m128i) -> m256i {
   m256i(unsafe { _mm256_sra_epi32(a.0, count.0) })
 }
 
@@ -2850,14 +2848,14 @@ pub fn shr_i32_m256i(a: m256i, count: m128i) -> m256i {
 /// # use safe_arch::*;
 /// let a =
 ///   m256i::from([1_i16, 2, 3, 4, -1, -2, -3, -4, 1, 2, 3, 4, -1, -2, -3, -4]);
-/// let c: [i16; 16] = shr_i16_imm_m256i!(a, 1).into();
+/// let c: [i16; 16] = shr_imm_i16_m256i!(a, 1).into();
 /// assert_eq!(c, [0_i16, 1, 1, 2, -1, -1, -2, -2, 0, 1, 1, 2, -1, -1, -2, -2]);
 /// ```
 /// * **Intrinsic:** [`_mm256_srai_epi16`]
 /// * **Assembly:** `vpsraw ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shr_i16_imm_m256i {
+macro_rules! shr_imm_i16_m256i {
   ($a:expr, $imm:expr) => {{
     let a: $crate::m256i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
@@ -2874,14 +2872,14 @@ macro_rules! shr_i16_imm_m256i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([1_i32, 2, 3, 4, -1, -2, -3, -4]);
-/// let c: [i32; 8] = shr_i32_imm_m256i!(a, 1).into();
+/// let c: [i32; 8] = shr_imm_i32_m256i!(a, 1).into();
 /// assert_eq!(c, [0, 1, 1, 2, -1, -1, -2, -2]);
 /// ```
 /// * **Intrinsic:** [`_mm256_srai_epi32`]
 /// * **Assembly:** `vpsrad ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shr_i32_imm_m256i {
+macro_rules! shr_imm_i32_m256i {
   ($a:expr, $imm:expr) => {{
     let a: $crate::m256i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
@@ -2898,7 +2896,7 @@ macro_rules! shr_i32_imm_m256i {
 /// # use safe_arch::*;
 /// let a = m256i::from([0_i32, 1111, -2999, -13888, 5444, 6222, 7333, -11111]);
 /// let count = m256i::from([1_i32, 2, 3, 4, 5, 4, 3, 2]);
-/// let b: [i32; 8] = shr_i32_each_m256i(a, count).into();
+/// let b: [i32; 8] = shr_each_i32_m256i(a, count).into();
 /// assert_eq!(b, [0, 277, -375, -868, 170, 388, 916, -2778]);
 /// ```
 /// * **Intrinsic:** [`_mm256_srav_epi32`]
@@ -2906,16 +2904,16 @@ macro_rules! shr_i32_imm_m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn shr_i32_each_m256i(a: m256i, count: m256i) -> m256i {
+pub fn shr_each_i32_m256i(a: m256i, count: m256i) -> m256i {
   m256i(unsafe { _mm256_srav_epi32(a.0, count.0) })
 }
 
-/// Lanewise `u16` shift right by the lower `i64` lane of `count`.
+/// Lanewise `u16` shift right by the lower `u64` lane of `count`.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([5_u16, 6, 2, 5, 4, 3, 1, 0, 12, 13, 56, 21, 8, 7, 6, 5]);
-/// let count = m128i::from(1_i128);
-/// let b: [u16; 16] = shr_u16_m256i(a, count).into();
+/// let count = m128i::from(1_u128);
+/// let b: [u16; 16] = shr_all_u16_m256i(a, count).into();
 /// assert_eq!(b, [2, 3, 1, 2, 2, 1, 0, 0, 6, 6, 28, 10, 4, 3, 3, 2]);
 /// ```
 /// * **Intrinsic:** [`_mm256_srl_epi16`]
@@ -2923,16 +2921,16 @@ pub fn shr_i32_each_m256i(a: m256i, count: m256i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn shr_u16_m256i(a: m256i, count: m128i) -> m256i {
+pub fn shr_all_u16_m256i(a: m256i, count: m128i) -> m256i {
   m256i(unsafe { _mm256_srl_epi16(a.0, count.0) })
 }
 
-/// Lanewise `u32` shift right by the lower `i64` lane of `count`.
+/// Lanewise `u32` shift right by the lower `u64` lane of `count`.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([0_u32, 1, 2, 13, 4, 15, 6, 17]);
-/// let count = m128i::from(1_i128);
-/// let b: [u32; 8] = shr_u32_m256i(a, count).into();
+/// let count = m128i::from(1_u128);
+/// let b: [u32; 8] = shr_all_u32_m256i(a, count).into();
 /// assert_eq!(b, [0, 0, 1, 6, 2, 7, 3, 8]);
 /// ```
 /// * **Intrinsic:** [`_mm256_srl_epi32`]
@@ -2940,16 +2938,16 @@ pub fn shr_u16_m256i(a: m256i, count: m128i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn shr_u32_m256i(a: m256i, count: m128i) -> m256i {
+pub fn shr_all_u32_m256i(a: m256i, count: m128i) -> m256i {
   m256i(unsafe { _mm256_srl_epi32(a.0, count.0) })
 }
 
-/// Lanewise `u64` shift right by the lower `i64` lane of `count`.
+/// Lanewise `u64` shift right by the lower `u64` lane of `count`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([0_i64, 1, 2, 13]);
-/// let count = m128i::from(1_i128);
-/// let b: [u64; 4] = shr_u64_m256i(a, count).into();
+/// let a = m256i::from([0_u64, 1, 2, 13]);
+/// let count = m128i::from(1_u128);
+/// let b: [u64; 4] = shr_all_u64_m256i(a, count).into();
 /// assert_eq!(b, [0, 0, 1, 6]);
 /// ```
 /// * **Intrinsic:** [`_mm256_srl_epi64`]
@@ -2957,7 +2955,7 @@ pub fn shr_u32_m256i(a: m256i, count: m128i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn shr_u64_m256i(a: m256i, count: m128i) -> m256i {
+pub fn shr_all_u64_m256i(a: m256i, count: m128i) -> m256i {
   m256i(unsafe { _mm256_srl_epi64(a.0, count.0) })
 }
 
@@ -2967,14 +2965,14 @@ pub fn shr_u64_m256i(a: m256i, count: m128i) -> m256i {
 /// # use safe_arch::*;
 /// let a =
 ///   m256i::from([1_i16, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
-/// let c: [u16; 16] = shr_u16_imm_m256i!(a, 1).into();
+/// let c: [u16; 16] = shr_imm_u16_m256i!(a, 1).into();
 /// assert_eq!(c, [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8]);
 /// ```
 /// * **Intrinsic:** [`_mm256_srli_epi16`]
 /// * **Assembly:** `vpsrlw ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shr_u16_imm_m256i {
+macro_rules! shr_imm_u16_m256i {
   ($a:expr, $imm:expr) => {{
     let a: $crate::m256i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
@@ -2991,14 +2989,14 @@ macro_rules! shr_u16_imm_m256i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([1_i32, 2, 3, 4, 5, 6, 7, 8]);
-/// let c: [u32; 8] = shr_u32_imm_m256i!(a, 1).into();
+/// let c: [u32; 8] = shr_imm_u32_m256i!(a, 1).into();
 /// assert_eq!(c, [0, 1, 1, 2, 2, 3, 3, 4]);
 /// ```
 /// * **Intrinsic:** [`_mm256_srli_epi32`]
 /// * **Assembly:** `vpsrld ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shr_u32_imm_m256i {
+macro_rules! shr_imm_u32_m256i {
   ($a:expr, $imm:expr) => {{
     let a: $crate::m256i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
@@ -3015,14 +3013,14 @@ macro_rules! shr_u32_imm_m256i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([1_u64, 2, 3, 4]);
-/// let c: [u64; 4] = shr_u64_imm_m256i!(a, 1).into();
+/// let c: [u64; 4] = shr_imm_u64_m256i!(a, 1).into();
 /// assert_eq!(c, [0, 1, 1, 2]);
 /// ```
 /// * **Intrinsic:** [`_mm256_srli_epi64`]
 /// * **Assembly:** `vpsrlq ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shr_u64_imm_m256i {
+macro_rules! shr_imm_u64_m256i {
   ($a:expr, $imm:expr) => {{
     let a: $crate::m256i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
@@ -3034,12 +3032,12 @@ macro_rules! shr_u64_imm_m256i {
   }};
 }
 
-/// Lanewise `u32` shift right by the matching `i32` lane in `count`.
+/// Lanewise `u32` shift right by the matching `u32` lane in `count`.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([0_u32, 1111, 2999, 13888, 5444, 6222, 7333, 11111]);
 /// let count = m256i::from([1_i32, 2, 3, 4, 5, 4, 3, 2]);
-/// let b: [u32; 8] = shr_u32_each_m256i(a, count).into();
+/// let b: [u32; 8] = shr_each_u32_m256i(a, count).into();
 /// assert_eq!(b, [0, 277, 374, 868, 170, 388, 916, 2777]);
 /// ```
 /// * **Intrinsic:** [`_mm256_srlv_epi32`]
@@ -3047,7 +3045,7 @@ macro_rules! shr_u64_imm_m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn shr_u32_each_m256i(a: m256i, count: m256i) -> m256i {
+pub fn shr_each_u32_m256i(a: m256i, count: m256i) -> m256i {
   m256i(unsafe { _mm256_srlv_epi32(a.0, count.0) })
 }
 
@@ -3055,8 +3053,8 @@ pub fn shr_u32_each_m256i(a: m256i, count: m256i) -> m256i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([0_u64, 1111, 2999, 13888]);
-/// let count = m256i::from([1_i64, 2, 3, 4]);
-/// let b: [u64; 4] = shr_u64_each_m256i(a, count).into();
+/// let count = m256i::from([1_u64, 2, 3, 4]);
+/// let b: [u64; 4] = shr_each_u64_m256i(a, count).into();
 /// assert_eq!(b, [0, 277, 374, 868]);
 /// ```
 /// * **Intrinsic:** [`_mm256_srlv_epi64`]
@@ -3064,7 +3062,7 @@ pub fn shr_u32_each_m256i(a: m256i, count: m256i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn shr_u64_each_m256i(a: m256i, count: m256i) -> m256i {
+pub fn shr_each_u64_m256i(a: m256i, count: m256i) -> m256i {
   m256i(unsafe { _mm256_srlv_epi64(a.0, count.0) })
 }
 

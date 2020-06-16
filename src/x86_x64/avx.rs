@@ -37,13 +37,13 @@ pub fn add_m256(a: m256, b: m256) -> m256 {
 /// # use safe_arch::*;
 /// let a = m256d::from_array([10.0, 20.0, 30.0, 40.0]);
 /// let b = m256d::from_array([100.0, 200.0, 300.0, 400.0]);
-/// let c = add_sub_m256d(a, b).to_array();
+/// let c = addsub_m256d(a, b).to_array();
 /// assert_eq!(c, [-90.0, 220.0, -270.0, 440.0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn add_sub_m256d(a: m256d, b: m256d) -> m256d {
+pub fn addsub_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_addsub_pd(a.0, b.0) })
 }
 
@@ -52,13 +52,13 @@ pub fn add_sub_m256d(a: m256d, b: m256d) -> m256d {
 /// # use safe_arch::*;
 /// let a = m256::from_array([10.0, 20.0, 30.0, 40.0, 1.0, 2.0, 3.0, 4.0]);
 /// let b = m256::from_array([1.0, 20.0, 3.0, 40.0, 11.0, 12.0, 13.0, 14.0]);
-/// let c = add_sub_m256(a, b).to_array();
+/// let c = addsub_m256(a, b).to_array();
 /// assert_eq!(c, [9.0, 40.0, 27.0, 80.0, -10.0, 14.0, -10.0, 18.0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn add_sub_m256(a: m256, b: m256) -> m256 {
+pub fn addsub_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_addsub_ps(a.0, b.0) })
 }
 
