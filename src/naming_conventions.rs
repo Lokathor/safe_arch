@@ -43,12 +43,15 @@
 //! * `add`: Addition. This is "wrapping" by default, though some other types of
 //!   addition are available. Remember that wrapping signed addition is the same
 //!   as wrapping unsigned addition.
-//! * `and`: Bitwise And, `a & b`.
 //! * `andnot`: Bitwise `(!a) & b`. This seems a little funny at first but it's
 //!   useful for clearing bits. The output will be based on the `b` side's bit
 //!   pattern, but with all active bits in `a` cleared:
 //!   * `andnot(0b0010, 0b1011) == 0b1001`
 //! * `average`: Averages the two inputs.
+//! * `bitand`: Bitwise And, `a & b`, like [the trait](core::ops::BitAnd).
+//! * `bitor`: Bitwise Or, `a | b`, like [the trait](core::ops::BitOr).
+//! * `bitxor`: Bitwise eXclusive Or, `a ^ b`, like [the
+//!   trait](core::ops::BitXor).
 //! * `blend`: TODO
 //! * `cast`: Convert between data types while preserving the exact bit
 //!   patterns, like how [`transmute`](core::mem::transmute) works.
@@ -88,7 +91,6 @@
 //!   the low half of that (a normal "wrapping" mul), or "widen" the outputs to
 //!   be all the bits at the expense of not multiplying half the lanes the
 //!   lanes.
-//! * `or`: Bitwise Or, `a | b`.
 //! * `pack`: Take the integers in the `a` and `b` inputs, reduce them to fit
 //!   within the half-sized integer type (eg: `i16` to `i8`), and pack them all
 //!   together into the output.
@@ -141,4 +143,3 @@
 //! * `sub`: Subtract.
 //! * `unpack`: Takes a SIMD value and gets out some of the lanes while widening
 //!   them, such as converting `i16` to `i32`.
-//! * `xor`: Bitwise eXclusive Or, `a ^ b`.

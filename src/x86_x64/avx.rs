@@ -67,13 +67,13 @@ pub fn addsub_m256(a: m256, b: m256) -> m256 {
 /// # use safe_arch::*;
 /// let a = m256d::from_array([1.0, 0.0, 1.0, 0.0]);
 /// let b = m256d::from_array([1.0, 1.0, 0.0, 0.0]);
-/// let c = and_m256d(a, b).to_array();
+/// let c = bitand_m256d(a, b).to_array();
 /// assert_eq!(c, [1.0, 0.0, 0.0, 0.0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn and_m256d(a: m256d, b: m256d) -> m256d {
+pub fn bitand_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_and_pd(a.0, b.0) })
 }
 
@@ -82,13 +82,13 @@ pub fn and_m256d(a: m256d, b: m256d) -> m256d {
 /// # use safe_arch::*;
 /// let a = m256::from_array([1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0]);
 /// let b = m256::from_array([1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0]);
-/// let c = and_m256(a, b).to_array();
+/// let c = bitand_m256(a, b).to_array();
 /// assert_eq!(c, [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn and_m256(a: m256, b: m256) -> m256 {
+pub fn bitand_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_and_ps(a.0, b.0) })
 }
 
@@ -97,7 +97,7 @@ pub fn and_m256(a: m256, b: m256) -> m256 {
 /// # use safe_arch::*;
 /// let a = m256d::from_array([1.0, 0.0, 1.0, 0.0]);
 /// let b = m256d::from_array([1.0, 1.0, 0.0, 0.0]);
-/// let c = and_m256d(a, b).to_array();
+/// let c = bitand_m256d(a, b).to_array();
 /// assert_eq!(c, [1.0, 0.0, 0.0, 0.0]);
 /// ```
 #[must_use]
@@ -112,7 +112,7 @@ pub fn andnot_m256d(a: m256d, b: m256d) -> m256d {
 /// # use safe_arch::*;
 /// let a = m256::from_array([1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0]);
 /// let b = m256::from_array([1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0]);
-/// let c = and_m256(a, b).to_array();
+/// let c = bitand_m256(a, b).to_array();
 /// assert_eq!(c, [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0]);
 /// ```
 #[must_use]
@@ -1812,13 +1812,13 @@ pub fn mul_m256(a: m256, b: m256) -> m256 {
 /// # use safe_arch::*;
 /// let a = m256d::from_array([1.0, 1.0, 0.0, 0.0]);
 /// let b = m256d::from_array([1.0, 0.0, 1.0, 0.0]);
-/// let c = or_m256d(a, b).to_array();
+/// let c = bitor_m256d(a, b).to_array();
 /// assert_eq!(c, [1.0, 1.0, 1.0, 0.0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn or_m256d(a: m256d, b: m256d) -> m256d {
+pub fn bitor_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_or_pd(a.0, b.0) })
 }
 
@@ -1827,13 +1827,13 @@ pub fn or_m256d(a: m256d, b: m256d) -> m256d {
 /// # use safe_arch::*;
 /// let a = m256::from_array([1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0]);
 /// let b = m256::from_array([1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0]);
-/// let c = or_m256(a, b).to_array();
+/// let c = bitor_m256(a, b).to_array();
 /// assert_eq!(c, [1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn or_m256(a: m256, b: m256) -> m256 {
+pub fn bitor_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_or_ps(a.0, b.0) })
 }
 
@@ -3208,13 +3208,13 @@ pub fn unpack_lo_m256(a: m256, b: m256) -> m256 {
 /// # use safe_arch::*;
 /// let a = m256d::from_array([1.0, 0.0, 1.0, 0.0]);
 /// let b = m256d::from_array([1.0, 1.0, 0.0, 0.0]);
-/// let c = xor_m256d(a, b).to_array();
+/// let c = bitxor_m256d(a, b).to_array();
 /// assert_eq!(c, [0.0, 1.0, 1.0, 0.0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn xor_m256d(a: m256d, b: m256d) -> m256d {
+pub fn bitxor_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_xor_pd(a.0, b.0) })
 }
 
@@ -3223,13 +3223,13 @@ pub fn xor_m256d(a: m256d, b: m256d) -> m256d {
 /// # use safe_arch::*;
 /// let a = m256::from_array([1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0]);
 /// let b = m256::from_array([1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0]);
-/// let c = xor_m256(a, b).to_array();
+/// let c = bitxor_m256(a, b).to_array();
 /// assert_eq!(c, [0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn xor_m256(a: m256, b: m256) -> m256 {
+pub fn bitxor_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_xor_ps(a.0, b.0) })
 }
 
@@ -3295,7 +3295,7 @@ impl BitAnd for m256d {
   #[must_use]
   #[inline(always)]
   fn bitand(self, rhs: Self) -> Self {
-    and_m256d(self, rhs)
+    bitand_m256d(self, rhs)
   }
 }
 impl BitAndAssign for m256d {
@@ -3310,7 +3310,7 @@ impl BitOr for m256d {
   #[must_use]
   #[inline(always)]
   fn bitor(self, rhs: Self) -> Self {
-    or_m256d(self, rhs)
+    bitor_m256d(self, rhs)
   }
 }
 impl BitOrAssign for m256d {
@@ -3325,7 +3325,7 @@ impl BitXor for m256d {
   #[must_use]
   #[inline(always)]
   fn bitxor(self, rhs: Self) -> Self {
-    xor_m256d(self, rhs)
+    bitxor_m256d(self, rhs)
   }
 }
 impl BitXorAssign for m256d {
@@ -3439,7 +3439,7 @@ impl BitAnd for m256 {
   #[must_use]
   #[inline(always)]
   fn bitand(self, rhs: Self) -> Self {
-    and_m256(self, rhs)
+    bitand_m256(self, rhs)
   }
 }
 impl BitAndAssign for m256 {
@@ -3454,7 +3454,7 @@ impl BitOr for m256 {
   #[must_use]
   #[inline(always)]
   fn bitor(self, rhs: Self) -> Self {
-    or_m256(self, rhs)
+    bitor_m256(self, rhs)
   }
 }
 impl BitOrAssign for m256 {
@@ -3469,7 +3469,7 @@ impl BitXor for m256 {
   #[must_use]
   #[inline(always)]
   fn bitxor(self, rhs: Self) -> Self {
-    xor_m256(self, rhs)
+    bitxor_m256(self, rhs)
   }
 }
 impl BitXorAssign for m256 {
