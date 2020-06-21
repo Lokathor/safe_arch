@@ -1835,20 +1835,19 @@ pub fn move_mask_m128d(a: m128d) -> i32 {
   unsafe { _mm_movemask_pd(a.0) }
 }
 
-/// Multiplies the lower 32 bits (only) of each `u64` lane into 64-bit `u64`
-/// values.
+/// Multiplies the odd `u32` lanes and gives the widened (`u64`) results.
 ///
 /// ```
 /// # use safe_arch::*;
-/// let a = m128i::from([1_u64, u32::MAX as u64]);
-/// let b = m128i::from([5_u64, u32::MAX as u64]);
-/// let c: [u64; 2] = mul_u64_widen_low_bits_m128i(a, b).into();
-/// assert_eq!(c, [5_u64, (u32::MAX as u64 * u32::MAX as u64)]);
+/// let a = m128i::from([1, 7, u32::MAX, 7]);
+/// let b = m128i::from([5, 7, u32::MAX, 7]);
+/// let c: [u64; 2] = mul_widen_u32_odd_m128i(a, b).into();
+/// assert_eq!(c, [(1 * 5), (u32::MAX as u64 * u32::MAX as u64)]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn mul_u64_widen_low_bits_m128i(a: m128i, b: m128i) -> m128i {
+pub fn mul_widen_u32_odd_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_mul_epu32(a.0, b.0) })
 }
 
