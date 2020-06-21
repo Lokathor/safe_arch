@@ -957,20 +957,19 @@ macro_rules! multi_packed_sum_abs_diff_u8_m128i {
   }};
 }
 
-/// Multiplies the lower 32 bits (only) of each `i64` lane into 64-bit `i64`
-/// values.
+/// Multiplies the odd `i32` lanes and gives the widened (`i64`) results.
 ///
 /// ```
 /// # use safe_arch::*;
-/// let a = m128i::from([1_i64, i32::MAX as i64]);
-/// let b = m128i::from([5_i64, i32::MAX as i64]);
-/// let c: [i64; 2] = mul_u64_widen_low_bits_m128i(a, b).into();
-/// assert_eq!(c, [5_i64, (i32::MAX as i64 * i32::MAX as i64)]);
+/// let a = m128i::from([1, 7, i32::MAX, 7]);
+/// let b = m128i::from([-5, 7, i32::MAX, 7]);
+/// let c: [i64; 2] = mul_widen_i32_odd_m128i(a, b).into();
+/// assert_eq!(c, [(-1 * 5), (i32::MAX as i64 * i32::MAX as i64)]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-pub fn mul_i64_widen_low_bits_m128i(a: m128i, b: m128i) -> m128i {
+pub fn mul_widen_i32_odd_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_mul_epi32(a.0, b.0) })
 }
 
