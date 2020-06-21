@@ -189,13 +189,13 @@ pub fn add_saturating_u16_m128i(a: m128i, b: m128i) -> m128i {
 /// # use safe_arch::*;
 /// let a = m128d::from_array([1.0, 0.0]);
 /// let b = m128d::from_array([1.0, 1.0]);
-/// let c = and_m128d(a, b).to_array();
+/// let c = bitand_m128d(a, b).to_array();
 /// assert_eq!(c, [1.0, 0.0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn and_m128d(a: m128d, b: m128d) -> m128d {
+pub fn bitand_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_and_pd(a.0, b.0) })
 }
 
@@ -204,13 +204,13 @@ pub fn and_m128d(a: m128d, b: m128d) -> m128d {
 /// # use safe_arch::*;
 /// let a = m128i::from([1, 0, 1, 0]);
 /// let b = m128i::from([1, 1, 0, 0]);
-/// let c: [i32; 4] = and_m128i(a, b).into();
+/// let c: [i32; 4] = bitand_m128i(a, b).into();
 /// assert_eq!(c, [1, 0, 0, 0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn and_m128i(a: m128i, b: m128i) -> m128i {
+pub fn bitand_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_and_si128(a.0, b.0) })
 }
 
@@ -1935,13 +1935,13 @@ pub fn mul_i16_keep_low_m128i(a: m128i, b: m128i) -> m128i {
 /// # use safe_arch::*;
 /// let a = m128d::from_array([1.0, 0.0]);
 /// let b = m128d::from_array([1.0, 1.0]);
-/// let c = or_m128d(a, b).to_array();
+/// let c = bitor_m128d(a, b).to_array();
 /// assert_eq!(c, [1.0, 1.0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn or_m128d(a: m128d, b: m128d) -> m128d {
+pub fn bitor_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_or_pd(a.0, b.0) })
 }
 
@@ -1950,13 +1950,13 @@ pub fn or_m128d(a: m128d, b: m128d) -> m128d {
 /// # use safe_arch::*;
 /// let a = m128i::from([1, 0, 1, 0]);
 /// let b = m128i::from([1, 1, 0, 0]);
-/// let c: [i32; 4] = or_m128i(a, b).into();
+/// let c: [i32; 4] = bitor_m128i(a, b).into();
 /// assert_eq!(c, [1, 1, 1, 0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn or_m128i(a: m128i, b: m128i) -> m128i {
+pub fn bitor_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_or_si128(a.0, b.0) })
 }
 
@@ -3341,13 +3341,13 @@ pub fn unpack_low_m128d(a: m128d, b: m128d) -> m128d {
 /// # use safe_arch::*;
 /// let a = m128d::from_array([1.0, 0.0]);
 /// let b = m128d::from_array([1.0, 1.0]);
-/// let c = xor_m128d(a, b).to_array();
+/// let c = bitxor_m128d(a, b).to_array();
 /// assert_eq!(c, [0.0, 1.0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn xor_m128d(a: m128d, b: m128d) -> m128d {
+pub fn bitxor_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_xor_pd(a.0, b.0) })
 }
 
@@ -3356,13 +3356,13 @@ pub fn xor_m128d(a: m128d, b: m128d) -> m128d {
 /// # use safe_arch::*;
 /// let a = m128i::from([1, 0, 1, 0]);
 /// let b = m128i::from([1, 1, 0, 0]);
-/// let c: [i32; 4] = xor_m128i(a, b).into();
+/// let c: [i32; 4] = bitxor_m128i(a, b).into();
 /// assert_eq!(c, [0, 1, 1, 0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn xor_m128i(a: m128i, b: m128i) -> m128i {
+pub fn bitxor_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_xor_si128(a.0, b.0) })
 }
 
@@ -3399,7 +3399,7 @@ impl BitAnd for m128d {
   #[must_use]
   #[inline(always)]
   fn bitand(self, rhs: Self) -> Self {
-    and_m128d(self, rhs)
+    bitand_m128d(self, rhs)
   }
 }
 impl BitAndAssign for m128d {
@@ -3414,7 +3414,7 @@ impl BitOr for m128d {
   #[must_use]
   #[inline(always)]
   fn bitor(self, rhs: Self) -> Self {
-    or_m128d(self, rhs)
+    bitor_m128d(self, rhs)
   }
 }
 impl BitOrAssign for m128d {
@@ -3429,7 +3429,7 @@ impl BitXor for m128d {
   #[must_use]
   #[inline(always)]
   fn bitxor(self, rhs: Self) -> Self {
-    xor_m128d(self, rhs)
+    bitxor_m128d(self, rhs)
   }
 }
 impl BitXorAssign for m128d {
@@ -3526,7 +3526,7 @@ impl BitAnd for m128i {
   #[must_use]
   #[inline(always)]
   fn bitand(self, rhs: Self) -> Self {
-    and_m128i(self, rhs)
+    bitand_m128i(self, rhs)
   }
 }
 impl BitAndAssign for m128i {
@@ -3541,7 +3541,7 @@ impl BitOr for m128i {
   #[must_use]
   #[inline(always)]
   fn bitor(self, rhs: Self) -> Self {
-    or_m128i(self, rhs)
+    bitor_m128i(self, rhs)
   }
 }
 impl BitOrAssign for m128i {
@@ -3556,7 +3556,7 @@ impl BitXor for m128i {
   #[must_use]
   #[inline(always)]
   fn bitxor(self, rhs: Self) -> Self {
-    xor_m128i(self, rhs)
+    bitxor_m128i(self, rhs)
   }
 }
 impl BitXorAssign for m128i {

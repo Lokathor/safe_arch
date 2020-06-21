@@ -557,7 +557,7 @@ macro_rules! combined_byte_shr_imm_m256i {
 /// # use safe_arch::*;
 /// let a = m256i::from([0_i64, 0, 1, 1]);
 /// let b = m256i::from([0_i64, 1, 0, 1]);
-/// let c: [i64; 4] = and_m256i(a, b).into();
+/// let c: [i64; 4] = bitand_m256i(a, b).into();
 /// assert_eq!(c, [0_i64, 0, 0, 1]);
 /// ```
 /// * **Intrinsic:** [`_mm256_and_si256`]
@@ -565,7 +565,7 @@ macro_rules! combined_byte_shr_imm_m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn and_m256i(a: m256i, b: m256i) -> m256i {
+pub fn bitand_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_and_si256(a.0, b.0) })
 }
 
@@ -2156,7 +2156,7 @@ pub fn mul_i32_keep_low_m256i(a: m256i, b: m256i) -> m256i {
 /// # use safe_arch::*;
 /// let a = m256i::from([0_i64, 0, 1, 1]);
 /// let b = m256i::from([0_i64, 1, 0, 1]);
-/// let c: [i64; 4] = or_m256i(a, b).into();
+/// let c: [i64; 4] = bitor_m256i(a, b).into();
 /// assert_eq!(c, [0_i64, 1, 1, 1]);
 /// ```
 /// * **Intrinsic:** [`_mm256_or_si256`]
@@ -2164,7 +2164,7 @@ pub fn mul_i32_keep_low_m256i(a: m256i, b: m256i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn or_m256i(a: m256i, b: m256i) -> m256i {
+pub fn bitor_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_or_si256(a.0, b.0) })
 }
 
@@ -3392,7 +3392,7 @@ pub fn unpack_low_i64_m256i(a: m256i, b: m256i) -> m256i {
 /// # use safe_arch::*;
 /// let a = m256i::from([0_i64, 0, 1, 1]);
 /// let b = m256i::from([0_i64, 1, 0, 1]);
-/// let c: [i64; 4] = xor_m256i(a, b).into();
+/// let c: [i64; 4] = bitxor_m256i(a, b).into();
 /// assert_eq!(c, [0_i64, 1, 1, 0]);
 /// ```
 /// * **Intrinsic:** [`_mm256_xor_si256`]
@@ -3400,7 +3400,7 @@ pub fn unpack_low_i64_m256i(a: m256i, b: m256i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn xor_m256i(a: m256i, b: m256i) -> m256i {
+pub fn bitxor_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_xor_si256(a.0, b.0) })
 }
 
@@ -3423,7 +3423,7 @@ impl BitAnd for m256i {
   #[must_use]
   #[inline(always)]
   fn bitand(self, rhs: Self) -> Self {
-    and_m256i(self, rhs)
+    bitand_m256i(self, rhs)
   }
 }
 impl BitAndAssign for m256i {
@@ -3438,7 +3438,7 @@ impl BitOr for m256i {
   #[must_use]
   #[inline(always)]
   fn bitor(self, rhs: Self) -> Self {
-    or_m256i(self, rhs)
+    bitor_m256i(self, rhs)
   }
 }
 impl BitOrAssign for m256i {
@@ -3453,7 +3453,7 @@ impl BitXor for m256i {
   #[must_use]
   #[inline(always)]
   fn bitxor(self, rhs: Self) -> Self {
-    xor_m256i(self, rhs)
+    bitxor_m256i(self, rhs)
   }
 }
 impl BitXorAssign for m256i {
