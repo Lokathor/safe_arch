@@ -97,13 +97,13 @@ pub fn bitand_m256(a: m256, b: m256) -> m256 {
 /// # use safe_arch::*;
 /// let a = m256d::from_array([1.0, 0.0, 1.0, 0.0]);
 /// let b = m256d::from_array([1.0, 1.0, 0.0, 0.0]);
-/// let c = bitand_m256d(a, b).to_array();
-/// assert_eq!(c, [1.0, 0.0, 0.0, 0.0]);
+/// let c = bitandnot_m256d(a, b).to_array();
+/// assert_eq!(c, [0.0, 1.0, 0.0, 0.0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn andnot_m256d(a: m256d, b: m256d) -> m256d {
+pub fn bitandnot_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_andnot_pd(a.0, b.0) })
 }
 
@@ -112,13 +112,13 @@ pub fn andnot_m256d(a: m256d, b: m256d) -> m256d {
 /// # use safe_arch::*;
 /// let a = m256::from_array([1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0]);
 /// let b = m256::from_array([1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0]);
-/// let c = bitand_m256(a, b).to_array();
-/// assert_eq!(c, [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0]);
+/// let c = bitandnot_m256(a, b).to_array();
+/// assert_eq!(c, [0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn andnot_m256(a: m256, b: m256) -> m256 {
+pub fn bitandnot_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_andnot_ps(a.0, b.0) })
 }
 

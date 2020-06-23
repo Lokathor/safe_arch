@@ -574,7 +574,7 @@ pub fn bitand_m256i(a: m256i, b: m256i) -> m256i {
 /// # use safe_arch::*;
 /// let a = m256i::from([0_i64, 0, 1, 1]);
 /// let b = m256i::from([0_i64, 1, 0, 1]);
-/// let c: [i64; 4] = andnot_m256i(a, b).into();
+/// let c: [i64; 4] = bitandnot_m256i(a, b).into();
 /// assert_eq!(c, [0_i64, 1, 0, 0]);
 /// ```
 /// * **Intrinsic:** [`_mm256_andnot_si256`]
@@ -582,7 +582,7 @@ pub fn bitand_m256i(a: m256i, b: m256i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn andnot_m256i(a: m256i, b: m256i) -> m256i {
+pub fn bitandnot_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_andnot_si256(a.0, b.0) })
 }
 

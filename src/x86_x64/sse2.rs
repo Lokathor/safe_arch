@@ -219,13 +219,13 @@ pub fn bitand_m128i(a: m128i, b: m128i) -> m128i {
 /// # use safe_arch::*;
 /// let a = m128d::from_array([1.0, 0.0]);
 /// let b = m128d::from_array([1.0, 1.0]);
-/// let c = andnot_m128d(a, b).to_array();
+/// let c = bitandnot_m128d(a, b).to_array();
 /// assert_eq!(c, [0.0, 1.0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn andnot_m128d(a: m128d, b: m128d) -> m128d {
+pub fn bitandnot_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_andnot_pd(a.0, b.0) })
 }
 
@@ -234,13 +234,13 @@ pub fn andnot_m128d(a: m128d, b: m128d) -> m128d {
 /// # use safe_arch::*;
 /// let a = m128i::from([1, 0, 1, 0]);
 /// let b = m128i::from([1, 1, 0, 0]);
-/// let c: [i32; 4] = andnot_m128i(a, b).into();
+/// let c: [i32; 4] = bitandnot_m128i(a, b).into();
 /// assert_eq!(c, [0, 1, 0, 0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn andnot_m128i(a: m128i, b: m128i) -> m128i {
+pub fn bitandnot_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_andnot_si128(a.0, b.0) })
 }
 

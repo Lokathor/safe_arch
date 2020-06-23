@@ -52,13 +52,13 @@ pub fn bitand_m128(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 0.0, 1.0, 0.0]);
 /// let b = m128::from_array([1.0, 1.0, 0.0, 0.0]);
-/// let c = andnot_m128(a, b).to_array();
+/// let c = bitandnot_m128(a, b).to_array();
 /// assert_eq!(c, [0.0, 1.0, 0.0, 0.0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse")))]
-pub fn andnot_m128(a: m128, b: m128) -> m128 {
+pub fn bitandnot_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_andnot_ps(a.0, b.0) })
 }
 

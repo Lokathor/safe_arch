@@ -43,12 +43,12 @@
 //! * `add`: Addition. This is "wrapping" by default, though some other types of
 //!   addition are available. Remember that wrapping signed addition is the same
 //!   as wrapping unsigned addition.
-//! * `andnot`: Bitwise `(!a) & b`. This seems a little funny at first but it's
-//!   useful for clearing bits. The output will be based on the `b` side's bit
-//!   pattern, but with all active bits in `a` cleared:
-//!   * `andnot(0b0010, 0b1011) == 0b1001`
 //! * `average`: Averages the two inputs.
 //! * `bitand`: Bitwise And, `a & b`, like [the trait](core::ops::BitAnd).
+//! * `bitandnot`: Bitwise `(!a) & b`. This seems a little funny at first but
+//!   it's useful for clearing bits. The output will be based on the `b` side's
+//!   bit pattern, but with all active bits in `a` cleared:
+//!   * `bitandnot(0b0010, 0b1011) == 0b1001`
 //! * `bitor`: Bitwise Or, `a | b`, like [the trait](core::ops::BitOr).
 //! * `bitxor`: Bitwise eXclusive Or, `a ^ b`, like [the
 //!   trait](core::ops::BitXor).

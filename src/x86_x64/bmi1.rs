@@ -2,32 +2,32 @@
 
 use super::*;
 
-/// Bitwise `(!a) & b`, `u32`
+/// Bitwise `(!a) & b` for `u32`
 /// ```
 /// # use safe_arch::*;
 /// let a = [1, 0, 1, 0];
 /// let b = [1, 1, 0, 0];
 /// let mut c = [0_u32; 4];
 /// for i in 0..4 {
-///   c[i] = andnot_u32(a[i], b[i]);
+///   c[i] = bitandnot_u32(a[i], b[i]);
 /// }
 /// assert_eq!(c, [0, 1, 0, 0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi1")))]
-pub fn andnot_u32(a: u32, b: u32) -> u32 {
+pub fn bitandnot_u32(a: u32, b: u32) -> u32 {
   unsafe { _andn_u32(a, b) }
 }
 
-/// Bitwise `(!a) & b`, `u64`
+/// Bitwise `(!a) & b` for `u64`
 /// ```
 /// # use safe_arch::*;
 /// let a = [1_u64, 0, 1, 0];
 /// let b = [1_u64, 1, 0, 0];
 /// let mut c = [0_u64; 4];
 /// for i in 0..4 {
-///   c[i] = andnot_u64(a[i], b[i]);
+///   c[i] = bitandnot_u64(a[i], b[i]);
 /// }
 /// assert_eq!(c, [0_u64, 1, 0, 0]);
 /// ```
@@ -35,7 +35,7 @@ pub fn andnot_u32(a: u32, b: u32) -> u32 {
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi1")))]
-pub fn andnot_u64(a: u64, b: u64) -> u64 {
+pub fn bitandnot_u64(a: u64, b: u64) -> u64 {
   unsafe { _andn_u64(a, b) }
 }
 
