@@ -1071,11 +1071,11 @@ pub fn cmp_gt_mask_i64_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_cmpgt_epi64(a.0, b.0) })
 }
 
-/// Sign extend `i16` values to `i32` values.
+/// Convert `i16` values to `i32` values.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([-5_i16; 8]);
-/// let b: [i32; 8] = convert_i16_m128i_m256i(a).into();
+/// let b: [i32; 8] = convert_to_i32_m256i_from_i16_m128i(a).into();
 /// assert_eq!(b, [-5_i32; 8]);
 /// ```
 /// * **Intrinsic:** [`_mm256_cvtepi16_epi32`]
@@ -1083,15 +1083,15 @@ pub fn cmp_gt_mask_i64_m256i(a: m256i, b: m256i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn convert_i16_m128i_m256i(a: m128i) -> m256i {
+pub fn convert_to_i32_m256i_from_i16_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepi16_epi32(a.0) })
 }
 
-/// Sign extend `i16` values to `i64` values.
+/// Convert `i16` values to `i64` values.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([-5_i16; 8]);
-/// let b: [i64; 4] = convert_i16_m128i_lower4_m256i(a).into();
+/// let b: [i64; 4] = convert_to_i64_m256i_from_lower4_i16_m128i(a).into();
 /// assert_eq!(b, [-5_i64; 4]);
 /// ```
 /// * **Intrinsic:** [`_mm256_cvtepi16_epi64`]
@@ -1099,15 +1099,15 @@ pub fn convert_i16_m128i_m256i(a: m128i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn convert_i16_m128i_lower4_m256i(a: m128i) -> m256i {
+pub fn convert_to_i64_m256i_from_lower4_i16_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepi16_epi64(a.0) })
 }
 
-/// Sign extend `i32` values to `i64` values.
+/// Convert `i32` values to `i64` values.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([-5_i32; 4]);
-/// let b: [i64; 4] = convert_i32_m128i_m256i(a).into();
+/// let b: [i64; 4] = convert_to_i64_m256i_from_i32_m128i(a).into();
 /// assert_eq!(b, [-5_i64; 4]);
 /// ```
 /// * **Intrinsic:** [`_mm256_cvtepi32_epi64`]
@@ -1115,15 +1115,15 @@ pub fn convert_i16_m128i_lower4_m256i(a: m128i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn convert_i32_m128i_m256i(a: m128i) -> m256i {
+pub fn convert_to_i64_m256i_from_i32_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepi32_epi64(a.0) })
 }
 
-/// Sign extend `i8` values to `i16` values.
+/// Convert `i8` values to `i16` values.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([-5_i8; 16]);
-/// let b: [i16; 16] = convert_i8_m128i_m256i(a).into();
+/// let b: [i16; 16] = convert_to_i16_m256i_from_i8_m128i(a).into();
 /// assert_eq!(b, [-5_i16; 16]);
 /// ```
 /// * **Intrinsic:** [`_mm256_cvtepi8_epi16`]
@@ -1131,15 +1131,15 @@ pub fn convert_i32_m128i_m256i(a: m128i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn convert_i8_m128i_m256i(a: m128i) -> m256i {
+pub fn convert_to_i16_m256i_from_i8_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepi8_epi16(a.0) })
 }
 
-/// Sign extend the lower 8 `i8` values to `i32` values.
+/// Convert the lower 8 `i8` values to `i32` values.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([-5_i8; 16]);
-/// let b: [i32; 8] = convert_i8_m128i_lower8_m256i(a).into();
+/// let b: [i32; 8] = convert_to_i32_m256i_from_lower8_i8_m128i(a).into();
 /// assert_eq!(b, [-5_i32; 8]);
 /// ```
 /// * **Intrinsic:** [`_mm256_cvtepi8_epi32`]
@@ -1147,15 +1147,15 @@ pub fn convert_i8_m128i_m256i(a: m128i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn convert_i8_m128i_lower8_m256i(a: m128i) -> m256i {
+pub fn convert_to_i32_m256i_from_lower8_i8_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepi8_epi32(a.0) })
 }
 
-/// Sign extend the lower 4 `i8` values to `i64` values.
+/// Convert the lower 4 `i8` values to `i64` values.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([-5_i8; 16]);
-/// let b: [i64; 4] = convert_i8_m128i_lower4_m256i(a).into();
+/// let b: [i64; 4] = convert_to_i64_m256i_from_lower4_i8_m128i(a).into();
 /// assert_eq!(b, [-5_i64; 4]);
 /// ```
 /// * **Intrinsic:** [`_mm256_cvtepi8_epi64`]
@@ -1163,15 +1163,15 @@ pub fn convert_i8_m128i_lower8_m256i(a: m128i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn convert_i8_m128i_lower4_m256i(a: m128i) -> m256i {
+pub fn convert_to_i64_m256i_from_lower4_i8_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepi8_epi64(a.0) })
 }
 
-/// Zero extend `u16` values to `i32` values.
+/// Convert `u16` values to `i32` values.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([5_u16; 8]);
-/// let b: [i32; 8] = convert_u16_m128i_m256i(a).into();
+/// let b: [i32; 8] = convert_to_i32_m256i_from_u16_m128i(a).into();
 /// assert_eq!(b, [5_i32; 8]);
 /// ```
 /// * **Intrinsic:** [`_mm256_cvtepu16_epi32`]
@@ -1179,15 +1179,15 @@ pub fn convert_i8_m128i_lower4_m256i(a: m128i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn convert_u16_m128i_m256i(a: m128i) -> m256i {
+pub fn convert_to_i32_m256i_from_u16_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepu16_epi32(a.0) })
 }
 
-/// Zero extend lower 4 `u16` values to `i64` values.
+/// Convert `u16` values to `i64` values.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([5_u16; 8]);
-/// let b: [i64; 4] = convert_u16_m128i_lower4_m256i(a).into();
+/// let b: [i64; 4] = convert_to_i64_m256i_from_lower4_u16_m128i(a).into();
 /// assert_eq!(b, [5_i64; 4]);
 /// ```
 /// * **Intrinsic:** [`_mm256_cvtepu16_epi64`]
@@ -1195,15 +1195,15 @@ pub fn convert_u16_m128i_m256i(a: m128i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn convert_u16_m128i_lower4_m256i(a: m128i) -> m256i {
+pub fn convert_to_i64_m256i_from_lower4_u16_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepu16_epi64(a.0) })
 }
 
-/// Zero extend `u32` values to `i64` values.
+/// Convert `u32` values to `i64` values.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([5_u32; 4]);
-/// let b: [i64; 4] = convert_u32_m128i_m256i(a).into();
+/// let b: [i64; 4] = convert_to_i64_m256i_from_u32_m128i(a).into();
 /// assert_eq!(b, [5_i64; 4]);
 /// ```
 /// * **Intrinsic:** [`_mm256_cvtepu32_epi64`]
@@ -1211,15 +1211,15 @@ pub fn convert_u16_m128i_lower4_m256i(a: m128i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn convert_u32_m128i_m256i(a: m128i) -> m256i {
+pub fn convert_to_i64_m256i_from_u32_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepu32_epi64(a.0) })
 }
 
-/// Zero extend `u8` values to `i16` values.
+/// Convert `u8` values to `i16` values.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([5_u8; 16]);
-/// let b: [i16; 16] = convert_u8_m128i_m256i(a).into();
+/// let b: [i16; 16] = convert_to_i16_m256i_from_u8_m128i(a).into();
 /// assert_eq!(b, [5_i16; 16]);
 /// ```
 /// * **Intrinsic:** [`_mm256_cvtepu8_epi16`]
@@ -1227,15 +1227,15 @@ pub fn convert_u32_m128i_m256i(a: m128i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn convert_u8_m128i_m256i(a: m128i) -> m256i {
+pub fn convert_to_i16_m256i_from_u8_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepu8_epi16(a.0) })
 }
 
-/// Zero extend lower 8 `u8` values to `i16` values.
+/// Convert lower 8 `u8` values to `i16` values.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([5_u8; 16]);
-/// let b: [i32; 8] = convert_u8_m128i_lower8_m256i(a).into();
+/// let b: [i32; 8] = convert_to_i16_m256i_from_lower8_u8_m128i(a).into();
 /// assert_eq!(b, [5_i32; 8]);
 /// ```
 /// * **Intrinsic:** [`_mm256_cvtepu8_epi32`]
@@ -1243,15 +1243,15 @@ pub fn convert_u8_m128i_m256i(a: m128i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn convert_u8_m128i_lower8_m256i(a: m128i) -> m256i {
+pub fn convert_to_i16_m256i_from_lower8_u8_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepu8_epi32(a.0) })
 }
 
-/// Zero extend lower 4 `u8` values to `i16` values.
+/// Convert lower 4 `u8` values to `i16` values.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([5_u8; 16]);
-/// let b: [i64; 4] = convert_u8_m128i_lower4_m256i(a).into();
+/// let b: [i64; 4] = convert_to_i16_m256i_from_lower4_u8_m128i(a).into();
 /// assert_eq!(b, [5_i64; 4]);
 /// ```
 /// * **Intrinsic:** [`_mm256_cvtepu8_epi64`]
@@ -1259,7 +1259,7 @@ pub fn convert_u8_m128i_lower8_m256i(a: m128i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn convert_u8_m128i_lower4_m256i(a: m128i) -> m256i {
+pub fn convert_to_i16_m256i_from_lower4_u8_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepu8_epi64(a.0) })
 }
 

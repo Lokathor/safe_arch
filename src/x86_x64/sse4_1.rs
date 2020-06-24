@@ -224,13 +224,15 @@ pub fn cmp_eq_mask_i64_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([0_i16, -1, 2, -3, 4, 5, 6, 7]);
-/// let c: [i32; 4] = convert_i16_lower4_to_i32_m128i(a).into();
+/// let c: [i32; 4] = convert_to_i32_m128i_from_lower4_i16_m128i(a).into();
 /// assert_eq!(c, [0, -1, 2, -3]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtepi16_epi32`]
+/// * **Assembly:** `pmovsxwd xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-pub fn convert_i16_lower4_to_i32_m128i(a: m128i) -> m128i {
+pub fn convert_to_i32_m128i_from_lower4_i16_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepi16_epi32(a.0) })
 }
 
@@ -238,13 +240,15 @@ pub fn convert_i16_lower4_to_i32_m128i(a: m128i) -> m128i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([0_i16, -1, 2, -3, 4, 5, 6, 7]);
-/// let c: [i64; 2] = convert_i16_lower2_to_i64_m128i(a).into();
+/// let c: [i64; 2] = convert_to_i16_m128i_from_lower2_i16_m128i(a).into();
 /// assert_eq!(c, [0, -1]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtepi16_epi64`]
+/// * **Assembly:** `pmovsxwq xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-pub fn convert_i16_lower2_to_i64_m128i(a: m128i) -> m128i {
+pub fn convert_to_i16_m128i_from_lower2_i16_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepi16_epi64(a.0) })
 }
 
@@ -252,13 +256,15 @@ pub fn convert_i16_lower2_to_i64_m128i(a: m128i) -> m128i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([0, -1, 2, -3]);
-/// let c: [i64; 2] = convert_i32_lower2_to_i64_m128i(a).into();
+/// let c: [i64; 2] = convert_to_i64_m128i_from_lower2_i32_m128i(a).into();
 /// assert_eq!(c, [0, -1]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtepi32_epi64`]
+/// * **Assembly:** `_mm_cvtepi32_epi64`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-pub fn convert_i32_lower2_to_i64_m128i(a: m128i) -> m128i {
+pub fn convert_to_i64_m128i_from_lower2_i32_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepi32_epi64(a.0) })
 }
 
@@ -270,10 +276,12 @@ pub fn convert_i32_lower2_to_i64_m128i(a: m128i) -> m128i {
 /// let c: [i16; 8] = convert_i8_lower8_to_i16_m128i(a).into();
 /// assert_eq!(c, [0_i16, -1, 2, -3, 4, -5, 6, -7]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtepi8_epi16`]
+/// * **Assembly:** `pmovsxbw xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-pub fn convert_i8_lower8_to_i16_m128i(a: m128i) -> m128i {
+pub fn convert_to_i16_m128i_from_lower8_i8_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepi8_epi16(a.0) })
 }
 
@@ -282,13 +290,15 @@ pub fn convert_i8_lower8_to_i16_m128i(a: m128i) -> m128i {
 /// # use safe_arch::*;
 /// let a =
 ///   m128i::from([0_i8, -1, 2, -3, 4, -5, 6, -7, 8, 9, 10, 11, 12, 13, 14, 15]);
-/// let c: [i32; 4] = convert_i8_lower4_to_i32_m128i(a).into();
+/// let c: [i32; 4] = convert_to_i32_m128i_from_lower4_i8_m128i(a).into();
 /// assert_eq!(c, [0, -1, 2, -3]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtepi8_epi32`]
+/// * **Assembly:** `pmovsxbd xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-pub fn convert_i8_lower4_to_i32_m128i(a: m128i) -> m128i {
+pub fn convert_to_i32_m128i_from_lower4_i8_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepi8_epi32(a.0) })
 }
 
@@ -300,10 +310,12 @@ pub fn convert_i8_lower4_to_i32_m128i(a: m128i) -> m128i {
 /// let c: [i64; 2] = convert_i8_lower2_to_i64_m128i(a).into();
 /// assert_eq!(c, [0_i64, -1]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtepi8_epi64`]
+/// * **Assembly:** `pmovsxbq xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-pub fn convert_i8_lower2_to_i64_m128i(a: m128i) -> m128i {
+pub fn convert_to_i64_m128i_from_lower2_i8_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepi8_epi64(a.0) })
 }
 
@@ -311,13 +323,15 @@ pub fn convert_i8_lower2_to_i64_m128i(a: m128i) -> m128i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([u16::MAX, 1, 2, 3, 4, 5, 6, 7]);
-/// let c: [u32; 4] = convert_u16_lower4_to_u32_m128i(a).into();
+/// let c: [u32; 4] = convert_to_u32_m128i_from_lower4_u16_m128i(a).into();
 /// assert_eq!(c, [u16::MAX as u32, 1, 2, 3]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtepu16_epi32`]
+/// * **Assembly:** `pmovzxwd xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-pub fn convert_u16_lower4_to_u32_m128i(a: m128i) -> m128i {
+pub fn convert_to_u32_m128i_from_lower4_u16_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepu16_epi32(a.0) })
 }
 
@@ -328,10 +342,12 @@ pub fn convert_u16_lower4_to_u32_m128i(a: m128i) -> m128i {
 /// let c: [u64; 2] = convert_u16_lower2_to_u64_m128i(a).into();
 /// assert_eq!(c, [u16::MAX as u64, 1]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtepu16_epi64`]
+/// * **Assembly:** `pmovzxwq xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-pub fn convert_u16_lower2_to_u64_m128i(a: m128i) -> m128i {
+pub fn convert_to_u64_m128i_from_lower2_u16_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepu16_epi64(a.0) })
 }
 
@@ -342,10 +358,12 @@ pub fn convert_u16_lower2_to_u64_m128i(a: m128i) -> m128i {
 /// let c: [u64; 2] = convert_u32_lower2_to_u64_m128i(a).into();
 /// assert_eq!(c, [u32::MAX as u64, 1]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtepu32_epi64`]
+/// * **Assembly:** `pmovzxdq xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-pub fn convert_u32_lower2_to_u64_m128i(a: m128i) -> m128i {
+pub fn convert_to_u64_m128i_from_lower2_u32_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepu32_epi64(a.0) })
 }
 
@@ -354,13 +372,15 @@ pub fn convert_u32_lower2_to_u64_m128i(a: m128i) -> m128i {
 /// # use safe_arch::*;
 /// let a =
 ///   m128i::from([u8::MAX, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-/// let c: [u16; 8] = convert_u8_lower8_to_u16_m128i(a).into();
+/// let c: [u16; 8] = convert_to_u16_m128i_from_lower8_u8_m128i(a).into();
 /// assert_eq!(c, [u8::MAX as u16, 1, 2, 3, 4, 5, 6, 7]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtepu8_epi16`]
+/// * **Assembly:** `pmovzxbw xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-pub fn convert_u8_lower8_to_u16_m128i(a: m128i) -> m128i {
+pub fn convert_to_u16_m128i_from_lower8_u8_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepu8_epi16(a.0) })
 }
 
@@ -369,13 +389,15 @@ pub fn convert_u8_lower8_to_u16_m128i(a: m128i) -> m128i {
 /// # use safe_arch::*;
 /// let a =
 ///   m128i::from([u8::MAX, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-/// let c: [u32; 4] = convert_u8_lower4_to_u32_m128i(a).into();
+/// let c: [u32; 4] = convert_to_u32_m128i_from_lower4_u8_m128i(a).into();
 /// assert_eq!(c, [u8::MAX as u32, 1, 2, 3]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtepu8_epi32`]
+/// * **Assembly:** `pmovzxbd xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-pub fn convert_u8_lower4_to_u32_m128i(a: m128i) -> m128i {
+pub fn convert_to_u32_m128i_from_lower4_u8_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepu8_epi32(a.0) })
 }
 
@@ -387,10 +409,12 @@ pub fn convert_u8_lower4_to_u32_m128i(a: m128i) -> m128i {
 /// let c: [u64; 2] = convert_u8_lower2_to_u64_m128i(a).into();
 /// assert_eq!(c, [u8::MAX as u64, 1]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtepu8_epi64`]
+/// * **Assembly:** `pmovzxbq xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-pub fn convert_u8_lower2_to_u64_m128i(a: m128i) -> m128i {
+pub fn convert_to_u64_m128i_from_lower2_u8_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_cvtepu8_epi64(a.0) })
 }
 

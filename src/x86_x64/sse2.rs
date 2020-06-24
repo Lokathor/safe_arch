@@ -1085,14 +1085,16 @@ pub fn cmp_neq_i32_m128d_s(a: m128d, b: m128d) -> i32 {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([1, 2, 3, 4]);
-/// let b = convert_to_m128d_from_m128i(a);
+/// let b = convert_to_m128d_from_lower2_i32_m128i(a);
 /// let c = m128d::from_array([1.0, 2.0]);
 /// assert_eq!(b.to_bits(), c.to_bits());
 /// ```
+/// * **Intrinsic:** [`_mm_cvtepi32_pd`]
+/// * **Assembly:** `cvtdq2pd xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn convert_to_m128d_from_m128i(a: m128i) -> m128d {
+pub fn convert_to_m128d_from_lower2_i32_m128i(a: m128i) -> m128d {
   m128d(unsafe { _mm_cvtepi32_pd(a.0) })
 }
 
@@ -1100,14 +1102,16 @@ pub fn convert_to_m128d_from_m128i(a: m128i) -> m128d {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([1, 2, 3, 4]);
-/// let b = convert_to_m128_from_m128i(a);
+/// let b = convert_to_m128_from_i32_m128i(a);
 /// let c = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// assert_eq!(b.to_bits(), c.to_bits());
 /// ```
+/// * **Intrinsic:** [`_mm_cvtepi32_ps`]
+/// * **Assembly:** `cvtdq2ps xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn convert_to_m128_from_m128i(a: m128i) -> m128 {
+pub fn convert_to_m128_from_i32_m128i(a: m128i) -> m128 {
   m128(unsafe { _mm_cvtepi32_ps(a.0) })
 }
 
@@ -1119,10 +1123,12 @@ pub fn convert_to_m128_from_m128i(a: m128i) -> m128 {
 /// let c: [i32; 4] = b.into();
 /// assert_eq!(c, [1, 2, 0, 0]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtpd_epi32`]
+/// * **Assembly:** `cvtpd2dq xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn convert_to_m128i_from_m128d(a: m128d) -> m128i {
+pub fn convert_to_i32_m128i_from_m128d(a: m128d) -> m128i {
   m128i(unsafe { _mm_cvtpd_epi32(a.0) })
 }
 
@@ -1133,6 +1139,8 @@ pub fn convert_to_m128i_from_m128d(a: m128d) -> m128i {
 /// let b = convert_to_m128_from_m128d(a);
 /// assert_eq!(b.to_bits(), [1_f32.to_bits(), 2.5_f32.to_bits(), 0, 0]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtpd_ps`]
+/// * **Assembly:** `cvtpd2ps xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
@@ -1140,7 +1148,7 @@ pub fn convert_to_m128_from_m128d(a: m128d) -> m128 {
   m128(unsafe { _mm_cvtpd_ps(a.0) })
 }
 
-/// Rounds the two `f64` lanes to the low two `i32` lanes.
+/// Rounds the `f32` lanes to `i32` lanes.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.5, 3.0, 4.0]);
@@ -1148,10 +1156,12 @@ pub fn convert_to_m128_from_m128d(a: m128d) -> m128 {
 /// let c: [i32; 4] = b.into();
 /// assert_eq!(c, [1, 2, 3, 4]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtps_epi32`]
+/// * **Assembly:** `cvtps2dq xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn convert_to_m128i_from_m128(a: m128) -> m128i {
+pub fn convert_to_i32_m128i_from_m128(a: m128) -> m128i {
   m128i(unsafe { _mm_cvtps_epi32(a.0) })
 }
 
@@ -1162,10 +1172,12 @@ pub fn convert_to_m128i_from_m128(a: m128) -> m128i {
 /// let b = convert_to_m128d_from_m128(a);
 /// assert_eq!(b.to_bits(), [1_f64.to_bits(), 2.5_f64.to_bits()]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtps_pd`]
+/// * **Assembly:** `cvtps2pd xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn convert_to_m128d_from_m128(a: m128) -> m128d {
+pub fn convert_to_m128d_from_lower2_m128(a: m128) -> m128d {
   m128d(unsafe { _mm_cvtps_pd(a.0) })
 }
 
@@ -1220,6 +1232,8 @@ pub fn get_i64_from_m128d_s(a: m128d) -> i64 {
 /// let c = convert_m128d_s_replace_m128_s(a, b);
 /// assert_eq!(c.to_array(), [1.0, 4.0, 5.0, 6.0]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtsd_ss`]
+/// * **Assembly:** `cvtsd2ss xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
@@ -1264,6 +1278,8 @@ pub fn get_i64_from_m128i_s(a: m128i) -> i64 {
 /// let b = convert_i32_replace_m128d_s(a, 5_i32);
 /// assert_eq!(b.to_array(), [5.0, 2.0]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtsi32_sd`]
+/// * **Assembly:** `cvtsi2sd xmm, r32`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
@@ -1292,6 +1308,8 @@ pub fn set_i32_m128i_s(i: i32) -> m128i {
 /// let b = convert_i64_replace_m128d_s(a, 5_i64);
 /// assert_eq!(b.to_array(), [5.0, 2.0]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtsi64_sd`]
+/// * **Assembly:** `cvtsi2sd xmm, r64`
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
@@ -1323,9 +1341,10 @@ pub fn set_i64_m128i_s(i: i64) -> m128i {
 /// let c = convert_m128_s_replace_m128d_s(a, b);
 /// assert_eq!(c.to_array(), [3.0, 2.5]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtss_sd`]
+/// * **Assembly:** `cvtss2sd xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg(target_arch = "x86_64")]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
 pub fn convert_m128_s_replace_m128d_s(a: m128d, b: m128) -> m128d {
   m128d(unsafe { _mm_cvtss_sd(a.0, b.0) })
@@ -1340,7 +1359,6 @@ pub fn convert_m128_s_replace_m128d_s(a: m128d, b: m128) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg(target_arch = "x86_64")]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
 pub fn truncate_m128d_to_m128i(a: m128d) -> m128i {
   m128i(unsafe { _mm_cvttpd_epi32(a.0) })
@@ -1355,7 +1373,6 @@ pub fn truncate_m128d_to_m128i(a: m128d) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg(target_arch = "x86_64")]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
 pub fn truncate_m128_to_m128i(a: m128) -> m128i {
   m128i(unsafe { _mm_cvttps_epi32(a.0) })

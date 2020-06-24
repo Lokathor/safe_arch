@@ -573,6 +573,8 @@ pub fn cmp_neq_i32_m128_s(a: m128, b: m128) -> i32 {
 /// let b = convert_i32_replace_m128_s(a, 5_i32).to_array();
 /// assert_eq!(b, [5.0, 2.0, 3.0, 4.0]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtsi32_ss`]
+/// * **Assembly:** `cvtsi2ss xmm, r32`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse")))]
@@ -587,6 +589,8 @@ pub fn convert_i32_replace_m128_s(a: m128, i: i32) -> m128 {
 /// let b = convert_i64_replace_m128_s(a, 5_i64).to_array();
 /// assert_eq!(b, [5.0, 2.0, 3.0, 4.0]);
 /// ```
+/// * **Intrinsic:** [`_mm_cvtsi64_ss`]
+/// * **Assembly:** `cvtsi2ss xmm, r64`
 #[must_use]
 #[inline(always)]
 #[cfg(arch = "x86_64")]

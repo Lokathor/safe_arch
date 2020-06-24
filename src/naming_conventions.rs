@@ -60,11 +60,14 @@
 //!   output where the output value is of the same data type as the inputs, but
 //!   with all the bits in a "true" lane as 1 and all the bits in a "false" lane
 //!   as 0. Remember that with floating point values all 1s bits is a NaN, and
-//!   with signed integers all 1s bits is `-1`.
+//!   with signed integers all 1s bits is -1.
 //!   * An "Ordered comparison" checks if _neither_ floating point value is NaN.
 //!   * An "Unordered comparison" checks if _either_ floating point value is
 //!     NaN.
-//! * `convert`: TODO
+//! * `convert`: This does some sort of numeric type change. The details can
+//!   vary wildly. Generally, if the number of lanes goes down then the lowest
+//!   lanes will be kept. If the number of lanes goes up then the new high lanes
+//!   will be zero.
 //! * `div`: Division.
 //! * `dot_product`: This works like the matrix math operation. The lanes are
 //!   multiplied and then the results are summed up into a single value.
