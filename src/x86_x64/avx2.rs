@@ -1679,7 +1679,7 @@ macro_rules! insert_m128i_to_m256i {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m256i = $a;
     let b: m128i = $b;
-    const IMM: i32 = ($imm & 0b1) as i32;
+    const IMM: ::core::primitive::i32 = ($imm & 0b1) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_inserti128_si256;
     #[cfg(target_arch = "x86_64")]
@@ -1998,10 +1998,11 @@ macro_rules! multi_packed_sum_abs_diff_u8_m256i {
   ($a:expr, $b:expr, low a $la_pick:expr, low b $lb_pick:expr, high a $ha_pick:expr, high b $hb_pick:expr) => {{
     let a: $crate::m256i = $a;
     let b: $crate::m256i = $b;
-    const IMM: i32 = ((($la_pick & 0b1) << 2)
+    const IMM: ::core::primitive::i32 = ((($la_pick & 0b1) << 2)
       | ($lb_pick & 0b11)
       | (($ha_pick & 0b1) << 5)
-      | ($hb_pick & 0b11) << 3) as i32;
+      | ($hb_pick & 0b11) << 3)
+      as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_mpsadbw_epu8;
     #[cfg(target_arch = "x86_64")]

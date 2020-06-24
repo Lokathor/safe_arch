@@ -79,7 +79,7 @@ macro_rules! combined_byte_shr_imm_m128i {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m128i = $a;
     let b: m128i = $b;
-    const IMM: i32 = $imm as i32;
+    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_alignr_epi8;
     #[cfg(target_arch = "x86_64")]

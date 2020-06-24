@@ -1084,9 +1084,9 @@ pub fn zeroed_m128() -> m128 {
 #[cfg_attr(target_feature = "sse", macro_export)]
 macro_rules! shuffle_m128 {
   ($a:expr, $b:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
-    const MASK: i32 =
+    const MASK: ::core::primitive::i32 =
       (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($e & 0b11) << 6)
-        as i32;
+        as ::core::primitive::i32;
     let a: m128 = $a;
     let b: m128 = $b;
     #[cfg(target_arch = "x86")]

@@ -300,7 +300,7 @@ pub fn average_u16_m128i(a: m128i, b: m128i) -> m128i {
 macro_rules! byte_shl_imm_u128_m128i {
   ($a:expr, $imm:expr) => {{
     let a: m128i = $a;
-    const IMM: i32 = $imm as i32;
+    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_bslli_si128;
     #[cfg(target_arch = "x86_64")]
@@ -322,12 +322,12 @@ macro_rules! byte_shl_imm_u128_m128i {
 macro_rules! byte_shr_imm_u128_m128i {
   ($a:expr, $imm:expr) => {{
     let a: m128i = $a;
-    const imm: i32 = $imm as i32;
+    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_bsrli_si128;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_bsrli_si128;
-    m128i(unsafe { _mm_bsrli_si128(a.0, imm) })
+    m128i(unsafe { _mm_bsrli_si128(a.0, IMM) })
   }};
 }
 
@@ -1119,7 +1119,7 @@ pub fn convert_to_m128_from_i32_m128i(a: m128i) -> m128 {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128d::from_array([1.0, 2.5]);
-/// let b = convert_to_m128i_from_m128d(a);
+/// let b = convert_to_i32_m128i_from_m128d(a);
 /// let c: [i32; 4] = b.into();
 /// assert_eq!(c, [1, 2, 0, 0]);
 /// ```
@@ -1152,7 +1152,7 @@ pub fn convert_to_m128_from_m128d(a: m128d) -> m128 {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.5, 3.0, 4.0]);
-/// let b = convert_to_m128i_from_m128(a);
+/// let b = convert_to_i32_m128i_from_m128(a);
 /// let c: [i32; 4] = b.into();
 /// assert_eq!(c, [1, 2, 3, 4]);
 /// ```
@@ -1169,7 +1169,7 @@ pub fn convert_to_i32_m128i_from_m128(a: m128) -> m128i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.5, 3.6, 4.7]);
-/// let b = convert_to_m128d_from_m128(a);
+/// let b = convert_to_m128d_from_lower2_m128(a);
 /// assert_eq!(b.to_bits(), [1_f64.to_bits(), 2.5_f64.to_bits()]);
 /// ```
 /// * **Intrinsic:** [`_mm_cvtps_pd`]
@@ -1455,7 +1455,8 @@ pub fn div_m128d_s(a: m128d, b: m128d) -> m128d {
 macro_rules! extract_i16_as_i32_m128i {
   ($a:expr, $imm:expr) => {{
     let a: m128i = $a;
-    const LANE: i32 = ($imm & 0b111) as i32;
+    const LANE: ::core::primitive::i32 =
+      ($imm & 0b111) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_extract_epi16;
     #[cfg(target_arch = "x86_64")]
@@ -1485,8 +1486,9 @@ macro_rules! extract_i16_as_i32_m128i {
 macro_rules! insert_i16_from_i32_m128i {
   ($a:expr, $i:expr, $imm:expr) => {{
     let a: m128i = $a;
-    let i: i32 = $i;
-    const LANE: i32 = ($imm & 0b111) as i32;
+    let i: ::core::primitive::i32 = $i;
+    const LANE: ::core::primitive::i32 =
+      ($imm & 0b111) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_insert_epi16;
     #[cfg(target_arch = "x86_64")]
@@ -2379,9 +2381,9 @@ pub fn zeroed_m128d() -> m128d {
 #[macro_export]
 macro_rules! shuffle_i32_m128i {
   ($a:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
-    const MASK: i32 =
+    const MASK: ::core::primitive::i32 =
       (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($e & 0b11) << 6)
-        as i32;
+        as ::core::primitive::i32;
     let a: m128i = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_shuffle_epi32;
@@ -2421,7 +2423,8 @@ macro_rules! shuffle_i32_m128i {
 #[macro_export]
 macro_rules! shuffle_m128d {
   ($a:expr, $b:expr, $z:expr, $o:expr) => {{
-    const MASK: i32 = (($z & 0b1) | ($o & 0b1) << 1) as i32;
+    const MASK: ::core::primitive::i32 =
+      (($z & 0b1) | ($o & 0b1) << 1) as ::core::primitive::i32;
     let a: m128d = $a;
     let b: m128d = $b;
     #[cfg(target_arch = "x86")]
@@ -2463,9 +2466,9 @@ macro_rules! shuffle_m128d {
 #[macro_export]
 macro_rules! shuffle_i16_high_lanes_m128i {
   ($a:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
-    const MASK: i32 =
+    const MASK: ::core::primitive::i32 =
       (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($e & 0b11) << 6)
-        as i32;
+        as ::core::primitive::i32;
     let a: m128i = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_shufflehi_epi16;
@@ -2506,9 +2509,9 @@ macro_rules! shuffle_i16_high_lanes_m128i {
 #[macro_export]
 macro_rules! shuffle_i16_low_lanes_m128i {
   ($a:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
-    const MASK: i32 =
+    const MASK: ::core::primitive::i32 =
       (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($e & 0b11) << 6)
-        as i32;
+        as ::core::primitive::i32;
     let a: m128i = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_shufflelo_epi16;
@@ -2587,7 +2590,7 @@ pub fn shl_all_u64_m128i(a: m128i, count: m128i) -> m128i {
 macro_rules! shl_imm_u16_m128i {
   ($a:expr, $imm:expr) => {{
     let a: m128i = $a;
-    const IMM: i32 = $imm as i32;
+    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_slli_epi16;
     #[cfg(target_arch = "x86_64")]
@@ -2608,7 +2611,7 @@ macro_rules! shl_imm_u16_m128i {
 macro_rules! shl_imm_u32_m128i {
   ($a:expr, $imm:expr) => {{
     let a: m128i = $a;
-    const IMM: i32 = $imm as i32;
+    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_slli_epi32;
     #[cfg(target_arch = "x86_64")]
@@ -2629,7 +2632,7 @@ macro_rules! shl_imm_u32_m128i {
 macro_rules! shl_imm_u64_m128i {
   ($a:expr, $imm:expr) => {{
     let a: m128i = $a;
-    const IMM: i32 = $imm as i32;
+    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_slli_epi64;
     #[cfg(target_arch = "x86_64")]
@@ -2721,7 +2724,7 @@ pub fn shr_all_i32_m128i(a: m128i, count: m128i) -> m128i {
 macro_rules! shr_imm_i16_m128i {
   ($a:expr, $imm:expr) => {{
     let a: m128i = $a;
-    const IMM: i32 = $imm as i32;
+    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_srai_epi16;
     #[cfg(target_arch = "x86_64")]
@@ -2744,7 +2747,7 @@ macro_rules! shr_imm_i16_m128i {
 macro_rules! shr_imm_i32_m128i {
   ($a:expr, $imm:expr) => {{
     let a: m128i = $a;
-    const IMM: i32 = $imm as i32;
+    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_srai_epi32;
     #[cfg(target_arch = "x86_64")]

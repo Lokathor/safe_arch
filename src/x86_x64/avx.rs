@@ -141,7 +141,7 @@ macro_rules! blend_imm_m256d {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m256d = $a;
     let b: m256d = $b;
-    const IMM: i32 = $imm as i32;
+    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_blend_pd;
     #[cfg(target_arch = "x86_64")]
@@ -170,7 +170,7 @@ macro_rules! blend_imm_m256 {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m256 = $a;
     let b: m256 = $b;
-    const IMM: i32 = $imm as i32;
+    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_blend_ps;
     #[cfg(target_arch = "x86_64")]
@@ -564,7 +564,7 @@ macro_rules! cmp_op_mask_m128 {
   (@_raw_call $a:expr, $b:expr, $imm:expr) => {{
     let a: m128 = $a;
     let b: m128 = $b;
-    const IMM: i32 = $imm as i32;
+    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_cmp_ps;
     #[cfg(target_arch = "x86_64")]
@@ -596,7 +596,7 @@ macro_rules! cmp_op_mask_m128_s {
   (@_raw_call $a:expr, $b:expr, $imm:expr) => {{
     let a: m128 = $a;
     let b: m128 = $b;
-    const IMM: i32 = $imm as i32;
+    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_cmp_ss;
     #[cfg(target_arch = "x86_64")]
@@ -628,7 +628,7 @@ macro_rules! cmp_op_mask_m256 {
   (@_raw_call $a:expr, $b:expr, $imm:expr) => {{
     let a: m256 = $a;
     let b: m256 = $b;
-    const IMM: i32 = $imm as i32;
+    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_cmp_ps;
     #[cfg(target_arch = "x86_64")]
@@ -660,7 +660,7 @@ macro_rules! cmp_op_mask_m128d {
   (@_raw_call $a:expr, $b:expr, $imm:expr) => {{
     let a: m128d = $a;
     let b: m128d = $b;
-    const IMM: i32 = $imm as i32;
+    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_cmp_pd;
     #[cfg(target_arch = "x86_64")]
@@ -692,7 +692,7 @@ macro_rules! cmp_op_mask_m128d_s {
   (@_raw_call $a:expr, $b:expr, $imm:expr) => {{
     let a: m128d = $a;
     let b: m128d = $b;
-    const IMM: i32 = $imm as i32;
+    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_cmp_sd;
     #[cfg(target_arch = "x86_64")]
@@ -724,7 +724,7 @@ macro_rules! cmp_op_mask_m256d {
   (@_raw_call $a:expr, $b:expr, $imm:expr) => {{
     let a: m256d = $a;
     let b: m256d = $b;
-    const IMM: i32 = $imm as i32;
+    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_cmp_pd;
     #[cfg(target_arch = "x86_64")]
@@ -971,7 +971,7 @@ macro_rules! dot_product_m256 {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m256 = $a;
     let b: m256 = $b;
-    const IMM: i32 = $imm as i32;
+    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_dp_ps;
     #[cfg(target_arch = "x86_64")]
@@ -992,7 +992,8 @@ macro_rules! dot_product_m256 {
 macro_rules! extract_i32_from_m256i {
   ($a:expr, $imm:expr) => {{
     let a: m256i = $a;
-    const IMM: i32 = ($imm & 0b111) as i32;
+    const IMM: ::core::primitive::i32 =
+      ($imm & 0b111) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_extract_epi32;
     #[cfg(target_arch = "x86_64")]
@@ -1014,7 +1015,8 @@ macro_rules! extract_i32_from_m256i {
 macro_rules! extract_i64_from_m256i {
   ($a:expr, $imm:expr) => {{
     let a: m256i = $a;
-    const IMM: i32 = ($imm & 0b111) as i32;
+    const IMM: ::core::primitive::i32 =
+      ($imm & 0b111) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_extract_epi64;
     #[cfg(target_arch = "x86_64")]
@@ -1037,7 +1039,8 @@ macro_rules! extract_i64_from_m256i {
 macro_rules! extract_m128d_from_m256d {
   ($a:expr, $imm:expr) => {{
     let a: m256d = $a;
-    const IMM: i32 = ($imm & 0b111) as i32;
+    const IMM: ::core::primitive::i32 =
+      ($imm & 0b111) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_extractf128_pd;
     #[cfg(target_arch = "x86_64")]
@@ -1060,7 +1063,8 @@ macro_rules! extract_m128d_from_m256d {
 macro_rules! extract_m128_from_m256 {
   ($a:expr, $imm:expr) => {{
     let a: m256 = $a;
-    const IMM: i32 = ($imm & 0b111) as i32;
+    const IMM: ::core::primitive::i32 =
+      ($imm & 0b111) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_extractf128_ps;
     #[cfg(target_arch = "x86_64")]
@@ -1083,7 +1087,8 @@ macro_rules! extract_m128_from_m256 {
 macro_rules! extract_m128i_from_m256i {
   ($a:expr, $imm:expr) => {{
     let a: m256i = $a;
-    const IMM: i32 = ($imm & 0b111) as i32;
+    const IMM: ::core::primitive::i32 =
+      ($imm & 0b111) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_extractf128_si256;
     #[cfg(target_arch = "x86_64")]
@@ -1205,7 +1210,8 @@ macro_rules! insert_i8_to_m256i {
   ($a:expr, $i:expr, $imm:expr) => {{
     let a: m256i = $a;
     let i: i8 = $i;
-    const IMM: i32 = ($imm & 0b11111) as i32;
+    const IMM: ::core::primitive::i32 =
+      ($imm & 0b11111) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_insert_epi8;
     #[cfg(target_arch = "x86_64")]
@@ -1230,7 +1236,8 @@ macro_rules! insert_i16_to_m256i {
   ($a:expr, $i:expr, $imm:expr) => {{
     let a: m256i = $a;
     let i: i16 = $i;
-    const IMM: i32 = ($imm & 0b1111) as i32;
+    const IMM: ::core::primitive::i32 =
+      ($imm & 0b1111) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_insert_epi16;
     #[cfg(target_arch = "x86_64")]
@@ -1253,8 +1260,9 @@ macro_rules! insert_i16_to_m256i {
 macro_rules! insert_i32_to_m256i {
   ($a:expr, $i:expr, $imm:expr) => {{
     let a: m256i = $a;
-    let i: i32 = $i;
-    const IMM: i32 = ($imm & 0b111) as i32;
+    let i: ::core::primitive::i32 = $i;
+    const IMM: ::core::primitive::i32 =
+      ($imm & 0b111) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_insert_epi32;
     #[cfg(target_arch = "x86_64")]
@@ -1279,7 +1287,7 @@ macro_rules! insert_i64_to_m256i {
   ($a:expr, $i:expr, $imm:expr) => {{
     let a: m256i = $a;
     let i: i64 = $i;
-    const IMM: i32 = ($imm & 0b11) as i32;
+    const IMM: ::core::primitive::i32 = ($imm & 0b11) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_insert_epi64;
     #[cfg(target_arch = "x86_64")]
@@ -1303,7 +1311,7 @@ macro_rules! insert_m128d_to_m256d {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m256d = $a;
     let b: m128d = $b;
-    const IMM: i32 = ($imm & 0b1) as i32;
+    const IMM: ::core::primitive::i32 = ($imm & 0b1) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_insertf128_pd;
     #[cfg(target_arch = "x86_64")]
@@ -1327,7 +1335,7 @@ macro_rules! insert_m128_to_m256 {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m256 = $a;
     let b: m128 = $b;
-    const IMM: i32 = ($imm & 0b1) as i32;
+    const IMM: ::core::primitive::i32 = ($imm & 0b1) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_insertf128_ps;
     #[cfg(target_arch = "x86_64")]
@@ -1355,7 +1363,7 @@ macro_rules! insert_m128i_to_m256i_slow_avx {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m256i = $a;
     let b: m128i = $b;
-    const IMM: i32 = ($imm & 0b1) as i32;
+    const IMM: ::core::primitive::i32 = ($imm & 0b1) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_insertf128_si256;
     #[cfg(target_arch = "x86_64")]
@@ -1885,7 +1893,8 @@ pub fn bitor_m256(a: m256, b: m256) -> m256 {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! permute_m128d {
   ($a:expr, $z:expr, $o:expr) => {{
-    const MASK: i32 = (($z & 0b1) | ($o & 0b1) << 1) as i32;
+    const MASK: ::core::primitive::i32 =
+      (($z & 0b1) | ($o & 0b1) << 1) as ::core::primitive::i32;
     let a: m128d = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_permute_pd;
@@ -1916,8 +1925,9 @@ macro_rules! permute_m128d {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! permute_within_m128d_m256d {
   ($a:expr, $z:expr, $o:expr, $t:expr, $h:expr) => {{
-    const MASK: i32 =
-      (($z & 0b1) | ($o & 0b1) << 1 | ($t & 0b1) << 2 | ($h & 0b1) << 3) as i32;
+    const MASK: ::core::primitive::i32 =
+      (($z & 0b1) | ($o & 0b1) << 1 | ($t & 0b1) << 2 | ($h & 0b1) << 3)
+        as ::core::primitive::i32;
     let a: m256d = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_permute_pd;
@@ -1950,9 +1960,9 @@ macro_rules! permute_within_m128d_m256d {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! permute_m128 {
   ($a:expr, $z:expr, $o:expr, $t:expr, $h:expr) => {{
-    const MASK: i32 =
+    const MASK: ::core::primitive::i32 =
       (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($h & 0b11) << 6)
-        as i32;
+        as ::core::primitive::i32;
     let a: m128 = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_permute_ps;
@@ -1988,9 +1998,9 @@ macro_rules! permute_m128 {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! permute_m256 {
   ($a:expr, $z:expr, $o:expr, $t:expr, $h:expr) => {{
-    const MASK: i32 =
+    const MASK: ::core::primitive::i32 =
       (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($h & 0b11) << 6)
-        as i32;
+        as ::core::primitive::i32;
     let a: m256 = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_permute_ps;
@@ -2019,7 +2029,7 @@ macro_rules! permute_m256 {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! permute_f128_in_m256d {
   ($a:expr, $b:expr, $low:tt, $high:tt) => {{
-    const MASK: i32 =
+    const MASK: ::core::primitive::i32 =
       $crate::permute_f128_in_m256d!(@_convert_tt_to_select $low) |
       ($crate::permute_f128_in_m256d!(@_convert_tt_to_select $high) << 4);
     let a: m256d = $a;
@@ -2069,7 +2079,7 @@ macro_rules! permute_f128_in_m256d {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! permute_f128_in_m256 {
   ($a:expr, $b:expr, $low:tt, $high:tt) => {{
-  const MASK: i32 = $crate::permute_f128_in_m256!(@_convert_tt_to_select $low)
+  const MASK: ::core::primitive::i32 = $crate::permute_f128_in_m256!(@_convert_tt_to_select $low)
     | ($crate::permute_f128_in_m256!(@_convert_tt_to_select $high) << 4);
     let a: m256 = $a;
     let b: m256 = $b;
@@ -2118,7 +2128,7 @@ macro_rules! permute_f128_in_m256 {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! permute_i128_in_m256i {
   ($a:expr, $b:expr, $low:tt, $high:tt) => {{
-  const MASK: i32 = $crate::permute_i128_in_m256i!(@_convert_tt_to_select $low)
+  const MASK: ::core::primitive::i32 = $crate::permute_i128_in_m256i!(@_convert_tt_to_select $low)
     | ($crate::permute_i128_in_m256i!(@_convert_tt_to_select $high) << 4);
     let a: m256i = $a;
     let b: m256i = $b;
@@ -2896,8 +2906,9 @@ pub fn zeroed_m256i() -> m256i {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! shuffle_m256d {
   ($a:expr, $b:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
-    const MASK: i32 =
-      (($z & 0b1) | ($o & 0b1) << 1 | ($t & 0b1) << 2 | ($e & 0b1) << 3) as i32;
+    const MASK: ::core::primitive::i32 =
+      (($z & 0b1) | ($o & 0b1) << 1 | ($t & 0b1) << 2 | ($e & 0b1) << 3)
+        as ::core::primitive::i32;
     let a: m256d = $a;
     let b: m256d = $b;
     #[cfg(target_arch = "x86")]
@@ -2925,9 +2936,9 @@ macro_rules! shuffle_m256d {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! shuffle_m256 {
   ($a:expr, $b:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
-    const MASK: i32 =
+    const MASK: ::core::primitive::i32 =
       (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($e & 0b11) << 6)
-        as i32;
+        as ::core::primitive::i32;
     let a: m256 = $a;
     let b: m256 = $b;
     #[cfg(target_arch = "x86")]

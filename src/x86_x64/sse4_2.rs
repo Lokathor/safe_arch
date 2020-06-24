@@ -112,26 +112,30 @@ pub fn crc32_u64(crc: u64, v: u64) -> u64 {
 ///
 /// // explicit needle length
 /// let needle: m128i = m128i::from(*b"e_______________");
-/// let i: i32 =
+/// let i: ::core::primitive::i32 =
 ///   string_search_for_index!([needle, 1], [hay, 16], u8, EqAny, FirstMatch);
 /// assert_eq!(i, 3);
-/// let i: i32 =
+/// let i: ::core::primitive::i32 =
 ///   string_search_for_index!([needle, 1], [hay, 16], u8, EqAny, LastMatch);
 /// assert_eq!(i, 6);
 ///
 /// // implicit needle length
 /// let needle: m128i = m128i::from(*b"e\0______________");
-/// let i: i32 = string_search_for_index!(needle, hay, u8, EqAny, FirstMatch);
+/// let i: ::core::primitive::i32 =
+///   string_search_for_index!(needle, hay, u8, EqAny, FirstMatch);
 /// assert_eq!(i, 3);
-/// let i: i32 = string_search_for_index!(needle, hay, u8, EqAny, LastMatch);
+/// let i: ::core::primitive::i32 =
+///   string_search_for_index!(needle, hay, u8, EqAny, LastMatch);
 /// assert_eq!(i, 6);
 ///
 /// // more than one needle character will match any of them, though we
 /// // don't get info about _which_ needle character matched.
 /// let needle: m128i = m128i::from(*b"et\0_____________");
-/// let i: i32 = string_search_for_index!(needle, hay, u8, EqAny, FirstMatch);
+/// let i: ::core::primitive::i32 =
+///   string_search_for_index!(needle, hay, u8, EqAny, FirstMatch);
 /// assert_eq!(i, 3);
-/// let i: i32 = string_search_for_index!(needle, hay, u8, EqAny, LastMatch);
+/// let i: ::core::primitive::i32 =
+///   string_search_for_index!(needle, hay, u8, EqAny, LastMatch);
 /// assert_eq!(i, 8);
 /// ```
 /// ## CmpRanges
@@ -139,7 +143,8 @@ pub fn crc32_u64(crc: u64, v: u64) -> u64 {
 /// # use safe_arch::*;
 /// let hay: m128i = m128i::from(*b"some test words.");
 /// let needle: m128i = m128i::from(*b"vz\0_____________");
-/// let i: i32 = string_search_for_index!(needle, hay, u8, CmpRanges, FirstMatch);
+/// let i: ::core::primitive::i32 =
+///   string_search_for_index!(needle, hay, u8, CmpRanges, FirstMatch);
 /// assert_eq!(i, 10); // matches the 'w'
 /// ```
 /// ## CmpEqEach
@@ -147,9 +152,11 @@ pub fn crc32_u64(crc: u64, v: u64) -> u64 {
 /// # use safe_arch::*;
 /// let hay: m128i = m128i::from(*b"some test words.");
 /// let needle: m128i = m128i::from(*b"_____test_______");
-/// let i: i32 = string_search_for_index!(needle, hay, u8, CmpEqEach, FirstMatch);
+/// let i: ::core::primitive::i32 =
+///   string_search_for_index!(needle, hay, u8, CmpEqEach, FirstMatch);
 /// assert_eq!(i, 5); // start of "test"
-/// let i: i32 = string_search_for_index!(needle, hay, u8, CmpEqEach, LastMatch);
+/// let i: ::core::primitive::i32 =
+///   string_search_for_index!(needle, hay, u8, CmpEqEach, LastMatch);
 /// assert_eq!(i, 8); // end of "test"
 /// ```
 /// ## CmpEqOrdered
@@ -157,7 +164,7 @@ pub fn crc32_u64(crc: u64, v: u64) -> u64 {
 /// # use safe_arch::*;
 /// let hay: m128i = m128i::from(*b"some test words.");
 /// let needle: m128i = m128i::from(*b"words\0__________");
-/// let i: i32 =
+/// let i: ::core::primitive::i32 =
 ///   string_search_for_index!(needle, hay, u8, CmpEqOrdered, FirstMatch);
 /// assert_eq!(i, 10); // This is where the "words" substring begins
 /// ```
@@ -282,10 +289,10 @@ macro_rules! string_search_for_index {
 
   (@_raw_explicit_len $needle:expr, $needle_len:expr, $haystack:expr, $haystack_len:expr, $imm:expr) => {{
     let a: m128i = $needle;
-    let la: i32 = $needle_len;
+    let la: ::core::primitive::i32 = $needle_len;
     let b: m128i = $haystack;
-    let lb: i32 = $haystack_len;
-    const IMM: i32 = $imm as i32;
+    let lb: ::core::primitive::i32 = $haystack_len;
+    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_cmpestri;
     #[cfg(target_arch = "x86_64")]
@@ -296,7 +303,7 @@ macro_rules! string_search_for_index {
   (@_raw_implicit_len $needle:expr, $haystack:expr, $imm:expr) => {{
     let a: m128i = $needle;
     let b: m128i = $haystack;
-    const IMM: i32 = $imm as i32;
+    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_cmpistri;
     #[cfg(target_arch = "x86_64")]
@@ -514,10 +521,10 @@ macro_rules! string_search_for_mask {
 
   (@_raw_explicit_len $needle:expr, $needle_len:expr, $haystack:expr, $haystack_len:expr, $imm:expr) => {{
     let a: m128i = $needle;
-    let la: i32 = $needle_len;
+    let la: ::core::primitive::i32 = $needle_len;
     let b: m128i = $haystack;
-    let lb: i32 = $haystack_len;
-    const IMM: i32 = $imm as i32;
+    let lb: ::core::primitive::i32 = $haystack_len;
+    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_cmpestrm;
     #[cfg(target_arch = "x86_64")]
@@ -528,7 +535,7 @@ macro_rules! string_search_for_mask {
   (@_raw_implicit_len $needle:expr, $haystack:expr, $imm:expr) => {{
     let a: m128i = $needle;
     let b: m128i = $haystack;
-    const IMM: i32 = $imm as i32;
+    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_cmpistrm;
     #[cfg(target_arch = "x86_64")]

@@ -72,7 +72,8 @@ pub fn aes_inv_mix_columns_m128i(a: m128i) -> m128i {
 macro_rules! aes_key_gen_assist_m128i {
   ($a:expr, $imm:expr) => {{
     let a: m128i = $a;
-    const IMM: i32 = ($imm & 0b1111_1111) as i32;
+    const IMM: ::core::primitive::i32 =
+      ($imm & 0b1111_1111) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_aeskeygenassist_si128;
     #[cfg(target_arch = "x86_64")]
