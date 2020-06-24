@@ -303,11 +303,8 @@ pub fn cast_to_m256_from_m256d(a: m256d) -> m256 {
 /// ```
 /// # use safe_arch::*;
 /// let a = load_f64_splat_m256d(&1.0);
-/// let b: [u32; 8] = cast_to_m256i_from_m256d(a).into();
-/// assert_eq!(
-///   b,
-///   [0, 0x3FF0_0000, 0, 0x3FF0_0000, 0, 0x3FF0_0000, 0, 0x3FF0_0000]
-/// );
+/// let b: [u64; 4] = cast_to_m256i_from_m256d(a).into();
+/// assert_eq!(b, [0x3FF00000_00000000_u64; 4]);
 /// ```
 /// * **Intrinsic:** [`_mm256_castpd_si256`]
 /// * **Assembly:** none
