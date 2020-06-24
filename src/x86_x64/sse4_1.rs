@@ -772,7 +772,7 @@ macro_rules! insert_f32_imm_m128 {
     m128(unsafe { _mm_insert_ps(a.0, b.0, IMM) })
   }};
   ($a:expr, $b:expr, from $b_lane_src:expr, to $a_lane_dest:expr) => {{
-    insert_f32_imm_m128!($a, $b, from $b_lane_src, to $a_lane_dest, mask 0)
+    $crate::insert_f32_imm_m128!($a, $b, from $b_lane_src, to $a_lane_dest, mask 0)
   }};
 }
 
