@@ -279,115 +279,162 @@ pub fn load_f32_splat_m256(a: &f32) -> m256 {
   m256(unsafe { _mm256_broadcast_ss(&a) })
 }
 
-/// Bit-preserving cast from `m256d` to `m256`.
+/// Bit-preserving cast to `m256` from `m256d`.
 ///
 /// ```
 /// # use safe_arch::*;
 /// let a = load_f64_splat_m256d(&1.0);
 /// assert_eq!(
-///   cast_from_m256d_to_m256(a).to_bits(),
+///   cast_to_m256_from_m256d(a).to_bits(),
 ///   [0, 0x3FF0_0000, 0, 0x3FF0_0000, 0, 0x3FF0_0000, 0, 0x3FF0_0000]
 /// );
 /// ```
+/// * **Intrinsic:** [`_mm256_castpd_ps`]
+/// * **Assembly:** none
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn cast_from_m256d_to_m256(a: m256d) -> m256 {
+pub fn cast_to_m256_from_m256d(a: m256d) -> m256 {
   m256(unsafe { _mm256_castpd_ps(a.0) })
 }
 
-/// Bit-preserving cast from `m256d` to `m256i`.
+/// Bit-preserving cast to `m256i` from `m256d`.
 ///
 /// ```
 /// # use safe_arch::*;
 /// let a = load_f64_splat_m256d(&1.0);
-/// let b: [u32; 8] = cast_from_m256d_to_m256i(a).into();
+/// let b: [u32; 8] = cast_to_m256i_from_m256d(a).into();
 /// assert_eq!(
 ///   b,
 ///   [0, 0x3FF0_0000, 0, 0x3FF0_0000, 0, 0x3FF0_0000, 0, 0x3FF0_0000]
 /// );
 /// ```
+/// * **Intrinsic:** [`_mm256_castpd_si256`]
+/// * **Assembly:** none
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn cast_from_m256d_to_m256i(a: m256d) -> m256i {
+pub fn cast_to_m256i_from_m256d(a: m256d) -> m256i {
   m256i(unsafe { _mm256_castpd_si256(a.0) })
 }
 
-/// Bit-preserving cast from `m256` to `m256i`.
+/// Bit-preserving cast to `m256i` from `m256`.
 ///
 /// ```
 /// # use safe_arch::*;
 /// let a = load_f32_splat_m256(&1.0);
-/// let b: [u64; 4] = cast_from_m256_to_m256d(a).to_bits();
-/// assert_eq!(
-///   b,
-///   [
-///     0x3f800000_3f800000,
-///     0x3f800000_3f800000,
-///     0x3f800000_3f800000,
-///     0x3f800000_3f800000,
-///   ]
-/// );
+/// let b: [u64; 4] = cast_to_m256d_from_m256(a).to_bits();
+/// assert_eq!(b, [0x3f800000_3f800000; 4]);
 /// ```
+/// * **Intrinsic:** [`_mm256_castps_pd`]
+/// * **Assembly:** none
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn cast_from_m256_to_m256d(a: m256) -> m256d {
+pub fn cast_to_m256d_from_m256(a: m256) -> m256d {
   m256d(unsafe { _mm256_castps_pd(a.0) })
 }
 
-/// Bit-preserving cast from `m256` to `m256i`.
+/// Bit-preserving cast to `m256i` from `m256`.
 ///
 /// ```
 /// # use safe_arch::*;
 /// let a = load_f32_splat_m256(&1.0);
-/// let b: [u64; 4] = cast_from_m256_to_m256i(a).into();
-/// assert_eq!(
-///   b,
-///   [
-///     0x3f800000_3f800000,
-///     0x3f800000_3f800000,
-///     0x3f800000_3f800000,
-///     0x3f800000_3f800000,
-///   ]
-/// );
+/// let b: [u64; 4] = cast_to_m256i_from_m256(a).into();
+/// assert_eq!(b, [0x3f800000_3f800000; 4]);
 /// ```
+/// * **Intrinsic:** [`_mm256_castps_si256`]
+/// * **Assembly:** none
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn cast_from_m256_to_m256i(a: m256) -> m256i {
+pub fn cast_to_m256i_from_m256(a: m256) -> m256i {
   m256i(unsafe { _mm256_castps_si256(a.0) })
 }
 
-/// Bit-preserving cast from `m256i` to `m256d`.
+/// Bit-preserving cast to `m256d` from `m256i`.
 ///
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([1.0_f64.to_bits(); 4]);
-/// let b = cast_from_m256i_to_m256d(a).to_array();
+/// let b = cast_to_m256d_from_m256i(a).to_array();
 /// assert_eq!(b, [1.0; 4]);
 /// ```
+/// * **Intrinsic:** [`_mm256_castsi256_pd`]
+/// * **Assembly:** none
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn cast_from_m256i_to_m256d(a: m256i) -> m256d {
+pub fn cast_to_m256d_from_m256i(a: m256i) -> m256d {
   m256d(unsafe { _mm256_castsi256_pd(a.0) })
 }
 
-/// Bit-preserving cast from `m256i` to `m256`.
+/// Bit-preserving cast to `m256` from `m256i`.
 ///
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([1.0_f32.to_bits(); 8]);
-/// let b = cast_from_m256i_to_m256(a).to_array();
+/// let b = cast_to_m256_from_m256i(a).to_array();
 /// assert_eq!(b, [1.0; 8]);
 /// ```
+/// * **Intrinsic:** [`_mm256_castsi256_ps`]
+/// * **Assembly:** none
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn cast_from_m256i_to_m256(a: m256i) -> m256 {
+pub fn cast_to_m256_from_m256i(a: m256i) -> m256 {
   m256(unsafe { _mm256_castsi256_ps(a.0) })
+}
+
+/// Bit-preserving cast to `m128` from `m256`.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256::from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
+/// let b = cast_to_m128_from_m256(a).to_array();
+/// assert_eq!(b, [1.0, 2.0, 3.0, 4.0]);
+/// ```
+/// * **Intrinsic:** [`_mm256_castps256_ps128`]
+/// * **Assembly:** none
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn cast_to_m128_from_m256(a: m256) -> m128 {
+  m128(unsafe { _mm256_castps256_ps128(a.0) })
+}
+
+/// Bit-preserving cast to `m128d` from `m256d`.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256d::from([1.0, 2.0, 3.0, 4.0]);
+/// let b = cast_to_m128d_from_m256d(a).to_array();
+/// assert_eq!(b, [1.0, 2.0]);
+/// ```
+/// * **Intrinsic:** [`_mm256_castpd256_pd128`]
+/// * **Assembly:** none
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn cast_to_m128d_from_m256d(a: m256d) -> m128d {
+  m128d(unsafe { _mm256_castpd256_pd128(a.0) })
+}
+
+/// Bit-preserving cast to `m128i` from `m256i`.
+///
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([1, 2, 3, 4, 5, 6, 7, 8]);
+/// let b: [i32; 4] = cast_to_m128i_from_m256i(a).into();
+/// assert_eq!(b, [1, 2, 3, 4]);
+/// ```
+/// * **Intrinsic:** [`_mm256_castsi256_si128`]
+/// * **Assembly:** none
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+pub fn cast_to_m128i_from_m256i(a: m256i) -> m128i {
+  m128i(unsafe { _mm256_castsi256_si128(a.0) })
 }
 
 /// Round `f64` lanes towards positive infinity.
