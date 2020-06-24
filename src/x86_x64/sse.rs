@@ -1049,51 +1049,46 @@ pub fn zeroed_m128() -> m128 {
   m128(unsafe { _mm_setzero_ps() })
 }
 
-/// Shuffles the lanes around.
+/// Swizzle the `f32` lanes from `$a` and `$b` together using an immediate
+/// control value.
 ///
-/// This is a macro because the shuffle pattern must be a compile time constant,
-/// and Rust doesn't currently support that for functions.
+/// The `a:` and `b:` prefixes on the index selection values are literal tokens
+/// that you type. It helps keep clear what value comes from where. The first
+/// two output lanes come from `$a`, the second two output lanes come from `$b`.
 ///
-/// * The low lanes of the output come from `$a`, as picked by `$z` and `$o`
-///   (Zero and One)
-/// * The high lanes of the output come from `$b`, as picked by `$t` and `$e`
-///   (Two and threE).
-/// * `$a` and `$b` must obviously be `m128` expressions.
-/// * Each of the lane selection values is a lane index (`0..4`). They can be
-///   any integer type as long as all four lane indexes are the same type. Out
-///   of bounds index values are wrapped to just the low 2 bits.
-/// * The lane selection values are combined into a private `const` which is
-///   computed at compile time and then used at runtime. This means that you can
-///   use literals, but you can also use the names of other constants or even a
-///   `const fn` expression, if that is somehow is useful to you.
-///
+/// You can pass the same value as both arguments, but if you want to swizzle
+/// within only a single register and you have `avx` available consider using
+/// [`swiz_ai_f32_all_m128`] instead. You'll get much better performance.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([5.0, 6.0, 7.0, 8.0]);
 /// //
-/// let c = shuffle_m128!(a, b, 0, 0, 0, 0).to_array();
+/// let c = swiz_abi_f32_all_m128!(a, b, [a:0, a:0, b:0, b:0]).to_array();
 /// assert_eq!(c, [1.0, 1.0, 5.0, 5.0]);
 /// //
-/// let c = shuffle_m128!(a, b, 0, 1, 2, 3).to_array();
+/// let c = swiz_abi_f32_all_m128!(a, b, [a:0, a:1, b:2, b:3]).to_array();
 /// assert_eq!(c, [1.0, 2.0, 7.0, 8.0]);
 /// //
-/// let c = shuffle_m128!(a, b, 0, 2, 2, 1).to_array();
+/// let c = swiz_abi_f32_all_m128!(a, b, [a:0, a:2, b:2, b:1]).to_array();
 /// assert_eq!(c, [1.0, 3.0, 7.0, 6.0]);
 /// ```
-#[cfg_attr(target_feature = "sse", macro_export)]
-macro_rules! shuffle_m128 {
-  ($a:expr, $b:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
+/// * **Intrinsic:** [`_mm_shuffle_ps`]
+/// * **Assembly:** `shufps xmm, xmm, imm8`
+#[macro_export]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse")))]
+macro_rules! swiz_abi_f32_all_m128 {
+  ($a:expr, $b:expr, [a:$z:expr, a:$o:expr, b:$t:expr, b:$e:expr]) => {{
     const MASK: ::core::primitive::i32 =
       (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($e & 0b11) << 6)
         as ::core::primitive::i32;
-    let a: m128 = $a;
-    let b: m128 = $b;
+    let a: $crate::m128 = $a;
+    let b: $crate::m128 = $b;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_shuffle_ps;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_shuffle_ps;
-    m128(unsafe { _mm_shuffle_ps(a.0, b.0, MASK) })
+    $crate::m128(unsafe { _mm_shuffle_ps(a.0, b.0, MASK) })
   }};
 }
 

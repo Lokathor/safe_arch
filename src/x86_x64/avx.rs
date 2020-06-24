@@ -2054,216 +2054,225 @@ macro_rules! permute_m256 {
   }};
 }
 
-/// Permutes the lanes around.
+/// Swizzle 128 bits of floating point data at a time from `$a` and `$b` using
+/// an immediate control value.
+///
+/// You can pass `A_Low`, `A_High`, `B_Low`, `B_High`, or `Zeroed`.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256d::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m256d::from_array([5.0, 6.0, 7.0, 8.0]);
 /// //
-/// let c = permute_f128_in_m256d!(a, b, 2, Clear).to_array();
+/// let c = swiz_abi_f128z_all_m256d!(a, b, [B_Low, Zeroed]).to_array();
 /// assert_eq!(c, [5.0, 6.0, 0.0, 0.0]);
 /// //
-/// let c = permute_f128_in_m256d!(a, b, 0, 1).to_array();
-/// assert_eq!(c, [1.0, 2.0, 3.0, 4.0]);
-/// //
-/// let c = permute_f128_in_m256d!(a, b, Clear, 3).to_array();
-/// assert_eq!(c, [0.0, 0.0, 7.0, 8.0]);
+/// let c = swiz_abi_f128z_all_m256d!(a, b, [Zeroed, A_High]).to_array();
+/// assert_eq!(c, [0.0, 0.0, 3.0, 4.0]);
 /// ```
+/// * **Intrinsic:** [`_mm256_permute2f128_pd`]
+/// * **Assembly:** `vperm2f128 ymm, ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! permute_f128_in_m256d {
-  ($a:expr, $b:expr, $low:tt, $high:tt) => {{
-    const MASK: ::core::primitive::i32 =
-      $crate::permute_f128_in_m256d!(@_convert_tt_to_select $low) |
-      ($crate::permute_f128_in_m256d!(@_convert_tt_to_select $high) << 4);
-    let a: m256d = $a;
-    let b: m256d = $b;
+macro_rules! swiz_abi_f128z_all_m256d {
+  ($a:expr, $b:expr, [$low:tt, $high:tt]) => {{
+  const MASK: ::core::primitive::i32 = $crate::swiz_abi_f128z_all_m256d!(@_convert_tt_to_select $low)
+    | ($crate::swiz_abi_f128z_all_m256d!(@_convert_tt_to_select $high) << 4);
+    let a: $crate::m256d = $a;
+    let b: $crate::m256d = $b;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_permute2f128_pd;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_permute2f128_pd;
-    m256d(unsafe { _mm256_permute2f128_pd(a.0, b.0, MASK) })
+    $crate::m256d(unsafe { _mm256_permute2f128_pd(a.0, b.0, MASK) })
   }};
-  (@_convert_tt_to_select 0) => {
+  (@_convert_tt_to_select A_Low) => {
     0
   };
-  (@_convert_tt_to_select 1) => {
+  (@_convert_tt_to_select A_High) => {
     1
   };
-  (@_convert_tt_to_select 2) => {
+  (@_convert_tt_to_select B_Low) => {
     2
   };
-  (@_convert_tt_to_select 3) => {
+  (@_convert_tt_to_select B_High) => {
     3
   };
-  (@_convert_tt_to_select Clear) => {
+  (@_convert_tt_to_select Zeroed) => {
     0b1000
-  };
-  (@_convert_tt_to_select $unknown:tt) => {
-    compile_error!("Illegal select value, must be 0 ..= 3 or Clear.");
   };
 }
 
-/// Permutes the lanes around.
+/// Swizzle 128 bits of floating point data at a time from `$a` and `$b` using
+/// an immediate control value.
+///
+/// You can pass `A_Low`, `A_High`, `B_Low`, `B_High`, or `Zeroed`.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256::from_array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
 /// let b = m256::from_array([9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0]);
 /// //
-/// let c = permute_f128_in_m256!(a, b, 2, Clear).to_array();
+/// let c = swiz_abi_f128z_all_m256!(a, b, [B_Low, Zeroed]).to_array();
 /// assert_eq!(c, [9.0, 10.0, 11.0, 12.0, 0.0, 0.0, 0.0, 0.0]);
 /// //
-/// let c = permute_f128_in_m256!(a, b, 0, 1).to_array();
-/// assert_eq!(c, [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
-/// //
-/// let c = permute_f128_in_m256!(a, b, Clear, 3).to_array();
-/// assert_eq!(c, [0.0, 0.0, 0.0, 0.0, 13.0, 14.0, 15.0, 16.0]);
+/// let c = swiz_abi_f128z_all_m256!(a, b, [Zeroed, A_High]).to_array();
+/// assert_eq!(c, [0.0, 0.0, 0.0, 0.0, 5.0, 6.0, 7.0, 8.0]);
 /// ```
+/// * **Intrinsic:** [`_mm256_permute2f128_ps`]
+/// * **Assembly:** `vperm2f128 ymm, ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! permute_f128_in_m256 {
-  ($a:expr, $b:expr, $low:tt, $high:tt) => {{
-  const MASK: ::core::primitive::i32 = $crate::permute_f128_in_m256!(@_convert_tt_to_select $low)
-    | ($crate::permute_f128_in_m256!(@_convert_tt_to_select $high) << 4);
-    let a: m256 = $a;
-    let b: m256 = $b;
+macro_rules! swiz_abi_f128z_all_m256 {
+  ($a:expr, $b:expr, [$low:tt, $high:tt]) => {{
+  const MASK: ::core::primitive::i32 = $crate::swiz_abi_f128z_all_m256!(@_convert_tt_to_select $low)
+    | ($crate::swiz_abi_f128z_all_m256!(@_convert_tt_to_select $high) << 4);
+    let a: $crate::m256 = $a;
+    let b: $crate::m256 = $b;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_permute2f128_ps;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_permute2f128_ps;
-    m256(unsafe { _mm256_permute2f128_ps(a.0, b.0, MASK) })
+    $crate::m256(unsafe { _mm256_permute2f128_ps(a.0, b.0, MASK) })
   }};
-  (@_convert_tt_to_select 0) => {
+  (@_convert_tt_to_select A_Low) => {
     0
   };
-  (@_convert_tt_to_select 1) => {
+  (@_convert_tt_to_select A_High) => {
     1
   };
-  (@_convert_tt_to_select 2) => {
+  (@_convert_tt_to_select B_Low) => {
     2
   };
-  (@_convert_tt_to_select 3) => {
+  (@_convert_tt_to_select B_High) => {
     3
   };
-  (@_convert_tt_to_select Clear) => {
+  (@_convert_tt_to_select Zeroed) => {
     0b1000
-  };
-  (@_convert_tt_to_select $unknown:tt) => {
-    compile_error!("Illegal select value, must be 0 ..= 3 or Clear.");
   };
 }
 
-/// Permutes the lanes around.
+/// *Slowly* swizzle 128 bits of integer data from `$a` and `$b` using an
+/// immediate control value.
+///
+/// You can pass `A_Low`, `A_High`, `B_Low`, `B_High`, or `Zeroed`.
+///
+/// If `avx2` is available you should use [`swiz_abi_i128z_all_m256i`] instead.
+/// Only use this if you're targeting `avx` but not `avx2`.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([1, 2, 3, 4, 5, 6, 7, 8]);
 /// let b = m256i::from([9, 10, 11, 12, 13, 14, 15, 16]);
 /// //
-/// let c: [i32; 8] = permute_i128_in_m256i!(a, b, 2, Clear).into();
+/// let c: [i32; 8] = swiz_abi_f128z_all_m256i!(a, b, [B_Low, Zeroed]).into();
 /// assert_eq!(c, [9, 10, 11, 12, 0, 0, 0, 0]);
 /// //
-/// let c: [i32; 8] = permute_i128_in_m256i!(a, b, 0, 1).into();
-/// assert_eq!(c, [1, 2, 3, 4, 5, 6, 7, 8]);
-/// //
-/// let c: [i32; 8] = permute_i128_in_m256i!(a, b, Clear, 3).into();
-/// assert_eq!(c, [0, 0, 0, 0, 13, 14, 15, 16]);
+/// let c: [i32; 8] = swiz_abi_f128z_all_m256i!(a, b, [Zeroed, A_High]).into();
+/// assert_eq!(c, [0, 0, 0, 0, 5, 6, 7, 8]);
 /// ```
+/// * **Intrinsic:** [`_mm256_permute2f128_si256`]
+/// * **Assembly:** `vperm2f128 ymm, ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! permute_i128_in_m256i {
-  ($a:expr, $b:expr, $low:tt, $high:tt) => {{
-  const MASK: ::core::primitive::i32 = $crate::permute_i128_in_m256i!(@_convert_tt_to_select $low)
-    | ($crate::permute_i128_in_m256i!(@_convert_tt_to_select $high) << 4);
-    let a: m256i = $a;
-    let b: m256i = $b;
+macro_rules! swiz_abi_f128z_all_m256i {
+  ($a:expr, $b:expr, [$low:tt, $high:tt]) => {{
+  const MASK: ::core::primitive::i32 = $crate::swiz_abi_f128z_all_m256i!(@_convert_tt_to_select $low)
+    | ($crate::swiz_abi_f128z_all_m256i!(@_convert_tt_to_select $high) << 4);
+    let a: $crate::m256i = $a;
+    let b: $crate::m256i = $b;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_permute2f128_si256;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_permute2f128_si256;
-    m256i(unsafe { _mm256_permute2f128_si256(a.0, b.0, MASK) })
+    $crate::m256i(unsafe { _mm256_permute2f128_si256(a.0, b.0, MASK) })
   }};
-  (@_convert_tt_to_select 0) => {
+  (@_convert_tt_to_select A_Low) => {
     0
   };
-  (@_convert_tt_to_select 1) => {
+  (@_convert_tt_to_select A_High) => {
     1
   };
-  (@_convert_tt_to_select 2) => {
+  (@_convert_tt_to_select B_Low) => {
     2
   };
-  (@_convert_tt_to_select 3) => {
+  (@_convert_tt_to_select B_High) => {
     3
   };
-  (@_convert_tt_to_select Clear) => {
+  (@_convert_tt_to_select Zeroed) => {
     0b1000
-  };
-  (@_convert_tt_to_select $unknown:tt) => {
-    compile_error!("Illegal select value, must be 0 ..= 3 or Clear.");
   };
 }
 
-/// Permute with a runtime varying pattern.
-///
-/// For whatever reason, **bit 1** in each `i64` lane is the selection bit.
+/// Swizzle `f64` lanes in `a` using **bit 1** of the `i64` lanes in `v`
 /// ```
 /// # use safe_arch::*;
 /// let a = m128d::from_array([2.0, 3.0]);
-/// let b = m128i::from([1_i64 << 1, 0 << 1]);
-/// let c = permute_varying_m128d(a, b).to_array();
+/// let v = m128i::from([1_i64 << 1, 0 << 1]);
+/// let c = swiz_av_f64_all_m128d(a, v).to_array();
 /// assert_eq!(c, [3.0, 2.0]);
 /// ```
+/// * **Intrinsic:** [`_mm_permutevar_pd`]
+/// * **Assembly:** `vpermilpd xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn permute_varying_m128d(a: m128d, b: m128i) -> m128d {
-  m128d(unsafe { _mm_permutevar_pd(a.0, b.0) })
+pub fn swiz_av_f64_all_m128d(a: m128d, v: m128i) -> m128d {
+  m128d(unsafe { _mm_permutevar_pd(a.0, v.0) })
 }
 
-/// Permute with a runtime varying pattern.
+/// Swizzle `f64` lanes in `a` using **bit 1** of the `i64` lanes in `v`.
 ///
-/// For whatever reason, **bit 1** in each `i64` lane is the selection bit.
+/// Each lane selection value picks only within that 128-bit half of the overall
+/// register.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256d::from_array([2.0, 3.0, 7.0, 8.0]);
-/// let b = m256i::from([1_i64 << 1, 0 << 1, 1 << 1, 1 << 1]);
-/// let c = permute_varying_m256d(a, b).to_array();
+/// let v = m256i::from([1_i64 << 1, 0 << 1, 1 << 1, 1 << 1]);
+/// let c = swiz_av_f64_half_m256d(a, v).to_array();
 /// assert_eq!(c, [3.0, 2.0, 8.0, 8.0]);
 /// ```
+/// * **Intrinsic:** [`_mm256_permutevar_pd`]
+/// * **Assembly:** `vpermilpd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn permute_varying_m256d(a: m256d, b: m256i) -> m256d {
+pub fn swiz_av_f64_half_m256d(a: m256d, b: m256i) -> m256d {
   m256d(unsafe { _mm256_permutevar_pd(a.0, b.0) })
 }
 
-/// Permute with a runtime varying pattern.
+/// Swizzle `f32` values in `a` using `i32` values in `v`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m128::from_array([0.0, 1.0, 2.0, 3.0]);
-/// let b = m128i::from([0, 2, 3, 1]);
-/// let c = permute_varying_m128(a, b).to_array();
-/// assert_eq!(c, [0.0, 2.0, 3.0, 1.0]);
+/// let a = m128::from_array([5.0, 6.0, 7.0, 8.0]);
+/// let v = m128i::from([0, 2, 3, 1]);
+/// let c = swiz_av_f32_all_m128(a, v).to_array();
+/// assert_eq!(c, [5.0, 7.0, 8.0, 6.0]);
 /// ```
+/// * **Intrinsic:** [`_mm_permutevar_ps`]
+/// * **Assembly:** `vpermilps xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn permute_varying_m128(a: m128, b: m128i) -> m128 {
-  m128(unsafe { _mm_permutevar_ps(a.0, b.0) })
+pub fn swiz_av_f32_all_m128(a: m128, v: m128i) -> m128 {
+  m128(unsafe { _mm_permutevar_ps(a.0, v.0) })
 }
 
-/// Permute with a runtime varying pattern.
+/// Swizzle `f32` values in `a` using `i32` values in `v`.
+///
+/// Each lane selection value picks only within that 128-bit half of the overall
+/// register.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256::from_array([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]);
-/// let b = m256i::from([0, 2, 3, 1, 0, 3, 2, 2]);
-/// let c = permute_varying_m256(a, b).to_array();
+/// let v = m256i::from([0, 2, 3, 1, 0, 3, 2, 2]);
+/// let c = swiz_av_f32_half_m256(a, v).to_array();
 /// assert_eq!(c, [0.0, 2.0, 3.0, 1.0, 4.0, 7.0, 6.0, 6.0]);
 /// ```
+/// * **Intrinsic:** [`_mm256_permutevar_ps`]
+/// * **Assembly:** `vpermilps ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn permute_varying_m256(a: m256, b: m256i) -> m256 {
-  m256(unsafe { _mm256_permutevar_ps(a.0, b.0) })
+pub fn swiz_av_f32_half_m256(a: m256, v: m256i) -> m256 {
+  m256(unsafe { _mm256_permutevar_ps(a.0, v.0) })
 }
 
 /// Reciprocal of `f32` lanes.

@@ -2267,58 +2267,52 @@ pub fn pack_i32_to_u16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_packs_epi32(a.0, b.0) })
 }
 
-/// Selects the output style of a [`permute_2x128_m256i`] usage.
-#[repr(i32)]
-#[allow(non_camel_case_types)]
-pub enum Permute_2x128_m256i {
-  /// Select the lower 128 bits from `$a`
-  ALow = 0,
-  /// Select the higher 128 bits from `$a`
-  AHigh = 1,
-  /// Select the lower 128 bits from `$b`
-  BLow = 2,
-  /// Select the higher 128 bits from `$b`
-  BHigh = 3,
-  /// Zero the bits.
-  Zeroed = 0b1000,
-}
-
-/// Permutes the lanes around.
+/// Swizzle 128 bits of integer data from `$a` and `$b` using an immediate
+/// control value.
 ///
-/// * `$a` and `$b` must be [`m256i`] values.
-/// * `$low` and `$high` must be [`Permute_2x128_m256i`] constants.
+/// You can pass `A_Low`, `A_High`, `B_Low`, `B_High`, or `Zeroed`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([1_i128, 2]);
-/// let b = m256i::from([3_i128, 4]);
+/// let a = m256i::from([1, 2, 3, 4, 5, 6, 7, 8]);
+/// let b = m256i::from([9, 10, 11, 12, 13, 14, 15, 16]);
 /// //
-/// use Permute_2x128_m256i::*;
-/// let c: [i128; 2] =
-///   permute_2x128_m256i!(a, b, low = ALow, high = BHigh).into();
-/// assert_eq!(c, [1_i128, 4]);
-///
-/// let d: [i128; 2] =
-///   permute_2x128_m256i!(a, b, low = Zeroed, high = BLow).into();
-/// assert_eq!(d, [0_i128, 3]);
+/// let c: [i32; 8] = swiz_abi_i128z_all_m256i!(a, b, [B_Low, Zeroed]).into();
+/// assert_eq!(c, [9, 10, 11, 12, 0, 0, 0, 0]);
+/// //
+/// let c: [i32; 8] = swiz_abi_i128z_all_m256i!(a, b, [Zeroed, A_High]).into();
+/// assert_eq!(c, [0, 0, 0, 0, 5, 6, 7, 8]);
 /// ```
 /// * **Intrinsic:** [`_mm256_permute2x128_si256`]
 /// * **Assembly:** `vperm2i128 ymm, ymm, ymm, imm8`
 #[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! permute_2x128_m256i {
-  ($a:expr, $b:expr, low=$low:expr, high=$high:expr) => {{
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+macro_rules! swiz_abi_i128z_all_m256i {
+  ($a:expr, $b:expr, [$low:tt, $high:tt]) => {{
+  const MASK: ::core::primitive::i32 = $crate::swiz_abi_i128z_all_m256i!(@_convert_tt_to_select $low)
+    | ($crate::swiz_abi_i128z_all_m256i!(@_convert_tt_to_select $high) << 4);
     let a: $crate::m256i = $a;
     let b: $crate::m256i = $b;
-    const LOW: $crate::Permute_2x128_m256i = $low;
-    const HIGH: $crate::Permute_2x128_m256i = $high;
-    const IMM: ::core::primitive::i32 =
-      LOW as ::core::primitive::i32 | ((HIGH as ::core::primitive::i32) << 4);
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_permute2x128_si256;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_permute2x128_si256;
-    $crate::m256i(unsafe { _mm256_permute2x128_si256(a.0, b.0, IMM) })
+    $crate::m256i(unsafe { _mm256_permute2x128_si256(a.0, b.0, MASK) })
   }};
+  (@_convert_tt_to_select A_Low) => {
+    0
+  };
+  (@_convert_tt_to_select A_High) => {
+    1
+  };
+  (@_convert_tt_to_select B_Low) => {
+    2
+  };
+  (@_convert_tt_to_select B_High) => {
+    3
+  };
+  (@_convert_tt_to_select Zeroed) => {
+    0b1000
+  };
 }
 
 /// Permutes the lanes around.
@@ -2381,12 +2375,12 @@ macro_rules! permute_m256d {
   }};
 }
 
-/// Permutes the 32-bit integer lanes.
+/// Swizzle `i32` lanes in `a` using `i32` values in `v`.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([8, 9, 10, 11, 12, 13, 14, 15]);
-/// let indexes = m256i::from([7, 6, 5, 5, 3, 2, 2, 0]);
-/// let c: [i32; 8] = permute_i32_m256i(a, indexes).into();
+/// let v = m256i::from([7, 6, 5, 5, 3, 2, 2, 0]);
+/// let c: [i32; 8] = swiz_av_i32_all_m256i(a, v).into();
 /// assert_eq!(c, [15, 14, 13, 13, 11, 10, 10, 8]);
 /// ```
 /// * **Intrinsic:** [`_mm256_permutevar8x32_epi32`]
@@ -2394,16 +2388,16 @@ macro_rules! permute_m256d {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn permute_i32_m256i(a: m256i, indexes: m256i) -> m256i {
-  m256i(unsafe { _mm256_permutevar8x32_epi32(a.0, indexes.0) })
+pub fn swiz_av_i32_all_m256i(a: m256i, v: m256i) -> m256i {
+  m256i(unsafe { _mm256_permutevar8x32_epi32(a.0, v.0) })
 }
 
-/// Permutes the `f32` lanes.
+/// Swizzle `f32` lanes in `a` using `i32` values in `v`.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256::from_array([8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0]);
-/// let indexes = m256i::from([7, 6, 5, 5, 3, 2, 2, 0]);
-/// let c: [f32; 8] = permute_m256(a, indexes).to_array();
+/// let v = m256i::from([7, 6, 5, 5, 3, 2, 2, 0]);
+/// let c: [f32; 8] = swiz_av_i32_all_m256(a, v).to_array();
 /// assert_eq!(c, [15.0, 14.0, 13.0, 13.0, 11.0, 10.0, 10.0, 8.0]);
 /// ```
 /// * **Intrinsic:** [`_mm256_permutevar8x32_ps`]
@@ -2411,8 +2405,8 @@ pub fn permute_i32_m256i(a: m256i, indexes: m256i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn permute_m256(a: m256, indexes: m256i) -> m256 {
-  m256(unsafe { _mm256_permutevar8x32_ps(a.0, indexes.0) })
+pub fn swiz_av_i32_all_m256(a: m256, v: m256i) -> m256 {
+  m256(unsafe { _mm256_permutevar8x32_ps(a.0, v.0) })
 }
 
 /// Compute "sum of `u8` absolute differences".
@@ -2471,11 +2465,12 @@ macro_rules! shuffle_i32_m256i {
   }};
 }
 
-/// Shuffle `a` according to `control`.
+/// Swizzle `i8` lanes in `a` using `i8` values in `v`.
 ///
-/// * Each 8 bit output lane is set by the `i8` in the appropriate `control`
-///   value.
-/// * A `control` lane can be negative to zero that lane in the output.
+/// Each lane selection value picks only within that 128-bit half of the overall
+/// register.
+///
+/// If a lane in `v` is negative, that output is zeroed.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([
@@ -2483,15 +2478,15 @@ macro_rules! shuffle_i32_m256i {
 ///   13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127,
 /// ]);
 /// let b = m256i::from([
-///   -1_i8, -1, 0, 2, 2, 3, 4, 5, 6, 6, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12,
+///   -1_i8, 1, 0, 2, 2, 3, 4, 5, 6, 6, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12,
 ///   13, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4,
 /// ]);
-/// let c: [i8; 32] = shuffle_i8_m256i(a, b).into();
+/// let c: [i8; 32] = swiz_av_i8z_half_m256i(a, b).into();
 /// assert_eq!(
 ///   c,
 ///   [
-///     0, 0, 3, 2, 2, 13, 4, 15, 6, 6, 17, 8, 8, 19, 19, 20, 20, 21, 21, 22, 22,
-///     23, 23, 22, 21, 20, 19, 8, 17, 6, 15, 4
+///     0, 11, 3, 2, 2, 13, 4, 15, 6, 6, 17, 8, 8, 19, 19, 20, 20, 21, 21, 22,
+///     22, 23, 23, 22, 21, 20, 19, 8, 17, 6, 15, 4
 ///   ]
 /// );
 /// ```
@@ -2500,8 +2495,8 @@ macro_rules! shuffle_i32_m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-pub fn shuffle_i8_m256i(a: m256i, control: m256i) -> m256i {
-  m256i(unsafe { _mm256_shuffle_epi8(a.0, control.0) })
+pub fn swiz_av_i8z_half_m256i(a: m256i, v: m256i) -> m256i {
+  m256i(unsafe { _mm256_shuffle_epi8(a.0, v.0) })
 }
 
 /// Shuffles the upper `i16` lanes from each 128 bit region.

@@ -97,7 +97,6 @@
 //! * `pack`: Take the integers in the `a` and `b` inputs, reduce them to fit
 //!   within the half-sized integer type (eg: `i16` to `i8`), and pack them all
 //!   together into the output.
-//! * `permute` / `shuffle`: TODO
 //! * `population`: The "population" operations refer to the bits within an
 //!   integer. Either counting them or adjusting them in various ways.
 //! * `rdrand`: Use the hardware RNG to make a random value of the given length.
@@ -144,5 +143,8 @@
 //!   based searching within a register. This lets you do some very high speed
 //!   searching through ASCII strings when the stars align.
 //! * `sub`: Subtract.
+//! * `swiz`: This lets you re-order ("swizzle") the data lanes. Sometimes this
+//!   is called "shuffle", sometimes it's called "permute", to avoid confusion
+//!   this crate uses a third time entirely.
 //! * `unpack`: Takes a SIMD value and gets out some of the lanes while widening
 //!   them, such as converting `i16` to `i32`.
