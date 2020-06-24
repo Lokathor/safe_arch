@@ -2,9 +2,10 @@
 
 use super::*;
 
-/// Perform one round of AES decryption flow on `a` using the `round_key`.
+/// "Perform one round of AES decryption flow on `a` using the `round_key`."
 /// ```
 /// # use safe_arch::*;
+/// // TODO
 /// ```
 #[must_use]
 #[inline(always)]
@@ -13,9 +14,10 @@ pub fn aes_decrypt_m128i(a: m128i, round_key: m128i) -> m128i {
   m128i(unsafe { _mm_aesdec_si128(a.0, round_key.0) })
 }
 
-/// Perform the last round of AES decryption flow on `a` using the `round_key`.
-/// ```
+/// "Perform the last round of AES decryption flow on `a` using the
+/// `round_key`." ```
 /// # use safe_arch::*;
+/// // TODO
 /// ```
 #[must_use]
 #[inline(always)]
@@ -24,9 +26,10 @@ pub fn aes_decrypt_last_m128i(a: m128i, round_key: m128i) -> m128i {
   m128i(unsafe { _mm_aesdeclast_si128(a.0, round_key.0) })
 }
 
-/// Perform one round of AES encryption flow on `a` using the `round_key`.
+/// "Perform one round of AES encryption flow on `a` using the `round_key`."
 /// ```
 /// # use safe_arch::*;
+/// // TODO
 /// ```
 #[must_use]
 #[inline(always)]
@@ -35,9 +38,10 @@ pub fn aes_encrypt_m128i(a: m128i, round_key: m128i) -> m128i {
   m128i(unsafe { _mm_aesenc_si128(a.0, round_key.0) })
 }
 
-/// Perform the last round of AES encryption flow on `a` using the `round_key`.
-/// ```
+/// "Perform the last round of AES encryption flow on `a` using the
+/// `round_key`." ```
 /// # use safe_arch::*;
+/// // TODO
 /// ```
 #[must_use]
 #[inline(always)]
@@ -46,9 +50,10 @@ pub fn aes_encrypt_last_m128i(a: m128i, round_key: m128i) -> m128i {
   m128i(unsafe { _mm_aesenclast_si128(a.0, round_key.0) })
 }
 
-/// Perform the InvMixColumns transform on `a`.
+/// "Perform the InvMixColumns transform on `a`."
 /// ```
 /// # use safe_arch::*;
+/// // TODO
 /// ```
 #[must_use]
 #[inline(always)]
@@ -60,6 +65,7 @@ pub fn aes_inv_mix_columns_m128i(a: m128i) -> m128i {
 /// ?
 /// ```
 /// # use safe_arch::*;
+/// // TODO
 /// ```
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "aes")))]
