@@ -139,8 +139,8 @@ pub fn bitandnot_m256(a: m256, b: m256) -> m256 {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! blend_imm_m256d {
   ($a:expr, $b:expr, $imm:expr) => {{
-    let a: m256d = $a;
-    let b: m256d = $b;
+    let a: $crate::m256d = $a;
+    let b: $crate::m256d = $b;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_blend_pd;
@@ -168,8 +168,8 @@ macro_rules! blend_imm_m256d {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! blend_imm_m256 {
   ($a:expr, $b:expr, $imm:expr) => {{
-    let a: m256 = $a;
-    let b: m256 = $b;
+    let a: $crate::m256 = $a;
+    let b: $crate::m256 = $b;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_blend_ps;
@@ -606,7 +606,7 @@ macro_rules! cmp_op_mask_m128 {
     )
   }};
   (@_raw_call $a:expr, $b:expr, $imm:expr) => {{
-    let a: m128 = $a;
+    let a: $crate::m128 = $a;
     let b: m128 = $b;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
@@ -638,7 +638,7 @@ macro_rules! cmp_op_mask_m128_s {
     )
   }};
   (@_raw_call $a:expr, $b:expr, $imm:expr) => {{
-    let a: m128 = $a;
+    let a: $crate::m128 = $a;
     let b: m128 = $b;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
@@ -670,8 +670,8 @@ macro_rules! cmp_op_mask_m256 {
     )
   }};
   (@_raw_call $a:expr, $b:expr, $imm:expr) => {{
-    let a: m256 = $a;
-    let b: m256 = $b;
+    let a: $crate::m256 = $a;
+    let b: $crate::m256 = $b;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_cmp_ps;
@@ -702,8 +702,8 @@ macro_rules! cmp_op_mask_m128d {
     )
   }};
   (@_raw_call $a:expr, $b:expr, $imm:expr) => {{
-    let a: m128d = $a;
-    let b: m128d = $b;
+    let a: $crate::m128d = $a;
+    let b: $crate::m128d = $b;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_cmp_pd;
@@ -734,8 +734,8 @@ macro_rules! cmp_op_mask_m128d_s {
     )
   }};
   (@_raw_call $a:expr, $b:expr, $imm:expr) => {{
-    let a: m128d = $a;
-    let b: m128d = $b;
+    let a: $crate::m128d = $a;
+    let b: $crate::m128d = $b;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_cmp_sd;
@@ -766,8 +766,8 @@ macro_rules! cmp_op_mask_m256d {
     )
   }};
   (@_raw_call $a:expr, $b:expr, $imm:expr) => {{
-    let a: m256d = $a;
-    let b: m256d = $b;
+    let a: $crate::m256d = $a;
+    let b: $crate::m256d = $b;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_cmp_pd;
@@ -1013,8 +1013,8 @@ pub fn div_m256(a: m256, b: m256) -> m256 {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! dot_product_m256 {
   ($a:expr, $b:expr, $imm:expr) => {{
-    let a: m256 = $a;
-    let b: m256 = $b;
+    let a: $crate::m256 = $a;
+    let b: $crate::m256 = $b;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_dp_ps;
@@ -1082,7 +1082,7 @@ macro_rules! extract_i64_from_m256i {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! extract_m128d_from_m256d {
   ($a:expr, $imm:expr) => {{
-    let a: m256d = $a;
+    let a: $crate::m256d = $a;
     const IMM: ::core::primitive::i32 =
       ($imm & 0b111) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
@@ -1106,7 +1106,7 @@ macro_rules! extract_m128d_from_m256d {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! extract_m128_from_m256 {
   ($a:expr, $imm:expr) => {{
-    let a: m256 = $a;
+    let a: $crate::m256 = $a;
     const IMM: ::core::primitive::i32 =
       ($imm & 0b111) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
@@ -1353,8 +1353,8 @@ macro_rules! insert_i64_to_m256i {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! insert_m128d_to_m256d {
   ($a:expr, $b:expr, $imm:expr) => {{
-    let a: m256d = $a;
-    let b: m128d = $b;
+    let a: $crate::m256d = $a;
+    let b: $crate::m128d = $b;
     const IMM: ::core::primitive::i32 = ($imm & 0b1) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_insertf128_pd;
@@ -1377,7 +1377,7 @@ macro_rules! insert_m128d_to_m256d {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! insert_m128_to_m256 {
   ($a:expr, $b:expr, $imm:expr) => {{
-    let a: m256 = $a;
+    let a: $crate::m256 = $a;
     let b: m128 = $b;
     const IMM: ::core::primitive::i32 = ($imm & 0b1) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
@@ -1939,7 +1939,7 @@ macro_rules! permute_m128d {
   ($a:expr, $z:expr, $o:expr) => {{
     const MASK: ::core::primitive::i32 =
       (($z & 0b1) | ($o & 0b1) << 1) as ::core::primitive::i32;
-    let a: m128d = $a;
+    let a: $crate::m128d = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_permute_pd;
     #[cfg(target_arch = "x86_64")]
@@ -1972,7 +1972,7 @@ macro_rules! permute_within_m128d_m256d {
     const MASK: ::core::primitive::i32 =
       (($z & 0b1) | ($o & 0b1) << 1 | ($t & 0b1) << 2 | ($h & 0b1) << 3)
         as ::core::primitive::i32;
-    let a: m256d = $a;
+    let a: $crate::m256d = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_permute_pd;
     #[cfg(target_arch = "x86_64")]
@@ -1981,38 +1981,33 @@ macro_rules! permute_within_m128d_m256d {
   }};
 }
 
-/// Permutes the lanes around.
-///
-/// * Different from "shuffle" because there is only one input.
-/// * Generally gives better overall performance than shuffle if it's available
-///   because it reduces register pressure.
-/// * The permute has to be a const.
+/// Swizzle the `f32` lanes from `$a` using an immediate control value.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// //
-/// let b = permute_m128!(a, 0, 0, 0, 0).to_array();
+/// let b = swiz_ai_f32_all_m128!(a, [0, 0, 0, 0]).to_array();
 /// assert_eq!(b, [1.0, 1.0, 1.0, 1.0]);
 /// //
-/// let b = permute_m128!(a, 0, 1, 0, 3).to_array();
+/// let b = swiz_ai_f32_all_m128!(a, [0, 1, 0, 3]).to_array();
 /// assert_eq!(b, [1.0, 2.0, 1.0, 4.0]);
 /// //
-/// let b = permute_m128!(a, 0, 0, 2, 2).to_array();
+/// let b = swiz_ai_f32_all_m128!(a, [0, 0, 2, 2]).to_array();
 /// assert_eq!(b, [1.0, 1.0, 3.0, 3.0]);
 /// ```
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! permute_m128 {
-  ($a:expr, $z:expr, $o:expr, $t:expr, $h:expr) => {{
+macro_rules! swiz_ai_f32_all_m128 {
+  ($a:expr, [$z:expr, $o:expr, $t:expr, $h:expr]) => {{
     const MASK: ::core::primitive::i32 =
       (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($h & 0b11) << 6)
         as ::core::primitive::i32;
-    let a: m128 = $a;
+    let a: $crate::m128 = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_permute_ps;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_permute_ps;
-    m128(unsafe { _mm_permute_ps(a.0, MASK) })
+    $crate::m128(unsafe { _mm_permute_ps(a.0, MASK) })
   }};
 }
 
@@ -2045,7 +2040,7 @@ macro_rules! permute_m256 {
     const MASK: ::core::primitive::i32 =
       (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($h & 0b11) << 6)
         as ::core::primitive::i32;
-    let a: m256 = $a;
+    let a: $crate::m256 = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_permute_ps;
     #[cfg(target_arch = "x86_64")]
@@ -2310,7 +2305,7 @@ pub fn reciprocal_m256(a: m256) -> m256 {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! round_m256d {
   ($a:expr, Nearest) => {{
-    let a: m256d = $a;
+    let a: $crate::m256d = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
       _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
@@ -2324,7 +2319,7 @@ macro_rules! round_m256d {
     })
   }};
   ($a:expr, NegInf) => {{
-    let a: m256d = $a;
+    let a: $crate::m256d = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
       _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
@@ -2338,7 +2333,7 @@ macro_rules! round_m256d {
     })
   }};
   ($a:expr, PosInf) => {{
-    let a: m256d = $a;
+    let a: $crate::m256d = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
       _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
@@ -2352,7 +2347,7 @@ macro_rules! round_m256d {
     })
   }};
   ($a:expr, Zero) => {{
-    let a: m256d = $a;
+    let a: $crate::m256d = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
       _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
@@ -2397,7 +2392,7 @@ macro_rules! round_m256d {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! round_m256 {
   ($a:expr, Nearest) => {{
-    let a: m256 = $a;
+    let a: $crate::m256 = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
       _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
@@ -2411,7 +2406,7 @@ macro_rules! round_m256 {
     })
   }};
   ($a:expr, NegInf) => {{
-    let a: m256 = $a;
+    let a: $crate::m256 = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
       _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
@@ -2425,7 +2420,7 @@ macro_rules! round_m256 {
     })
   }};
   ($a:expr, PosInf) => {{
-    let a: m256 = $a;
+    let a: $crate::m256 = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
       _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
@@ -2439,7 +2434,7 @@ macro_rules! round_m256 {
     })
   }};
   ($a:expr, Zero) => {{
-    let a: m256 = $a;
+    let a: $crate::m256 = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
       _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
@@ -2943,62 +2938,73 @@ pub fn zeroed_m256i() -> m256i {
   m256i(unsafe { _mm256_setzero_si256() })
 }
 
-/// Shuffles the `f64` lanes around.
+/// Swizzle the `f64` lanes from `$a` and `$b` together using an immediate
+/// control value.
 ///
-/// * args are 0 or 1 each, for "low" or "high" within that pairing.
-/// * a 0/1, b 0/1, a 2/3, b 2/3
+/// * Each index given should be either 0 or 1 from the lower half of `a` and
+///   `b`, then the higher half of `a` and `b`.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256d::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m256d::from_array([5.0, 6.0, 7.0, 8.0]);
 /// //
-/// let c = shuffle_m256d!(a, b, 1, 0, 1, 0).to_array();
+/// let c = swiz_abi_f64_half_m256d!(a, b, [al:1, bl:0, ah:1, bh:0]).to_array();
 /// assert_eq!(c, [2.0, 5.0, 4.0, 7.0]);
 /// ```
+/// * **Intrinsic:** [`_mm256_shuffle_pd`]
+/// * **Assembly:** `vshufpd ymm, ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! shuffle_m256d {
-  ($a:expr, $b:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
+macro_rules! swiz_abi_f64_half_m256d {
+  ($a:expr, $b:expr, [al:$z:expr, bl:$o:expr, ah:$t:expr, bh:$e:expr]) => {{
     const MASK: ::core::primitive::i32 =
       (($z & 0b1) | ($o & 0b1) << 1 | ($t & 0b1) << 2 | ($e & 0b1) << 3)
         as ::core::primitive::i32;
-    let a: m256d = $a;
-    let b: m256d = $b;
+    let a: $crate::m256d = $a;
+    let b: $crate::m256d = $b;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_shuffle_pd;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_shuffle_pd;
-    m256d(unsafe { _mm256_shuffle_pd(a.0, b.0, MASK) })
+    $crate::m256d(unsafe { _mm256_shuffle_pd(a.0, b.0, MASK) })
   }};
 }
 
-/// Shuffles the `f32` lanes around.
+/// Swizzle the `f32` lanes from `$a` and `$b` together using an immediate
+/// control value.
 ///
-/// * args are 0, 1, 2, 3 for which lane to use in the lower or upper half.
-/// * the same pattern is used for the four low lanes and the four high lanes.
-/// * a low, a low, b low, b low, a high, a high, b high, b high
+/// The `a:` and `b:` prefixes on the index selection values are literal tokens
+/// that you type. It helps keep clear what value comes from where. The first
+/// two output lanes come from `$a`, the second two output lanes come from `$b`.
+///
+/// This works like [`swiz_abi_f32_all_m128`], but with the low 128 bits and
+/// high 128 bits each doing a shuffle at the same time. Each index (`0..=3`)
+/// only refers to a lane within a given 128 bit portion of the 256 bit inputs.
+/// You cannot cross data between the two 128 bit halves.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256::from_array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
 /// let b = m256::from_array([9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0]);
 /// //
-/// let c = shuffle_m256!(a, b, 1, 3, 2, 0).to_array();
+/// let c = swiz_abi_f32_half_m256!(a, b, [a:1, a:3, b:2, b:0]).to_array();
 /// assert_eq!(c, [2.0, 4.0, 11.0, 9.0, 6.0, 8.0, 15.0, 13.0]);
 /// ```
+/// * **Intrinsic:** [`_mm256_shuffle_ps`]
+/// * **Assembly:** `vshufps ymm, ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! shuffle_m256 {
-  ($a:expr, $b:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
+macro_rules! swiz_abi_f32_half_m256 {
+  ($a:expr, $b:expr, [a:$z:expr, a:$o:expr, b:$t:expr, b:$e:expr]) => {{
     const MASK: ::core::primitive::i32 =
       (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($e & 0b11) << 6)
         as ::core::primitive::i32;
-    let a: m256 = $a;
-    let b: m256 = $b;
+    let a: $crate::m256 = $a;
+    let b: $crate::m256 = $b;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_shuffle_ps;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_shuffle_ps;
-    m256(unsafe { _mm256_shuffle_ps(a.0, b.0, MASK) })
+    $crate::m256(unsafe { _mm256_shuffle_ps(a.0, b.0, MASK) })
   }};
 }
 

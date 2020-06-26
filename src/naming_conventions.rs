@@ -145,6 +145,19 @@
 //! * `sub`: Subtract.
 //! * `swiz`: This lets you re-order ("swizzle") the data lanes. Sometimes this
 //!   is called "shuffle", sometimes it's called "permute", to avoid confusion
-//!   this crate uses a third time entirely.
+//!   this crate uses a third time entirely. There are many swizzle operations
+//!   and each has slightly different uses, so the names are extra picky here.
+//!   * `swiz_{args}_{lane-type}_{lane-sources}_{simd-type}`.
+//!   * "args" is the input arguments: `a` (one arg) or `ab` (two args), then
+//!     either `v` (runtime-varying) or `i` (immediate). All the immediate
+//!     shuffles are macros, of course.
+//!   * "lane type" is `f32`, `f64`, `i8`, etc. If there's a `z` after the type
+//!     then you'll also be able to zero an output position instead of making it
+//!     come from a particular source lane.
+//!   * "lane sources" is generally either "all" which means that all lanes can
+//!     go to all other lanes, or "half" which means that each half of the lanes
+//!     is isolated from the other half, and you can't cross data between the
+//!     two halves, only within a half (this is how most of the 256-bit x86/x64
+//!     shuffles work).
 //! * `unpack`: Takes a SIMD value and gets out some of the lanes while widening
 //!   them, such as converting `i16` to `i32`.

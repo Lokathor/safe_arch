@@ -2393,45 +2393,39 @@ macro_rules! shuffle_i32_m128i {
   }};
 }
 
-/// Shuffles the lanes around.
+/// Swizzle the `f64` lanes from `$a` and `$b` together using an immediate
+/// control value.
 ///
-/// This is a macro because the shuffle pattern must be a compile time constant,
-/// and Rust doesn't currently support that for functions.
+/// The `a:` and `b:` prefixes on the index selection values are literal tokens
+/// that you type. It helps keep clear what value comes from where. The first
+/// two output lanes come from `$a`, the second two output lanes come from `$b`.
 ///
-/// * The lane lane of the output comes from `$a`, as picked by `$z` (Zero)
-/// * The high lane of the output comes from `$b`, as picked by `$o` (One)
-/// * `$a` and `$b` must obviously be `m128d` expressions.
-/// * Both of the lane selection values is a lane index (`0..2`). They can be
-///   any integer type as long as they're same type. Out of bounds index values
-///   are wrapped to just the low bit.
-/// * The lane selection values are combined into a private `const` which is
-///   computed at compile time and then used at runtime. This means that you can
-///   use literals, but you can also use the names of other constants or even a
-///   `const fn` expression, if that is somehow is useful to you.
-///
+/// You can pass the same value as both arguments, but if you want to swizzle
+/// within only a single register and you have `avx` available consider using
+/// [`swiz_ai_f64_all_m128d`] instead. You'll get much better performance.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128d::from_array([1.0, 2.0]);
 /// let b = m128d::from_array([3.0, 4.0]);
 /// //
-/// let c = shuffle_m128d!(a, b, 0, 0).to_array();
+/// let c = swiz_abi_f64_all_m128d!(a, b, [a:0, b:0]).to_array();
 /// assert_eq!(c, [1.0, 3.0]);
 /// //
-/// let c = shuffle_m128d!(a, b, 0, 1).to_array();
+/// let c = swiz_abi_f64_all_m128d!(a, b, [a:0, b:1]).to_array();
 /// assert_eq!(c, [1.0, 4.0]);
 /// ```
 #[macro_export]
-macro_rules! shuffle_m128d {
-  ($a:expr, $b:expr, $z:expr, $o:expr) => {{
+macro_rules! swiz_abi_f64_all_m128d {
+  ($a:expr, $b:expr, [a:$z:expr, b:$o:expr]) => {{
     const MASK: ::core::primitive::i32 =
       (($z & 0b1) | ($o & 0b1) << 1) as ::core::primitive::i32;
-    let a: m128d = $a;
-    let b: m128d = $b;
+    let a: $crate::m128d = $a;
+    let b: $crate::m128d = $b;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_shuffle_pd;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_shuffle_pd;
-    m128d(unsafe { _mm_shuffle_pd(a.0, b.0, MASK) })
+    $crate::m128d(unsafe { _mm_shuffle_pd(a.0, b.0, MASK) })
   }};
 }
 
