@@ -18,8 +18,8 @@ use super::*;
 #[macro_export]
 macro_rules! blend_imm_i16_m128i {
   ($a:expr, $b:expr, $imm:expr) => {{
-    let a: m128i = $a;
-    let b: m128i = $b;
+    let a: $crate::m128i = $a;
+    let b: $crate::m128i = $b;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_blend_epi16;
@@ -543,7 +543,7 @@ macro_rules! dot_product_m128 {
 #[macro_export]
 macro_rules! extract_i32_imm_m128i {
   ($a:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_extract_epi32;
@@ -564,7 +564,7 @@ macro_rules! extract_i32_imm_m128i {
 #[cfg(target_arch = "x86_64")]
 macro_rules! extract_i64_imm_m128i {
   ($a:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_extract_epi64;
@@ -585,7 +585,7 @@ macro_rules! extract_i64_imm_m128i {
 #[macro_export]
 macro_rules! extract_i8_as_i32_imm_m128i {
   ($a:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_extract_epi8;
@@ -684,7 +684,7 @@ pub fn floor_m128_s(a: m128, b: m128) -> m128 {
 #[macro_export]
 macro_rules! insert_i32_imm_m128i {
   ($a:expr, $new:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     let new: ::core::primitive::i32 = $new;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
@@ -707,7 +707,7 @@ macro_rules! insert_i32_imm_m128i {
 #[cfg(target_arch = "x86_64")]
 macro_rules! insert_i64_imm_m128i {
   ($a:expr, $new:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     let new: i64 = $new;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
@@ -730,7 +730,7 @@ macro_rules! insert_i64_imm_m128i {
 #[macro_export]
 macro_rules! insert_i8_imm_m128i {
   ($a:expr, $new:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     let new: ::core::primitive::i32 = $new;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
@@ -970,8 +970,8 @@ pub fn min_position_u16_m128i(a: m128i) -> m128i {
 #[macro_export]
 macro_rules! multi_packed_sum_abs_diff_u8_m128i {
   ($a:expr, $b:expr, a $a_pick:expr, b $b_pick:expr) => {{
-    let a: m128i = $a;
-    let b: m128i = $b;
+    let a: $crate::m128i = $a;
+    let b: $crate::m128i = $b;
     const IMM: ::core::primitive::i32 =
       ((($a_pick & 0b1) << 2) | ($b_pick & 0b11)) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]

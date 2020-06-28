@@ -1678,7 +1678,7 @@ pub fn store_masked_i64_m256i(addr: &mut m256i, mask: m256i, a: m256i) {
 macro_rules! insert_m128i_to_m256i {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m256i = $a;
-    let b: m128i = $b;
+    let b: $crate::m128i = $b;
     const IMM: ::core::primitive::i32 = ($imm & 0b1) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_inserti128_si256;
@@ -2315,22 +2315,19 @@ macro_rules! swiz_abi_i128z_all_m256i {
   };
 }
 
-/// Permutes the lanes around.
-///
-/// * `$a` must be [`m256i`]
-/// * `$z`, `$o`, `$t`, `$h` are all `i32` index constants (2 bits each).
+/// Swizzle the `f64` lanes in `$a` using an immediate control value.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([5_i64, 6, 7, 8]);
-/// let b: [i64; 4] = permute_i64_m256i!(a, 3, 2, 1, 0).into();
+/// let b: [i64; 4] = swiz_ai_i64_all_m256i!(a, [3, 2, 1, 0]).into();
 /// assert_eq!(b, [8_i64, 7, 6, 5]);
 /// ```
 /// * **Intrinsic:** [`_mm256_permute4x64_epi64`]
 /// * **Assembly:** `vpermq ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! permute_i64_m256i {
-  ($a:expr, $z:expr, $o:expr, $t:expr, $h:expr) => {{
+macro_rules! swiz_ai_i64_all_m256i {
+  ($a:expr, [$z:expr, $o:expr, $t:expr, $h:expr]) => {{
     let a: $crate::m256i = $a;
     const ZERO: ::core::primitive::i32 = $z & 0b11;
     const ONE: ::core::primitive::i32 = $o & 0b11;
@@ -2345,22 +2342,19 @@ macro_rules! permute_i64_m256i {
   }};
 }
 
-/// Permutes the lanes around.
-///
-/// * `$a` must be [`m256d`]
-/// * `$z`, `$o`, `$t`, `$h` are all `i32` index constants (2 bits each).
+/// Swizzle the `f64` lanes from `$a` using an immediate control value.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256d::from_array([5.0, 6.0, 7.0, 8.0]);
-/// let b: [f64; 4] = permute_m256d!(a, 3, 2, 1, 0).to_array();
+/// let b: [f64; 4] = swiz_ai_f64_all_m256d!(a, [3, 2, 1, 0]).to_array();
 /// assert_eq!(b, [8.0, 7.0, 6.0, 5.0]);
 /// ```
 /// * **Intrinsic:** [`_mm256_permute4x64_pd`]
 /// * **Assembly:** `vpermpd ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! permute_m256d {
-  ($a:expr, $z:expr, $o:expr, $t:expr, $h:expr) => {{
+macro_rules! swiz_ai_f64_all_m256d {
+  ($a:expr, [$z:expr, $o:expr, $t:expr, $h:expr]) => {{
     let a: $crate::m256d = $a;
     const ZERO: ::core::primitive::i32 = $z & 0b11;
     const ONE: ::core::primitive::i32 = $o & 0b11;
@@ -2434,23 +2428,22 @@ pub fn sum_of_u8_abs_diff_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_sad_epu8(a.0, b.0) })
 }
 
-/// Shuffles the lanes around.
+/// Swizzle the `i32` lanes in `$a` using an immediate control value.
 ///
-/// * `$a` must be [`m256i`]
-/// * `$z`, `$o`, `$t`, `$h` are all `i32` index constants (2 bits each).
-/// * This shuffles the low 128 bits and high 128 bits using the same pattern.
+/// Each lane selection value picks only within that 128-bit half of the overall
+/// register.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([5, 6, 7, 8, 9, 10, 11, 12]);
-/// let b: [i32; 8] = shuffle_i32_m256i!(a, 3, 2, 1, 0).into();
+/// let b: [i32; 8] = swiz_ai_i32_half_m256i!(a, [3, 2, 1, 0]).into();
 /// assert_eq!(b, [8, 7, 6, 5, 12, 11, 10, 9]);
 /// ```
 /// * **Intrinsic:** [`_mm256_shuffle_epi32`]
 /// * **Assembly:** `vpshufd ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shuffle_i32_m256i {
-  ($a:expr, $z:expr, $o:expr, $t:expr, $h:expr) => {{
+macro_rules! swiz_ai_i32_half_m256i {
+  ($a:expr, [$z:expr, $o:expr, $t:expr, $h:expr]) => {{
     let a: $crate::m256i = $a;
     const ZERO: ::core::primitive::i32 = $z & 0b11;
     const ONE: ::core::primitive::i32 = $o & 0b11;
@@ -2499,25 +2492,22 @@ pub fn swiz_av_i8z_half_m256i(a: m256i, v: m256i) -> m256i {
   m256i(unsafe { _mm256_shuffle_epi8(a.0, v.0) })
 }
 
-/// Shuffles the upper `i16` lanes from each 128 bit region.
+/// Swizzle the high `i16` lanes in `$a` using an immediate control value.
 ///
-/// * `$a` must be [`m256i`]
-/// * `$z`, `$o`, `$t`, `$h` are all `i32` index constants (2 bits each).
-/// * This shuffles the upper four 16 bit lanes in each 128 bit region.
-/// * The lower four 16 bit lanes are unchanged.
+/// The lower 128 bits and upper 128 bits have this performed separately.
 /// ```
 /// # use safe_arch::*;
 /// let a =
 ///   m256i::from([0_i16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-/// let b: [i16; 16] = shuffle_i16_high_m256i!(a, 3, 2, 1, 0).into();
+/// let b: [i16; 16] = swiz_ai_i16_h64half_m256i!(a, [3, 2, 1, 0]).into();
 /// assert_eq!(b, [0, 1, 2, 3, 7, 6, 5, 4, 8, 9, 10, 11, 15, 14, 13, 12]);
 /// ```
 /// * **Intrinsic:** [`_mm256_shufflehi_epi16`]
 /// * **Assembly:** `vpshufhw ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shuffle_i16_high_m256i {
-  ($a:expr, $z:expr, $o:expr, $t:expr, $h:expr) => {{
+macro_rules! swiz_ai_i16_h64half_m256i {
+  ($a:expr, [$z:expr, $o:expr, $t:expr, $h:expr]) => {{
     let a: $crate::m256i = $a;
     const ZERO: ::core::primitive::i32 = $z & 0b11;
     const ONE: ::core::primitive::i32 = $o & 0b11;
@@ -2532,25 +2522,22 @@ macro_rules! shuffle_i16_high_m256i {
   }};
 }
 
-/// Shuffles the lower `i16` lanes from each 128 bit region.
+/// Swizzle the low `i16` lanes in `$a` using an immediate control value.
 ///
-/// * `$a` must be [`m256i`]
-/// * `$z`, `$o`, `$t`, `$h` are all `i32` index constants (2 bits each).
-/// * This shuffles the lower four 16 bit lanes in each 128 bit region.
-/// * The upper four 16 bit lanes are unchanged.
+/// The lower 128 bits and upper 128 bits have this performed separately.
 /// ```
 /// # use safe_arch::*;
 /// let a =
 ///   m256i::from([0_i16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-/// let b: [i16; 16] = shuffle_i16_low_m256i!(a, 3, 2, 1, 0).into();
+/// let b: [i16; 16] = swiz_ai_i16_l64half_m256i!(a, [3, 2, 1, 0]).into();
 /// assert_eq!(b, [3, 2, 1, 0, 4, 5, 6, 7, 11, 10, 9, 8, 12, 13, 14, 15]);
 /// ```
 /// * **Intrinsic:** [`_mm256_shufflelo_epi16`]
 /// * **Assembly:** `vpshuflw ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shuffle_i16_low_m256i {
-  ($a:expr, $z:expr, $o:expr, $t:expr, $h:expr) => {{
+macro_rules! swiz_ai_i16_l64half_m256i {
+  ($a:expr, [$z:expr, $o:expr, $t:expr, $h:expr]) => {{
     let a: $crate::m256i = $a;
     const ZERO: ::core::primitive::i32 = $z & 0b11;
     const ONE: ::core::primitive::i32 = $o & 0b11;

@@ -1406,7 +1406,7 @@ macro_rules! insert_m128_to_m256 {
 macro_rules! insert_m128i_to_m256i_slow_avx {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: m256i = $a;
-    let b: m128i = $b;
+    let b: $crate::m128i = $b;
     const IMM: ::core::primitive::i32 = ($imm & 0b1) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm256_insertf128_si256;
@@ -1911,32 +1911,21 @@ pub fn bitor_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_or_ps(a.0, b.0) })
 }
 
-/// Permutes the lanes around.
-///
-/// * Different from "shuffle" because there is only one input.
-/// * Generally gives better overall performance than shuffle if it's available
-///   because it reduces register pressure.
-///
-/// This is a macro because the shuffle pattern must be a compile time constant,
-/// and Rust doesn't currently support that for functions.
+/// Swizzle the `f64` lanes in `$a` using an immediate control value.
 ///
 /// ```
 /// # use safe_arch::*;
 /// let a = m128d::from_array([1.0, 2.0]);
 /// //
-/// let b = permute_m128d!(a, 0, 0).to_array();
-/// assert_eq!(b, [1.0, 1.0]);
-/// //
-/// let b = permute_m128d!(a, 0, 1).to_array();
-/// assert_eq!(b, [1.0, 2.0]);
-/// //
-/// let b = permute_m128d!(a, 1, 0).to_array();
+/// let b = swiz_ai_f64_all_m128d!(a, [1, 0]).to_array();
 /// assert_eq!(b, [2.0, 1.0]);
 /// ```
+/// * **Intrinsic:** [`_mm_permute_pd`]
+/// * **Assembly:** `vpermilpd xmm, xmm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! permute_m128d {
-  ($a:expr, $z:expr, $o:expr) => {{
+macro_rules! swiz_ai_f64_all_m128d {
+  ($a:expr, [$z:expr, $o:expr]) => {{
     const MASK: ::core::primitive::i32 =
       (($z & 0b1) | ($o & 0b1) << 1) as ::core::primitive::i32;
     let a: $crate::m128d = $a;
@@ -1944,31 +1933,32 @@ macro_rules! permute_m128d {
     use ::core::arch::x86::_mm_permute_pd;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_permute_pd;
-    m128d(unsafe { _mm_permute_pd(a.0, MASK) })
+    $crate::m128d(unsafe { _mm_permute_pd(a.0, MASK) })
   }};
 }
 
-/// Permutes the lanes around.
+/// Swizzle the `f64` lanes from `$a` and `$b` together using an immediate
+/// control value.
 ///
-/// * Each index is 0 or 1, picking the low or high lane of the associated
-///   128-bit portion of that index.
+/// The `a:` and `b:` prefixes on the index selection values are literal tokens
+/// that you type. It helps keep clear what value comes from where. The first
+/// two output lanes come from `$a`, the second two output lanes come from `$b`.
+///
+/// Each lane selection value picks only the low or high lane within that
+/// 128-bit half of the overall register.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256d::from_array([1.0, 2.0, 3.0, 4.0]);
 /// //
-/// let b = permute_within_m128d_m256d!(a, 0, 0, 0, 0).to_array();
-/// assert_eq!(b, [1.0, 1.0, 3.0, 3.0]);
-/// //
-/// let b = permute_within_m128d_m256d!(a, 0, 1, 0, 1).to_array();
-/// assert_eq!(b, [1.0, 2.0, 3.0, 4.0]);
-/// //
-/// let b = permute_within_m128d_m256d!(a, 1, 0, 1, 1).to_array();
-/// assert_eq!(b, [2.0, 1.0, 4.0, 4.0]);
+/// let b = swiz_ai_f64_half_m256d!(a, [a:1, a:0, b:1, b:0]).to_array();
+/// assert_eq!(b, [2.0, 1.0, 4.0, 3.0]);
 /// ```
+/// * **Intrinsic:** [`_mm256_permute_pd`]
+/// * **Assembly:** `vpermilpd ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! permute_within_m128d_m256d {
-  ($a:expr, $z:expr, $o:expr, $t:expr, $h:expr) => {{
+macro_rules! swiz_ai_f64_half_m256d {
+  ($a:expr, [a:$z:expr, a:$o:expr, b:$t:expr, b:$h:expr]) => {{
     const MASK: ::core::primitive::i32 =
       (($z & 0b1) | ($o & 0b1) << 1 | ($t & 0b1) << 2 | ($h & 0b1) << 3)
         as ::core::primitive::i32;
@@ -1977,7 +1967,7 @@ macro_rules! permute_within_m128d_m256d {
     use ::core::arch::x86::_mm256_permute_pd;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_permute_pd;
-    m256d(unsafe { _mm256_permute_pd(a.0, MASK) })
+    $crate::m256d(unsafe { _mm256_permute_pd(a.0, MASK) })
   }};
 }
 
@@ -2011,32 +2001,24 @@ macro_rules! swiz_ai_f32_all_m128 {
   }};
 }
 
-/// Permutes the lanes around.
+/// Swizzle the `f32` lanes in `$a` using an immediate control value.
 ///
-/// * Different from "shuffle" because there is only one input.
-/// * You can't move values between the high and low 128-bit segments.
-/// * Each index is `0..=3`, and selects the index only from that 128-bit half
-///   of the overall 256 bits involved.
-/// * Generally gives better overall performance than shuffle if it can
-///   accomplish the movement that you want.
-/// * The shuffle pattern must be a const.
+/// Each lane selection value picks only within that 128-bit half of the overall
+/// register. The same selection pattern is simply used for both the upper and
+/// lower 128 bits.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256::from_array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
 /// //
-/// let b = permute_m256!(a, 0, 0, 0, 0).to_array();
-/// assert_eq!(b, [1.0, 1.0, 1.0, 1.0, 5.0, 5.0, 5.0, 5.0]);
-/// //
-/// let b = permute_m256!(a, 0, 1, 0, 3).to_array();
-/// assert_eq!(b, [1.0, 2.0, 1.0, 4.0, 5.0, 6.0, 5.0, 8.0]);
-/// //
-/// let b = permute_m256!(a, 0, 0, 2, 2).to_array();
-/// assert_eq!(b, [1.0, 1.0, 3.0, 3.0, 5.0, 5.0, 7.0, 7.0]);
+/// let b = swiz_ai_f32_half_m256!(a, [3, 1, 2, 0]).to_array();
+/// assert_eq!(b, [4.0, 2.0, 3.0, 1.0, 8.0, 6.0, 7.0, 5.0]);
 /// ```
+/// * **Intrinsic:** [`_mm256_permute_ps`]
+/// * **Assembly:** `vpermilps ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! permute_m256 {
-  ($a:expr, $z:expr, $o:expr, $t:expr, $h:expr) => {{
+macro_rules! swiz_ai_f32_half_m256 {
+  ($a:expr, [$z:expr, $o:expr, $t:expr, $h:expr]) => {{
     const MASK: ::core::primitive::i32 =
       (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($h & 0b11) << 6)
         as ::core::primitive::i32;
@@ -2045,7 +2027,7 @@ macro_rules! permute_m256 {
     use ::core::arch::x86::_mm256_permute_ps;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_permute_ps;
-    m256(unsafe { _mm256_permute_ps(a.0, MASK) })
+    $crate::m256(unsafe { _mm256_permute_ps(a.0, MASK) })
   }};
 }
 

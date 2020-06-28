@@ -77,8 +77,8 @@ pub fn abs_i32_m128i(a: m128i) -> m128i {
 #[macro_export]
 macro_rules! combined_byte_shr_imm_m128i {
   ($a:expr, $b:expr, $imm:expr) => {{
-    let a: m128i = $a;
-    let b: m128i = $b;
+    let a: $crate::m128i = $a;
+    let b: $crate::m128i = $b;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_alignr_epi8;
