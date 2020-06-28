@@ -2,7 +2,7 @@
 name = "safe_arch"
 description = "Crate that exposes `core::arch` safely via `#[cfg()]`."
 repository = "https://github.com/Lokathor/safe_arch"
-version = "0.5.0-alpha.0"
+version = "0.5.0"
 authors = ["Lokathor <zefria@gmail.com>"]
 edition = "2018"
 license = "Zlib OR Apache-2.0 OR MIT"
