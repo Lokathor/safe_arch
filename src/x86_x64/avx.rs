@@ -1911,20 +1911,20 @@ pub fn bitor_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_or_ps(a.0, b.0) })
 }
 
-/// Swizzle the `f64` lanes in `$a` using an immediate control value.
+/// Shuffle the `f64` lanes in `$a` using an immediate control value.
 ///
 /// ```
 /// # use safe_arch::*;
 /// let a = m128d::from_array([1.0, 2.0]);
 /// //
-/// let b = swiz_ai_f64_all_m128d!(a, [1, 0]).to_array();
+/// let b = shuffle_ai_f64_all_m128d!(a, [1, 0]).to_array();
 /// assert_eq!(b, [2.0, 1.0]);
 /// ```
 /// * **Intrinsic:** [`_mm_permute_pd`]
 /// * **Assembly:** `vpermilpd xmm, xmm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! swiz_ai_f64_all_m128d {
+macro_rules! shuffle_ai_f64_all_m128d {
   ($a:expr, [$z:expr, $o:expr]) => {{
     const MASK: ::core::primitive::i32 =
       (($z & 0b1) | ($o & 0b1) << 1) as ::core::primitive::i32;
@@ -1937,7 +1937,7 @@ macro_rules! swiz_ai_f64_all_m128d {
   }};
 }
 
-/// Swizzle the `f64` lanes from `$a` and `$b` together using an immediate
+/// Shuffle the `f64` lanes from `$a` and `$b` together using an immediate
 /// control value.
 ///
 /// The `a:` and `b:` prefixes on the index selection values are literal tokens
@@ -1950,14 +1950,14 @@ macro_rules! swiz_ai_f64_all_m128d {
 /// # use safe_arch::*;
 /// let a = m256d::from_array([1.0, 2.0, 3.0, 4.0]);
 /// //
-/// let b = swiz_ai_f64_half_m256d!(a, [a:1, a:0, b:1, b:0]).to_array();
+/// let b = shuffle_ai_f64_half_m256d!(a, [a:1, a:0, b:1, b:0]).to_array();
 /// assert_eq!(b, [2.0, 1.0, 4.0, 3.0]);
 /// ```
 /// * **Intrinsic:** [`_mm256_permute_pd`]
 /// * **Assembly:** `vpermilpd ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! swiz_ai_f64_half_m256d {
+macro_rules! shuffle_ai_f64_half_m256d {
   ($a:expr, [a:$z:expr, a:$o:expr, b:$t:expr, b:$h:expr]) => {{
     const MASK: ::core::primitive::i32 =
       (($z & 0b1) | ($o & 0b1) << 1 | ($t & 0b1) << 2 | ($h & 0b1) << 3)
@@ -1971,23 +1971,23 @@ macro_rules! swiz_ai_f64_half_m256d {
   }};
 }
 
-/// Swizzle the `f32` lanes from `$a` using an immediate control value.
+/// Shuffle the `f32` lanes from `$a` using an immediate control value.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// //
-/// let b = swiz_ai_f32_all_m128!(a, [0, 0, 0, 0]).to_array();
+/// let b = shuffle_ai_f32_all_m128!(a, [0, 0, 0, 0]).to_array();
 /// assert_eq!(b, [1.0, 1.0, 1.0, 1.0]);
 /// //
-/// let b = swiz_ai_f32_all_m128!(a, [0, 1, 0, 3]).to_array();
+/// let b = shuffle_ai_f32_all_m128!(a, [0, 1, 0, 3]).to_array();
 /// assert_eq!(b, [1.0, 2.0, 1.0, 4.0]);
 /// //
-/// let b = swiz_ai_f32_all_m128!(a, [0, 0, 2, 2]).to_array();
+/// let b = shuffle_ai_f32_all_m128!(a, [0, 0, 2, 2]).to_array();
 /// assert_eq!(b, [1.0, 1.0, 3.0, 3.0]);
 /// ```
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! swiz_ai_f32_all_m128 {
+macro_rules! shuffle_ai_f32_all_m128 {
   ($a:expr, [$z:expr, $o:expr, $t:expr, $h:expr]) => {{
     const MASK: ::core::primitive::i32 =
       (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($h & 0b11) << 6)
@@ -2001,7 +2001,7 @@ macro_rules! swiz_ai_f32_all_m128 {
   }};
 }
 
-/// Swizzle the `f32` lanes in `$a` using an immediate control value.
+/// Shuffle the `f32` lanes in `$a` using an immediate control value.
 ///
 /// Each lane selection value picks only within that 128-bit half of the overall
 /// register. The same selection pattern is simply used for both the upper and
@@ -2010,14 +2010,14 @@ macro_rules! swiz_ai_f32_all_m128 {
 /// # use safe_arch::*;
 /// let a = m256::from_array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
 /// //
-/// let b = swiz_ai_f32_half_m256!(a, [3, 1, 2, 0]).to_array();
+/// let b = shuffle_ai_f32_half_m256!(a, [3, 1, 2, 0]).to_array();
 /// assert_eq!(b, [4.0, 2.0, 3.0, 1.0, 8.0, 6.0, 7.0, 5.0]);
 /// ```
 /// * **Intrinsic:** [`_mm256_permute_ps`]
 /// * **Assembly:** `vpermilps ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! swiz_ai_f32_half_m256 {
+macro_rules! shuffle_ai_f32_half_m256 {
   ($a:expr, [$z:expr, $o:expr, $t:expr, $h:expr]) => {{
     const MASK: ::core::primitive::i32 =
       (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($h & 0b11) << 6)
@@ -2031,7 +2031,7 @@ macro_rules! swiz_ai_f32_half_m256 {
   }};
 }
 
-/// Swizzle 128 bits of floating point data at a time from `$a` and `$b` using
+/// Shuffle 128 bits of floating point data at a time from `$a` and `$b` using
 /// an immediate control value.
 ///
 /// You can pass `A_Low`, `A_High`, `B_Low`, `B_High`, or `Zeroed`.
@@ -2040,20 +2040,20 @@ macro_rules! swiz_ai_f32_half_m256 {
 /// let a = m256d::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m256d::from_array([5.0, 6.0, 7.0, 8.0]);
 /// //
-/// let c = swiz_abi_f128z_all_m256d!(a, b, [B_Low, Zeroed]).to_array();
+/// let c = shuffle_abi_f128z_all_m256d!(a, b, [B_Low, Zeroed]).to_array();
 /// assert_eq!(c, [5.0, 6.0, 0.0, 0.0]);
 /// //
-/// let c = swiz_abi_f128z_all_m256d!(a, b, [Zeroed, A_High]).to_array();
+/// let c = shuffle_abi_f128z_all_m256d!(a, b, [Zeroed, A_High]).to_array();
 /// assert_eq!(c, [0.0, 0.0, 3.0, 4.0]);
 /// ```
 /// * **Intrinsic:** [`_mm256_permute2f128_pd`]
 /// * **Assembly:** `vperm2f128 ymm, ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! swiz_abi_f128z_all_m256d {
+macro_rules! shuffle_abi_f128z_all_m256d {
   ($a:expr, $b:expr, [$low:tt, $high:tt]) => {{
-  const MASK: ::core::primitive::i32 = $crate::swiz_abi_f128z_all_m256d!(@_convert_tt_to_select $low)
-    | ($crate::swiz_abi_f128z_all_m256d!(@_convert_tt_to_select $high) << 4);
+  const MASK: ::core::primitive::i32 = $crate::shuffle_abi_f128z_all_m256d!(@_convert_tt_to_select $low)
+    | ($crate::shuffle_abi_f128z_all_m256d!(@_convert_tt_to_select $high) << 4);
     let a: $crate::m256d = $a;
     let b: $crate::m256d = $b;
     #[cfg(target_arch = "x86")]
@@ -2079,7 +2079,7 @@ macro_rules! swiz_abi_f128z_all_m256d {
   };
 }
 
-/// Swizzle 128 bits of floating point data at a time from `$a` and `$b` using
+/// Shuffle 128 bits of floating point data at a time from `$a` and `$b` using
 /// an immediate control value.
 ///
 /// You can pass `A_Low`, `A_High`, `B_Low`, `B_High`, or `Zeroed`.
@@ -2088,20 +2088,20 @@ macro_rules! swiz_abi_f128z_all_m256d {
 /// let a = m256::from_array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
 /// let b = m256::from_array([9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0]);
 /// //
-/// let c = swiz_abi_f128z_all_m256!(a, b, [B_Low, Zeroed]).to_array();
+/// let c = shuffle_abi_f128z_all_m256!(a, b, [B_Low, Zeroed]).to_array();
 /// assert_eq!(c, [9.0, 10.0, 11.0, 12.0, 0.0, 0.0, 0.0, 0.0]);
 /// //
-/// let c = swiz_abi_f128z_all_m256!(a, b, [Zeroed, A_High]).to_array();
+/// let c = shuffle_abi_f128z_all_m256!(a, b, [Zeroed, A_High]).to_array();
 /// assert_eq!(c, [0.0, 0.0, 0.0, 0.0, 5.0, 6.0, 7.0, 8.0]);
 /// ```
 /// * **Intrinsic:** [`_mm256_permute2f128_ps`]
 /// * **Assembly:** `vperm2f128 ymm, ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! swiz_abi_f128z_all_m256 {
+macro_rules! shuffle_abi_f128z_all_m256 {
   ($a:expr, $b:expr, [$low:tt, $high:tt]) => {{
-  const MASK: ::core::primitive::i32 = $crate::swiz_abi_f128z_all_m256!(@_convert_tt_to_select $low)
-    | ($crate::swiz_abi_f128z_all_m256!(@_convert_tt_to_select $high) << 4);
+  const MASK: ::core::primitive::i32 = $crate::shuffle_abi_f128z_all_m256!(@_convert_tt_to_select $low)
+    | ($crate::shuffle_abi_f128z_all_m256!(@_convert_tt_to_select $high) << 4);
     let a: $crate::m256 = $a;
     let b: $crate::m256 = $b;
     #[cfg(target_arch = "x86")]
@@ -2132,27 +2132,27 @@ macro_rules! swiz_abi_f128z_all_m256 {
 ///
 /// You can pass `A_Low`, `A_High`, `B_Low`, `B_High`, or `Zeroed`.
 ///
-/// If `avx2` is available you should use [`swiz_abi_i128z_all_m256i`] instead.
-/// Only use this if you're targeting `avx` but not `avx2`.
+/// If `avx2` is available you should use [`shuffle_abi_i128z_all_m256i`]
+/// instead. Only use this if you're targeting `avx` but not `avx2`.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([1, 2, 3, 4, 5, 6, 7, 8]);
 /// let b = m256i::from([9, 10, 11, 12, 13, 14, 15, 16]);
 /// //
-/// let c: [i32; 8] = swiz_abi_f128z_all_m256i!(a, b, [B_Low, Zeroed]).into();
+/// let c: [i32; 8] = shuffle_abi_f128z_all_m256i!(a, b, [B_Low, Zeroed]).into();
 /// assert_eq!(c, [9, 10, 11, 12, 0, 0, 0, 0]);
 /// //
-/// let c: [i32; 8] = swiz_abi_f128z_all_m256i!(a, b, [Zeroed, A_High]).into();
+/// let c: [i32; 8] = shuffle_abi_f128z_all_m256i!(a, b, [Zeroed, A_High]).into();
 /// assert_eq!(c, [0, 0, 0, 0, 5, 6, 7, 8]);
 /// ```
 /// * **Intrinsic:** [`_mm256_permute2f128_si256`]
 /// * **Assembly:** `vperm2f128 ymm, ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! swiz_abi_f128z_all_m256i {
+macro_rules! shuffle_abi_f128z_all_m256i {
   ($a:expr, $b:expr, [$low:tt, $high:tt]) => {{
-  const MASK: ::core::primitive::i32 = $crate::swiz_abi_f128z_all_m256i!(@_convert_tt_to_select $low)
-    | ($crate::swiz_abi_f128z_all_m256i!(@_convert_tt_to_select $high) << 4);
+  const MASK: ::core::primitive::i32 = $crate::shuffle_abi_f128z_all_m256i!(@_convert_tt_to_select $low)
+    | ($crate::shuffle_abi_f128z_all_m256i!(@_convert_tt_to_select $high) << 4);
     let a: $crate::m256i = $a;
     let b: $crate::m256i = $b;
     #[cfg(target_arch = "x86")]
@@ -2178,12 +2178,12 @@ macro_rules! swiz_abi_f128z_all_m256i {
   };
 }
 
-/// Swizzle `f64` lanes in `a` using **bit 1** of the `i64` lanes in `v`
+/// Shuffle `f64` lanes in `a` using **bit 1** of the `i64` lanes in `v`
 /// ```
 /// # use safe_arch::*;
 /// let a = m128d::from_array([2.0, 3.0]);
 /// let v = m128i::from([1_i64 << 1, 0 << 1]);
-/// let c = swiz_av_f64_all_m128d(a, v).to_array();
+/// let c = shuffle_av_f64_all_m128d(a, v).to_array();
 /// assert_eq!(c, [3.0, 2.0]);
 /// ```
 /// * **Intrinsic:** [`_mm_permutevar_pd`]
@@ -2191,11 +2191,11 @@ macro_rules! swiz_abi_f128z_all_m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn swiz_av_f64_all_m128d(a: m128d, v: m128i) -> m128d {
+pub fn shuffle_av_f64_all_m128d(a: m128d, v: m128i) -> m128d {
   m128d(unsafe { _mm_permutevar_pd(a.0, v.0) })
 }
 
-/// Swizzle `f64` lanes in `a` using **bit 1** of the `i64` lanes in `v`.
+/// Shuffle `f64` lanes in `a` using **bit 1** of the `i64` lanes in `v`.
 ///
 /// Each lane selection value picks only within that 128-bit half of the overall
 /// register.
@@ -2203,7 +2203,7 @@ pub fn swiz_av_f64_all_m128d(a: m128d, v: m128i) -> m128d {
 /// # use safe_arch::*;
 /// let a = m256d::from_array([2.0, 3.0, 7.0, 8.0]);
 /// let v = m256i::from([1_i64 << 1, 0 << 1, 1 << 1, 1 << 1]);
-/// let c = swiz_av_f64_half_m256d(a, v).to_array();
+/// let c = shuffle_av_f64_half_m256d(a, v).to_array();
 /// assert_eq!(c, [3.0, 2.0, 8.0, 8.0]);
 /// ```
 /// * **Intrinsic:** [`_mm256_permutevar_pd`]
@@ -2211,16 +2211,16 @@ pub fn swiz_av_f64_all_m128d(a: m128d, v: m128i) -> m128d {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn swiz_av_f64_half_m256d(a: m256d, b: m256i) -> m256d {
+pub fn shuffle_av_f64_half_m256d(a: m256d, b: m256i) -> m256d {
   m256d(unsafe { _mm256_permutevar_pd(a.0, b.0) })
 }
 
-/// Swizzle `f32` values in `a` using `i32` values in `v`.
+/// Shuffle `f32` values in `a` using `i32` values in `v`.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([5.0, 6.0, 7.0, 8.0]);
 /// let v = m128i::from([0, 2, 3, 1]);
-/// let c = swiz_av_f32_all_m128(a, v).to_array();
+/// let c = shuffle_av_f32_all_m128(a, v).to_array();
 /// assert_eq!(c, [5.0, 7.0, 8.0, 6.0]);
 /// ```
 /// * **Intrinsic:** [`_mm_permutevar_ps`]
@@ -2228,11 +2228,11 @@ pub fn swiz_av_f64_half_m256d(a: m256d, b: m256i) -> m256d {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn swiz_av_f32_all_m128(a: m128, v: m128i) -> m128 {
+pub fn shuffle_av_f32_all_m128(a: m128, v: m128i) -> m128 {
   m128(unsafe { _mm_permutevar_ps(a.0, v.0) })
 }
 
-/// Swizzle `f32` values in `a` using `i32` values in `v`.
+/// Shuffle `f32` values in `a` using `i32` values in `v`.
 ///
 /// Each lane selection value picks only within that 128-bit half of the overall
 /// register.
@@ -2240,7 +2240,7 @@ pub fn swiz_av_f32_all_m128(a: m128, v: m128i) -> m128 {
 /// # use safe_arch::*;
 /// let a = m256::from_array([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]);
 /// let v = m256i::from([0, 2, 3, 1, 0, 3, 2, 2]);
-/// let c = swiz_av_f32_half_m256(a, v).to_array();
+/// let c = shuffle_av_f32_half_m256(a, v).to_array();
 /// assert_eq!(c, [0.0, 2.0, 3.0, 1.0, 4.0, 7.0, 6.0, 6.0]);
 /// ```
 /// * **Intrinsic:** [`_mm256_permutevar_ps`]
@@ -2248,7 +2248,7 @@ pub fn swiz_av_f32_all_m128(a: m128, v: m128i) -> m128 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn swiz_av_f32_half_m256(a: m256, v: m256i) -> m256 {
+pub fn shuffle_av_f32_half_m256(a: m256, v: m256i) -> m256 {
   m256(unsafe { _mm256_permutevar_ps(a.0, v.0) })
 }
 
@@ -2920,7 +2920,7 @@ pub fn zeroed_m256i() -> m256i {
   m256i(unsafe { _mm256_setzero_si256() })
 }
 
-/// Swizzle the `f64` lanes from `$a` and `$b` together using an immediate
+/// Shuffle the `f64` lanes from `$a` and `$b` together using an immediate
 /// control value.
 ///
 /// * Each index given should be either 0 or 1 from the lower half of `a` and
@@ -2930,14 +2930,14 @@ pub fn zeroed_m256i() -> m256i {
 /// let a = m256d::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m256d::from_array([5.0, 6.0, 7.0, 8.0]);
 /// //
-/// let c = swiz_abi_f64_half_m256d!(a, b, [al:1, bl:0, ah:1, bh:0]).to_array();
+/// let c = shuffle_abi_f64_half_m256d!(a, b, [al:1, bl:0, ah:1, bh:0]).to_array();
 /// assert_eq!(c, [2.0, 5.0, 4.0, 7.0]);
 /// ```
 /// * **Intrinsic:** [`_mm256_shuffle_pd`]
 /// * **Assembly:** `vshufpd ymm, ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! swiz_abi_f64_half_m256d {
+macro_rules! shuffle_abi_f64_half_m256d {
   ($a:expr, $b:expr, [al:$z:expr, bl:$o:expr, ah:$t:expr, bh:$e:expr]) => {{
     const MASK: ::core::primitive::i32 =
       (($z & 0b1) | ($o & 0b1) << 1 | ($t & 0b1) << 2 | ($e & 0b1) << 3)
@@ -2952,14 +2952,14 @@ macro_rules! swiz_abi_f64_half_m256d {
   }};
 }
 
-/// Swizzle the `f32` lanes from `$a` and `$b` together using an immediate
+/// Shuffle the `f32` lanes from `$a` and `$b` together using an immediate
 /// control value.
 ///
 /// The `a:` and `b:` prefixes on the index selection values are literal tokens
 /// that you type. It helps keep clear what value comes from where. The first
 /// two output lanes come from `$a`, the second two output lanes come from `$b`.
 ///
-/// This works like [`swiz_abi_f32_all_m128`], but with the low 128 bits and
+/// This works like [`shuffle_abi_f32_all_m128`], but with the low 128 bits and
 /// high 128 bits each doing a shuffle at the same time. Each index (`0..=3`)
 /// only refers to a lane within a given 128 bit portion of the 256 bit inputs.
 /// You cannot cross data between the two 128 bit halves.
@@ -2968,14 +2968,14 @@ macro_rules! swiz_abi_f64_half_m256d {
 /// let a = m256::from_array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
 /// let b = m256::from_array([9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0]);
 /// //
-/// let c = swiz_abi_f32_half_m256!(a, b, [a:1, a:3, b:2, b:0]).to_array();
+/// let c = shuffle_abi_f32_half_m256!(a, b, [a:1, a:3, b:2, b:0]).to_array();
 /// assert_eq!(c, [2.0, 4.0, 11.0, 9.0, 6.0, 8.0, 15.0, 13.0]);
 /// ```
 /// * **Intrinsic:** [`_mm256_shuffle_ps`]
 /// * **Assembly:** `vshufps ymm, ymm, ymm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! swiz_abi_f32_half_m256 {
+macro_rules! shuffle_abi_f32_half_m256 {
   ($a:expr, $b:expr, [a:$z:expr, a:$o:expr, b:$t:expr, b:$e:expr]) => {{
     const MASK: ::core::primitive::i32 =
       (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($e & 0b11) << 6)

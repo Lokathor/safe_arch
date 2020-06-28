@@ -143,11 +143,11 @@
 //!   based searching within a register. This lets you do some very high speed
 //!   searching through ASCII strings when the stars align.
 //! * `sub`: Subtract.
-//! * `swiz`: This lets you re-order ("swizzle") the data lanes. Sometimes this
-//!   is called "shuffle", sometimes it's called "permute", to avoid confusion
-//!   this crate uses a third time entirely. There are many swizzle operations
-//!   and each has slightly different uses, so the names are extra picky here.
-//!   * `swiz_{args}_{lane-type}_{lane-sources}_{simd-type}`.
+//! * `shuffle`: This lets you re-order the data lanes. Sometimes x86/x64 calls
+//!   this is called "shuffle", and sometimes it's called "permute", and there's
+//!   no particular reasoning behind the different names, so we just call them
+//!   all shuffle.
+//!   * `shuffle_{args}_{lane-type}_{lane-sources}_{simd-type}`.
 //!   * "args" is the input arguments: `a` (one arg) or `ab` (two args), then
 //!     either `v` (runtime-varying) or `i` (immediate). All the immediate
 //!     shuffles are macros, of course.

@@ -223,7 +223,7 @@ pub fn mul_i16_scale_round_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_mulhrs_epi16(a.0, b.0) })
 }
 
-/// Swizzle `i8` lanes in `a` using `i8` values in `v`.
+/// Shuffle `i8` lanes in `a` using `i8` values in `v`.
 ///
 /// If a lane in `v` is negative, that output is zeroed.
 /// ```
@@ -232,7 +232,7 @@ pub fn mul_i16_scale_round_m128i(a: m128i, b: m128i) -> m128i {
 ///   m128i::from([70_i8, 1, 2, 3, 4, 5, 6, 7, 8, 99, 100, 11, 12, 13, 14, 55]);
 /// let v =
 ///   m128i::from([-1_i8, 5, 4, 1, 3, 0, 9, 10, 2, 14, 6, 7, 15, 12, 13, 8]);
-/// let c: [i8; 16] = swiz_av_i8z_all_m128i(a, v).into();
+/// let c: [i8; 16] = shuffle_av_i8z_all_m128i(a, v).into();
 /// assert_eq!(c, [0_i8, 5, 4, 1, 3, 70, 99, 100, 2, 14, 6, 7, 55, 12, 13, 8]);
 /// ```
 /// * **Intrinsic:** [`_mm_shuffle_epi8`]
@@ -240,7 +240,7 @@ pub fn mul_i16_scale_round_m128i(a: m128i, b: m128i) -> m128i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "ssse3")))]
-pub fn swiz_av_i8z_all_m128i(a: m128i, v: m128i) -> m128i {
+pub fn shuffle_av_i8z_all_m128i(a: m128i, v: m128i) -> m128i {
   m128i(unsafe { _mm_shuffle_epi8(a.0, v.0) })
 }
 

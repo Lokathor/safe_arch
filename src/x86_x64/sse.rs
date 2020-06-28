@@ -1049,7 +1049,7 @@ pub fn zeroed_m128() -> m128 {
   m128(unsafe { _mm_setzero_ps() })
 }
 
-/// Swizzle the `f32` lanes from `$a` and `$b` together using an immediate
+/// Shuffle the `f32` lanes from `$a` and `$b` together using an immediate
 /// control value.
 ///
 /// The `a:` and `b:` prefixes on the index selection values are literal tokens
@@ -1058,26 +1058,26 @@ pub fn zeroed_m128() -> m128 {
 ///
 /// You can pass the same value as both arguments, but if you want to swizzle
 /// within only a single register and you have `avx` available consider using
-/// [`swiz_ai_f32_all_m128`] instead. You'll get much better performance.
+/// [`shuffle_ai_f32_all_m128`] instead. You'll get much better performance.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([5.0, 6.0, 7.0, 8.0]);
 /// //
-/// let c = swiz_abi_f32_all_m128!(a, b, [a:0, a:0, b:0, b:0]).to_array();
+/// let c = shuffle_abi_f32_all_m128!(a, b, [a:0, a:0, b:0, b:0]).to_array();
 /// assert_eq!(c, [1.0, 1.0, 5.0, 5.0]);
 /// //
-/// let c = swiz_abi_f32_all_m128!(a, b, [a:0, a:1, b:2, b:3]).to_array();
+/// let c = shuffle_abi_f32_all_m128!(a, b, [a:0, a:1, b:2, b:3]).to_array();
 /// assert_eq!(c, [1.0, 2.0, 7.0, 8.0]);
 /// //
-/// let c = swiz_abi_f32_all_m128!(a, b, [a:0, a:2, b:2, b:1]).to_array();
+/// let c = shuffle_abi_f32_all_m128!(a, b, [a:0, a:2, b:2, b:1]).to_array();
 /// assert_eq!(c, [1.0, 3.0, 7.0, 6.0]);
 /// ```
 /// * **Intrinsic:** [`_mm_shuffle_ps`]
 /// * **Assembly:** `shufps xmm, xmm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse")))]
-macro_rules! swiz_abi_f32_all_m128 {
+macro_rules! shuffle_abi_f32_all_m128 {
   ($a:expr, $b:expr, [a:$z:expr, a:$o:expr, b:$t:expr, b:$e:expr]) => {{
     const MASK: ::core::primitive::i32 =
       (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($e & 0b11) << 6)
