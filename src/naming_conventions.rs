@@ -52,7 +52,9 @@
 //! * `bitor`: Bitwise Or, `a | b`, like [the trait](core::ops::BitOr).
 //! * `bitxor`: Bitwise eXclusive Or, `a ^ b`, like [the
 //!   trait](core::ops::BitXor).
-//! * `blend`: TODO
+//! * `blend`: Merge the data lanes of two SIMD values by taking either the `b`
+//!   value or `a` value for each lane. Depending on the instruction, the blend
+//!   mask can be either an immediate or a runtime value.
 //! * `cast`: Convert between data types while preserving the exact bit
 //!   patterns, like how [`transmute`](core::mem::transmute) works.
 //! * `ceil`: "Ceiling", rounds towards positive infinity.
@@ -97,7 +99,6 @@
 //! * `pack`: Take the integers in the `a` and `b` inputs, reduce them to fit
 //!   within the half-sized integer type (eg: `i16` to `i8`), and pack them all
 //!   together into the output.
-//! * `permute` / `shuffle`: TODO
 //! * `population`: The "population" operations refer to the bits within an
 //!   integer. Either counting them or adjusting them in various ways.
 //! * `rdrand`: Use the hardware RNG to make a random value of the given length.
@@ -144,5 +145,21 @@
 //!   based searching within a register. This lets you do some very high speed
 //!   searching through ASCII strings when the stars align.
 //! * `sub`: Subtract.
+//! * `shuffle`: This lets you re-order the data lanes. Sometimes x86/x64 calls
+//!   this is called "shuffle", and sometimes it's called "permute", and there's
+//!   no particular reasoning behind the different names, so we just call them
+//!   all shuffle.
+//!   * `shuffle_{args}_{lane-type}_{lane-sources}_{simd-type}`.
+//!   * "args" is the input arguments: `a` (one arg) or `ab` (two args), then
+//!     either `v` (runtime-varying) or `i` (immediate). All the immediate
+//!     shuffles are macros, of course.
+//!   * "lane type" is `f32`, `f64`, `i8`, etc. If there's a `z` after the type
+//!     then you'll also be able to zero an output position instead of making it
+//!     come from a particular source lane.
+//!   * "lane sources" is generally either "all" which means that all lanes can
+//!     go to all other lanes, or "half" which means that each half of the lanes
+//!     is isolated from the other half, and you can't cross data between the
+//!     two halves, only within a half (this is how most of the 256-bit x86/x64
+//!     shuffles work).
 //! * `unpack`: Takes a SIMD value and gets out some of the lanes while widening
 //!   them, such as converting `i16` to `i32`.

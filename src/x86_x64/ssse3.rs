@@ -77,8 +77,8 @@ pub fn abs_i32_m128i(a: m128i) -> m128i {
 #[macro_export]
 macro_rules! combined_byte_shr_imm_m128i {
   ($a:expr, $b:expr, $imm:expr) => {{
-    let a: m128i = $a;
-    let b: m128i = $b;
+    let a: $crate::m128i = $a;
+    let b: $crate::m128i = $b;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_alignr_epi8;
@@ -223,24 +223,25 @@ pub fn mul_i16_scale_round_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_mulhrs_epi16(a.0, b.0) })
 }
 
-/// Shuffles the `i8` lanes according to the pattern in `b`.
+/// Shuffle `i8` lanes in `a` using `i8` values in `v`.
 ///
-/// Each lane selection value in `b` is taken as only 4 bits.
-///
+/// If a lane in `v` is negative, that output is zeroed.
 /// ```
 /// # use safe_arch::*;
 /// let a =
-///   m128i::from([0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 99, 10, 11, 12, 13, 14, 55]);
-/// let b =
-///   m128i::from([11_i8, 5, 4, 1, 3, 0, 9, 10, 2, 14, 6, 7, 15, 12, 13, 8]);
-/// let c: [i8; 16] = shuffle_i8_m128i(a, b).into();
-/// assert_eq!(c, [11_i8, 5, 4, 1, 3, 0, 99, 10, 2, 14, 6, 7, 55, 12, 13, 8]);
+///   m128i::from([70_i8, 1, 2, 3, 4, 5, 6, 7, 8, 99, 100, 11, 12, 13, 14, 55]);
+/// let v =
+///   m128i::from([-1_i8, 5, 4, 1, 3, 0, 9, 10, 2, 14, 6, 7, 15, 12, 13, 8]);
+/// let c: [i8; 16] = shuffle_av_i8z_all_m128i(a, v).into();
+/// assert_eq!(c, [0_i8, 5, 4, 1, 3, 70, 99, 100, 2, 14, 6, 7, 55, 12, 13, 8]);
 /// ```
+/// * **Intrinsic:** [`_mm_shuffle_epi8`]
+/// * **Assembly:** `pshufb xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "ssse3")))]
-pub fn shuffle_i8_m128i(a: m128i, b: m128i) -> m128i {
-  m128i(unsafe { _mm_shuffle_epi8(a.0, b.0) })
+pub fn shuffle_av_i8z_all_m128i(a: m128i, v: m128i) -> m128i {
+  m128i(unsafe { _mm_shuffle_epi8(a.0, v.0) })
 }
 
 /// Applies the sign of `i8` values in `b` to the values in `a`.

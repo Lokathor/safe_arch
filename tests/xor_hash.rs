@@ -1,7 +1,6 @@
 #![cfg(target_feature = "avx")]
 #![cfg(feature = "bytemuck")]
 #[cfg_attr(feature = "nightly", feature(test))]
-
 use bytemuck;
 #[allow(unused_must_use)]
 #[allow(unused_variables)]

@@ -18,8 +18,8 @@ use super::*;
 #[macro_export]
 macro_rules! blend_imm_i16_m128i {
   ($a:expr, $b:expr, $imm:expr) => {{
-    let a: m128i = $a;
-    let b: m128i = $b;
+    let a: $crate::m128i = $a;
+    let b: $crate::m128i = $b;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_blend_epi16;
@@ -44,8 +44,8 @@ macro_rules! blend_imm_i16_m128i {
 #[macro_export]
 macro_rules! blend_imm_m128d {
   ($a:expr, $b:expr, $imm:expr) => {{
-    let a: m128d = $a;
-    let b: m128d = $b;
+    let a: $crate::m128d = $a;
+    let b: $crate::m128d = $b;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_blend_pd;
@@ -70,7 +70,7 @@ macro_rules! blend_imm_m128d {
 #[macro_export]
 macro_rules! blend_imm_m128 {
   ($a:expr, $b:expr, $imm:expr) => {{
-    let a: m128 = $a;
+    let a: $crate::m128 = $a;
     let b: m128 = $b;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
@@ -458,8 +458,8 @@ pub fn convert_to_u64_m128i_from_lower2_u8_m128i(a: m128i) -> m128i {
 #[macro_export]
 macro_rules! dot_product_m128d {
   ($a:expr, $b:expr, $imm:expr) => {{
-    let a: m128d = $a;
-    let b: m128d = $b;
+    let a: $crate::m128d = $a;
+    let b: $crate::m128d = $b;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_dp_pd;
@@ -522,7 +522,7 @@ macro_rules! dot_product_m128d {
 #[macro_export]
 macro_rules! dot_product_m128 {
   ($a:expr, $b:expr, $imm:expr) => {{
-    let a: m128 = $a;
+    let a: $crate::m128 = $a;
     let b: m128 = $b;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
@@ -543,7 +543,7 @@ macro_rules! dot_product_m128 {
 #[macro_export]
 macro_rules! extract_i32_imm_m128i {
   ($a:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_extract_epi32;
@@ -564,7 +564,7 @@ macro_rules! extract_i32_imm_m128i {
 #[cfg(target_arch = "x86_64")]
 macro_rules! extract_i64_imm_m128i {
   ($a:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_extract_epi64;
@@ -585,7 +585,7 @@ macro_rules! extract_i64_imm_m128i {
 #[macro_export]
 macro_rules! extract_i8_as_i32_imm_m128i {
   ($a:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_extract_epi8;
@@ -605,7 +605,7 @@ macro_rules! extract_i8_as_i32_imm_m128i {
 #[macro_export]
 macro_rules! extract_f32_as_i32_bits_imm_m128 {
   ($a:expr, $imm:expr) => {{
-    let a: m128 = $a;
+    let a: $crate::m128 = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_extract_ps;
@@ -684,7 +684,7 @@ pub fn floor_m128_s(a: m128, b: m128) -> m128 {
 #[macro_export]
 macro_rules! insert_i32_imm_m128i {
   ($a:expr, $new:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     let new: ::core::primitive::i32 = $new;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
@@ -707,7 +707,7 @@ macro_rules! insert_i32_imm_m128i {
 #[cfg(target_arch = "x86_64")]
 macro_rules! insert_i64_imm_m128i {
   ($a:expr, $new:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     let new: i64 = $new;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
@@ -730,7 +730,7 @@ macro_rules! insert_i64_imm_m128i {
 #[macro_export]
 macro_rules! insert_i8_imm_m128i {
   ($a:expr, $new:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     let new: ::core::primitive::i32 = $new;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
@@ -760,7 +760,7 @@ macro_rules! insert_i8_imm_m128i {
 #[macro_export]
 macro_rules! insert_f32_imm_m128 {
   ($a:expr, $b:expr, from $b_lane_src:expr, to $a_lane_dest:expr, mask $clear_lanes:expr) => {{
-    let a: m128 = $a;
+    let a: $crate::m128 = $a;
     let b: m128 = $b;
     const IMM: ::core::primitive::i32 = ($b_lane_src & 0b11) << 6
       | ($a_lane_dest & 0b11) << 4
@@ -970,8 +970,8 @@ pub fn min_position_u16_m128i(a: m128i) -> m128i {
 #[macro_export]
 macro_rules! multi_packed_sum_abs_diff_u8_m128i {
   ($a:expr, $b:expr, a $a_pick:expr, b $b_pick:expr) => {{
-    let a: m128i = $a;
-    let b: m128i = $b;
+    let a: $crate::m128i = $a;
+    let b: $crate::m128i = $b;
     const IMM: ::core::primitive::i32 =
       ((($a_pick & 0b1) << 2) | ($b_pick & 0b11)) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
@@ -1046,7 +1046,7 @@ pub fn pack_i32_to_u16_m128i(a: m128i, b: m128i) -> m128i {
 #[macro_export]
 macro_rules! round_m128d {
   ($a:expr, Nearest) => {{
-    let a: m128d = $a;
+    let a: $crate::m128d = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
       _mm_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
@@ -1060,7 +1060,7 @@ macro_rules! round_m128d {
     })
   }};
   ($a:expr, NegInf) => {{
-    let a: m128d = $a;
+    let a: $crate::m128d = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
       _mm_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
@@ -1074,7 +1074,7 @@ macro_rules! round_m128d {
     })
   }};
   ($a:expr, PosInf) => {{
-    let a: m128d = $a;
+    let a: $crate::m128d = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
       _mm_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
@@ -1088,7 +1088,7 @@ macro_rules! round_m128d {
     })
   }};
   ($a:expr, Zero) => {{
-    let a: m128d = $a;
+    let a: $crate::m128d = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
       _mm_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
@@ -1120,8 +1120,8 @@ macro_rules! round_m128d {
 #[macro_export]
 macro_rules! round_m128d_s {
   ($a:expr, $b:expr, Nearest) => {{
-    let a: m128d = $a;
-    let b: m128d = $b;
+    let a: $crate::m128d = $a;
+    let b: $crate::m128d = $b;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
       _mm_round_sd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
@@ -1135,8 +1135,8 @@ macro_rules! round_m128d_s {
     })
   }};
   ($a:expr, $b:expr, NegInf) => {{
-    let a: m128d = $a;
-    let b: m128d = $b;
+    let a: $crate::m128d = $a;
+    let b: $crate::m128d = $b;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
       _mm_round_sd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
@@ -1150,8 +1150,8 @@ macro_rules! round_m128d_s {
     })
   }};
   ($a:expr, $b:expr, PosInf) => {{
-    let a: m128d = $a;
-    let b: m128d = $b;
+    let a: $crate::m128d = $a;
+    let b: $crate::m128d = $b;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
       _mm_round_sd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
@@ -1165,8 +1165,8 @@ macro_rules! round_m128d_s {
     })
   }};
   ($a:expr, $b:expr, Zero) => {{
-    let a: m128d = $a;
-    let b: m128d = $b;
+    let a: $crate::m128d = $a;
+    let b: $crate::m128d = $b;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
       _mm_round_sd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
@@ -1198,7 +1198,7 @@ macro_rules! round_m128d_s {
 #[macro_export]
 macro_rules! round_m128 {
   ($a:expr, Nearest) => {{
-    let a: m128 = $a;
+    let a: $crate::m128 = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
       _mm_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
@@ -1212,7 +1212,7 @@ macro_rules! round_m128 {
     })
   }};
   ($a:expr, NegInf) => {{
-    let a: m128 = $a;
+    let a: $crate::m128 = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
       _mm_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
@@ -1226,7 +1226,7 @@ macro_rules! round_m128 {
     })
   }};
   ($a:expr, PosInf) => {{
-    let a: m128 = $a;
+    let a: $crate::m128 = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
       _mm_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
@@ -1240,7 +1240,7 @@ macro_rules! round_m128 {
     })
   }};
   ($a:expr, Zero) => {{
-    let a: m128 = $a;
+    let a: $crate::m128 = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
       _mm_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
@@ -1272,7 +1272,7 @@ macro_rules! round_m128 {
 #[macro_export]
 macro_rules! round_m128_s {
   ($a:expr, $b:expr, Nearest) => {{
-    let a: m128 = $a;
+    let a: $crate::m128 = $a;
     let b: m128 = $b;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
@@ -1287,7 +1287,7 @@ macro_rules! round_m128_s {
     })
   }};
   ($a:expr, $b:expr, NegInf) => {{
-    let a: m128 = $a;
+    let a: $crate::m128 = $a;
     let b: m128 = $b;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
@@ -1302,7 +1302,7 @@ macro_rules! round_m128_s {
     })
   }};
   ($a:expr, $b:expr, PosInf) => {{
-    let a: m128 = $a;
+    let a: $crate::m128 = $a;
     let b: m128 = $b;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{
@@ -1317,7 +1317,7 @@ macro_rules! round_m128_s {
     })
   }};
   ($a:expr, $b:expr, Zero) => {{
-    let a: m128 = $a;
+    let a: $crate::m128 = $a;
     let b: m128 = $b;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::{

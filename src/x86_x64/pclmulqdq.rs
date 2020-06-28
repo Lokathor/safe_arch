@@ -25,8 +25,8 @@ use super::*;
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "pclmulqdq")))]
 macro_rules! mul_i64_carryless_m128i {
   ($a:expr, lane 0, $b:expr, lane 0) => {{
-    let a: m128i = $a;
-    let b: m128i = $b;
+    let a: $crate::m128i = $a;
+    let b: $crate::m128i = $b;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_clmulepi64_si128;
     #[cfg(target_arch = "x86_64")]
@@ -34,8 +34,8 @@ macro_rules! mul_i64_carryless_m128i {
     m128i(unsafe { _mm_clmulepi64_si128(a.0, b.0, 0_i32) })
   }};
   ($a:expr, lane 1, $b:expr, lane 0) => {{
-    let a: m128i = $a;
-    let b: m128i = $b;
+    let a: $crate::m128i = $a;
+    let b: $crate::m128i = $b;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_clmulepi64_si128;
     #[cfg(target_arch = "x86_64")]
@@ -43,8 +43,8 @@ macro_rules! mul_i64_carryless_m128i {
     m128i(unsafe { _mm_clmulepi64_si128(a.0, b.0, 0b1_i32) })
   }};
   ($a:expr, lane 0, $b:expr, lane 1) => {{
-    let a: m128i = $a;
-    let b: m128i = $b;
+    let a: $crate::m128i = $a;
+    let b: $crate::m128i = $b;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_clmulepi64_si128;
     #[cfg(target_arch = "x86_64")]
@@ -52,8 +52,8 @@ macro_rules! mul_i64_carryless_m128i {
     m128i(unsafe { _mm_clmulepi64_si128(a.0, b.0, 0b1_0000_i32) })
   }};
   ($a:expr, lane 1, $b:expr, lane 1) => {{
-    let a: m128i = $a;
-    let b: m128i = $b;
+    let a: $crate::m128i = $a;
+    let b: $crate::m128i = $b;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_clmulepi64_si128;
     #[cfg(target_arch = "x86_64")]

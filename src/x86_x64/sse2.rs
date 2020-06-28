@@ -299,7 +299,7 @@ pub fn average_u16_m128i(a: m128i, b: m128i) -> m128i {
 #[macro_export]
 macro_rules! byte_shl_imm_u128_m128i {
   ($a:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_bslli_si128;
@@ -321,7 +321,7 @@ macro_rules! byte_shl_imm_u128_m128i {
 #[macro_export]
 macro_rules! byte_shr_imm_u128_m128i {
   ($a:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_bsrli_si128;
@@ -1454,7 +1454,7 @@ pub fn div_m128d_s(a: m128d, b: m128d) -> m128d {
 #[macro_export]
 macro_rules! extract_i16_as_i32_m128i {
   ($a:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     const LANE: ::core::primitive::i32 =
       ($imm & 0b111) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
@@ -1485,7 +1485,7 @@ macro_rules! extract_i16_as_i32_m128i {
 #[macro_export]
 macro_rules! insert_i16_from_i32_m128i {
   ($a:expr, $i:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     let i: ::core::primitive::i32 = $i;
     const LANE: ::core::primitive::i32 =
       ($imm & 0b111) as ::core::primitive::i32;
@@ -2351,173 +2351,115 @@ pub fn zeroed_m128d() -> m128d {
   m128d(unsafe { _mm_setzero_pd() })
 }
 
-/// Shuffles the `i32` lanes around.
-///
-/// This is a macro because the shuffle pattern must be a compile time constant,
-/// and Rust doesn't currently support that for functions.
-///
-/// * `$a` must obviously be an `m128i` expression.
-/// * Each of the lane selection values is a lane index (`0..4`). They can be
-///   any integer type as long as all four lane indexes are the same type. Out
-///   of bounds index values are wrapped to just the low 2 bits.
-/// * The lane selection values are combined into a private `const` which is
-///   computed at compile time and then used at runtime. This means that you can
-///   use literals, but you can also use the names of other constants or even a
-///   `const fn` expression, if that is somehow is useful to you.
+/// Shuffle the `i32` lanes in `$a` using an immediate
+/// control value.
 ///
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([6, 7, 8, 9]);
 /// //
-/// let c = shuffle_i32_m128i!(a, 0, 0, 0, 0);
-/// assert_eq!(<[i32; 4]>::from(c), [6, 6, 6, 6]);
-/// //
-/// let c = shuffle_i32_m128i!(a, 0, 1, 2, 3);
-/// assert_eq!(<[i32; 4]>::from(c), [6, 7, 8, 9]);
-/// //
-/// let c = shuffle_i32_m128i!(a, 0, 2, 2, 1);
+/// let c = shuffle_ai_f32_all_m128i!(a, [0, 2, 2, 1]);
 /// assert_eq!(<[i32; 4]>::from(c), [6, 8, 8, 7]);
 /// ```
+/// * **Intrinsic:** [`_mm_shuffle_epi32`]
+/// * **Assembly:** `pshufd xmm, xmm, imm8`
 #[macro_export]
-macro_rules! shuffle_i32_m128i {
-  ($a:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
+macro_rules! shuffle_ai_f32_all_m128i {
+  ($a:expr, [$z:expr, $o:expr, $t:expr, $e:expr]) => {{
     const MASK: ::core::primitive::i32 =
       (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($e & 0b11) << 6)
         as ::core::primitive::i32;
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_shuffle_epi32;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_shuffle_epi32;
-    m128i(unsafe { _mm_shuffle_epi32(a.0, MASK) })
+    $crate::m128i(unsafe { _mm_shuffle_epi32(a.0, MASK) })
   }};
 }
 
-/// Shuffles the lanes around.
+/// Shuffle the `f64` lanes from `$a` and `$b` together using an immediate
+/// control value.
 ///
-/// This is a macro because the shuffle pattern must be a compile time constant,
-/// and Rust doesn't currently support that for functions.
+/// The `a:` and `b:` prefixes on the index selection values are literal tokens
+/// that you type. It helps keep clear what value comes from where. The first
+/// two output lanes come from `$a`, the second two output lanes come from `$b`.
 ///
-/// * The lane lane of the output comes from `$a`, as picked by `$z` (Zero)
-/// * The high lane of the output comes from `$b`, as picked by `$o` (One)
-/// * `$a` and `$b` must obviously be `m128d` expressions.
-/// * Both of the lane selection values is a lane index (`0..2`). They can be
-///   any integer type as long as they're same type. Out of bounds index values
-///   are wrapped to just the low bit.
-/// * The lane selection values are combined into a private `const` which is
-///   computed at compile time and then used at runtime. This means that you can
-///   use literals, but you can also use the names of other constants or even a
-///   `const fn` expression, if that is somehow is useful to you.
-///
+/// You can pass the same value as both arguments, but if you want to swizzle
+/// within only a single register and you have `avx` available consider using
+/// [`shuffle_ai_f64_all_m128d`] instead. You'll get much better performance.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128d::from_array([1.0, 2.0]);
 /// let b = m128d::from_array([3.0, 4.0]);
 /// //
-/// let c = shuffle_m128d!(a, b, 0, 0).to_array();
+/// let c = shuffle_abi_f64_all_m128d!(a, b, [a:0, b:0]).to_array();
 /// assert_eq!(c, [1.0, 3.0]);
 /// //
-/// let c = shuffle_m128d!(a, b, 0, 1).to_array();
+/// let c = shuffle_abi_f64_all_m128d!(a, b, [a:0, b:1]).to_array();
 /// assert_eq!(c, [1.0, 4.0]);
 /// ```
 #[macro_export]
-macro_rules! shuffle_m128d {
-  ($a:expr, $b:expr, $z:expr, $o:expr) => {{
+macro_rules! shuffle_abi_f64_all_m128d {
+  ($a:expr, $b:expr, [a:$z:expr, b:$o:expr]) => {{
     const MASK: ::core::primitive::i32 =
       (($z & 0b1) | ($o & 0b1) << 1) as ::core::primitive::i32;
-    let a: m128d = $a;
-    let b: m128d = $b;
+    let a: $crate::m128d = $a;
+    let b: $crate::m128d = $b;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_shuffle_pd;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_shuffle_pd;
-    m128d(unsafe { _mm_shuffle_pd(a.0, b.0, MASK) })
+    $crate::m128d(unsafe { _mm_shuffle_pd(a.0, b.0, MASK) })
   }};
 }
 
-/// Shuffles the higher `i16` lanes, low lanes unaffected.
-///
-/// This is a macro because the shuffle pattern must be a compile time constant,
-/// and Rust doesn't currently support that for functions.
-///
-/// * `$a` must obviously be an `m128i` expression.
-/// * Each of the lane selection values is a lane index (`0..4`) within the high
-///   lanes (eg: 0 to this macro is the 5th `i16` lane ). They can be any
-///   integer type as long as all four lane indexes are the same type. Out of
-///   bounds index values are wrapped to just the low 2 bits.
-/// * The lane selection values are combined into a private `const` which is
-///   computed at compile time and then used at runtime. This means that you can
-///   use literals, but you can also use the names of other constants or even a
-///   `const fn` expression, if that is somehow is useful to you.
-///
+/// Shuffle the high `i16` lanes in `$a` using an immediate control value.
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([1_i16, 2, 3, 4, 5, 6, 7, 8]);
-/// //
-/// let c = shuffle_i16_high_lanes_m128i!(a, 0, 0, 0, 0);
-/// assert_eq!(<[i16; 8]>::from(c), [1_i16, 2, 3, 4, 5, 5, 5, 5]);
-/// //
-/// let c = shuffle_i16_high_lanes_m128i!(a, 0, 1, 2, 3);
-/// assert_eq!(<[i16; 8]>::from(c), [1_i16, 2, 3, 4, 5, 6, 7, 8]);
-/// //
-/// let c = shuffle_i16_high_lanes_m128i!(a, 0, 2, 2, 1);
-/// assert_eq!(<[i16; 8]>::from(c), [1_i16, 2, 3, 4, 5, 7, 7, 6]);
+/// let c = shuffle_ai_i16_h64all_m128i!(a, [3, 2, 0, 1]);
+/// assert_eq!(<[i16; 8]>::from(c), [1_i16, 2, 3, 4, 8, 7, 5, 6]);
 /// ```
+/// * **Intrinsic:** [`_mm_shufflehi_epi16`]
+/// * **Assembly:** `pshufhw xmm, xmm, imm8`
 #[macro_export]
-macro_rules! shuffle_i16_high_lanes_m128i {
-  ($a:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
+macro_rules! shuffle_ai_i16_h64all_m128i {
+  ($a:expr, [$z:expr, $o:expr, $t:expr, $e:expr]) => {{
     const MASK: ::core::primitive::i32 =
       (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($e & 0b11) << 6)
         as ::core::primitive::i32;
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_shufflehi_epi16;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_shufflehi_epi16;
-    m128i(unsafe { _mm_shufflehi_epi16(a.0, MASK) })
+    $crate::m128i(unsafe { _mm_shufflehi_epi16(a.0, MASK) })
   }};
 }
 
-/// Shuffles the lower `i16` lanes, high lanes unaffected.
-///
-/// This is a macro because the shuffle pattern must be a compile time constant,
-/// and Rust doesn't currently support that for functions.
-///
-/// * `$a` must obviously be an `m128i` expression.
-/// * Each of the lane selection values is a lane index (`0..4`). They can be
-///   any integer type as long as all four lane indexes are the same type. Out
-///   of bounds index values are wrapped to just the low 2 bits.
-/// * The lane selection values are combined into a private `const` which is
-///   computed at compile time and then used at runtime. This means that you can
-///   use literals, but you can also use the names of other constants or even a
-///   `const fn` expression, if that is somehow is useful to you.
-///
+/// Shuffle the low `i16` lanes in `$a` using an immediate control value.
 /// ```
 /// # use safe_arch::*;
-/// # use safe_arch::shuffle_i32_m128i;
 /// let a = m128i::from([1_i16, 2, 3, 4, 5, 6, 7, 8]);
 /// //
-/// let c = shuffle_i16_low_lanes_m128i!(a, 0, 0, 0, 0);
-/// assert_eq!(<[i16; 8]>::from(c), [1, 1, 1, 1, 5, 6, 7, 8_i16]);
-/// //
-/// let c = shuffle_i16_low_lanes_m128i!(a, 0, 1, 2, 3);
-/// assert_eq!(<[i16; 8]>::from(c), [1, 2, 3, 4, 5, 6, 7, 8_i16]);
-/// //
-/// let c = shuffle_i16_low_lanes_m128i!(a, 0, 2, 2, 1);
-/// assert_eq!(<[i16; 8]>::from(c), [1, 3, 3, 2, 5, 6, 7, 8_i16]);
+/// let c = shuffle_ai_i16_l64all_m128i!(a, [0, 2, 3, 1]);
+/// assert_eq!(<[i16; 8]>::from(c), [1_i16, 3, 4, 2, 5, 6, 7, 8]);
 /// ```
+/// * **Intrinsic:** [`_mm_shufflelo_epi16`]
+/// * **Assembly:** `pshuflw xmm, xmm, imm8`
 #[macro_export]
-macro_rules! shuffle_i16_low_lanes_m128i {
-  ($a:expr, $z:expr, $o:expr, $t:expr, $e:expr) => {{
+macro_rules! shuffle_ai_i16_l64all_m128i {
+  ($a:expr, [$z:expr, $o:expr, $t:expr, $e:expr]) => {{
     const MASK: ::core::primitive::i32 =
       (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($e & 0b11) << 6)
         as ::core::primitive::i32;
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_shufflelo_epi16;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_shufflelo_epi16;
-    m128i(unsafe { _mm_shufflelo_epi16(a.0, MASK) })
+    $crate::m128i(unsafe { _mm_shufflelo_epi16(a.0, MASK) })
   }};
 }
 
@@ -2589,7 +2531,7 @@ pub fn shl_all_u64_m128i(a: m128i, count: m128i) -> m128i {
 #[macro_export]
 macro_rules! shl_imm_u16_m128i {
   ($a:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_slli_epi16;
@@ -2610,7 +2552,7 @@ macro_rules! shl_imm_u16_m128i {
 #[macro_export]
 macro_rules! shl_imm_u32_m128i {
   ($a:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_slli_epi32;
@@ -2631,7 +2573,7 @@ macro_rules! shl_imm_u32_m128i {
 #[macro_export]
 macro_rules! shl_imm_u64_m128i {
   ($a:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_slli_epi64;
@@ -2723,7 +2665,7 @@ pub fn shr_all_i32_m128i(a: m128i, count: m128i) -> m128i {
 #[macro_export]
 macro_rules! shr_imm_i16_m128i {
   ($a:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_srai_epi16;
@@ -2746,7 +2688,7 @@ macro_rules! shr_imm_i16_m128i {
 #[macro_export]
 macro_rules! shr_imm_i32_m128i {
   ($a:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
     use ::core::arch::x86::_mm_srai_epi32;

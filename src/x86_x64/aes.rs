@@ -15,7 +15,8 @@ pub fn aes_decrypt_m128i(a: m128i, round_key: m128i) -> m128i {
 }
 
 /// "Perform the last round of AES decryption flow on `a` using the
-/// `round_key`." ```
+/// `round_key`."
+/// ```
 /// # use safe_arch::*;
 /// // TODO
 /// ```
@@ -39,7 +40,8 @@ pub fn aes_encrypt_m128i(a: m128i, round_key: m128i) -> m128i {
 }
 
 /// "Perform the last round of AES encryption flow on `a` using the
-/// `round_key`." ```
+/// `round_key`."
+/// ```
 /// # use safe_arch::*;
 /// // TODO
 /// ```
@@ -71,7 +73,7 @@ pub fn aes_inv_mix_columns_m128i(a: m128i) -> m128i {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "aes")))]
 macro_rules! aes_key_gen_assist_m128i {
   ($a:expr, $imm:expr) => {{
-    let a: m128i = $a;
+    let a: $crate::m128i = $a;
     const IMM: ::core::primitive::i32 =
       ($imm & 0b1111_1111) as ::core::primitive::i32;
     #[cfg(target_arch = "x86")]
