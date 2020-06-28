@@ -52,7 +52,9 @@
 //! * `bitor`: Bitwise Or, `a | b`, like [the trait](core::ops::BitOr).
 //! * `bitxor`: Bitwise eXclusive Or, `a ^ b`, like [the
 //!   trait](core::ops::BitXor).
-//! * `blend`: TODO
+//! * `blend`: Merge the data lanes of two SIMD values by taking either the `b`
+//!   value or `a` value for each lane. Depending on the instruction, the blend
+//!   mask can be either an immediate or a runtime value.
 //! * `cast`: Convert between data types while preserving the exact bit
 //!   patterns, like how [`transmute`](core::mem::transmute) works.
 //! * `ceil`: "Ceiling", rounds towards positive infinity.
