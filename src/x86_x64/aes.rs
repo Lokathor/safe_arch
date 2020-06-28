@@ -15,7 +15,8 @@ pub fn aes_decrypt_m128i(a: m128i, round_key: m128i) -> m128i {
 }
 
 /// "Perform the last round of AES decryption flow on `a` using the
-/// `round_key`." ```
+/// `round_key`."
+/// ```
 /// # use safe_arch::*;
 /// // TODO
 /// ```
@@ -39,7 +40,8 @@ pub fn aes_encrypt_m128i(a: m128i, round_key: m128i) -> m128i {
 }
 
 /// "Perform the last round of AES encryption flow on `a` using the
-/// `round_key`." ```
+/// `round_key`."
+/// ```
 /// # use safe_arch::*;
 /// // TODO
 /// ```
