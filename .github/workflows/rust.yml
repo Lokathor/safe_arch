@@ -32,13 +32,6 @@ jobs:
         profile: minimal
         default: true
     - name: Run tests with default features
-      uses: actions-rs/cargo@v1
-      with:
-        toolchain: ${{ matrix.rust.toolchain }}
-        command: test
+      run: cargo test --target ${{ matrix.rust.target }}
     - name: Run tests with all features
-      uses: actions-rs/cargo@v1
-      with:
-        toolchain: ${{ matrix.rust.toolchain }}
-        command: test
-        args: --all-features
+      run: cargo test --target ${{ matrix.rust.target }} --all-features
