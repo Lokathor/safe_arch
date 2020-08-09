@@ -1684,7 +1684,7 @@ macro_rules! insert_m128i_to_m256i {
     use ::core::arch::x86::_mm256_inserti128_si256;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_inserti128_si256;
-    m256i(unsafe { _mm256_inserti128_si256(a.0, b.0, IMM) })
+    $crate::m256i(unsafe { _mm256_inserti128_si256(a.0, b.0, IMM) })
   }};
 }
 
@@ -2007,7 +2007,7 @@ macro_rules! multi_packed_sum_abs_diff_u8_m256i {
     use ::core::arch::x86::_mm256_mpsadbw_epu8;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_mpsadbw_epu8;
-    m256i(unsafe { _mm256_mpsadbw_epu8(a.0, b.0, IMM) })
+    $crate::m256i(unsafe { _mm256_mpsadbw_epu8(a.0, b.0, IMM) })
   }};
 }
 

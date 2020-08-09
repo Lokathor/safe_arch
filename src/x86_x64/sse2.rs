@@ -305,7 +305,7 @@ macro_rules! byte_shl_imm_u128_m128i {
     use ::core::arch::x86::_mm_bslli_si128;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_bslli_si128;
-    m128i(unsafe { _mm_bslli_si128(a.0, IMM) })
+    $crate::m128i(unsafe { _mm_bslli_si128(a.0, IMM) })
   }};
 }
 
@@ -327,7 +327,7 @@ macro_rules! byte_shr_imm_u128_m128i {
     use ::core::arch::x86::_mm_bsrli_si128;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_bsrli_si128;
-    m128i(unsafe { _mm_bsrli_si128(a.0, IMM) })
+    $crate::m128i(unsafe { _mm_bsrli_si128(a.0, IMM) })
   }};
 }
 
@@ -1493,7 +1493,7 @@ macro_rules! insert_i16_from_i32_m128i {
     use ::core::arch::x86::_mm_insert_epi16;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_insert_epi16;
-    m128i(unsafe { _mm_insert_epi16(a.0, i, LANE) })
+    $crate::m128i(unsafe { _mm_insert_epi16(a.0, i, LANE) })
   }};
 }
 
@@ -2495,7 +2495,7 @@ macro_rules! shl_imm_u16_m128i {
     use ::core::arch::x86::_mm_slli_epi16;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_slli_epi16;
-    m128i(unsafe { _mm_slli_epi16(a.0, IMM) })
+    $crate::m128i(unsafe { _mm_slli_epi16(a.0, IMM) })
   }};
 }
 
@@ -2516,7 +2516,7 @@ macro_rules! shl_imm_u32_m128i {
     use ::core::arch::x86::_mm_slli_epi32;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_slli_epi32;
-    m128i(unsafe { _mm_slli_epi32(a.0, IMM) })
+    $crate::m128i(unsafe { _mm_slli_epi32(a.0, IMM) })
   }};
 }
 
@@ -2537,7 +2537,7 @@ macro_rules! shl_imm_u64_m128i {
     use ::core::arch::x86::_mm_slli_epi64;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_slli_epi64;
-    m128i(unsafe { _mm_slli_epi64(a.0, IMM) })
+    $crate::m128i(unsafe { _mm_slli_epi64(a.0, IMM) })
   }};
 }
 
@@ -2629,7 +2629,7 @@ macro_rules! shr_imm_i16_m128i {
     use ::core::arch::x86::_mm_srai_epi16;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_srai_epi16;
-    m128i(unsafe { _mm_srai_epi16(a.0, IMM) })
+    $crate::m128i(unsafe { _mm_srai_epi16(a.0, IMM) })
   }};
 }
 
@@ -2652,7 +2652,7 @@ macro_rules! shr_imm_i32_m128i {
     use ::core::arch::x86::_mm_srai_epi32;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_srai_epi32;
-    m128i(unsafe { _mm_srai_epi32(a.0, IMM) })
+    $crate::m128i(unsafe { _mm_srai_epi32(a.0, IMM) })
   }};
 }
 

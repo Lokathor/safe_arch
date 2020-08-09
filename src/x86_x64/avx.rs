@@ -146,7 +146,7 @@ macro_rules! blend_imm_m256d {
     use ::core::arch::x86::_mm256_blend_pd;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_blend_pd;
-    m256d(unsafe { _mm256_blend_pd(a.0, b.0, IMM) })
+    $crate::m256d(unsafe { _mm256_blend_pd(a.0, b.0, IMM) })
   }};
 }
 
@@ -175,7 +175,7 @@ macro_rules! blend_imm_m256 {
     use ::core::arch::x86::_mm256_blend_ps;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_blend_ps;
-    m256(unsafe { _mm256_blend_ps(a.0, b.0, IMM) })
+    $crate::m256(unsafe { _mm256_blend_ps(a.0, b.0, IMM) })
   }};
 }
 
@@ -613,7 +613,7 @@ macro_rules! cmp_op_mask_m128 {
     use ::core::arch::x86::_mm_cmp_ps;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_cmp_ps;
-    m128(unsafe { _mm_cmp_ps(a.0, b.0, IMM) })
+    $crate::m128(unsafe { _mm_cmp_ps(a.0, b.0, IMM) })
   }};
 }
 
@@ -645,7 +645,7 @@ macro_rules! cmp_op_mask_m128_s {
     use ::core::arch::x86::_mm_cmp_ss;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_cmp_ss;
-    m128(unsafe { _mm_cmp_ss(a.0, b.0, IMM) })
+    $crate::m128(unsafe { _mm_cmp_ss(a.0, b.0, IMM) })
   }};
 }
 
@@ -677,7 +677,7 @@ macro_rules! cmp_op_mask_m256 {
     use ::core::arch::x86::_mm256_cmp_ps;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_cmp_ps;
-    m256(unsafe { _mm256_cmp_ps(a.0, b.0, IMM) })
+    $crate::m256(unsafe { _mm256_cmp_ps(a.0, b.0, IMM) })
   }};
 }
 
@@ -709,7 +709,7 @@ macro_rules! cmp_op_mask_m128d {
     use ::core::arch::x86::_mm_cmp_pd;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_cmp_pd;
-    m128d(unsafe { _mm_cmp_pd(a.0, b.0, IMM) })
+    $crate::m128d(unsafe { _mm_cmp_pd(a.0, b.0, IMM) })
   }};
 }
 
@@ -741,7 +741,7 @@ macro_rules! cmp_op_mask_m128d_s {
     use ::core::arch::x86::_mm_cmp_sd;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_cmp_sd;
-    m128d(unsafe { _mm_cmp_sd(a.0, b.0, IMM) })
+    $crate::m128d(unsafe { _mm_cmp_sd(a.0, b.0, IMM) })
   }};
 }
 
@@ -773,7 +773,7 @@ macro_rules! cmp_op_mask_m256d {
     use ::core::arch::x86::_mm256_cmp_pd;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_cmp_pd;
-    m256d(unsafe { _mm256_cmp_pd(a.0, b.0, IMM) })
+    $crate::m256d(unsafe { _mm256_cmp_pd(a.0, b.0, IMM) })
   }};
 }
 
@@ -1020,7 +1020,7 @@ macro_rules! dot_product_m256 {
     use ::core::arch::x86::_mm256_dp_ps;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_dp_ps;
-    m256(unsafe { _mm256_dp_ps(a.0, b.0, IMM) })
+    $crate::m256(unsafe { _mm256_dp_ps(a.0, b.0, IMM) })
   }};
 }
 
@@ -1089,7 +1089,7 @@ macro_rules! extract_m128d_from_m256d {
     use ::core::arch::x86::_mm256_extractf128_pd;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_extractf128_pd;
-    m128d(unsafe { _mm256_extractf128_pd(a.0, IMM) })
+    $crate::m128d(unsafe { _mm256_extractf128_pd(a.0, IMM) })
   }};
 }
 
@@ -1113,7 +1113,7 @@ macro_rules! extract_m128_from_m256 {
     use ::core::arch::x86::_mm256_extractf128_ps;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_extractf128_ps;
-    m128(unsafe { _mm256_extractf128_ps(a.0, IMM) })
+    $crate::m128(unsafe { _mm256_extractf128_ps(a.0, IMM) })
   }};
 }
 
@@ -1137,7 +1137,7 @@ macro_rules! extract_m128i_from_m256i {
     use ::core::arch::x86::_mm256_extractf128_si256;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_extractf128_si256;
-    m128i(unsafe { _mm256_extractf128_si256(a.0, IMM) })
+    $crate::m128i(unsafe { _mm256_extractf128_si256(a.0, IMM) })
   }};
 }
 
@@ -1260,7 +1260,7 @@ macro_rules! insert_i8_to_m256i {
     use ::core::arch::x86::_mm256_insert_epi8;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_insert_epi8;
-    m256i(unsafe { _mm256_insert_epi8(a.0, i, IMM) })
+    $crate::m256i(unsafe { _mm256_insert_epi8(a.0, i, IMM) })
   }};
 }
 
@@ -1286,7 +1286,7 @@ macro_rules! insert_i16_to_m256i {
     use ::core::arch::x86::_mm256_insert_epi16;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_insert_epi16;
-    m256i(unsafe { _mm256_insert_epi16(a.0, i, IMM) })
+    $crate::m256i(unsafe { _mm256_insert_epi16(a.0, i, IMM) })
   }};
 }
 
@@ -1311,7 +1311,7 @@ macro_rules! insert_i32_to_m256i {
     use ::core::arch::x86::_mm256_insert_epi32;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_insert_epi32;
-    m256i(unsafe { _mm256_insert_epi32(a.0, i, IMM) })
+    $crate::m256i(unsafe { _mm256_insert_epi32(a.0, i, IMM) })
   }};
 }
 
@@ -1336,7 +1336,7 @@ macro_rules! insert_i64_to_m256i {
     use ::core::arch::x86::_mm256_insert_epi64;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_insert_epi64;
-    m256i(unsafe { _mm256_insert_epi64(a.0, i, IMM) })
+    $crate::m256i(unsafe { _mm256_insert_epi64(a.0, i, IMM) })
   }};
 }
 
@@ -1360,7 +1360,7 @@ macro_rules! insert_m128d_to_m256d {
     use ::core::arch::x86::_mm256_insertf128_pd;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_insertf128_pd;
-    m256d(unsafe { _mm256_insertf128_pd(a.0, b.0, IMM) })
+    $crate::m256d(unsafe { _mm256_insertf128_pd(a.0, b.0, IMM) })
   }};
 }
 
@@ -1384,7 +1384,7 @@ macro_rules! insert_m128_to_m256 {
     use ::core::arch::x86::_mm256_insertf128_ps;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_insertf128_ps;
-    m256(unsafe { _mm256_insertf128_ps(a.0, b.0, IMM) })
+    $crate::m256(unsafe { _mm256_insertf128_ps(a.0, b.0, IMM) })
   }};
 }
 
@@ -1412,7 +1412,7 @@ macro_rules! insert_m128i_to_m256i_slow_avx {
     use ::core::arch::x86::_mm256_insertf128_si256;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_insertf128_si256;
-    m256i(unsafe { _mm256_insertf128_si256(a.0, b.0, IMM) })
+    $crate::m256i(unsafe { _mm256_insertf128_si256(a.0, b.0, IMM) })
   }};
 }
 
@@ -2296,7 +2296,7 @@ macro_rules! round_m256d {
     use ::core::arch::x86_64::{
       _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
     };
-    m256d(unsafe {
+    $crate::m256d(unsafe {
       _mm256_round_pd(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEAREST_INT)
     })
   }};
@@ -2310,7 +2310,7 @@ macro_rules! round_m256d {
     use ::core::arch::x86_64::{
       _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
     };
-    m256d(unsafe {
+    $crate::m256d(unsafe {
       _mm256_round_pd(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEG_INF)
     })
   }};
@@ -2324,7 +2324,7 @@ macro_rules! round_m256d {
     use ::core::arch::x86_64::{
       _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
     };
-    m256d(unsafe {
+    $crate::m256d(unsafe {
       _mm256_round_pd(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_POS_INF)
     })
   }};
@@ -2338,7 +2338,7 @@ macro_rules! round_m256d {
     use ::core::arch::x86_64::{
       _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
     };
-    m256d(unsafe {
+    $crate::m256d(unsafe {
       _mm256_round_pd(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_ZERO)
     })
   }};
@@ -2383,7 +2383,7 @@ macro_rules! round_m256 {
     use ::core::arch::x86_64::{
       _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
     };
-    m256(unsafe {
+    $crate::m256(unsafe {
       _mm256_round_ps(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEAREST_INT)
     })
   }};
@@ -2397,7 +2397,7 @@ macro_rules! round_m256 {
     use ::core::arch::x86_64::{
       _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
     };
-    m256(unsafe {
+    $crate::m256(unsafe {
       _mm256_round_ps(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEG_INF)
     })
   }};
@@ -2411,7 +2411,7 @@ macro_rules! round_m256 {
     use ::core::arch::x86_64::{
       _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
     };
-    m256(unsafe {
+    $crate::m256(unsafe {
       _mm256_round_ps(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_POS_INF)
     })
   }};
@@ -2425,7 +2425,7 @@ macro_rules! round_m256 {
     use ::core::arch::x86_64::{
       _mm256_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
     };
-    m256(unsafe {
+    $crate::m256(unsafe {
       _mm256_round_ps(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_ZERO)
     })
   }};
