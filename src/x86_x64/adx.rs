@@ -28,6 +28,7 @@ pub fn add_carry_u32(c_in: u8, a: u32, b: u32, out: &mut u32) -> u8 {
 /// ```
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "adx")))]
+#[cfg(target_arch = "x86_64")]
 pub fn add_carry_u64(c_in: u8, a: u64, b: u64, out: &mut u64) -> u8 {
   unsafe { _addcarryx_u64(c_in, a, b, out) }
 }
