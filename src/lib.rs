@@ -236,7 +236,10 @@ submodule!(pub x86_x64 {
   /// * **Intrinsic:** `_rdtsc`
   /// * **Assembly:** `rdtsc`
   pub fn read_timestamp_counter() -> u64 {
-    unsafe { _rdtsc() }
+    // Note(Lokathor): This was changed from i64 to u64 at some point, but
+    // everyone ever was already casting this value to `u64` so crater didn't
+    // even consider it a problem. We will follow suit.
+    unsafe { _rdtsc() as u64 }
   }
 
   /// Reads the CPU's timestamp counter value and store the processor signature.

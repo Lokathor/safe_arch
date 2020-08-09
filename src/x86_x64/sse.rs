@@ -1243,10 +1243,7 @@ pub fn sub_m128_s(a: m128, b: m128) -> m128 {
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse")))]
 pub fn transpose_four_m128(
-  a: &mut m128,
-  b: &mut m128,
-  c: &mut m128,
-  d: &mut m128,
+  a: &mut m128, b: &mut m128, c: &mut m128, d: &mut m128,
 ) {
   unsafe { _MM_TRANSPOSE4_PS(&mut a.0, &mut b.0, &mut c.0, &mut d.0) }
 }

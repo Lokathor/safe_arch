@@ -529,7 +529,7 @@ macro_rules! string_search_for_mask {
     use ::core::arch::x86::_mm_cmpestrm;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_cmpestrm;
-    m128i(unsafe { _mm_cmpestrm(a.0, la, b.0, lb, IMM) })
+    $crate::m128i(unsafe { _mm_cmpestrm(a.0, la, b.0, lb, IMM) })
   }};
 
   (@_raw_implicit_len $needle:expr, $haystack:expr, $imm:expr) => {{
@@ -540,6 +540,6 @@ macro_rules! string_search_for_mask {
     use ::core::arch::x86::_mm_cmpistrm;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_cmpistrm;
-    m128i(unsafe { _mm_cmpistrm(a.0, b.0, IMM) })
+    $crate::m128i(unsafe { _mm_cmpistrm(a.0, b.0, IMM) })
   }};
 }

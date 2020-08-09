@@ -1684,7 +1684,7 @@ macro_rules! insert_m128i_to_m256i {
     use ::core::arch::x86::_mm256_inserti128_si256;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_inserti128_si256;
-    m256i(unsafe { _mm256_inserti128_si256(a.0, b.0, IMM) })
+    $crate::m256i(unsafe { _mm256_inserti128_si256(a.0, b.0, IMM) })
   }};
 }
 
@@ -2007,7 +2007,7 @@ macro_rules! multi_packed_sum_abs_diff_u8_m256i {
     use ::core::arch::x86::_mm256_mpsadbw_epu8;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm256_mpsadbw_epu8;
-    m256i(unsafe { _mm256_mpsadbw_epu8(a.0, b.0, IMM) })
+    $crate::m256i(unsafe { _mm256_mpsadbw_epu8(a.0, b.0, IMM) })
   }};
 }
 
@@ -3393,6 +3393,12 @@ impl Not for m256i {
   /// simple enough.
   ///
   /// Negates the bits by performing an `xor` with an all-1s bit pattern.
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m256i::from([0_u128, 0]);
+  /// let c: [u128; 2] = (!a).into();
+  /// assert_eq!(c, [u128::MAX, u128::MAX]);
+  /// ```
   #[must_use]
   #[inline(always)]
   fn not(self) -> Self {
@@ -3403,6 +3409,13 @@ impl Not for m256i {
 
 impl BitAnd for m256i {
   type Output = Self;
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m256i::from([0_i64, 0, 1, 1]);
+  /// let b = m256i::from([0_i64, 1, 0, 1]);
+  /// let c: [i64; 4] = (a & b).into();
+  /// assert_eq!(c, [0_i64, 0, 0, 1]);
+  /// ```
   #[must_use]
   #[inline(always)]
   fn bitand(self, rhs: Self) -> Self {
@@ -3418,6 +3431,13 @@ impl BitAndAssign for m256i {
 
 impl BitOr for m256i {
   type Output = Self;
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m256i::from([0_i64, 0, 1, 1]);
+  /// let b = m256i::from([0_i64, 1, 0, 1]);
+  /// let c: [i64; 4] = (a | b).into();
+  /// assert_eq!(c, [0_i64, 1, 1, 1]);
+  /// ```
   #[must_use]
   #[inline(always)]
   fn bitor(self, rhs: Self) -> Self {
@@ -3433,6 +3453,13 @@ impl BitOrAssign for m256i {
 
 impl BitXor for m256i {
   type Output = Self;
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m256i::from([0_i64, 0, 1, 1]);
+  /// let b = m256i::from([0_i64, 1, 0, 1]);
+  /// let c: [i64; 4] = (a ^ b).into();
+  /// assert_eq!(c, [0_i64, 1, 1, 0]);
+  /// ```
   #[must_use]
   #[inline(always)]
   fn bitxor(self, rhs: Self) -> Self {
@@ -3445,3 +3472,20 @@ impl BitXorAssign for m256i {
     *self = *self ^ rhs;
   }
 }
+
+impl PartialEq for m256i {
+  #[must_use]
+  #[inline(always)]
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m256i::from([0_i64, 0, 1, 1]);
+  /// let b = m256i::from([0_i64, 1, 0, 1]);
+  /// assert_eq!(a, a);
+  /// assert_ne!(a, b);
+  /// ```
+  fn eq(&self, other: &Self) -> bool {
+    let mask = cmp_eq_mask_i8_m256i(*self, *other);
+    move_mask_m256i(mask) == -1_i32
+  }
+}
+impl Eq for m256i {}

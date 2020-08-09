@@ -305,7 +305,7 @@ macro_rules! byte_shl_imm_u128_m128i {
     use ::core::arch::x86::_mm_bslli_si128;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_bslli_si128;
-    m128i(unsafe { _mm_bslli_si128(a.0, IMM) })
+    $crate::m128i(unsafe { _mm_bslli_si128(a.0, IMM) })
   }};
 }
 
@@ -327,7 +327,7 @@ macro_rules! byte_shr_imm_u128_m128i {
     use ::core::arch::x86::_mm_bsrli_si128;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_bsrli_si128;
-    m128i(unsafe { _mm_bsrli_si128(a.0, IMM) })
+    $crate::m128i(unsafe { _mm_bsrli_si128(a.0, IMM) })
   }};
 }
 
@@ -1493,7 +1493,7 @@ macro_rules! insert_i16_from_i32_m128i {
     use ::core::arch::x86::_mm_insert_epi16;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_insert_epi16;
-    m128i(unsafe { _mm_insert_epi16(a.0, i, LANE) })
+    $crate::m128i(unsafe { _mm_insert_epi16(a.0, i, LANE) })
   }};
 }
 
@@ -2063,22 +2063,8 @@ pub fn sum_of_u8_abs_diff_m128i(a: m128i, b: m128i) -> m128i {
 #[allow(clippy::many_single_char_names)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
 pub fn set_i8_m128i(
-  a: i8,
-  b: i8,
-  c: i8,
-  d: i8,
-  e: i8,
-  f: i8,
-  g: i8,
-  h: i8,
-  i: i8,
-  j: i8,
-  k: i8,
-  l: i8,
-  m: i8,
-  n: i8,
-  o: i8,
-  p: i8,
+  a: i8, b: i8, c: i8, d: i8, e: i8, f: i8, g: i8, h: i8, i: i8, j: i8, k: i8,
+  l: i8, m: i8, n: i8, o: i8, p: i8,
 ) -> m128i {
   m128i(unsafe { _mm_set_epi8(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) })
 }
@@ -2096,14 +2082,7 @@ pub fn set_i8_m128i(
 #[allow(clippy::many_single_char_names)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
 pub fn set_i16_m128i(
-  a: i16,
-  b: i16,
-  c: i16,
-  d: i16,
-  e: i16,
-  f: i16,
-  g: i16,
-  h: i16,
+  a: i16, b: i16, c: i16, d: i16, e: i16, f: i16, g: i16, h: i16,
 ) -> m128i {
   m128i(unsafe { _mm_set_epi16(a, b, c, d, e, f, g, h) })
 }
@@ -2250,22 +2229,8 @@ pub fn set_splat_i64_m128i(i: i64) -> m128i {
 #[allow(clippy::many_single_char_names)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
 pub fn set_reversed_i8_m128i(
-  a: i8,
-  b: i8,
-  c: i8,
-  d: i8,
-  e: i8,
-  f: i8,
-  g: i8,
-  h: i8,
-  i: i8,
-  j: i8,
-  k: i8,
-  l: i8,
-  m: i8,
-  n: i8,
-  o: i8,
-  p: i8,
+  a: i8, b: i8, c: i8, d: i8, e: i8, f: i8, g: i8, h: i8, i: i8, j: i8, k: i8,
+  l: i8, m: i8, n: i8, o: i8, p: i8,
 ) -> m128i {
   m128i(unsafe {
     _mm_setr_epi8(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p)
@@ -2285,14 +2250,7 @@ pub fn set_reversed_i8_m128i(
 #[allow(clippy::many_single_char_names)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
 pub fn set_reversed_i16_m128i(
-  a: i16,
-  b: i16,
-  c: i16,
-  d: i16,
-  e: i16,
-  f: i16,
-  g: i16,
-  h: i16,
+  a: i16, b: i16, c: i16, d: i16, e: i16, f: i16, g: i16, h: i16,
 ) -> m128i {
   m128i(unsafe { _mm_setr_epi16(a, b, c, d, e, f, g, h) })
 }
@@ -2537,7 +2495,7 @@ macro_rules! shl_imm_u16_m128i {
     use ::core::arch::x86::_mm_slli_epi16;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_slli_epi16;
-    m128i(unsafe { _mm_slli_epi16(a.0, IMM) })
+    $crate::m128i(unsafe { _mm_slli_epi16(a.0, IMM) })
   }};
 }
 
@@ -2558,7 +2516,7 @@ macro_rules! shl_imm_u32_m128i {
     use ::core::arch::x86::_mm_slli_epi32;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_slli_epi32;
-    m128i(unsafe { _mm_slli_epi32(a.0, IMM) })
+    $crate::m128i(unsafe { _mm_slli_epi32(a.0, IMM) })
   }};
 }
 
@@ -2579,7 +2537,7 @@ macro_rules! shl_imm_u64_m128i {
     use ::core::arch::x86::_mm_slli_epi64;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_slli_epi64;
-    m128i(unsafe { _mm_slli_epi64(a.0, IMM) })
+    $crate::m128i(unsafe { _mm_slli_epi64(a.0, IMM) })
   }};
 }
 
@@ -2671,7 +2629,7 @@ macro_rules! shr_imm_i16_m128i {
     use ::core::arch::x86::_mm_srai_epi16;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_srai_epi16;
-    m128i(unsafe { _mm_srai_epi16(a.0, IMM) })
+    $crate::m128i(unsafe { _mm_srai_epi16(a.0, IMM) })
   }};
 }
 
@@ -2694,7 +2652,7 @@ macro_rules! shr_imm_i32_m128i {
     use ::core::arch::x86::_mm_srai_epi32;
     #[cfg(target_arch = "x86_64")]
     use ::core::arch::x86_64::_mm_srai_epi32;
-    m128i(unsafe { _mm_srai_epi32(a.0, IMM) })
+    $crate::m128i(unsafe { _mm_srai_epi32(a.0, IMM) })
   }};
 }
 
@@ -3468,7 +3426,6 @@ impl SubAssign for m128d {
   }
 }
 
-#[cfg(feature = "partial_eq")]
 impl PartialEq for m128d {
   /// Not a direct intrinsic, this is a `cmp_eq_mask` and then a `move_mask`.
   #[must_use]

@@ -1,22 +1,40 @@
 name: Rust
 
-on:
-  push:
-    branches: [ primary ]
-  pull_request:
-    branches: [ primary ]
-
-env:
-  CARGO_TERM_COLOR: always
+on: [push]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build_test:
+    runs-on: ${{ matrix.rust.os }}
+    strategy:
+      matrix:
+        rust:
+        # x86
+        - { os: windows-latest, target: i686-pc-windows-msvc, toolchain: 1.43.0 }
+        - { os: windows-latest, target: i686-pc-windows-msvc, toolchain: stable }
+        - { os: windows-latest, target: i686-pc-windows-msvc, toolchain: beta }
+        - { os: windows-latest, target: i686-pc-windows-msvc, toolchain: nightly }
+        # x86_64
+        - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu, toolchain: 1.43.0 }
+        - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu, toolchain: stable }
+        - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu, toolchain: beta }
+        - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu, toolchain: nightly }
     steps:
-    - uses: actions/checkout@v2
-    - name: Switch To Beta
-      run: rustup default beta
-    - name: Build
-      run: cargo build
-    - name: Run tests
-      run: cargo test
+    - uses: actions/checkout@v1
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: ${{ matrix.rust.toolchain }}
+        target:  ${{ matrix.rust.target }}
+        profile: minimal
+        default: true
+    - name: Run tests with default features
+      uses: actions-rs/cargo@v1
+      with:
+        toolchain: ${{ matrix.rust.toolchain }}
+        command: test
+    - name: Run tests with all features
+      uses: actions-rs/cargo@v1
+      if: matrix.rust.toolchain != '1.34.0'
+      with:
+        toolchain: ${{ matrix.rust.toolchain }}
+        command: test
+        args: --all-features
