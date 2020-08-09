@@ -2063,22 +2063,8 @@ pub fn sum_of_u8_abs_diff_m128i(a: m128i, b: m128i) -> m128i {
 #[allow(clippy::many_single_char_names)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
 pub fn set_i8_m128i(
-  a: i8,
-  b: i8,
-  c: i8,
-  d: i8,
-  e: i8,
-  f: i8,
-  g: i8,
-  h: i8,
-  i: i8,
-  j: i8,
-  k: i8,
-  l: i8,
-  m: i8,
-  n: i8,
-  o: i8,
-  p: i8,
+  a: i8, b: i8, c: i8, d: i8, e: i8, f: i8, g: i8, h: i8, i: i8, j: i8, k: i8,
+  l: i8, m: i8, n: i8, o: i8, p: i8,
 ) -> m128i {
   m128i(unsafe { _mm_set_epi8(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) })
 }
@@ -2096,14 +2082,7 @@ pub fn set_i8_m128i(
 #[allow(clippy::many_single_char_names)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
 pub fn set_i16_m128i(
-  a: i16,
-  b: i16,
-  c: i16,
-  d: i16,
-  e: i16,
-  f: i16,
-  g: i16,
-  h: i16,
+  a: i16, b: i16, c: i16, d: i16, e: i16, f: i16, g: i16, h: i16,
 ) -> m128i {
   m128i(unsafe { _mm_set_epi16(a, b, c, d, e, f, g, h) })
 }
@@ -2250,22 +2229,8 @@ pub fn set_splat_i64_m128i(i: i64) -> m128i {
 #[allow(clippy::many_single_char_names)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
 pub fn set_reversed_i8_m128i(
-  a: i8,
-  b: i8,
-  c: i8,
-  d: i8,
-  e: i8,
-  f: i8,
-  g: i8,
-  h: i8,
-  i: i8,
-  j: i8,
-  k: i8,
-  l: i8,
-  m: i8,
-  n: i8,
-  o: i8,
-  p: i8,
+  a: i8, b: i8, c: i8, d: i8, e: i8, f: i8, g: i8, h: i8, i: i8, j: i8, k: i8,
+  l: i8, m: i8, n: i8, o: i8, p: i8,
 ) -> m128i {
   m128i(unsafe {
     _mm_setr_epi8(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p)
@@ -2285,14 +2250,7 @@ pub fn set_reversed_i8_m128i(
 #[allow(clippy::many_single_char_names)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
 pub fn set_reversed_i16_m128i(
-  a: i16,
-  b: i16,
-  c: i16,
-  d: i16,
-  e: i16,
-  f: i16,
-  g: i16,
-  h: i16,
+  a: i16, b: i16, c: i16, d: i16, e: i16, f: i16, g: i16, h: i16,
 ) -> m128i {
   m128i(unsafe { _mm_setr_epi16(a, b, c, d, e, f, g, h) })
 }
@@ -2971,7 +2929,7 @@ pub fn store_unaligned_m128d(r: &mut [f64; 2], a: m128d) {
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
 pub fn store_unaligned_m128i(r: &mut [u8; 16], a: m128i) {
-  unsafe { _mm_storeu_si128(r.as_mut_ptr().cast(), a.0) }
+  unsafe { _mm_storeu_si128(r.as_mut_ptr() as *mut _, a.0) }
 }
 
 /// Lanewise `a - b` with lanes as `i8`.
@@ -3448,7 +3406,7 @@ impl Not for m128d {
   #[must_use]
   #[inline(always)]
   fn not(self) -> Self {
-    let all_bits = set_splat_m128d(f64::from_bits(u64::MAX));
+    let all_bits = set_splat_m128d(f64::from_bits(core::u64::MAX));
     self ^ all_bits
   }
 }

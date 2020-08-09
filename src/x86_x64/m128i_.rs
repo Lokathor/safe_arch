@@ -279,6 +279,7 @@ impl Binary for m128i {
   }
 }
 
+#[cfg(feature = "rustc_1_42")]
 impl LowerExp for m128i {
   /// LowerExp formats each `i32`.
   /// ```
@@ -298,6 +299,7 @@ impl LowerExp for m128i {
   }
 }
 
+#[cfg(feature = "rustc_1_42")]
 impl UpperExp for m128i {
   /// UpperExp formats each `i32`.
   /// ```

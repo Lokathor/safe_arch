@@ -16,6 +16,9 @@ bytemuck = {version = "1.2", optional = true}
 [features]
 default = []
 
+# Adds LowerExp / UpperExp impls for integer types.
+rustc_1_42 = []
+
 [profile.test]
 opt-level = 3
 
