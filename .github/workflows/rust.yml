@@ -38,7 +38,6 @@ jobs:
         command: test
     - name: Run tests with all features
       uses: actions-rs/cargo@v1
-      if: matrix.rust.toolchain != '1.34.0'
       with:
         toolchain: ${{ matrix.rust.toolchain }}
         command: test
