@@ -2929,7 +2929,7 @@ pub fn store_unaligned_m128d(r: &mut [f64; 2], a: m128d) {
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
 pub fn store_unaligned_m128i(r: &mut [u8; 16], a: m128i) {
-  unsafe { _mm_storeu_si128(r.as_mut_ptr() as *mut _, a.0) }
+  unsafe { _mm_storeu_si128(r.as_mut_ptr().cast(), a.0) }
 }
 
 /// Lanewise `a - b` with lanes as `i8`.
@@ -3406,7 +3406,7 @@ impl Not for m128d {
   #[must_use]
   #[inline(always)]
   fn not(self) -> Self {
-    let all_bits = set_splat_m128d(f64::from_bits(core::u64::MAX));
+    let all_bits = set_splat_m128d(f64::from_bits(u64::MAX));
     self ^ all_bits
   }
 }
@@ -3426,7 +3426,6 @@ impl SubAssign for m128d {
   }
 }
 
-#[cfg(feature = "partial_eq")]
 impl PartialEq for m128d {
   /// Not a direct intrinsic, this is a `cmp_eq_mask` and then a `move_mask`.
   #[must_use]

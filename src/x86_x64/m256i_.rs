@@ -279,7 +279,6 @@ impl Binary for m256i {
   }
 }
 
-#[cfg(feature = "rustc_1_42")]
 impl LowerExp for m256i {
   /// LowerExp formats each `i32`.
   /// ```
@@ -299,7 +298,6 @@ impl LowerExp for m256i {
   }
 }
 
-#[cfg(feature = "rustc_1_42")]
 impl UpperExp for m256i {
   /// UpperExp formats each `i32`.
   /// ```

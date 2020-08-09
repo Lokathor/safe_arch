@@ -3174,8 +3174,8 @@ pub fn store_unaligned_hi_lo_m256i(
 ) {
   unsafe {
     _mm256_storeu2_m128i(
-      hi_addr.as_mut_ptr() as *mut _,
-      lo_addr.as_mut_ptr() as *mut _,
+      hi_addr.as_mut_ptr().cast(),
+      lo_addr.as_mut_ptr().cast(),
       a.0,
     )
   }
@@ -3451,7 +3451,7 @@ impl Not for m256d {
   #[must_use]
   #[inline(always)]
   fn not(self) -> Self {
-    let all_bits = set_splat_m256d(f64::from_bits(core::u64::MAX));
+    let all_bits = set_splat_m256d(f64::from_bits(u64::MAX));
     self ^ all_bits
   }
 }
@@ -3595,7 +3595,7 @@ impl Not for m256 {
   #[must_use]
   #[inline(always)]
   fn not(self) -> Self {
-    let all_bits = set_splat_m256(f32::from_bits(core::u32::MAX));
+    let all_bits = set_splat_m256(f32::from_bits(u32::MAX));
     self ^ all_bits
   }
 }

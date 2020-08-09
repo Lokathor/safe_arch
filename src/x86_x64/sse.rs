@@ -1412,7 +1412,7 @@ impl Not for m128 {
   #[must_use]
   #[inline(always)]
   fn not(self) -> Self {
-    let all_bits = set_splat_m128(f32::from_bits(core::u32::MAX));
+    let all_bits = set_splat_m128(f32::from_bits(u32::MAX));
     self ^ all_bits
   }
 }
