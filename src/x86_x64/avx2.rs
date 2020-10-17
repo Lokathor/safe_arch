@@ -700,7 +700,7 @@ macro_rules! blend_imm_i32_m256i {
 ///   ]
 /// );
 /// ```
-/// * **Intrinsic:** [`_mm256_avg_epu16`]
+/// * **Intrinsic:** [`_mm256_blendv_epi8`]
 /// * **Assembly:** `vpavgw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
