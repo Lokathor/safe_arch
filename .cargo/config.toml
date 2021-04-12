@@ -4,6 +4,6 @@
 # `cargo test` and `cargo doc` and so on during development.
 
 [build]
-# This can cause weirdness!
+# This can cause weirdness if they don't match!
 rustflags = ["-Ctarget-cpu=native"]
 rustdocflags = ["-Ctarget-cpu=native"]
