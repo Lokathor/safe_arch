@@ -7,6 +7,7 @@ fn test_leading_zero_count_u32() {
 }
 
 #[test]
+#[cfg(target_arch = "x86_64")]
 fn test_leading_zero_count_u64() {
   assert_eq!(leading_zero_count_u64(u64::MAX), 0);
   assert_eq!(leading_zero_count_u64(u64::MAX >> 3), 3);

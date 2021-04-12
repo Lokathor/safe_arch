@@ -17,6 +17,7 @@ fn test_rdseed_u32() {
 }
 
 #[test]
+#[cfg(target_arch = "x86_64")]
 fn test_rdseed_u64() {
   let mut val = 0_u64;
   let _it_worked = rdseed_u64(&mut val);

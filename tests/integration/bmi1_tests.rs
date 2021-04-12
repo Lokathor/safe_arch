@@ -12,6 +12,7 @@ fn test_bitandnot_u32() {
 }
 
 #[test]
+#[cfg(target_arch = "x86_64")]
 fn test_bitandnot_u64() {
   let a = [1_u64, 0, 1, 0];
   let b = [1_u64, 1, 0, 0];
@@ -30,6 +31,7 @@ fn test_bit_extract_u32() {
 }
 
 #[test]
+#[cfg(target_arch = "x86_64")]
 fn test_bit_extract_u64() {
   assert_eq!(bit_extract_u64(0b0110, 0, 3), 0b110);
   assert_eq!(bit_extract_u64(0b0110, 0, 2), 0b10);
@@ -44,6 +46,7 @@ fn test_bit_extract2_u32() {
 }
 
 #[test]
+#[cfg(target_arch = "x86_64")]
 fn test_bit_extract2_u64() {
   assert_eq!(bit_extract2_u64(0b0110, (3 << 8) | 0), 0b110);
   assert_eq!(bit_extract2_u64(0b0110, (2 << 8) | 0), 0b10);
@@ -60,6 +63,7 @@ fn test_bit_lowest_set_value_u32() {
 }
 
 #[test]
+#[cfg(target_arch = "x86_64")]
 fn test_bit_lowest_set_value_u64() {
   assert_eq!(bit_lowest_set_value_u64(0b0), 0);
   assert_eq!(bit_lowest_set_value_u64(0b1), 1);
@@ -78,6 +82,7 @@ fn test_bit_lowest_set_mask_u32() {
 }
 
 #[test]
+#[cfg(target_arch = "x86_64")]
 fn test_bit_lowest_set_mask_u64() {
   assert_eq!(bit_lowest_set_mask_u64(0b0), u64::MAX);
   assert_eq!(bit_lowest_set_mask_u64(0b1), 0b1);
@@ -96,6 +101,7 @@ fn test_bit_lowest_set_reset_u32() {
 }
 
 #[test]
+#[cfg(target_arch = "x86_64")]
 fn test_bit_lowest_set_reset_u64() {
   assert_eq!(bit_lowest_set_reset_u64(0b0), 0);
   assert_eq!(bit_lowest_set_reset_u64(0b1), 0b0);
@@ -114,6 +120,7 @@ fn test_trailing_zero_count_u32() {
 }
 
 #[test]
+#[cfg(target_arch = "x86_64")]
 fn test_trailing_zero_count_u64() {
   assert_eq!(trailing_zero_count_u64(0b0), 64);
   assert_eq!(trailing_zero_count_u64(0b1), 0);

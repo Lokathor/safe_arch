@@ -8,6 +8,7 @@ fn test_population_count_i32() {
 }
 
 #[test]
+#[cfg(target_arch = "x86_64")]
 fn test_population_count_i64() {
   assert_eq!(population_count_i64(0), 0);
   assert_eq!(population_count_i64(0b1), 1);
