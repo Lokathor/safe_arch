@@ -13,14 +13,14 @@ use super::*;
 /// let a = m128i::from([10, 20, 30, 40]);
 /// let b = m128i::from([100, 200, 300, 400]);
 /// //
-/// let c: [i32; 4] = blend_i32_m128i!(a, b, 0b0110).into();
+/// let c: [i32; 4] = blend_imm_i32_m128i!(a, b, 0b0110).into();
 /// assert_eq!(c, [10, 200, 300, 40]);
 /// ```
 /// * **Intrinsic:** [`_mm_blend_epi32`]
 /// * **Assembly:** `vpblendd xmm, xmm, xmm, imm8`
 #[macro_export]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! blend_i32_m128i {
+macro_rules! blend_imm_i32_m128i {
   ($a:expr, $b:expr, $imm:expr) => {{
     let a: $crate::m128i = $a;
     let b: $crate::m128i = $b;
