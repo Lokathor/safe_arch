@@ -18,6 +18,9 @@ mod lzcnt_tests;
 #[cfg(target_feature = "pclmulqdq")]
 mod pclmulqdq_tests;
 
+#[cfg(target_feature = "popcnt")]
+mod popcnt_tests;
+
 #[cfg(target_feature = "rdrand")]
 mod rdrand_tests;
 
