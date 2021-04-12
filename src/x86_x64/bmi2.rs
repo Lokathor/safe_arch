@@ -3,13 +3,9 @@
 use super::*;
 
 /// Zero out all high bits in a `u32` starting at the index given.
-/// ```
-/// # use safe_arch::*;
-/// assert_eq!(bit_zero_high_index_u32(0b1111, 0), 0b0000);
-/// assert_eq!(bit_zero_high_index_u32(0b1111, 1), 0b0001);
-/// assert_eq!(bit_zero_high_index_u32(0b1111, 2), 0b0011);
-/// assert_eq!(bit_zero_high_index_u32(0b1111, 3), 0b0111);
-/// ```
+///
+/// * **Intrinsic:** [`_bzhi_u32`]
+/// * **Assembly:** `bzhi r32, r32, r32`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi2")))]
@@ -18,13 +14,9 @@ pub fn bit_zero_high_index_u32(a: u32, index: u32) -> u32 {
 }
 
 /// Zero out all high bits in a `u64` starting at the index given.
-/// ```
-/// # use safe_arch::*;
-/// assert_eq!(bit_zero_high_index_u64(0b1111, 0), 0b0000);
-/// assert_eq!(bit_zero_high_index_u64(0b1111, 1), 0b0001);
-/// assert_eq!(bit_zero_high_index_u64(0b1111, 2), 0b0011);
-/// assert_eq!(bit_zero_high_index_u64(0b1111, 3), 0b0111);
-/// ```
+///
+/// * **Intrinsic:** [`_bzhi_u64`]
+/// * **Assembly:** `bzhi r64, r64, r64`
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
@@ -37,12 +29,9 @@ pub fn bit_zero_high_index_u64(a: u64, index: u32) -> u64 {
 /// reference.
 ///
 /// This does not read or write arithmetic flags.
-/// ```
-/// # use safe_arch::*;
-/// let mut x = 0_u32;
-/// assert_eq!(mul_extended_u32(u32::MAX, 17, &mut x), 4294967279);
-/// assert_eq!(x, 16);
-/// ```
+///
+/// * **Intrinsic:** [`_mulx_u32`]
+/// * **Assembly:** `mulx r32, r32, m32`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi2")))]
@@ -54,12 +43,9 @@ pub fn mul_extended_u32(a: u32, b: u32, extra: &mut u32) -> u32 {
 /// reference.
 ///
 /// This does not read or write arithmetic flags.
-/// ```
-/// # use safe_arch::*;
-/// let mut x = 0_u64;
-/// assert_eq!(mul_extended_u64(u64::MAX, 17, &mut x), 18446744073709551599);
-/// assert_eq!(x, 16);
-/// ```
+///
+/// * **Intrinsic:** [`_mulx_u64`]
+/// * **Assembly:** `mulx r64, r64, m64`
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
@@ -71,12 +57,9 @@ pub fn mul_extended_u64(a: u64, b: u64, extra: &mut u64) -> u64 {
 /// Deposit contiguous low bits from a `u32` according to a mask.
 ///
 /// Other bits are zero.
-/// ```
-/// # use safe_arch::*;
-/// assert_eq!(population_deposit_u32(0b1001, 0b1111), 0b1001);
-/// assert_eq!(population_deposit_u32(0b1001, 0b1110), 0b0010);
-/// assert_eq!(population_deposit_u32(0b1001, 0b1100), 0b0100);
-/// ```
+///
+/// * **Intrinsic:** [`_pdep_u32`]
+/// * **Assembly:** `pdep r32, r32, r32`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi2")))]
@@ -87,12 +70,9 @@ pub fn population_deposit_u32(a: u32, index: u32) -> u32 {
 /// Deposit contiguous low bits from a `u64` according to a mask.
 ///
 /// Other bits are zero.
-/// ```
-/// # use safe_arch::*;
-/// assert_eq!(population_deposit_u64(0b1001, 0b1111), 0b1001);
-/// assert_eq!(population_deposit_u64(0b1001, 0b1110), 0b0010);
-/// assert_eq!(population_deposit_u64(0b1001, 0b1100), 0b0100);
-/// ```
+///
+/// * **Intrinsic:** [`_pdep_u64`]
+/// * **Assembly:** `pdep r64, r64, r64`
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
@@ -102,12 +82,9 @@ pub fn population_deposit_u64(a: u64, index: u64) -> u64 {
 }
 
 /// Extract bits from a `u32` according to a mask.
-/// ```
-/// # use safe_arch::*;
-/// assert_eq!(population_extract_u32(0b1001, 0b1111), 0b1001);
-/// assert_eq!(population_extract_u32(0b1001, 0b1110), 0b0100);
-/// assert_eq!(population_extract_u32(0b1001, 0b1100), 0b0010);
-/// ```
+///
+/// * **Intrinsic:** [`_pext_u32`]
+/// * **Assembly:** `pext r32, r32, r32`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi2")))]
@@ -116,12 +93,9 @@ pub fn population_extract_u32(a: u32, index: u32) -> u32 {
 }
 
 /// Extract bits from a `u64` according to a mask.
-/// ```
-/// # use safe_arch::*;
-/// assert_eq!(population_extract_u64(0b1001, 0b1111), 0b1001);
-/// assert_eq!(population_extract_u64(0b1001, 0b1110), 0b0100);
-/// assert_eq!(population_extract_u64(0b1001, 0b1100), 0b0010);
-/// ```
+///
+/// * **Intrinsic:** [`_pext_u64`]
+/// * **Assembly:** `pext r64, r64, r64`
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]

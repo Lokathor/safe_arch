@@ -9,6 +9,9 @@ mod adx_tests;
 #[cfg(target_feature = "bmi1")]
 mod bmi1_tests;
 
+#[cfg(target_feature = "bmi2")]
+mod bmi2_tests;
+
 #[cfg(target_feature = "lzcnt")]
 mod lzcnt_tests;
 
