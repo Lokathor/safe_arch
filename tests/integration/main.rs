@@ -15,6 +15,9 @@ mod bmi2_tests;
 #[cfg(target_feature = "lzcnt")]
 mod lzcnt_tests;
 
+#[cfg(target_feature = "rdrand")]
+mod rdrand_tests;
+
 #[cfg(target_feature = "sse2")]
 mod sse2_tests;
 
