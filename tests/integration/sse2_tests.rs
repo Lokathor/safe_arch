@@ -1,7 +1,6 @@
-use safe_arch::*;
+use super::*;
 
 #[test]
-#[cfg(target_feature = "sse2")]
 fn atoi_test() {
   fn atoi(x: [u8; 16]) -> u64 {
     let ascii_zero = set_splat_i8_m128i(b'0' as i8);
