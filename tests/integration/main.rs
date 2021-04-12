@@ -30,6 +30,9 @@ mod rdseed_tests;
 #[cfg(target_feature = "sse2")]
 mod sse2_tests;
 
+#[cfg(target_feature = "ssse3")]
+mod ssse3_tests;
+
 #[allow(dead_code)]
 fn approx_eq_f32(a: f32, b: f32) -> bool {
   (a - b).abs() < 0.00000001
