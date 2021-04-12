@@ -409,13 +409,13 @@ pub fn cmp_nlt_mask_m128_s(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([0.0, f32::NAN, 0.0, f32::NAN]);
 /// let b = m128::from_array([0.0, 0.0, f32::NAN, f32::NAN]);
-/// let c = cmp_ordinary_mask_m128(a, b).to_bits();
+/// let c = cmp_ordered_mask_m128(a, b).to_bits();
 /// assert_eq!(c, [u32::MAX, 0, 0, 0]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse")))]
-pub fn cmp_ordinary_mask_m128(a: m128, b: m128) -> m128 {
+pub fn cmp_ordered_mask_m128(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpord_ps(a.0, b.0) })
 }
 
@@ -426,13 +426,13 @@ pub fn cmp_ordinary_mask_m128(a: m128, b: m128) -> m128 {
 /// # use safe_arch::*;
 /// let a = m128::from_array([0.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([0.0, f32::NAN, f32::NAN, f32::NAN]);
-/// let c = cmp_ordinary_mask_m128_s(a, b).to_bits();
+/// let c = cmp_ordered_mask_m128_s(a, b).to_bits();
 /// assert_eq!(c, [u32::MAX, 2_f32.to_bits(), 3_f32.to_bits(), 4_f32.to_bits()]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse")))]
-pub fn cmp_ordinary_mask_m128_s(a: m128, b: m128) -> m128 {
+pub fn cmp_ordered_mask_m128_s(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmpord_ss(a.0, b.0) })
 }
 
