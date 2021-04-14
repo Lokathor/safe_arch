@@ -36,6 +36,76 @@ mod ssse3_tests;
 #[cfg(target_feature = "sse4.2")]
 mod sse4_2_tests;
 
+#[test]
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+fn test_m128_size_align() {
+  assert_eq!(core::mem::size_of::<m128>(), 16);
+  assert_eq!(core::mem::align_of::<m128>(), 16);
+}
+
+#[test]
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+fn test_m128d_size_align() {
+  assert_eq!(core::mem::size_of::<m128d>(), 16);
+  assert_eq!(core::mem::align_of::<m128d>(), 16);
+}
+
+#[test]
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+fn test_m128i_size_align() {
+  assert_eq!(core::mem::size_of::<m128i>(), 16);
+  assert_eq!(core::mem::align_of::<m128i>(), 16);
+}
+
+#[test]
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+fn test_m256_size_align() {
+  assert_eq!(core::mem::size_of::<m256>(), 32);
+  assert_eq!(core::mem::align_of::<m256>(), 32);
+}
+
+#[test]
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+fn test_m256d_size_align() {
+  assert_eq!(core::mem::size_of::<m256d>(), 32);
+  assert_eq!(core::mem::align_of::<m256d>(), 32);
+}
+
+#[test]
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+fn test_m256i_size_align() {
+  assert_eq!(core::mem::size_of::<m256i>(), 32);
+  assert_eq!(core::mem::align_of::<m256i>(), 32);
+}
+
+#[test]
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+fn test_m128_fmt() {
+  let f = format!("{:?}", m128::default());
+  assert_eq!(&f, "m128(0.0, 0.0, 0.0, 0.0)");
+
+  let f = format!("{}", m128::default());
+  assert_eq!(&f, "(0, 0, 0, 0)");
+
+  let f = format!("{:b}", m128::default());
+  assert_eq!(&f, "(0, 0, 0, 0)");
+
+  let f = format!("{:e}", m128::default());
+  assert_eq!(&f, "(0e0, 0e0, 0e0, 0e0)");
+
+  let f = format!("{:E}", m128::default());
+  assert_eq!(&f, "(0E0, 0E0, 0E0, 0E0)");
+
+  let f = format!("{:x}", m128::default());
+  assert_eq!(&f, "(0, 0, 0, 0)");
+
+  let f = format!("{:X}", m128::default());
+  assert_eq!(&f, "(0, 0, 0, 0)");
+
+  let f = format!("{:o}", m128::default());
+  assert_eq!(&f, "(0, 0, 0, 0)");
+}
+
 #[allow(dead_code)]
 fn approx_eq_f32(a: f32, b: f32) -> bool {
   (a - b).abs() < 0.00000001

@@ -22,12 +22,6 @@ unsafe impl bytemuck::Pod for m128d {}
 #[cfg(feature = "bytemuck")]
 unsafe impl bytemuck::TransparentWrapper<__m128d> for m128d {}
 
-#[test]
-fn test_m128d_size_align() {
-  assert_eq!(core::mem::size_of::<m128d>(), 16);
-  assert_eq!(core::mem::align_of::<m128d>(), 16);
-}
-
 impl m128d {
   /// Transmutes the `m128d` to an array.
   ///

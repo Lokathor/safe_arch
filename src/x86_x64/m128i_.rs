@@ -25,12 +25,6 @@ unsafe impl bytemuck::Pod for m128i {}
 #[cfg(feature = "bytemuck")]
 unsafe impl bytemuck::TransparentWrapper<__m128i> for m128i {}
 
-#[test]
-fn test_m128i_size_align() {
-  assert_eq!(core::mem::size_of::<m128i>(), 16);
-  assert_eq!(core::mem::align_of::<m128i>(), 16);
-}
-
 impl Clone for m128i {
   #[must_use]
   #[inline(always)]

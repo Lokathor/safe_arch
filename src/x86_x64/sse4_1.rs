@@ -4,81 +4,35 @@ use super::*;
 
 /// Blends the `i16` lanes according to the immediate mask.
 ///
-/// Each bit 0 though 7 controls lane 0 through 7. Use 0 for the `$a` value and
-/// 1 for the `$b` value.
+/// Each bit 0 though 7 controls lane 0 through 7. Use 0 for the `a` value and
+/// 1 for the `b` value.
 ///
-/// ```
-/// # use safe_arch::*;
-/// let a = m128i::from([0_i16, 1, 2, 3, 4, 5, 6, 7]);
-/// let b = m128i::from([0_i16, -1, -2, -3, -4, -5, -6, -7]);
-/// //
-/// let c: [i16; 8] = blend_imm_i16_m128i!(a, b, 0b1111_0110).into();
-/// assert_eq!(c, [0_i16, -1, -2, 3, -4, -5, -6, -7]);
-/// ```
-#[macro_export]
-macro_rules! blend_imm_i16_m128i {
-  ($a:expr, $b:expr, $imm:expr) => {{
-    let a: $crate::m128i = $a;
-    let b: $crate::m128i = $b;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm_blend_epi16;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm_blend_epi16;
-    $crate::m128i(unsafe { _mm_blend_epi16(a.0, b.0, IMM) })
-  }};
+/// * **Intrinsic:** [`_mm_blend_epi16`]
+/// * **Assembly:** `pblendw xmm, xmm, imm8`
+pub fn blend_imm_i16_m128i<const IMM: i32>(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_blend_epi16(a.0, b.0, IMM) })
+}
+
+/// Blends the `i16` lanes according to the immediate mask.
+///
+/// Bits 0 and 1 control where output lane 0 and 1 come from. Use 0 for the `a`
+/// value and 1 for the `b` value.
+///
+/// * **Intrinsic:** [`_mm_blend_pd`]
+/// * **Assembly:** `blendpd xmm, xmm, imm8`
+pub fn blend_imm_m128d<const IMM: i32>(a: m128d, b: m128d) -> m128d {
+  m128d(unsafe { _mm_blend_pd(a.0, b.0, IMM) })
 }
 
 /// Blends the lanes according to the immediate mask.
 ///
-/// Bits 0 and 1 control where output lane 0 and 1 come from. Use 0 for the `$a`
-/// value and 1 for the `$b` value.
+/// Bits 0 to 3 control where output lane 0 to 3 come from. Use 0 for the `a`
+/// value and 1 for the `b` value.
 ///
-/// ```
-/// # use safe_arch::*;
-/// let a = m128d::from_array([0.0, 1.0]);
-/// let b = m128d::from_array([2.0, 3.0]);
-/// let c = blend_imm_m128d!(a, b, 0b10).to_array();
-/// assert_eq!(c, [0.0, 3.0]);
-/// ```
-#[macro_export]
-macro_rules! blend_imm_m128d {
-  ($a:expr, $b:expr, $imm:expr) => {{
-    let a: $crate::m128d = $a;
-    let b: $crate::m128d = $b;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm_blend_pd;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm_blend_pd;
-    $crate::m128d(unsafe { _mm_blend_pd(a.0, b.0, IMM) })
-  }};
-}
-
-/// Blends the lanes according to the immediate mask.
-///
-/// Bits 0 to 3 control where output lane 0 to 3 come from. Use 0 for the `$a`
-/// value and 1 for the `$b` value.
-///
-/// ```
-/// # use safe_arch::*;
-/// let a = m128::from_array([0.0, 1.0, 2.0, 3.0]);
-/// let b = m128::from_array([4.0, 5.0, 6.0, 7.0]);
-/// let c = blend_imm_m128!(a, b, 0b0110).to_array();
-/// assert_eq!(c, [0.0, 5.0, 6.0, 3.0]);
-/// ```
-#[macro_export]
-macro_rules! blend_imm_m128 {
-  ($a:expr, $b:expr, $imm:expr) => {{
-    let a: $crate::m128 = $a;
-    let b: m128 = $b;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm_blend_ps;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm_blend_ps;
-    $crate::m128(unsafe { _mm_blend_ps(a.0, b.0, IMM) })
-  }};
+/// * **Intrinsic:** [`_mm_blend_ps`]
+/// * **Assembly:** `blendps xmm, xmm, imm8`
+pub fn blend_imm_m128<const IMM: i32>(a: m128, b: m128) -> m128 {
+  m128(unsafe { _mm_blend_ps(a.0, b.0, IMM) })
 }
 
 /// Blend the `i8` lanes according to a runtime varying mask.
@@ -86,18 +40,8 @@ macro_rules! blend_imm_m128 {
 /// The sign bit of each `i8` lane in the `mask` value determines if the output
 /// lane uses `a` (mask non-negative) or `b` (mask negative).
 ///
-/// ```
-/// # use safe_arch::*;
-/// let a =
-///   m128i::from([0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-/// let b = m128i::from([
-///   0_i8, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13, -14, -15,
-/// ]);
-/// let mask =
-///   m128i::from([0_i8, -1, -1, 0, 0, 0, -1, -1, -1, 0, 0, 0, -1, -1, -1, 0]);
-/// let c: [i8; 16] = blend_varying_i8_m128i(a, b, mask).into();
-/// assert_eq!(c, [0, -1, -2, 3, 4, 5, -6, -7, -8, 9, 10, 11, -12, -13, -14, 15]);
-/// ```
+/// * **Intrinsic:** [`_mm_blendv_epi8`]
+/// * **Assembly:** `pblendvb xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
@@ -110,14 +54,8 @@ pub fn blend_varying_i8_m128i(a: m128i, b: m128i, mask: m128i) -> m128i {
 /// The sign bit of each lane in the `mask` value determines if the output
 /// lane uses `a` (mask non-negative) or `b` (mask negative).
 ///
-/// ```
-/// # use safe_arch::*;
-/// let a = m128d::from_array([0.0, 1.0]);
-/// let b = m128d::from_array([2.0, 3.0]);
-/// let mask = m128d::from_array([-1.0, 0.0]);
-/// let c = blend_varying_m128d(a, b, mask).to_array();
-/// assert_eq!(c, [2.0, 1.0]);
-/// ```
+/// * **Intrinsic:** [`_mm_blendv_pd`]
+/// * **Assembly:** `blendvpd xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
@@ -130,14 +68,8 @@ pub fn blend_varying_m128d(a: m128d, b: m128d, mask: m128d) -> m128d {
 /// The sign bit of each lane in the `mask` value determines if the output
 /// lane uses `a` (mask non-negative) or `b` (mask negative).
 ///
-/// ```
-/// # use safe_arch::*;
-/// let a = m128::from_array([0.0, 1.0, 2.0, 3.0]);
-/// let b = m128::from_array([4.0, 5.0, 6.0, 7.0]);
-/// let mask = m128::from_array([-1.0, 0.0, -1.0, 0.0]);
-/// let c = blend_varying_m128(a, b, mask).to_array();
-/// assert_eq!(c, [4.0, 1.0, 6.0, 3.0]);
-/// ```
+/// * **Intrinsic:** [`_mm_blendv_ps`]
+/// * **Assembly:** `blendvps xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
@@ -145,13 +77,10 @@ pub fn blend_varying_m128(a: m128, b: m128, mask: m128) -> m128 {
   m128(unsafe { _mm_blendv_ps(a.0, b.0, mask.0) })
 }
 
-/// Round each lane to a whole number, towards positive infinity
+/// Round each lane to a whole number, towards positive infinity.
 ///
-/// ```
-/// # use safe_arch::*;
-/// let a = m128d::from_array([-0.1, 1.8]);
-/// assert_eq!(ceil_m128d(a).to_array(), [0.0, 2.0]);
-/// ```
+/// * **Intrinsic:** [`_mm_ceil_pd`]
+/// * **Assembly:** `roundpd xmm, xmm, imm8`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
@@ -159,13 +88,10 @@ pub fn ceil_m128d(a: m128d) -> m128d {
   m128d(unsafe { _mm_ceil_pd(a.0) })
 }
 
-/// Round each lane to a whole number, towards positive infinity
+/// Round each lane to a whole number, towards positive infinity.
 ///
-/// ```
-/// # use safe_arch::*;
-/// let a = m128::from_array([-0.1, 1.8, 2.5, 3.0]);
-/// assert_eq!(ceil_m128(a).to_array(), [0.0, 2.0, 3.0, 3.0]);
-/// ```
+/// * **Intrinsic:** [`_mm_ceil_ps`]
+/// * **Assembly:** `roundps xmm, xmm, imm8`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
@@ -175,12 +101,8 @@ pub fn ceil_m128(a: m128) -> m128 {
 
 /// Round the low lane of `b` toward positive infinity, high lane is `a`.
 ///
-/// ```
-/// # use safe_arch::*;
-/// let a = m128d::from_array([-0.1, 1.8]);
-/// let b = m128d::from_array([2.5, 3.0]);
-/// assert_eq!(ceil_m128d_s(a, b).to_array(), [3.0, 1.8]);
-/// ```
+/// * **Intrinsic:** [`_mm_ceil_sd`]
+/// * **Assembly:** `roundsd xmm, xmm, imm8`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
@@ -190,12 +112,8 @@ pub fn ceil_m128d_s(a: m128d, b: m128d) -> m128d {
 
 /// Round the low lane of `b` toward positive infinity, other lanes `a`.
 ///
-/// ```
-/// # use safe_arch::*;
-/// let a = m128::from_array([-0.1, 1.8, 5.0, 6.0]);
-/// let b = m128::from_array([2.5, 3.0, 10.0, 20.0]);
-/// assert_eq!(ceil_m128_s(a, b).to_array(), [3.0, 1.8, 5.0, 6.0]);
-/// ```
+/// * **Intrinsic:** [`_mm_ceil_ss`]
+/// * **Assembly:** `roundss xmm, xmm, imm8`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
@@ -206,13 +124,9 @@ pub fn ceil_m128_s(a: m128, b: m128) -> m128 {
 /// Lanewise `a == b` with lanes as `i64`.
 ///
 /// All bits 1 for true (`-1`), all bit 0 for false (`0`).
-/// ```
-/// # use safe_arch::*;
-/// let a = m128i::from([5_i64, 6_i64]);
-/// let b = m128i::from([5_i64, 7_i64]);
-/// let c: [i64; 2] = cmp_eq_mask_i64_m128i(a, b).into();
-/// assert_eq!(c, [-1_i64, 0]);
-/// ```
+///
+/// * **Intrinsic:** [`_mm_cmpeq_epi64`]
+/// * **Assembly:** `pcmpeqq xmm, xmm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
@@ -221,12 +135,7 @@ pub fn cmp_eq_mask_i64_m128i(a: m128i, b: m128i) -> m128i {
 }
 
 /// Convert the lower four `i16` lanes to four `i32` lanes.
-/// ```
-/// # use safe_arch::*;
-/// let a = m128i::from([0_i16, -1, 2, -3, 4, 5, 6, 7]);
-/// let c: [i32; 4] = convert_to_i32_m128i_from_lower4_i16_m128i(a).into();
-/// assert_eq!(c, [0, -1, 2, -3]);
-/// ```
+///
 /// * **Intrinsic:** [`_mm_cvtepi16_epi32`]
 /// * **Assembly:** `pmovsxwd xmm, xmm`
 #[must_use]
@@ -237,12 +146,7 @@ pub fn convert_to_i32_m128i_from_lower4_i16_m128i(a: m128i) -> m128i {
 }
 
 /// Convert the lower two `i64` lanes to two `i32` lanes.
-/// ```
-/// # use safe_arch::*;
-/// let a = m128i::from([0_i16, -1, 2, -3, 4, 5, 6, 7]);
-/// let c: [i64; 2] = convert_to_i16_m128i_from_lower2_i16_m128i(a).into();
-/// assert_eq!(c, [0, -1]);
-/// ```
+///
 /// * **Intrinsic:** [`_mm_cvtepi16_epi64`]
 /// * **Assembly:** `pmovsxwq xmm, xmm`
 #[must_use]
@@ -253,12 +157,7 @@ pub fn convert_to_i16_m128i_from_lower2_i16_m128i(a: m128i) -> m128i {
 }
 
 /// Convert the lower two `i32` lanes to two `i64` lanes.
-/// ```
-/// # use safe_arch::*;
-/// let a = m128i::from([0, -1, 2, -3]);
-/// let c: [i64; 2] = convert_to_i64_m128i_from_lower2_i32_m128i(a).into();
-/// assert_eq!(c, [0, -1]);
-/// ```
+///
 /// * **Intrinsic:** [`_mm_cvtepi32_epi64`]
 /// * **Assembly:** `_mm_cvtepi32_epi64`
 #[must_use]
@@ -269,13 +168,7 @@ pub fn convert_to_i64_m128i_from_lower2_i32_m128i(a: m128i) -> m128i {
 }
 
 /// Convert the lower eight `i8` lanes to eight `i16` lanes.
-/// ```
-/// # use safe_arch::*;
-/// let a =
-///   m128i::from([0_i8, -1, 2, -3, 4, -5, 6, -7, 8, 9, 10, 11, 12, 13, 14, 15]);
-/// let c: [i16; 8] = convert_to_i16_m128i_from_lower8_i8_m128i(a).into();
-/// assert_eq!(c, [0_i16, -1, 2, -3, 4, -5, 6, -7]);
-/// ```
+///
 /// * **Intrinsic:** [`_mm_cvtepi8_epi16`]
 /// * **Assembly:** `pmovsxbw xmm, xmm`
 #[must_use]
@@ -286,13 +179,7 @@ pub fn convert_to_i16_m128i_from_lower8_i8_m128i(a: m128i) -> m128i {
 }
 
 /// Convert the lower four `i8` lanes to four `i32` lanes.
-/// ```
-/// # use safe_arch::*;
-/// let a =
-///   m128i::from([0_i8, -1, 2, -3, 4, -5, 6, -7, 8, 9, 10, 11, 12, 13, 14, 15]);
-/// let c: [i32; 4] = convert_to_i32_m128i_from_lower4_i8_m128i(a).into();
-/// assert_eq!(c, [0, -1, 2, -3]);
-/// ```
+///
 /// * **Intrinsic:** [`_mm_cvtepi8_epi32`]
 /// * **Assembly:** `pmovsxbd xmm, xmm`
 #[must_use]
@@ -303,13 +190,7 @@ pub fn convert_to_i32_m128i_from_lower4_i8_m128i(a: m128i) -> m128i {
 }
 
 /// Convert the lower two `i8` lanes to two `i64` lanes.
-/// ```
-/// # use safe_arch::*;
-/// let a =
-///   m128i::from([0_i8, -1, 2, -3, 4, -5, 6, -7, 8, 9, 10, 11, 12, 13, 14, 15]);
-/// let c: [i64; 2] = convert_to_i64_m128i_from_lower2_i8_m128i(a).into();
-/// assert_eq!(c, [0_i64, -1]);
-/// ```
+///
 /// * **Intrinsic:** [`_mm_cvtepi8_epi64`]
 /// * **Assembly:** `pmovsxbq xmm, xmm`
 #[must_use]
@@ -320,12 +201,7 @@ pub fn convert_to_i64_m128i_from_lower2_i8_m128i(a: m128i) -> m128i {
 }
 
 /// Convert the lower four `u16` lanes to four `u32` lanes.
-/// ```
-/// # use safe_arch::*;
-/// let a = m128i::from([u16::MAX, 1, 2, 3, 4, 5, 6, 7]);
-/// let c: [u32; 4] = convert_to_u32_m128i_from_lower4_u16_m128i(a).into();
-/// assert_eq!(c, [u16::MAX as u32, 1, 2, 3]);
-/// ```
+///
 /// * **Intrinsic:** [`_mm_cvtepu16_epi32`]
 /// * **Assembly:** `pmovzxwd xmm, xmm`
 #[must_use]
@@ -336,12 +212,7 @@ pub fn convert_to_u32_m128i_from_lower4_u16_m128i(a: m128i) -> m128i {
 }
 
 /// Convert the lower two `u16` lanes to two `u64` lanes.
-/// ```
-/// # use safe_arch::*;
-/// let a = m128i::from([u16::MAX, 1, 2, 3, 4, 5, 6, 7]);
-/// let c: [u64; 2] = convert_to_u64_m128i_from_lower2_u16_m128i(a).into();
-/// assert_eq!(c, [u16::MAX as u64, 1]);
-/// ```
+///
 /// * **Intrinsic:** [`_mm_cvtepu16_epi64`]
 /// * **Assembly:** `pmovzxwq xmm, xmm`
 #[must_use]
@@ -352,12 +223,7 @@ pub fn convert_to_u64_m128i_from_lower2_u16_m128i(a: m128i) -> m128i {
 }
 
 /// Convert the lower two `u32` lanes to two `u64` lanes.
-/// ```
-/// # use safe_arch::*;
-/// let a = m128i::from([u32::MAX, 1, 2, 3]);
-/// let c: [u64; 2] = convert_to_u64_m128i_from_lower2_u32_m128i(a).into();
-/// assert_eq!(c, [u32::MAX as u64, 1]);
-/// ```
+///
 /// * **Intrinsic:** [`_mm_cvtepu32_epi64`]
 /// * **Assembly:** `pmovzxdq xmm, xmm`
 #[must_use]
@@ -368,13 +234,7 @@ pub fn convert_to_u64_m128i_from_lower2_u32_m128i(a: m128i) -> m128i {
 }
 
 /// Convert the lower eight `u8` lanes to eight `u16` lanes.
-/// ```
-/// # use safe_arch::*;
-/// let a =
-///   m128i::from([u8::MAX, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-/// let c: [u16; 8] = convert_to_u16_m128i_from_lower8_u8_m128i(a).into();
-/// assert_eq!(c, [u8::MAX as u16, 1, 2, 3, 4, 5, 6, 7]);
-/// ```
+///
 /// * **Intrinsic:** [`_mm_cvtepu8_epi16`]
 /// * **Assembly:** `pmovzxbw xmm, xmm`
 #[must_use]
@@ -385,13 +245,7 @@ pub fn convert_to_u16_m128i_from_lower8_u8_m128i(a: m128i) -> m128i {
 }
 
 /// Convert the lower four `u8` lanes to four `u32` lanes.
-/// ```
-/// # use safe_arch::*;
-/// let a =
-///   m128i::from([u8::MAX, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-/// let c: [u32; 4] = convert_to_u32_m128i_from_lower4_u8_m128i(a).into();
-/// assert_eq!(c, [u8::MAX as u32, 1, 2, 3]);
-/// ```
+///
 /// * **Intrinsic:** [`_mm_cvtepu8_epi32`]
 /// * **Assembly:** `pmovzxbd xmm, xmm`
 #[must_use]
@@ -402,13 +256,7 @@ pub fn convert_to_u32_m128i_from_lower4_u8_m128i(a: m128i) -> m128i {
 }
 
 /// Convert the lower two `u8` lanes to two `u64` lanes.
-/// ```
-/// # use safe_arch::*;
-/// let a =
-///   m128i::from([u8::MAX, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-/// let c: [u64; 2] = convert_to_u64_m128i_from_lower2_u8_m128i(a).into();
-/// assert_eq!(c, [u8::MAX as u64, 1]);
-/// ```
+///
 /// * **Intrinsic:** [`_mm_cvtepu8_epi64`]
 /// * **Assembly:** `pmovzxbq xmm, xmm`
 #[must_use]
@@ -420,138 +268,52 @@ pub fn convert_to_u64_m128i_from_lower2_u8_m128i(a: m128i) -> m128i {
 
 /// Performs a dot product of two `m128d` registers.
 ///
-/// The output details are determined by a control mask:
-/// * For each lane, you can multiply that lane from `$a` and `$b` or you can
-///   take a default of 0.0
+/// The output details are determined by the constant:
+/// * For each lane, you can multiply that lane from `a` and `b` or you can take
+///   a default of 0.0
+/// * Bits 4 and 5 determines if we mul lanes 0 in `a` and `b`, and lanes 1 in
+///   `a` and `b`.
 /// * This forms two temporary `f64` values which are summed to a single `f64`.
 /// * For each output lane, you can have the sum in that lane or 0.0.
+/// * Bits 0 and 1 determines if an output lane is our sum or 0.0.
 ///
-/// ```
-/// # use safe_arch::*;
-/// let a = m128d::from_array([1.0, 2.0]);
-/// let b = m128d::from_array([3.0, 4.0]);
-///
-/// // Bits 4 determines if we mul lanes 0, and bit 5 if we mul lanes 1.
-///
-/// let c = dot_product_m128d!(a, b, 0b0000_0011).to_array();
-/// assert_eq!(c, [0.0, 0.0]); // no mul
-/// let c = dot_product_m128d!(a, b, 0b0001_0011).to_array();
-/// assert_eq!(c, [3.0, 3.0]); // mul lane 0 (1 * 3)
-/// let c = dot_product_m128d!(a, b, 0b0010_0011).to_array();
-/// assert_eq!(c, [8.0, 8.0]); // mul lane 1 (2 * 4)
-/// let c = dot_product_m128d!(a, b, 0b0011_0011).to_array();
-/// assert_eq!(c, [11.0, 11.0]); // mul both lanes (and summed in the next step)
-///
-/// // After here we have two temp lanes, which get added to form `sum`.
-///
-/// // Bits 0 and 1 determines if an output lane is `sum` or `0.0`.
-///
-/// let c = dot_product_m128d!(a, b, 0b0011_0000).to_array();
-/// assert_eq!(c, [0.0, 0.0]); // never use sum
-/// let c = dot_product_m128d!(a, b, 0b0011_0001).to_array();
-/// assert_eq!(c, [11.0, 0.0]); // sum in output lane 0
-/// let c = dot_product_m128d!(a, b, 0b0011_0010).to_array();
-/// assert_eq!(c, [0.0, 11.0]); // sum in output lane 1
-/// let c = dot_product_m128d!(a, b, 0b0011_0011).to_array();
-/// assert_eq!(c, [11.0, 11.0]); // sum in both output lanes.
-/// ```
-#[macro_export]
-macro_rules! dot_product_m128d {
-  ($a:expr, $b:expr, $imm:expr) => {{
-    let a: $crate::m128d = $a;
-    let b: $crate::m128d = $b;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm_dp_pd;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm_dp_pd;
-    $crate::m128d(unsafe { _mm_dp_pd(a.0, b.0, IMM) })
-  }};
+/// * **Intrinsic:** [`_mm_dp_pd`]
+/// * **Assembly:** `dppd xmm, xmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+pub fn dot_product_m128d<const IMM: i32>(a: m128d, b: m128d) -> m128d {
+  m128d(unsafe { _mm_dp_pd(a.0, b.0, IMM) })
 }
 
 /// Performs a dot product of two `m128` registers.
 ///
 /// The output details are determined by a control mask:
-/// * For each lane, you can multiply that lane from `$a` and `$b` or you can
-///   take a default of 0.0
+/// * For each lane, you can multiply that lane from `a` and `b` or you can take
+///   a default of 0.0
+/// * Bits 4 through 7 determine if we should mul lanes 0 through 3.
 /// * This forms four temporary `f32` values which are summed to a single `f32`.
 /// * For each output lane, you can have the sum in that lane or 0.0.
+/// * Bits 0 through 3 determines if the `sum` is in lanes 0 through 3.
 ///
-/// ```
-/// # use safe_arch::*;
-/// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
-/// let b = m128::from_array([5.0, 6.0, 7.0, 8.0]);
-///
-/// // Bits 4 through 7 determine if we should mul lanes 0 through 3.
-///
-/// let c = dot_product_m128!(a, b, 0b0000_1111).to_array();
-/// assert_eq!(c, [0.0, 0.0, 0.0, 0.0]); // no mul
-/// let c = dot_product_m128!(a, b, 0b0001_1111).to_array();
-/// assert_eq!(c, [5.0, 5.0, 5.0, 5.0]); // mul temp lane 0 (1 * 5)
-/// let c = dot_product_m128!(a, b, 0b0010_1111).to_array();
-/// assert_eq!(c, [12.0, 12.0, 12.0, 12.0]); // mul temp lane 1 (2 * 6)
-/// let c = dot_product_m128!(a, b, 0b0100_1111).to_array();
-/// assert_eq!(c, [21.0, 21.0, 21.0, 21.0]); // mul temp lane 2 (3 * 7)
-/// let c = dot_product_m128!(a, b, 0b1000_1111).to_array();
-/// assert_eq!(c, [32.0, 32.0, 32.0, 32.0]); // mul temp lane 3 (4 * 8)
-/// let c = dot_product_m128!(a, b, 0b1111_1111).to_array();
-/// assert_eq!(c, [70.0, 70.0, 70.0, 70.0]); // mul all lanes (and summed in the next step)
-///
-/// // After here we have four temp lanes, which get added to form `sum`.
-///
-/// // Bits 0 through 3 determines if the `sum` is in lanes 0 through 3.
-///
-/// let c = dot_product_m128!(a, b, 0b1111_0000).to_array();
-/// assert_eq!(c, [0.0, 0.0, 0.0, 0.0]); // never use sum
-///
-/// let c = dot_product_m128!(a, b, 0b1111_0001).to_array();
-/// assert_eq!(c, [70.0, 0.0, 0.0, 0.0]); // sum in output lane 0
-///
-/// let c = dot_product_m128!(a, b, 0b1111_0010).to_array();
-/// assert_eq!(c, [0.0, 70.0, 0.0, 0.0]); // sum in output lane 1
-///
-/// let c = dot_product_m128!(a, b, 0b1111_0100).to_array();
-/// assert_eq!(c, [0.0, 0.0, 70.0, 0.0]); // sum in output lane 2
-///
-/// let c = dot_product_m128!(a, b, 0b1111_1000).to_array();
-/// assert_eq!(c, [0.0, 0.0, 0.0, 70.0]); // sum in output lane 3
-///
-/// let c = dot_product_m128!(a, b, 0b1111_1111).to_array();
-/// assert_eq!(c, [70.0, 70.0, 70.0, 70.0]); // sum in all output lanes
-/// ```
-#[macro_export]
-macro_rules! dot_product_m128 {
-  ($a:expr, $b:expr, $imm:expr) => {{
-    let a: $crate::m128 = $a;
-    let b: m128 = $b;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm_dp_ps;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm_dp_ps;
-    $crate::m128(unsafe { _mm_dp_ps(a.0, b.0, IMM) })
-  }};
+/// * **Intrinsic:** [`_mm_dp_ps`]
+/// * **Assembly:** `dpps xmm, xmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+pub fn dot_product_m128<const IMM: i32>(a: m128, b: m128) -> m128 {
+  m128(unsafe { _mm_dp_ps(a.0, b.0, IMM) })
 }
 
 /// Gets the `i32` lane requested. Only the lowest 2 bits are considered.
 ///
-/// ```
-/// # use safe_arch::*;
-/// let a = m128i::from([5, 6, 7, 8]);
-/// assert_eq!(extract_i32_imm_m128i!(a, 1), 6);
-/// ```
-#[macro_export]
-macro_rules! extract_i32_imm_m128i {
-  ($a:expr, $imm:expr) => {{
-    let a: $crate::m128i = $a;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm_extract_epi32;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm_extract_epi32;
-    unsafe { _mm_extract_epi32(a.0, IMM) }
-  }};
+/// * **Intrinsic:** [`_mm_extract_epi32`]
+/// * **Assembly:** `pextrd r32, xmm, imm8`
+pub fn extract_i32_imm_m128i<const IMM: i32>(a: m128i) -> i32 {
+  unsafe { _mm_extract_epi32(a.0, IMM) }
 }
+
+// TODO
 
 /// Gets the `i64` lane requested. Only the lowest bit is considered.
 ///

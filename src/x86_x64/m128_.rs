@@ -22,12 +22,6 @@ unsafe impl bytemuck::Pod for m128 {}
 #[cfg(feature = "bytemuck")]
 unsafe impl bytemuck::TransparentWrapper<__m128> for m128 {}
 
-#[test]
-fn test_m128_size_align() {
-  assert_eq!(core::mem::size_of::<m128>(), 16);
-  assert_eq!(core::mem::align_of::<m128>(), 16);
-}
-
 impl m128 {
   /// Transmutes the `m128` to an array.
   ///
@@ -112,11 +106,6 @@ impl From<m128> for [f32; 4] {
 
 impl Debug for m128 {
   /// Debug formats each float.
-  /// ```
-  /// # use safe_arch::*;
-  /// let f = format!("{:?}", m128::default());
-  /// assert_eq!(&f, "m128(0.0, 0.0, 0.0, 0.0)");
-  /// ```
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     write!(f, "m128(")?;
     for (i, float) in self.to_array().iter().enumerate() {
@@ -131,11 +120,6 @@ impl Debug for m128 {
 
 impl Display for m128 {
   /// Display formats each float, and leaves the type name off of the font.
-  /// ```
-  /// # use safe_arch::*;
-  /// let f = format!("{}", m128::default());
-  /// assert_eq!(&f, "(0, 0, 0, 0)");
-  /// ```
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     write!(f, "(")?;
     for (i, float) in self.to_array().iter().enumerate() {
@@ -150,11 +134,6 @@ impl Display for m128 {
 
 impl Binary for m128 {
   /// Binary formats each float's bit pattern (via [`f32::to_bits`]).
-  /// ```
-  /// # use safe_arch::*;
-  /// let f = format!("{:b}", m128::default());
-  /// assert_eq!(&f, "(0, 0, 0, 0)");
-  /// ```
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     write!(f, "(")?;
     for (i, float) in self.to_array().iter().enumerate() {
@@ -169,11 +148,6 @@ impl Binary for m128 {
 
 impl LowerExp for m128 {
   /// LowerExp formats each float.
-  /// ```
-  /// # use safe_arch::*;
-  /// let f = format!("{:e}", m128::default());
-  /// assert_eq!(&f, "(0e0, 0e0, 0e0, 0e0)");
-  /// ```
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     write!(f, "(")?;
     for (i, float) in self.to_array().iter().enumerate() {
@@ -188,11 +162,6 @@ impl LowerExp for m128 {
 
 impl UpperExp for m128 {
   /// UpperExp formats each float.
-  /// ```
-  /// # use safe_arch::*;
-  /// let f = format!("{:E}", m128::default());
-  /// assert_eq!(&f, "(0E0, 0E0, 0E0, 0E0)");
-  /// ```
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     write!(f, "(")?;
     for (i, float) in self.to_array().iter().enumerate() {
@@ -207,11 +176,6 @@ impl UpperExp for m128 {
 
 impl LowerHex for m128 {
   /// LowerHex formats each float's bit pattern (via [`f32::to_bits`]).
-  /// ```
-  /// # use safe_arch::*;
-  /// let f = format!("{:x}", m128::default());
-  /// assert_eq!(&f, "(0, 0, 0, 0)");
-  /// ```
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     write!(f, "(")?;
     for (i, float) in self.to_array().iter().enumerate() {
@@ -226,11 +190,6 @@ impl LowerHex for m128 {
 
 impl UpperHex for m128 {
   /// UpperHex formats each float's bit pattern (via [`f32::to_bits`]).
-  /// ```
-  /// # use safe_arch::*;
-  /// let f = format!("{:X}", m128::default());
-  /// assert_eq!(&f, "(0, 0, 0, 0)");
-  /// ```
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     write!(f, "(")?;
     for (i, float) in self.to_array().iter().enumerate() {
@@ -245,11 +204,6 @@ impl UpperHex for m128 {
 
 impl Octal for m128 {
   /// Octal formats each float's bit pattern (via [`f32::to_bits`]).
-  /// ```
-  /// # use safe_arch::*;
-  /// let f = format!("{:o}", m128::default());
-  /// assert_eq!(&f, "(0, 0, 0, 0)");
-  /// ```
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     write!(f, "(")?;
     for (i, float) in self.to_array().iter().enumerate() {

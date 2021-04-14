@@ -22,12 +22,6 @@ unsafe impl bytemuck::Pod for m256d {}
 #[cfg(feature = "bytemuck")]
 unsafe impl bytemuck::TransparentWrapper<__m256d> for m256d {}
 
-#[test]
-fn test_m256d_size_align() {
-  assert_eq!(core::mem::size_of::<m256d>(), 32);
-  assert_eq!(core::mem::align_of::<m256d>(), 32);
-}
-
 impl m256d {
   /// Transmutes the `m256d` to an array.
   ///
