@@ -24,12 +24,14 @@ fn test_crc32_u32() {
 }
 
 #[test]
+#[cfg(target_arch = "x86_64")]
 fn test_crc32_u64() {
   assert_eq!(crc32_u64(u64::MAX, u64::MAX), 3080238136_u64);
 }
 
 #[test]
 #[rustfmt::skip]
+#[cfg(target_arch = "x86_64")]
 fn test_search_implicit_str_for_index() {
 
   // Eq Any
@@ -66,8 +68,9 @@ fn test_search_implicit_str_for_index() {
 
 }
 
-#[test] 
+#[test]
 #[rustfmt::skip]
+#[cfg(target_arch = "x86_64")]
 fn test_search_implicit_str_for_mask() {
   // EqAny
   let hay: m128i = m128i::from(*b"some test words.");
