@@ -30,6 +30,9 @@ mod rdseed_tests;
 #[cfg(target_feature = "sse2")]
 mod sse2_tests;
 
+#[cfg(target_feature = "sse3")]
+mod sse3_tests;
+
 #[cfg(target_feature = "ssse3")]
 mod ssse3_tests;
 
