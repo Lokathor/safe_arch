@@ -6,6 +6,9 @@ use safe_arch::*;
 #[cfg(target_feature = "adx")]
 mod adx_tests;
 
+#[cfg(target_feature = "avx")]
+mod avx_tests;
+
 #[cfg(target_feature = "bmi1")]
 mod bmi1_tests;
 
