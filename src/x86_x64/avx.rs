@@ -1534,9 +1534,7 @@ pub fn set_i64_m256i(
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg(target_arch="x86_64")]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-#[rustfmt::skip]
 pub fn set_m128_m256(
   high: m128, low: m128
 ) -> m256 {
