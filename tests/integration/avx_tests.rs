@@ -332,6 +332,7 @@ fn test_extract_i32_from_m256i() {
 }
 
 #[test]
+#[cfg(target_arch = "x86_64")]
 fn test_extract_i64_from_m256i() {
   let a = m256i::from([9_i64, 10, 11, 12]);
   assert_eq!(extract_i64_from_m256i::<1>(a), 10_i64);
@@ -432,6 +433,7 @@ fn test_insert_i32_to_m256i() {
 }
 
 #[test]
+#[cfg(target_arch = "x86_64")]
 fn test_insert_i64_to_m256i() {
   let a = m256i::from([0_i64; 4]);
   let b: [i64; 4] = insert_i64_to_m256i::<3>(a, 5).into();
@@ -833,6 +835,7 @@ fn test_set_i32_m256i() {
 }
 
 #[test]
+#[cfg(target_arch = "x86_64")]
 fn test_set_i64_m256i() {
   let a: [i64; 4] = set_i64_m256i(0, 1, 2, 3).into();
   assert_eq!(a, [3, 2, 1, 0]);
@@ -887,6 +890,7 @@ fn test_set_splat_i32_m256i() {
 }
 
 #[test]
+#[cfg(target_arch = "x86_64")]
 fn test_set_splat_i64_m256i() {
   let a: [i64; 4] = set_splat_i64_m256i(56).into();
   assert_eq!(a, [56_i64; 4]);
@@ -923,6 +927,7 @@ fn test_set_reversed_i32_m256i() {
 }
 
 #[test]
+#[cfg(target_arch = "x86_64")]
 fn test_set_reversed_i64_m256i() {
   let a: [i64; 4] = set_reversed_i64_m256i(0, 1, 2, 3).into();
   assert_eq!(a, [0, 1, 2, 3]);

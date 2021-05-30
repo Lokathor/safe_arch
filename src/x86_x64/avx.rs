@@ -680,6 +680,7 @@ pub fn extract_i32_from_m256i<const IMM: i32>(a: m256i) -> i32 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg(target_arch = "x86_64")]
 pub fn extract_i64_from_m256i<const IMM: i32>(a: m256i) -> i64 {
   unsafe { _mm256_extract_epi64(a.0, IMM) }
 }
@@ -823,6 +824,7 @@ pub fn insert_i32_to_m256i<const IMM: i32>(a: m256i, i: i32) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg(target_arch = "x86_64")]
 pub fn insert_i64_to_m256i<const IMM: i32>(a: m256i, i: i64) -> m256i {
   m256i(unsafe { _mm256_insert_epi64(a.0, i, IMM) })
 }
@@ -1519,7 +1521,7 @@ pub fn set_i32_m256i(
 #[inline(always)]
 #[cfg(target_arch="x86_64")]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-#[rustfmt::skip]
+#[cfg(target_arch = "x86_64")]
 pub fn set_i64_m256i(
   e3: i64, e2: i64, e1: i64, e0: i64,
 ) -> m256i {
@@ -1732,7 +1734,6 @@ pub fn set_reversed_i32_m256i(
 #[inline(always)]
 #[cfg(target_arch="x86_64")]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-#[rustfmt::skip]
 pub fn set_reversed_i64_m256i(
   e3: i64, e2: i64, e1: i64, e0: i64,
 ) -> m256i {
