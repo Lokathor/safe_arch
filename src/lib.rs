@@ -126,13 +126,8 @@
 
 use core::{
   convert::AsRef,
-  fmt::{
-    Binary, Debug, Display, LowerExp, LowerHex, Octal, UpperExp, UpperHex,
-  },
-  ops::{
-    Add, AddAssign, BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor,
-    BitXorAssign, Div, DivAssign, Mul, MulAssign, Neg, Not, Sub, SubAssign,
-  },
+  fmt::{Binary, Debug, Display, LowerExp, LowerHex, Octal, UpperExp, UpperHex},
+  ops::{Add, AddAssign, BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign, Div, DivAssign, Mul, MulAssign, Neg, Not, Sub, SubAssign},
 };
 
 pub mod naming_conventions;
