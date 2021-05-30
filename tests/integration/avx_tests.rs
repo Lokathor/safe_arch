@@ -65,21 +65,20 @@ fn test_bitandnot_m256() {
 }
 
 #[test]
-fn test_blend_imm_m256d() {
+fn test_blend_m256d() {
   let a = m256d::from_array([10.0, 20.0, 30.0, 40.0]);
   let b = m256d::from_array([100.0, 200.0, 300.0, 400.0]);
   //
-  let c = blend_imm_m256d!(a, b, 0b0110).to_array();
+  let c = blend_m256d::<0b0110>(a, b).to_array();
   assert_eq!(c, [10.0, 200.0, 300.0, 40.0]);
 }
 
 #[test]
-fn test_blend_imm_m256() {
+fn test_blend_m256() {
   let a = m256::from_array([10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0]);
-  let b =
-    m256::from_array([100.0, 200.0, 300.0, 400.0, 500.0, 600.0, 700.0, 800.0]);
+  let b = m256::from_array([100.0, 200.0, 300.0, 400.0, 500.0, 600.0, 700.0, 800.0]);
   //
-  let c = blend_imm_m256!(a, b, 0b0011_0110).to_array();
+  let c = blend_m256::<0b0011_0110>(a, b).to_array();
   assert_eq!(c, [10.0, 200.0, 300.0, 40.0, 500.0, 600.0, 70.0, 80.0]);
 }
 
@@ -132,10 +131,7 @@ fn test_load_f32_splat_m256() {
 #[test]
 fn test_cast_to_m256_from_m256d() {
   let a = load_f64_splat_m256d(&1.0);
-  assert_eq!(
-    cast_to_m256_from_m256d(a).to_bits(),
-    [0, 0x3FF0_0000, 0, 0x3FF0_0000, 0, 0x3FF0_0000, 0, 0x3FF0_0000]
-  );
+  assert_eq!(cast_to_m256_from_m256d(a).to_bits(), [0, 0x3FF0_0000, 0, 0x3FF0_0000, 0, 0x3FF0_0000, 0, 0x3FF0_0000]);
 }
 
 #[test]
@@ -198,7 +194,7 @@ fn test_ceil_m256() {
 fn test_cmp_op_mask_m128() {
   let a = m128::from_array([2.0, 0.0, -2.0, 0.0]);
   let b = m128::from_array([1.0, 1.0, -1.0, -1.0]);
-  let c = cmp_op_mask_m128!(a, GreaterThanOrdered, b).to_bits();
+  let c = cmp_op_mask_m128::<{ cmp_op!(GreaterThanOrdered) }>(a, b).to_bits();
   assert_eq!(c, [u32::MAX, 0, 0, u32::MAX]);
 }
 
@@ -206,7 +202,7 @@ fn test_cmp_op_mask_m128() {
 fn test_cmp_op_mask_m128_s() {
   let a = m128::from_array([2.0, 0.0, -2.0, 0.0]);
   let b = m128::from_array([1.0, 1.0, -1.0, -1.0]);
-  let c = cmp_op_mask_m128_s!(a, GreaterThanOrdered, b).to_bits();
+  let c = cmp_op_mask_m128_s::<{ cmp_op!(GreaterThanOrdered) }>(a, b).to_bits();
   assert_eq!(c, [u32::MAX, 0, (-2_f32).to_bits(), 0]);
 }
 
@@ -214,7 +210,7 @@ fn test_cmp_op_mask_m128_s() {
 fn test_cmp_op_mask_m256() {
   let a = m256::from_array([1.0, 5.0, 0.0, 7.0, 5.0, 6.0, 7.0, -20.0]);
   let b = m256::from_array([2.0, 1.0, 3.0, 4.0, 1.0, -2.0, -3.0, -4.0]);
-  let c = cmp_op_mask_m256!(a, LessThanOrdered, b).to_bits();
+  let c = cmp_op_mask_m256::<{ cmp_op!(LessThanOrdered) }>(a, b).to_bits();
   assert_eq!(c, [u32::MAX, 0, u32::MAX, 0, 0, 0, 0, u32::MAX]);
 }
 
@@ -222,7 +218,7 @@ fn test_cmp_op_mask_m256() {
 fn test_cmp_op_mask_m128d() {
   let a = m128d::from_array([1.0, 0.0]);
   let b = m128d::from_array([1.0, 1.0]);
-  let c = cmp_op_mask_m128d!(a, EqualOrdered, b).to_bits();
+  let c = cmp_op_mask_m128d::<{ cmp_op!(EqualOrdered) }>(a, b).to_bits();
   assert_eq!(c, [u64::MAX, 0]);
 }
 
@@ -230,7 +226,7 @@ fn test_cmp_op_mask_m128d() {
 fn test_cmp_op_mask_m128d_s() {
   let a = m128d::from_array([1.0, 7.0]);
   let b = m128d::from_array([1.0, 1.0]);
-  let c = cmp_op_mask_m128d_s!(a, EqualOrdered, b).to_bits();
+  let c = cmp_op_mask_m128d_s::<{ cmp_op!(EqualOrdered) }>(a, b).to_bits();
   assert_eq!(c, [u64::MAX, 7_f64.to_bits()]);
 }
 
@@ -238,7 +234,7 @@ fn test_cmp_op_mask_m128d_s() {
 fn test_cmp_op_mask_m256d() {
   let a = m256d::from_array([1.0, 5.0, 0.0, 7.0]);
   let b = m256d::from_array([2.0, 1.0, 3.0, 4.0]);
-  let c = cmp_op_mask_m256d!(a, LessThanOrdered, b).to_bits();
+  let c = cmp_op_mask_m256d::<{ cmp_op!(LessThanOrdered) }>(a, b).to_bits();
   assert_eq!(c, [u64::MAX, 0, u64::MAX, 0]);
 }
 
@@ -325,27 +321,27 @@ fn test_div_m256() {
 fn test_dot_product_m256() {
   let a = m256::from_array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
   let b = m256::from_array([9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0]);
-  let c = dot_product_m256!(a, b, 0b1111_1111).to_array();
+  let c = dot_product_m256::<0b1111_1111>(a, b).to_array();
   assert_eq!(c, [110.0, 110.0, 110.0, 110.0, 382.0, 382.0, 382.0, 382.0]);
 }
 
 #[test]
 fn test_extract_i32_from_m256i() {
   let a = m256i::from([9, 10, 11, 12, 13, 14, 15, 16]);
-  assert_eq!(extract_i32_from_m256i!(a, 3), 12);
+  assert_eq!(extract_i32_from_m256i::<3>(a), 12);
 }
 
 #[test]
 fn test_extract_i64_from_m256i() {
   let a = m256i::from([9_i64, 10, 11, 12]);
-  assert_eq!(extract_i64_from_m256i!(a, 1), 10_i64);
+  assert_eq!(extract_i64_from_m256i::<1>(a), 10_i64);
 }
 
 #[test]
 fn test_extract_m128d_from_m256d() {
   let a = m256d::from([13.0, 14.0, 15.0, 16.0]);
   let b = m128d::from([15.0, 16.0]).to_array();
-  let c = extract_m128d_from_m256d!(a, 1).to_array();
+  let c = extract_m128d_from_m256d::<1>(a).to_array();
   assert_eq!(b, c);
 }
 
@@ -353,7 +349,7 @@ fn test_extract_m128d_from_m256d() {
 fn test_extract_m128_from_m256() {
   let a = m256::from([9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0]);
   let b = m128::from([13.0, 14.0, 15.0, 16.0]).to_array();
-  let c = extract_m128_from_m256!(a, 1).to_array();
+  let c = extract_m128_from_m256::<1>(a).to_array();
   assert_eq!(b, c);
 }
 
@@ -361,7 +357,7 @@ fn test_extract_m128_from_m256() {
 fn test_extract_m128i_from_m256i() {
   let a = m256i::from([9, 10, 11, 12, 13, 14, 15, 16]);
   let b: [i32; 4] = m128i::from([13, 14, 15, 16]).into();
-  let c: [i32; 4] = extract_m128i_from_m256i!(a, 1).into();
+  let c: [i32; 4] = extract_m128i_from_m256i::<1>(a).into();
   assert_eq!(b, c);
 }
 
@@ -414,28 +410,23 @@ fn test_sub_horizontal_m256() {
 #[test]
 fn test_insert_i8_to_m256i() {
   let a = m256i::from([0_i8; 32]);
-  let b: [i8; 32] = insert_i8_to_m256i!(a, 5_i8, 3).into();
-  let c: [i8; 32] = m256i::from([
-    0_i8, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0,
-  ])
-  .into();
+  let b: [i8; 32] = insert_i8_to_m256i::<3>(a, 5).into();
+  let c: [i8; 32] = m256i::from([0_i8, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]).into();
   assert_eq!(b, c);
 }
 
 #[test]
 fn test_insert_i16_to_m256i() {
   let a = m256i::from([0_i16; 16]);
-  let b: [i16; 16] = insert_i16_to_m256i!(a, 5_i16, 3).into();
-  let c: [i16; 16] =
-    m256i::from([0_i16, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]).into();
+  let b: [i16; 16] = insert_i16_to_m256i::<3>(a, 5).into();
+  let c: [i16; 16] = m256i::from([0_i16, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]).into();
   assert_eq!(b, c);
 }
 
 #[test]
 fn test_insert_i32_to_m256i() {
   let a = m256i::from([0_i32; 8]);
-  let b: [i32; 8] = insert_i32_to_m256i!(a, 5_i32, 3).into();
+  let b: [i32; 8] = insert_i32_to_m256i::<3>(a, 5).into();
   let c: [i32; 8] = m256i::from([0, 0, 0, 5, 0, 0, 0, 0]).into();
   assert_eq!(b, c);
 }
@@ -443,7 +434,7 @@ fn test_insert_i32_to_m256i() {
 #[test]
 fn test_insert_i64_to_m256i() {
   let a = m256i::from([0_i64; 4]);
-  let b: [i64; 4] = insert_i64_to_m256i!(a, 5_i64, 3).into();
+  let b: [i64; 4] = insert_i64_to_m256i::<3>(a, 5).into();
   let c: [i64; 4] = m256i::from([0, 0, 0, 5_i64]).into();
   assert_eq!(b, c);
 }
@@ -451,24 +442,21 @@ fn test_insert_i64_to_m256i() {
 #[test]
 fn test_insert_m128d_to_m256d() {
   let a = m256d::from([0.0; 4]);
-  let b: [f64; 4] =
-    insert_m128d_to_m256d!(a, m128d::from([3.0, 4.0]), 1).to_array();
+  let b: [f64; 4] = insert_m128d_to_m256d::<1>(a, m128d::from([3.0, 4.0])).to_array();
   assert_eq!(b, [0.0, 0.0, 3.0, 4.0]);
 }
 
 #[test]
 fn test_insert_m128_to_m256() {
   let a = m256::from([0.0; 8]);
-  let b: [f32; 8] =
-    insert_m128_to_m256!(a, m128::from([1.0, 2.0, 3.0, 4.0]), 1).to_array();
+  let b: [f32; 8] = insert_m128_to_m256::<1>(a, m128::from([1.0, 2.0, 3.0, 4.0])).to_array();
   assert_eq!(b, [0.0, 0.0, 0.0, 0.0, 1.0, 2.0, 3.0, 4.0]);
 }
 
 #[test]
 fn test_insert_m128i_to_m256i_slow_avx() {
   let a = m256i::from([0_i32; 8]);
-  let b: [i32; 8] =
-    insert_m128i_to_m256i_slow_avx!(a, m128i::from([1, 2, 3, 4]), 1).into();
+  let b: [i32; 8] = insert_m128i_to_m256i_slow_avx::<1>(a, m128i::from([1, 2, 3, 4])).into();
   assert_eq!(b, [0, 0, 0, 0, 1, 2, 3, 4]);
 }
 
@@ -495,18 +483,12 @@ fn test_load_m256i() {
 
 #[test]
 fn test_load_unaligned_m256d() {
-  assert_eq!(
-    load_unaligned_m256d(&[8.0, 17.0, 6.0, 5.0]).to_array(),
-    [8.0, 17.0, 6.0, 5.0]
-  );
+  assert_eq!(load_unaligned_m256d(&[8.0, 17.0, 6.0, 5.0]).to_array(), [8.0, 17.0, 6.0, 5.0]);
 }
 
 #[test]
 fn test_load_unaligned_m256() {
-  assert_eq!(
-    load_unaligned_m256(&[8.0, 17.0, 6.0, 5.0, 1.0, 2.0, 3.0, 4.0]).to_array(),
-    [8.0, 17.0, 6.0, 5.0, 1.0, 2.0, 3.0, 4.0]
-  );
+  assert_eq!(load_unaligned_m256(&[8.0, 17.0, 6.0, 5.0, 1.0, 2.0, 3.0, 4.0]).to_array(), [8.0, 17.0, 6.0, 5.0, 1.0, 2.0, 3.0, 4.0]);
 }
 
 #[test]
@@ -516,30 +498,17 @@ fn test_load_unaligned_m256i() {
 
 #[test]
 fn test_load_unaligned_hi_lo_m256d() {
-  assert_eq!(
-    load_unaligned_hi_lo_m256d(&[3.0, 4.0], &[1.0, 2.0]).to_array(),
-    [1.0, 2.0, 3.0, 4.0]
-  );
+  assert_eq!(load_unaligned_hi_lo_m256d(&[3.0, 4.0], &[1.0, 2.0]).to_array(), [1.0, 2.0, 3.0, 4.0]);
 }
 
 #[test]
 fn test_load_unaligned_hi_lo_m256() {
-  assert_eq!(
-    load_unaligned_hi_lo_m256(&[5.0, 6.0, 7.0, 8.0], &[1.0, 2.0, 3.0, 4.0])
-      .to_array(),
-    [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]
-  );
+  assert_eq!(load_unaligned_hi_lo_m256(&[5.0, 6.0, 7.0, 8.0], &[1.0, 2.0, 3.0, 4.0]).to_array(), [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
 }
 
 #[test]
 fn test_load_unaligned_hi_lo_m256i() {
-  assert_eq!(
-    <[i8; 32]>::from(load_unaligned_hi_lo_m256i(&[7_i8; 16], &[9_i8; 16])),
-    [
-      9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7, 7,
-      7, 7, 7, 7, 7, 7, 7, 7,
-    ]
-  );
+  assert_eq!(<[i8; 32]>::from(load_unaligned_hi_lo_m256i(&[7_i8; 16], &[9_i8; 16])), [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,]);
 }
 
 #[test]
@@ -566,52 +535,35 @@ fn test_load_masked_m128() {
 #[test]
 fn test_load_masked_m256() {
   let a = m256::from([8.0, 17.0, 16.0, 20.0, 80.0, 1.0, 2.0, 3.0]);
-  let b =
-    load_masked_m256(&a, m256i::from([0, -1, -1, 0, -1, -1, 0, 0])).to_array();
+  let b = load_masked_m256(&a, m256i::from([0, -1, -1, 0, -1, -1, 0, 0])).to_array();
   assert_eq!(b, [0.0, 17.0, 16.0, 0.0, 80.0, 1.0, 0.0, 0.0]);
 }
 
 #[test]
 fn test_store_masked_m128d() {
   let mut a = m128d::default();
-  store_masked_m128d(
-    &mut a,
-    m128i::from([0_i64, -1]),
-    m128d::from([8.0, 17.0]),
-  );
+  store_masked_m128d(&mut a, m128i::from([0_i64, -1]), m128d::from([8.0, 17.0]));
   assert_eq!(a.to_array(), [0.0, 17.0]);
 }
 
 #[test]
 fn test_store_masked_m256d() {
   let mut a = m256d::default();
-  store_masked_m256d(
-    &mut a,
-    m256i::from([0_i64, -1, -1, 0]),
-    m256d::from([8.0, 17.0, 16.0, 20.0]),
-  );
+  store_masked_m256d(&mut a, m256i::from([0_i64, -1, -1, 0]), m256d::from([8.0, 17.0, 16.0, 20.0]));
   assert_eq!(a.to_array(), [0.0, 17.0, 16.0, 0.0]);
 }
 
 #[test]
 fn test_store_masked_m128() {
   let mut a = m128::default();
-  store_masked_m128(
-    &mut a,
-    m128i::from([0, -1, -1, 0]),
-    m128::from([8.0, 17.0, 16.0, 20.0]),
-  );
+  store_masked_m128(&mut a, m128i::from([0, -1, -1, 0]), m128::from([8.0, 17.0, 16.0, 20.0]));
   assert_eq!(a.to_array(), [0.0, 17.0, 16.0, 0.0]);
 }
 
 #[test]
 fn test_store_masked_m256() {
   let mut a = m256::default();
-  store_masked_m256(
-    &mut a,
-    m256i::from([0, -1, -1, 0, -1, -1, 0, 0]),
-    m256::from([8.0, 17.0, 16.0, 20.0, 80.0, 1.0, 2.0, 3.0]),
-  );
+  store_masked_m256(&mut a, m256i::from([0, -1, -1, 0, -1, -1, 0, 0]), m256::from([8.0, 17.0, 16.0, 20.0, 80.0, 1.0, 2.0, 3.0]));
   assert_eq!(a.to_array(), [0.0, 17.0, 16.0, 0.0, 80.0, 1.0, 0.0, 0.0]);
 }
 
@@ -675,10 +627,7 @@ fn test_move_mask_m256d() {
 
 #[test]
 fn test_move_mask_m256() {
-  assert_eq!(
-    0b00110100,
-    move_mask_m256(m256::from([1.0, 12.0, -1.0, 3.0, -1.0, -2.0, 3.0, 4.0]))
-  );
+  assert_eq!(0b00110100, move_mask_m256(m256::from([1.0, 12.0, -1.0, 3.0, -1.0, -2.0, 3.0, 4.0])));
 }
 
 #[test]
@@ -714,76 +663,76 @@ fn test_bitor_m256() {
 }
 
 #[test]
-fn test_shuffle_ai_f64_all_m128d() {
+fn test_permute_m128d() {
   let a = m128d::from_array([1.0, 2.0]);
   //
-  let b = shuffle_ai_f64_all_m128d!(a, [1, 0]).to_array();
+  let b = permute_m128d::<0b_0_1>(a).to_array();
   assert_eq!(b, [2.0, 1.0]);
 }
 
 #[test]
-fn test_shuffle_ai_f64_half_m256d() {
+fn test_permute_m256d() {
   let a = m256d::from_array([1.0, 2.0, 3.0, 4.0]);
   //
-  let b = shuffle_ai_f64_half_m256d!(a, [a:1, a:0, b:1, b:0]).to_array();
+  let b = permute_m256d::<0b_0_1_0_1>(a).to_array();
   assert_eq!(b, [2.0, 1.0, 4.0, 3.0]);
 }
 
 #[test]
-fn test_shuffle_ai_f32_all_m128() {
+fn test_permute_m128() {
   let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
   //
-  let b = shuffle_ai_f32_all_m128!(a, [0, 0, 0, 0]).to_array();
+  let b = permute_m128::<0b_00_00_00_00>(a).to_array();
   assert_eq!(b, [1.0, 1.0, 1.0, 1.0]);
   //
-  let b = shuffle_ai_f32_all_m128!(a, [0, 1, 0, 3]).to_array();
+  let b = permute_m128::<0b_11_00_01_00>(a).to_array();
   assert_eq!(b, [1.0, 2.0, 1.0, 4.0]);
   //
-  let b = shuffle_ai_f32_all_m128!(a, [0, 0, 2, 2]).to_array();
+  let b = permute_m128::<0b_10_10_00_00>(a).to_array();
   assert_eq!(b, [1.0, 1.0, 3.0, 3.0]);
 }
 
 #[test]
-fn test_() {
+fn test_permute_m256() {
   let a = m256::from_array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
   //
-  let b = shuffle_ai_f32_half_m256!(a, [3, 1, 2, 0]).to_array();
+  let b = permute_m256::<0b_00_10_01_11>(a).to_array();
   assert_eq!(b, [4.0, 2.0, 3.0, 1.0, 8.0, 6.0, 7.0, 5.0]);
 }
 
 #[test]
-fn test_shuffle_abi_f128z_all_m256d() {
+fn test_permute2z_m256d() {
   let a = m256d::from_array([1.0, 2.0, 3.0, 4.0]);
   let b = m256d::from_array([5.0, 6.0, 7.0, 8.0]);
   //
-  let c = shuffle_abi_f128z_all_m256d!(a, b, [B_Low, Zeroed]).to_array();
+  let c = permute2z_m256d::<0b1000_0010>(a, b).to_array();
   assert_eq!(c, [5.0, 6.0, 0.0, 0.0]);
   //
-  let c = shuffle_abi_f128z_all_m256d!(a, b, [Zeroed, A_High]).to_array();
+  let c = permute2z_m256d::<0b0001_1000>(a, b).to_array();
   assert_eq!(c, [0.0, 0.0, 3.0, 4.0]);
 }
 
 #[test]
-fn test_shuffle_abi_f128z_all_m256() {
+fn test_permute2z_m256() {
   let a = m256::from_array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
   let b = m256::from_array([9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0]);
   //
-  let c = shuffle_abi_f128z_all_m256!(a, b, [B_Low, Zeroed]).to_array();
+  let c = permute2z_m256::<0b1000_0010>(a, b).to_array();
   assert_eq!(c, [9.0, 10.0, 11.0, 12.0, 0.0, 0.0, 0.0, 0.0]);
   //
-  let c = shuffle_abi_f128z_all_m256!(a, b, [Zeroed, A_High]).to_array();
+  let c = permute2z_m256::<0b0001_1000>(a, b).to_array();
   assert_eq!(c, [0.0, 0.0, 0.0, 0.0, 5.0, 6.0, 7.0, 8.0]);
 }
 
 #[test]
-fn test_shuffle_abi_f128z_all_m256i() {
+fn test_permute2z_m256i() {
   let a = m256i::from([1, 2, 3, 4, 5, 6, 7, 8]);
   let b = m256i::from([9, 10, 11, 12, 13, 14, 15, 16]);
   //
-  let c: [i32; 8] = shuffle_abi_f128z_all_m256i!(a, b, [B_Low, Zeroed]).into();
+  let c: [i32; 8] = permute2z_m256i::<0b1000_0010>(a, b).into();
   assert_eq!(c, [9, 10, 11, 12, 0, 0, 0, 0]);
   //
-  let c: [i32; 8] = shuffle_abi_f128z_all_m256i!(a, b, [Zeroed, A_High]).into();
+  let c: [i32; 8] = permute2z_m256i::<0b0001_1000>(a, b).into();
   assert_eq!(c, [0, 0, 0, 0, 5, 6, 7, 8]);
 }
 
@@ -833,38 +782,26 @@ fn test_reciprocal_m256() {
 fn test_round_m256d() {
   let a = m256d::from_array([-0.1, 1.6, 2.5, 3.1]);
   //
-  assert_eq!(round_m256d!(a, Nearest).to_array(), [0.0, 2.0, 2.0, 3.0]);
+  assert_eq!(round_m256d::<{ round_op!(Nearest) }>(a).to_array(), [0.0, 2.0, 2.0, 3.0]);
   //
-  assert_eq!(round_m256d!(a, NegInf).to_array(), [-1.0, 1.0, 2.0, 3.0]);
+  assert_eq!(round_m256d::<{ round_op!(NegInf) }>(a).to_array(), [-1.0, 1.0, 2.0, 3.0]);
   //
-  assert_eq!(round_m256d!(a, PosInf).to_array(), [0.0, 2.0, 3.0, 4.0]);
+  assert_eq!(round_m256d::<{ round_op!(PosInf) }>(a).to_array(), [0.0, 2.0, 3.0, 4.0]);
   //
-  assert_eq!(round_m256d!(a, Zero).to_array(), [0.0, 1.0, 2.0, 3.0]);
+  assert_eq!(round_m256d::<{ round_op!(Zero) }>(a).to_array(), [0.0, 1.0, 2.0, 3.0]);
 }
 
 #[test]
 fn test_round_m256() {
   let a = m256::from_array([-0.1, 1.6, 3.3, 4.5, 5.1, 6.5, 7.2, 8.0]);
   //
-  assert_eq!(
-    round_m256!(a, Nearest).to_array(),
-    [0.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]
-  );
+  assert_eq!(round_m256::<{ round_op!(Nearest) }>(a).to_array(), [0.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
   //
-  assert_eq!(
-    round_m256!(a, NegInf).to_array(),
-    [-1.0, 1.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]
-  );
+  assert_eq!(round_m256::<{ round_op!(NegInf) }>(a).to_array(), [-1.0, 1.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
   //
-  assert_eq!(
-    round_m256!(a, PosInf).to_array(),
-    [0.0, 2.0, 4.0, 5.0, 6.0, 7.0, 8.0, 8.0]
-  );
+  assert_eq!(round_m256::<{ round_op!(PosInf) }>(a).to_array(), [0.0, 2.0, 4.0, 5.0, 6.0, 7.0, 8.0, 8.0]);
   //
-  assert_eq!(
-    round_m256!(a, Zero).to_array(),
-    [0.0, 1.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]
-  );
+  assert_eq!(round_m256::<{ round_op!(Zero) }>(a).to_array(), [0.0, 1.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
 }
 
 #[test]
@@ -879,22 +816,19 @@ fn test_reciprocal_sqrt_m256() {
 
 #[test]
 fn test_set_i8_m256i() {
-  let a: [i8; 32] =
-    set_i8_m256i(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31).into();
+  let a: [i8; 32] = set_i8_m256i(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31).into();
   assert_eq!(a, [31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
 }
 
 #[test]
 fn test_set_i16_m256i() {
-  let a: [i16; 16] =
-    set_i16_m256i(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15).into();
+  let a: [i16; 16] = set_i16_m256i(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15).into();
   assert_eq!(a, [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
 }
 
 #[test]
 fn test_set_i32_m256i() {
-  let a: [i32; 8] =
-    set_i32_m256i(0, 1, 2, 3, 4, 5, 6, 7).into();
+  let a: [i32; 8] = set_i32_m256i(0, 1, 2, 3, 4, 5, 6, 7).into();
   assert_eq!(a, [7, 6, 5, 4, 3, 2, 1, 0]);
 }
 
@@ -906,28 +840,19 @@ fn test_set_i64_m256i() {
 
 #[test]
 fn test_set_m128_m256() {
-  let a = set_m128_m256(
-    m128::from([4.0, 5.0, 6.0, 7.0]),
-    m128::from([0.0, 1.0, 2.0, 3.0]),
-  ).to_array();
+  let a = set_m128_m256(m128::from([4.0, 5.0, 6.0, 7.0]), m128::from([0.0, 1.0, 2.0, 3.0])).to_array();
   assert_eq!(a, [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]);
 }
 
 #[test]
 fn test_set_m128d_m256d() {
-  let a = set_m128d_m256d(
-    m128d::from([2.0, 3.0]),
-    m128d::from([0.0, 1.0]),
-  ).to_array();
+  let a = set_m128d_m256d(m128d::from([2.0, 3.0]), m128d::from([0.0, 1.0])).to_array();
   assert_eq!(a, [0.0, 1.0, 2.0, 3.0]);
 }
 
 #[test]
 fn test_set_m128i_m256i() {
-  let a: [i64; 4] = set_m128i_m256i(
-    set_i64_m128i(3_i64, 2),
-    set_i64_m128i(1_i64, 0),
-  ).into();
+  let a: [i64; 4] = set_m128i_m256i(set_i64_m128i(3_i64, 2), set_i64_m128i(1_i64, 0)).into();
   assert_eq!(a, [0_i64, 1, 2, 3]);
 }
 
@@ -939,8 +864,7 @@ fn test_set_m256d() {
 
 #[test]
 fn test_set_m256() {
-  let a =
-    set_m256(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0).to_array();
+  let a = set_m256(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0).to_array();
   assert_eq!(a, [7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0, 0.0]);
 }
 
@@ -976,29 +900,25 @@ fn test_set_splat_m256d() {
 
 #[test]
 fn test_set_splat_m256() {
-  let a =
-    set_splat_m256(56.0).to_array();
+  let a = set_splat_m256(56.0).to_array();
   assert_eq!(a, [56.0; 8]);
 }
 
 #[test]
 fn test_set_reversed_i8_m256i() {
-  let a: [i8; 32] =
-    set_reversed_i8_m256i(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31).into();
+  let a: [i8; 32] = set_reversed_i8_m256i(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31).into();
   assert_eq!(a, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]);
 }
 
 #[test]
 fn test_set_reversed_i16_m256i() {
-  let a: [i16; 16] =
-    set_reversed_i16_m256i(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15).into();
+  let a: [i16; 16] = set_reversed_i16_m256i(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15).into();
   assert_eq!(a, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
 }
 
 #[test]
 fn test_set_reversed_i32_m256i() {
-  let a: [i32; 8] =
-    set_reversed_i32_m256i(0, 1, 2, 3, 4, 5, 6, 7).into();
+  let a: [i32; 8] = set_reversed_i32_m256i(0, 1, 2, 3, 4, 5, 6, 7).into();
   assert_eq!(a, [0, 1, 2, 3, 4, 5, 6, 7]);
 }
 
@@ -1010,28 +930,19 @@ fn test_set_reversed_i64_m256i() {
 
 #[test]
 fn test_set_reversed_m128_m256() {
-  let a = set_reversed_m128_m256(
-    set_reversed_m128(7.0, 6.0, 5.0, 4.0),
-    set_reversed_m128(3.0, 2.0, 1.0, 0.0),
-  ).to_array();
+  let a = set_reversed_m128_m256(set_reversed_m128(7.0, 6.0, 5.0, 4.0), set_reversed_m128(3.0, 2.0, 1.0, 0.0)).to_array();
   assert_eq!(a, [7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0, 0.0]);
 }
 
 #[test]
 fn test_set_reversed_m128d_m256d() {
-  let a = set_reversed_m128d_m256d(
-    set_reversed_m128d(3.0, 2.0),
-    set_reversed_m128d(1.0, 0.0),
-  ).to_array();
+  let a = set_reversed_m128d_m256d(set_reversed_m128d(3.0, 2.0), set_reversed_m128d(1.0, 0.0)).to_array();
   assert_eq!(a, [3.0, 2.0, 1.0, 0.0]);
 }
 
 #[test]
 fn test_set_reversed_m128i_m256i() {
-  let a: [i64; 4] = set_reversed_m128i_m256i(
-    m128i::from([0_i64, 1]),
-    m128i::from([2_i64, 3]),
-  ).into();
+  let a: [i64; 4] = set_reversed_m128i_m256i(m128i::from([0_i64, 1]), m128i::from([2_i64, 3])).into();
   assert_eq!(a, [0_i64, 1, 2, 3]);
 }
 
@@ -1043,8 +954,7 @@ fn test_set_reversed_m256d() {
 
 #[test]
 fn test_set_reversed_m256() {
-  let a =
-    set_reversed_m256(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0).to_array();
+  let a = set_reversed_m256(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0).to_array();
   assert_eq!(a, [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]);
 }
 
@@ -1067,38 +977,38 @@ fn test_zeroed_m256i() {
 }
 
 #[test]
-fn test_shuffle_half_m256d() {
+fn test_shuffle_m256d() {
   let a = m256d::from_array([1.0, 2.0, 3.0, 4.0]);
   let b = m256d::from_array([5.0, 6.0, 7.0, 8.0]);
   //
-  let c = shuffle_half_m256d::<0b_0_0_0_0>(a, b).to_array();
+  let c = shuffle_m256d::<0b_0_0_0_0>(a, b).to_array();
   assert_eq!(c, [1.0, 5.0, 3.0, 7.0]);
   //
-  let c = shuffle_half_m256d::<0b_0_0_0_1>(a, b).to_array();
+  let c = shuffle_m256d::<0b_0_0_0_1>(a, b).to_array();
   assert_eq!(c, [2.0, 5.0, 3.0, 7.0]);
   //
-  let c = shuffle_half_m256d::<0b_0_0_1_0>(a, b).to_array();
+  let c = shuffle_m256d::<0b_0_0_1_0>(a, b).to_array();
   assert_eq!(c, [1.0, 6.0, 3.0, 7.0]);
   //
-  let c = shuffle_half_m256d::<0b_0_0_1_1>(a, b).to_array();
+  let c = shuffle_m256d::<0b_0_0_1_1>(a, b).to_array();
   assert_eq!(c, [2.0, 6.0, 3.0, 7.0]);
   //
-  let c = shuffle_half_m256d::<0b_1_0_0_1>(a, b).to_array();
+  let c = shuffle_m256d::<0b_1_0_0_1>(a, b).to_array();
   assert_eq!(c, [2.0, 5.0, 3.0, 8.0]);
   //
-  let c = shuffle_half_m256d::<0b_0_1_0_1>(a, b).to_array();
+  let c = shuffle_m256d::<0b_0_1_0_1>(a, b).to_array();
   assert_eq!(c, [2.0, 5.0, 4.0, 7.0]);
   //
-  let c = shuffle_half_m256d::<0b_1_1_1_1>(a, b).to_array();
+  let c = shuffle_m256d::<0b_1_1_1_1>(a, b).to_array();
   assert_eq!(c, [2.0, 6.0, 4.0, 8.0]);
 }
 
 #[test]
-fn test_shuffle_abi_f32_half_m256() {
+fn test_shuffle_m256() {
   let a = m256::from_array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
   let b = m256::from_array([9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0]);
   //
-  let c = shuffle_abi_f32_half_m256!(a, b, [a:1, a:3, b:2, b:0]).to_array();
+  let c = shuffle_m256::<0b_00_10_11_01>(a, b).to_array();
   assert_eq!(c, [2.0, 4.0, 11.0, 9.0, 6.0, 8.0, 15.0, 13.0]);
 }
 
@@ -1147,10 +1057,7 @@ fn test_store_unaligned_m256d() {
 #[test]
 fn test_store_unaligned_m256() {
   let mut addr = [0.0; 8];
-  store_unaligned_m256(
-    &mut addr,
-    m256::from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]),
-  );
+  store_unaligned_m256(&mut addr, m256::from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]));
   assert_eq!(addr, [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
 }
 
@@ -1165,11 +1072,7 @@ fn test_store_unaligned_m256i() {
 fn test_store_unaligned_hi_lo_m256d() {
   let mut hi_addr = [0.0; 2];
   let mut lo_addr = [0.0; 2];
-  store_unaligned_hi_lo_m256d(
-    &mut hi_addr,
-    &mut lo_addr,
-    m256d::from([1.0, 2.0, 3.0, 4.0]),
-  );
+  store_unaligned_hi_lo_m256d(&mut hi_addr, &mut lo_addr, m256d::from([1.0, 2.0, 3.0, 4.0]));
   assert_eq!(hi_addr, [3.0, 4.0]);
   assert_eq!(lo_addr, [1.0, 2.0]);
 }
@@ -1178,11 +1081,7 @@ fn test_store_unaligned_hi_lo_m256d() {
 fn test_store_unaligned_hi_lo_m256() {
   let mut hi_addr = [0.0; 4];
   let mut lo_addr = [0.0; 4];
-  store_unaligned_hi_lo_m256(
-    &mut hi_addr,
-    &mut lo_addr,
-    m256::from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]),
-  );
+  store_unaligned_hi_lo_m256(&mut hi_addr, &mut lo_addr, m256::from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]));
   assert_eq!(hi_addr, [5.0, 6.0, 7.0, 8.0]);
   assert_eq!(lo_addr, [1.0, 2.0, 3.0, 4.0]);
 }
@@ -1191,11 +1090,7 @@ fn test_store_unaligned_hi_lo_m256() {
 fn test_store_unaligned_hi_lo_m256i() {
   let mut hi_addr = [0_i8; 16];
   let mut lo_addr = [0_i8; 16];
-  store_unaligned_hi_lo_m256i(
-    &mut hi_addr,
-    &mut lo_addr,
-    m256i::from([56_i8; 32]),
-  );
+  store_unaligned_hi_lo_m256i(&mut hi_addr, &mut lo_addr, m256i::from([56_i8; 32]));
   assert_eq!(hi_addr, [56_i8; 16]);
   assert_eq!(lo_addr, [56_i8; 16]);
 }
