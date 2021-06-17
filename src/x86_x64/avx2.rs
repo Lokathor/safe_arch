@@ -2,35 +2,27 @@
 
 use super::*;
 
-/// Blends the `i32` lanes in `$a` and `$b` into a single value.
+/// Blends the `i32` lanes in `a` and `b` into a single value.
 ///
 /// * The blend is controlled by an immediate mask value (an `i32`).
 /// * For each lane `0..=3`, use `0` if you want that lane of the output to be
-///   from `$a` and use `1` if you want that lane of the output to be from `$b`.
+///   from `a` and use `1` if you want that lane of the output to be from `b`.
 ///
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([10, 20, 30, 40]);
 /// let b = m128i::from([100, 200, 300, 400]);
 /// //
-/// let c: [i32; 4] = blend_imm_i32_m128i!(a, b, 0b0110).into();
+/// let c: [i32; 4] = blend_imm_i32_m128i::<0b0110>(a, b).into();
 /// assert_eq!(c, [10, 200, 300, 40]);
 /// ```
 /// * **Intrinsic:** [`_mm_blend_epi32`]
 /// * **Assembly:** `vpblendd xmm, xmm, xmm, imm8`
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! blend_imm_i32_m128i {
-  ($a:expr, $b:expr, $imm:expr) => {{
-    let a: $crate::m128i = $a;
-    let b: $crate::m128i = $b;
-    const IMM: ::core::primitive::i32 = $imm;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm_blend_epi32;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm_blend_epi32;
-    $crate::m128i(unsafe { _mm_blend_epi32(a.0, b.0, IMM) })
-  }};
+pub fn blend_imm_i32_m128i<const IMM: i32>(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_blend_epi32(a.0, b.0, IMM) })
 }
 
 /// Splat the lowest 8-bit lane across the entire 128 bits.
@@ -191,11 +183,7 @@ pub fn load_masked_i64_m128i(a: &m128i, mask: m128i) -> m128i {
 /// ```
 /// # use safe_arch::*;
 /// let mut a = m128i::default();
-/// store_masked_i32_m128i(
-///   &mut a,
-///   m128i::from([-1_i32, 0, 0, -1]),
-///   set_splat_i32_m128i(5),
-/// );
+/// store_masked_i32_m128i(&mut a, m128i::from([-1_i32, 0, 0, -1]), set_splat_i32_m128i(5));
 /// assert_eq!(<[i32; 4]>::from(a), [5, 0, 0, 5]);
 /// ```
 /// * **Intrinsic:** [`_mm_maskstore_epi32`]
@@ -215,11 +203,7 @@ pub fn store_masked_i32_m128i(addr: &mut m128i, mask: m128i, a: m128i) {
 /// ```
 /// # use safe_arch::*;
 /// let mut a = m128i::default();
-/// store_masked_i64_m128i(
-///   &mut a,
-///   m128i::from([0_i64, -1]),
-///   set_splat_i64_m128i(5),
-/// );
+/// store_masked_i64_m128i(&mut a, m128i::from([0_i64, -1]), set_splat_i64_m128i(5));
 /// assert_eq!(<[i64; 2]>::from(a), [0, 5]);
 /// ```
 /// * **Intrinsic:** [`_mm_maskstore_epi64`]
@@ -526,30 +510,16 @@ pub fn add_saturating_u16_m256i(a: m256i, b: m256i) -> m256i {
 /// let b = m256i::from([12_i8; 32]);
 /// // `a` bytes come in to the _high_ indexes because these are LE bytes.
 /// // Also note that the three 5 values at the low half and high half.
-/// let c: [i8; 32] = combined_byte_shr_imm_m256i!(a, b, 3).into();
-/// assert_eq!(
-///   c,
-///   [
-///     12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 5, 5, 5,
-///     12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 5, 5, 5_i8
-///   ]
-/// );
+/// let c: [i8; 32] = combined_byte_shr_imm_m256i::<3>(a, b).into();
+/// assert_eq!(c, [12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 5, 5, 5, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 5, 5, 5_i8]);
 /// ```
 /// * **Intrinsic:** [`_mm256_alignr_epi8`]
 /// * **Assembly:** `vpalignr ymm, ymm, ymm, imm8`
-#[macro_export]
-#[rustfmt::skip]
-macro_rules! combined_byte_shr_imm_m256i {
-  ($a:expr, $b:expr, $imm:expr) => {{
-    let a: $crate::m256i = $a;
-    let b: $crate::m256i = $b;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_alignr_epi8;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_alignr_epi8;
-    $crate::m256i(unsafe { _mm256_alignr_epi8(a.0, b.0, IMM) })
-  }};
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn combined_byte_shr_imm_m256i<const IMM: i32>(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_alignr_epi8(a.0, b.0, IMM) })
 }
 
 /// Bitwise `a & b`.
@@ -631,24 +601,16 @@ pub fn average_u16_m256i(a: m256i, b: m256i) -> m256i {
 /// let a = m256i::from([5_i16; 16]);
 /// let b = m256i::from([10_i16; 16]);
 /// //
-/// let c: [i16; 16] = blend_imm_i16_m256i!(a, b, 0b11001000).into();
+/// let c: [i16; 16] = blend_imm_i16_m256i::<0b11001000>(a, b).into();
 /// assert_eq!(c, [5_i16, 5, 5, 10, 5, 5, 10, 10, 5, 5, 5, 10, 5, 5, 10, 10]);
 /// ```
 /// * **Intrinsic:** [`_mm256_blend_epi16`]
 /// * **Assembly:** `vpblendw ymm, ymm, ymm, imm8`
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! blend_imm_i16_m256i {
-  ($a:expr, $b:expr, $imm:expr) => {{
-    let a: $crate::m256i = $a;
-    let b: $crate::m256i = $b;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_blend_epi16;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_blend_epi16;
-    $crate::m256i(unsafe { _mm256_blend_epi16(a.0, b.0, IMM) })
-  }};
+pub fn blend_imm_i16_m256i<const IMM: i32>(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_blend_epi16(a.0, b.0, IMM) })
 }
 
 /// Blends the `i32` lanes according to the immediate value.
@@ -660,24 +622,16 @@ macro_rules! blend_imm_i16_m256i {
 /// let a = m256i::from([5_i32; 8]);
 /// let b = m256i::from([10_i32; 8]);
 /// //
-/// let c: [i32; 8] = blend_imm_i32_m256i!(a, b, 0b11001000).into();
+/// let c: [i32; 8] = blend_imm_i32_m256i::<0b11001000>(a, b).into();
 /// assert_eq!(c, [5, 5, 5, 10, 5, 5, 10, 10]);
 /// ```
 /// * **Intrinsic:** [`_mm256_blend_epi32`]
 /// * **Assembly:** `vpblendd ymm, ymm, ymm, imm8`
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! blend_imm_i32_m256i {
-  ($a:expr, $b:expr, $imm:expr) => {{
-    let a: $crate::m256i = $a;
-    let b: $crate::m256i = $b;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_blend_epi32;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_blend_epi32;
-    $crate::m256i(unsafe { _mm256_blend_epi32(a.0, b.0, IMM) })
-  }};
+pub fn blend_imm_i32_m256i<const IMM: i32>(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_blend_epi32(a.0, b.0, IMM) })
 }
 
 /// Blend `i8` lanes according to a runtime varying mask.
@@ -687,18 +641,9 @@ macro_rules! blend_imm_i32_m256i {
 /// # use safe_arch::*;
 /// let a = m256i::from([5_i8; 32]);
 /// let b = m256i::from([10_i8; 32]);
-/// let mask = m256i::from([
-///   0_i8, 0, 0, -1, -1, -1, 0, 0, 0, -1, -1, -1, 0, 0, 0, -1, -1, -1, 0, 0, 0,
-///   -1, -1, -1, 0, 0, 0, -1, -1, -1, 0, 0,
-/// ]);
+/// let mask = m256i::from([0_i8, 0, 0, -1, -1, -1, 0, 0, 0, -1, -1, -1, 0, 0, 0, -1, -1, -1, 0, 0, 0, -1, -1, -1, 0, 0, 0, -1, -1, -1, 0, 0]);
 /// let c: [i8; 32] = blend_varying_i8_m256i(a, b, mask).into();
-/// assert_eq!(
-///   c,
-///   [
-///     5, 5, 5, 10, 10, 10, 5, 5, 5, 10, 10, 10, 5, 5, 5, 10, 10, 10, 5, 5, 5,
-///     10, 10, 10, 5, 5, 5, 10, 10, 10, 5, 5
-///   ]
-/// );
+/// assert_eq!(c, [5, 5, 5, 10, 10, 10, 5, 5, 5, 10, 10, 10, 5, 5, 5, 10, 10, 10, 5, 5, 5, 10, 10, 10, 5, 5, 5, 10, 10, 10, 5, 5]);
 /// ```
 /// * **Intrinsic:** [`_mm256_blendv_epi8`]
 /// * **Assembly:** `vpavgw ymm, ymm, ymm`
@@ -811,23 +756,16 @@ pub fn set_splat_m128_s_m256(a: m128) -> m256 {
 /// # use safe_arch::*;
 /// let a = m256i::from([0x0000000B_0000000A_0000000F_11111111_u128; 2]);
 /// //
-/// let b: [u128; 2] = byte_shl_imm_u128_m256i!(a, 1).into();
+/// let b: [u128; 2] = byte_shl_imm_u128_m256i::<1>(a).into();
 /// assert_eq!(b, [0x00000B00_00000A00_00000F11_11111100_u128; 2]);
 /// ```
 /// * **Intrinsic:** [`_mm256_bslli_epi128`]
 /// * **Assembly:** `vpslldq ymm, ymm, imm8`
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! byte_shl_imm_u128_m256i {
-  ($a:expr, $imm:expr) => {{
-    let a: $crate::m256i = $a;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_bslli_epi128;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_bslli_epi128;
-    $crate::m256i(unsafe { _mm256_bslli_epi128(a.0, IMM) })
-  }};
+pub fn byte_shl_imm_u128_m256i<const IMM: i32>(a: m256i) -> m256i {
+  m256i(unsafe { _mm256_bslli_epi128(a.0, IMM) })
 }
 
 /// Shifts each `u128` lane right by a number of **bytes**.
@@ -836,42 +774,23 @@ macro_rules! byte_shl_imm_u128_m256i {
 /// # use safe_arch::*;
 /// let a = m256i::from([0x0000000B_0000000A_0000000F_11111111_u128; 2]);
 /// //
-/// let b: [u128; 2] = byte_shr_imm_u128_m256i!(a, 1).into();
+/// let b: [u128; 2] = byte_shr_imm_u128_m256i::<1>(a).into();
 /// assert_eq!(b, [0x00000000_0B000000_0A000000_0F111111; 2]);
 /// ```
 /// * **Intrinsic:** [`_mm256_bsrli_epi128`]
 /// * **Assembly:** `vpsrldq ymm, ymm, imm8`
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! byte_shr_imm_u128_m256i {
-  ($a:expr, $imm:expr) => {{
-    let a: $crate::m256i = $a;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_bsrli_epi128;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_bsrli_epi128;
-    $crate::m256i(unsafe { _mm256_bsrli_epi128(a.0, IMM) })
-  }};
+pub fn byte_shr_imm_u128_m256i<const IMM: i32>(a: m256i) -> m256i {
+  m256i(unsafe { _mm256_bsrli_epi128(a.0, IMM) })
 }
 
 /// Compare `i8` lanes for equality, mask output.
 /// ```
 /// # use safe_arch::*;
-/// assert_eq!(
-///   <[i8; 32]>::from(cmp_eq_mask_i8_m256i(
-///     m256i::from([1_i8; 32]),
-///     m256i::from([1_i8; 32])
-///   )),
-///   [-1_i8; 32]
-/// );
-/// assert_eq!(
-///   <[i8; 32]>::from(cmp_eq_mask_i8_m256i(
-///     m256i::from([5_i8; 32]),
-///     m256i::from([6_i8; 32])
-///   )),
-///   [0_i8; 32]
-/// );
+/// assert_eq!(<[i8; 32]>::from(cmp_eq_mask_i8_m256i(m256i::from([1_i8; 32]), m256i::from([1_i8; 32]))), [-1_i8; 32]);
+/// assert_eq!(<[i8; 32]>::from(cmp_eq_mask_i8_m256i(m256i::from([5_i8; 32]), m256i::from([6_i8; 32]))), [0_i8; 32]);
 /// ```
 /// * **Intrinsic:** [`_mm256_cmpeq_epi8`]
 /// * **Assembly:** `vpcmpeqb ymm, ymm, ymm`
@@ -885,20 +804,8 @@ pub fn cmp_eq_mask_i8_m256i(a: m256i, b: m256i) -> m256i {
 /// Compare `i16` lanes for equality, mask output.
 /// ```
 /// # use safe_arch::*;
-/// assert_eq!(
-///   <[i16; 16]>::from(cmp_eq_mask_i16_m256i(
-///     m256i::from([1_i16; 16]),
-///     m256i::from([1_i16; 16])
-///   )),
-///   [-1_i16; 16]
-/// );
-/// assert_eq!(
-///   <[i16; 16]>::from(cmp_eq_mask_i16_m256i(
-///     m256i::from([5_i16; 16]),
-///     m256i::from([6_i16; 16])
-///   )),
-///   [0_i16; 16]
-/// );
+/// assert_eq!(<[i16; 16]>::from(cmp_eq_mask_i16_m256i(m256i::from([1_i16; 16]), m256i::from([1_i16; 16]))), [-1_i16; 16]);
+/// assert_eq!(<[i16; 16]>::from(cmp_eq_mask_i16_m256i(m256i::from([5_i16; 16]), m256i::from([6_i16; 16]))), [0_i16; 16]);
 /// ```
 /// * **Intrinsic:** [`_mm256_cmpeq_epi16`]
 /// * **Assembly:** `vpcmpeqw ymm, ymm, ymm`
@@ -912,20 +819,8 @@ pub fn cmp_eq_mask_i16_m256i(a: m256i, b: m256i) -> m256i {
 /// Compare `i32` lanes for equality, mask output.
 /// ```
 /// # use safe_arch::*;
-/// assert_eq!(
-///   <[i32; 8]>::from(cmp_eq_mask_i32_m256i(
-///     m256i::from([1_i32; 8]),
-///     m256i::from([1_i32; 8])
-///   )),
-///   [-1_i32; 8]
-/// );
-/// assert_eq!(
-///   <[i32; 8]>::from(cmp_eq_mask_i32_m256i(
-///     m256i::from([5_i32; 8]),
-///     m256i::from([6_i32; 8])
-///   )),
-///   [0_i32; 8]
-/// );
+/// assert_eq!(<[i32; 8]>::from(cmp_eq_mask_i32_m256i(m256i::from([1_i32; 8]), m256i::from([1_i32; 8]))), [-1_i32; 8]);
+/// assert_eq!(<[i32; 8]>::from(cmp_eq_mask_i32_m256i(m256i::from([5_i32; 8]), m256i::from([6_i32; 8]))), [0_i32; 8]);
 /// ```
 /// * **Intrinsic:** [`_mm256_cmpeq_epi32`]
 /// * **Assembly:** `vpcmpeqd ymm, ymm, ymm`
@@ -939,20 +834,8 @@ pub fn cmp_eq_mask_i32_m256i(a: m256i, b: m256i) -> m256i {
 /// Compare `i64` lanes for equality, mask output.
 /// ```
 /// # use safe_arch::*;
-/// assert_eq!(
-///   <[i64; 4]>::from(cmp_eq_mask_i64_m256i(
-///     m256i::from([1_i64; 4]),
-///     m256i::from([1_i64; 4])
-///   )),
-///   [-1_i64; 4]
-/// );
-/// assert_eq!(
-///   <[i64; 4]>::from(cmp_eq_mask_i64_m256i(
-///     m256i::from([5_i64; 4]),
-///     m256i::from([6_i64; 4])
-///   )),
-///   [0_i64; 4]
-/// );
+/// assert_eq!(<[i64; 4]>::from(cmp_eq_mask_i64_m256i(m256i::from([1_i64; 4]), m256i::from([1_i64; 4]))), [-1_i64; 4]);
+/// assert_eq!(<[i64; 4]>::from(cmp_eq_mask_i64_m256i(m256i::from([5_i64; 4]), m256i::from([6_i64; 4]))), [0_i64; 4]);
 /// ```
 /// * **Intrinsic:** [`_mm256_cmpeq_epi64`]
 /// * **Assembly:** `vpcmpeqq ymm, ymm, ymm`
@@ -966,20 +849,8 @@ pub fn cmp_eq_mask_i64_m256i(a: m256i, b: m256i) -> m256i {
 /// Compare `i8` lanes for `a > b`, mask output.
 /// ```
 /// # use safe_arch::*;
-/// assert_eq!(
-///   <[i8; 32]>::from(cmp_gt_mask_i8_m256i(
-///     m256i::from([1_i8; 32]),
-///     m256i::from([0_i8; 32])
-///   )),
-///   [-1_i8; 32]
-/// );
-/// assert_eq!(
-///   <[i8; 32]>::from(cmp_gt_mask_i8_m256i(
-///     m256i::from([5_i8; 32]),
-///     m256i::from([5_i8; 32])
-///   )),
-///   [0_i8; 32]
-/// );
+/// assert_eq!(<[i8; 32]>::from(cmp_gt_mask_i8_m256i(m256i::from([1_i8; 32]), m256i::from([0_i8; 32]))), [-1_i8; 32]);
+/// assert_eq!(<[i8; 32]>::from(cmp_gt_mask_i8_m256i(m256i::from([5_i8; 32]), m256i::from([5_i8; 32]))), [0_i8; 32]);
 /// ```
 /// * **Intrinsic:** [`_mm256_cmpgt_epi8`]
 /// * **Assembly:** `vpcmpgtb ymm, ymm, ymm`
@@ -993,20 +864,8 @@ pub fn cmp_gt_mask_i8_m256i(a: m256i, b: m256i) -> m256i {
 /// Compare `i16` lanes for `a > b`, mask output.
 /// ```
 /// # use safe_arch::*;
-/// assert_eq!(
-///   <[i16; 16]>::from(cmp_gt_mask_i16_m256i(
-///     m256i::from([1_i16; 16]),
-///     m256i::from([0_i16; 16])
-///   )),
-///   [-1_i16; 16]
-/// );
-/// assert_eq!(
-///   <[i16; 16]>::from(cmp_gt_mask_i16_m256i(
-///     m256i::from([5_i16; 16]),
-///     m256i::from([5_i16; 16])
-///   )),
-///   [0_i16; 16]
-/// );
+/// assert_eq!(<[i16; 16]>::from(cmp_gt_mask_i16_m256i(m256i::from([1_i16; 16]), m256i::from([0_i16; 16]))), [-1_i16; 16]);
+/// assert_eq!(<[i16; 16]>::from(cmp_gt_mask_i16_m256i(m256i::from([5_i16; 16]), m256i::from([5_i16; 16]))), [0_i16; 16]);
 /// ```
 /// * **Intrinsic:** [`_mm256_cmpgt_epi16`]
 /// * **Assembly:** `vpcmpgtw ymm, ymm, ymm`
@@ -1020,20 +879,8 @@ pub fn cmp_gt_mask_i16_m256i(a: m256i, b: m256i) -> m256i {
 /// Compare `i32` lanes for `a > b`, mask output.
 /// ```
 /// # use safe_arch::*;
-/// assert_eq!(
-///   <[i32; 8]>::from(cmp_gt_mask_i32_m256i(
-///     m256i::from([1_i32; 8]),
-///     m256i::from([0_i32; 8])
-///   )),
-///   [-1_i32; 8]
-/// );
-/// assert_eq!(
-///   <[i32; 8]>::from(cmp_gt_mask_i32_m256i(
-///     m256i::from([5_i32; 8]),
-///     m256i::from([5_i32; 8])
-///   )),
-///   [0_i32; 8]
-/// );
+/// assert_eq!(<[i32; 8]>::from(cmp_gt_mask_i32_m256i(m256i::from([1_i32; 8]), m256i::from([0_i32; 8]))), [-1_i32; 8]);
+/// assert_eq!(<[i32; 8]>::from(cmp_gt_mask_i32_m256i(m256i::from([5_i32; 8]), m256i::from([5_i32; 8]))), [0_i32; 8]);
 /// ```
 /// * **Intrinsic:** [`_mm256_cmpgt_epi32`]
 /// * **Assembly:** `vpcmpgtd ymm, ymm, ymm`
@@ -1047,20 +894,8 @@ pub fn cmp_gt_mask_i32_m256i(a: m256i, b: m256i) -> m256i {
 /// Compare `i64` lanes for `a > b`, mask output.
 /// ```
 /// # use safe_arch::*;
-/// assert_eq!(
-///   <[i64; 4]>::from(cmp_gt_mask_i64_m256i(
-///     m256i::from([1_i64; 4]),
-///     m256i::from([0_i64; 4])
-///   )),
-///   [-1_i64; 4]
-/// );
-/// assert_eq!(
-///   <[i64; 4]>::from(cmp_gt_mask_i64_m256i(
-///     m256i::from([5_i64; 4]),
-///     m256i::from([5_i64; 4])
-///   )),
-///   [0_i64; 4]
-/// );
+/// assert_eq!(<[i64; 4]>::from(cmp_gt_mask_i64_m256i(m256i::from([1_i64; 4]), m256i::from([0_i64; 4]))), [-1_i64; 4]);
+/// assert_eq!(<[i64; 4]>::from(cmp_gt_mask_i64_m256i(m256i::from([5_i64; 4]), m256i::from([5_i64; 4]))), [0_i64; 4]);
 /// ```
 /// * **Intrinsic:** [`_mm256_cmpgt_epi64`]
 /// * **Assembly:** `vpcmpgtq ymm, ymm, ymm`
@@ -1265,100 +1100,60 @@ pub fn convert_to_i16_m256i_from_lower4_u8_m128i(a: m128i) -> m256i {
 
 /// Gets an `i16` value out of an `m256i`, returns as `i32`.
 ///
-/// The lane to get must be a constant. If you select outside the range `0..16`
-/// then the selection is wrapped to be in range (only the lowest 4 bits of the
-/// input are used).
+/// The lane to get must be a constant in the range `0..16`.
 ///
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([0xA_i16, 0xB, 0xC, 0xD, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+/// let a = m256i::from([0xA_i16, 0xB, 0xC, 0xD, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 /// //
-/// assert_eq!(extract_i16_as_i32_m256i!(a, 0), 0xA);
-/// assert_eq!(extract_i16_as_i32_m256i!(a, 1), 0xB);
-/// // the lane requested is "wrapped" to be a valid index.
-/// assert_eq!(0b1_0010 & 0b1111, 2);
-/// assert_eq!(extract_i16_as_i32_m256i!(a, 0b1_0010), 0xC);
+/// assert_eq!(extract_i16_as_i32_m256i::<0>(a), 0xA);
+/// assert_eq!(extract_i16_as_i32_m256i::<1>(a), 0xB);
 /// ```
 /// * **Intrinsic:** [`_mm256_extract_epi16`]
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! extract_i16_as_i32_m256i {
-  ($a:expr, $imm:expr) => {{
-    let a: $crate::m256i = $a;
-    const LANE: ::core::primitive::i32 =
-      ($imm & 0b1111) as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_extract_epi16;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_extract_epi16;
-    unsafe { _mm256_extract_epi16(a.0, LANE) }
-  }};
+pub fn extract_i16_as_i32_m256i<const LANE: i32>(a: m256i) -> i32 {
+  unsafe { _mm256_extract_epi16(a.0, LANE) }
 }
 
 /// Gets an `i8` value out of an `m256i`, returns as `i32`.
 ///
-/// The lane to get must be a constant. If you select outside the range `0..32`
-/// then the selection is wrapped to be in range (only the lowest 5 bits of the
-/// input are used).
+/// The lane to get must be a constant in the range `0..32`.
 ///
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([
-///   0xA_i8, 0xB, 0xC, 0xD, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-///   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-/// ]);
+/// let a = m256i::from([0xA_i8, 0xB, 0xC, 0xD, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 /// //
-/// assert_eq!(extract_i8_as_i32_m256i!(a, 0), 0xA);
-/// assert_eq!(extract_i8_as_i32_m256i!(a, 1), 0xB);
-/// // the lane requested is "wrapped" to be a valid index.
-/// assert_eq!(0b10_0010 & 0b1_1111, 2);
-/// assert_eq!(extract_i8_as_i32_m256i!(a, 0b10_0010), 0xC);
+/// assert_eq!(extract_i8_as_i32_m256i::<0>(a), 0xA);
+/// assert_eq!(extract_i8_as_i32_m256i::<1>(a), 0xB);
 /// ```
 /// * **Intrinsic:** [`_mm256_extract_epi8`]
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! extract_i8_as_i32_m256i {
-  ($a:expr, $imm:expr) => {{
-    let a: $crate::m256i = $a;
-    const LANE: ::core::primitive::i32 =
-      ($imm & 0b11111) as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_extract_epi8;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_extract_epi8;
-    unsafe { _mm256_extract_epi8(a.0, LANE) }
-  }};
+pub fn extract_i8_as_i32_m256i<const LANE: i32>(a: m256i) -> i32 {
+  unsafe { _mm256_extract_epi8(a.0, LANE) }
 }
 
 /// Gets an `m128i` value out of an `m256i`.
 ///
-/// The lane to get must be a constant. Only the lowest bit of the value is
-/// used.
+/// The lane to get must be a constant 0 or 1.
 ///
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([5_u128, 6_u128]);
 /// //
-/// assert_eq!(extract_m128i_m256i!(a, 0), m128i::from(5_u128));
-/// assert_eq!(extract_m128i_m256i!(a, 1), m128i::from(6_u128));
-/// // the index is "wrapped" to be in bounds.
-/// assert_eq!(extract_m128i_m256i!(a, 2), m128i::from(5_u128));
+/// assert_eq!(extract_m128i_m256i::<0>(a), m128i::from(5_u128));
+/// assert_eq!(extract_m128i_m256i::<1>(a), m128i::from(6_u128));
 /// ```
 /// * **Intrinsic:** [`_mm256_extract_epi8`]
 /// * **Assembly:** `vextracti128 xmm, ymm, imm8`
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! extract_m128i_m256i {
-  ($a:expr, $imm:expr) => {{
-    let a: $crate::m256i = $a;
-    const LANE: ::core::primitive::i32 = ($imm & 0b1) as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_extracti128_si256;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_extracti128_si256;
-    $crate::m128i(unsafe { _mm256_extracti128_si256(a.0, LANE) })
-  }};
+pub fn extract_m128i_m256i<const LANE: i32>(a: m256i) -> m128i {
+  m128i(unsafe { _mm256_extracti128_si256(a.0, LANE) })
 }
 
 /// Horizontal `a + b` with lanes as `i16`.
@@ -1370,10 +1165,7 @@ macro_rules! extract_m128i_m256i {
 /// let a = m256i::from([5_i16; 16]);
 /// let b = m256i::from([6_i16; 16]);
 /// let c: [i16; 16] = add_horizontal_i16_m256i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [10_i16, 10, 10, 10, 12, 12, 12, 12, 10, 10, 10, 10, 12, 12, 12, 12]
-/// );
+/// assert_eq!(c, [10_i16, 10, 10, 10, 12, 12, 12, 12, 10, 10, 10, 10, 12, 12, 12, 12]);
 /// ```
 /// * **Intrinsic:** [`_mm256_hadd_epi16`]
 /// * **Assembly:** `vphaddw ymm, ymm, ymm`
@@ -1439,16 +1231,10 @@ pub fn add_horizontal_i32_m256i(a: m256i, b: m256i) -> m256i {
 ///   b.high
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([5_i16, 6, 2, 5, 4, 3, 1, 0, -12, 13, 56, 21, 8, 7, 6, 5]);
-/// let b = m256i::from([
-///   12000_i16, 13000, -2, -8, 0, 1, 2, 3, 8, 7, 6, 5, 234, 654, 123, 978,
-/// ]);
+/// let a = m256i::from([5_i16, 6, 2, 5, 4, 3, 1, 0, -12, 13, 56, 21, 8, 7, 6, 5]);
+/// let b = m256i::from([12000_i16, 13000, -2, -8, 0, 1, 2, 3, 8, 7, 6, 5, 234, 654, 123, 978]);
 /// let c: [i16; 16] = add_horizontal_i16_m256i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [11_i16, 7, 7, 1, 25000, -10, 1, 5, 1, 77, 15, 11, 15, 11, 888, 1101]
-/// );
+/// assert_eq!(c, [11_i16, 7, 7, 1, 25000, -10, 1, 5, 1, 77, 15, 11, 15, 11, 888, 1101]);
 /// ```
 /// * **Intrinsic:** [`_mm256_hsub_epi16`]
 /// * **Assembly:** `vphsubw ymm, ymm, ymm`
@@ -1512,12 +1298,8 @@ pub fn sub_horizontal_saturating_i16_m256i(a: m256i, b: m256i) -> m256i {
 /// values to produce the final output.
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([
-///   1_i16, 2, 3, 4, -1, -2, -3, -4, 12, 13, -14, -15, 100, 200, 300, -400,
-/// ]);
-/// let b = m256i::from([
-///   5_i16, 6, 7, 8, -15, -26, -37, 48, 50, 60, 70, -80, 90, 100, 12, -80,
-/// ]);
+/// let a = m256i::from([1_i16, 2, 3, 4, -1, -2, -3, -4, 12, 13, -14, -15, 100, 200, 300, -400]);
+/// let b = m256i::from([5_i16, 6, 7, 8, -15, -26, -37, 48, 50, 60, 70, -80, 90, 100, 12, -80]);
 /// let c: [i32; 8] = mul_i16_horizontal_add_m256i(a, b).into();
 /// assert_eq!(c, [17, 53, 67, -81, 1380, 220, 29000, 35600]);
 /// ```
@@ -1570,8 +1352,7 @@ pub fn mul_u8i8_add_horizontal_saturating_m256i(a: m256i, b: m256i) -> m256i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([5_i32; 8]);
-/// let b =
-///   load_masked_i32_m256i(&a, m256i::from([-1_i32, 0, 0, -1, -1, -1, 0, 0]));
+/// let b = load_masked_i32_m256i(&a, m256i::from([-1_i32, 0, 0, -1, -1, -1, 0, 0]));
 /// assert_eq!(<[i32; 8]>::from(b), [5, 0, 0, 5, 5, 5, 0, 0]);
 /// ```
 /// * **Intrinsic:** [`_mm256_maskload_epi32`]
@@ -1580,9 +1361,7 @@ pub fn mul_u8i8_add_horizontal_saturating_m256i(a: m256i, b: m256i) -> m256i {
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
 pub fn load_masked_i32_m256i(a: &m256i, mask: m256i) -> m256i {
-  m256i(unsafe {
-    _mm256_maskload_epi32(a as *const m256i as *const i32, mask.0)
-  })
+  m256i(unsafe { _mm256_maskload_epi32(a as *const m256i as *const i32, mask.0) })
 }
 
 /// Loads the reference given and zeroes any `i64` lanes not in the mask.
@@ -1601,9 +1380,7 @@ pub fn load_masked_i32_m256i(a: &m256i, mask: m256i) -> m256i {
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
 pub fn load_masked_i64_m256i(a: &m256i, mask: m256i) -> m256i {
-  m256i(unsafe {
-    _mm256_maskload_epi64(a as *const m256i as *const i64, mask.0)
-  })
+  m256i(unsafe { _mm256_maskload_epi64(a as *const m256i as *const i64, mask.0) })
 }
 
 /// Stores the `i32` masked lanes given to the reference.
@@ -1614,11 +1391,7 @@ pub fn load_masked_i64_m256i(a: &m256i, mask: m256i) -> m256i {
 /// ```
 /// # use safe_arch::*;
 /// let mut a = m256i::default();
-/// store_masked_i32_m256i(
-///   &mut a,
-///   m256i::from([-1_i32, 0, 0, -1, -1, -1, 0, 0]),
-///   m256i::from([5_i32; 8]),
-/// );
+/// store_masked_i32_m256i(&mut a, m256i::from([-1_i32, 0, 0, -1, -1, -1, 0, 0]), m256i::from([5_i32; 8]));
 /// assert_eq!(<[i32; 8]>::from(a), [5, 0, 0, 5, 5, 5, 0, 0]);
 /// ```
 /// * **Intrinsic:** [`_mm256_maskstore_epi32`]
@@ -1627,9 +1400,7 @@ pub fn load_masked_i64_m256i(a: &m256i, mask: m256i) -> m256i {
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
 pub fn store_masked_i32_m256i(addr: &mut m256i, mask: m256i, a: m256i) {
-  unsafe {
-    _mm256_maskstore_epi32(addr as *mut m256i as *mut i32, mask.0, a.0)
-  };
+  unsafe { _mm256_maskstore_epi32(addr as *mut m256i as *mut i32, mask.0, a.0) };
 }
 
 /// Stores the `i32` masked lanes given to the reference.
@@ -1640,11 +1411,7 @@ pub fn store_masked_i32_m256i(addr: &mut m256i, mask: m256i, a: m256i) {
 /// ```
 /// # use safe_arch::*;
 /// let mut a = m256i::default();
-/// store_masked_i64_m256i(
-///   &mut a,
-///   m256i::from([0_i64, -1, -1, 0]),
-///   m256i::from([5_i64; 4]),
-/// );
+/// store_masked_i64_m256i(&mut a, m256i::from([0_i64, -1, -1, 0]), m256i::from([5_i64; 4]));
 /// assert_eq!(<[i64; 4]>::from(a), [0, 5, 5, 0]);
 /// ```
 /// * **Intrinsic:** [`_mm256_maskstore_epi64`]
@@ -1653,60 +1420,33 @@ pub fn store_masked_i32_m256i(addr: &mut m256i, mask: m256i, a: m256i) {
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
 pub fn store_masked_i64_m256i(addr: &mut m256i, mask: m256i, a: m256i) {
-  unsafe {
-    _mm256_maskstore_epi64(addr as *mut m256i as *mut i64, mask.0, a.0)
-  };
+  unsafe { _mm256_maskstore_epi64(addr as *mut m256i as *mut i64, mask.0, a.0) };
 }
 
 /// Inserts an `m128i` to an `m256i` at the high or low position.
 ///
-/// * First arg: the `m256i` register to insert to
-/// * Second arg: the `m128i` register to be inserted
-/// * Third arg: 0 or 1 to target either the low or high half for insertion.
-///
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([0_i32; 8]);
-/// let b: [i32; 8] =
-///   insert_m128i_to_m256i!(a, m128i::from([1, 2, 3, 4]), 1).into();
+/// let b: [i32; 8] = insert_m128i_to_m256i::<1>(a, m128i::from([1, 2, 3, 4])).into();
 /// assert_eq!(b, [0, 0, 0, 0, 1, 2, 3, 4]);
 /// ```
 /// * **Intrinsic:** [`_mm256_inserti128_si256`]
 /// * **Assembly:** `vinserti128 ymm, ymm, xmm, imm8`
-#[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! insert_m128i_to_m256i {
-  ($a:expr, $b:expr, $imm:expr) => {{
-    let a: m256i = $a;
-    let b: $crate::m128i = $b;
-    const IMM: ::core::primitive::i32 = ($imm & 0b1) as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_inserti128_si256;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_inserti128_si256;
-    $crate::m256i(unsafe { _mm256_inserti128_si256(a.0, b.0, IMM) })
-  }};
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn insert_m128i_to_m256i<const LANE: i32>(a: m256i, b: m128i) -> m256i {
+  m256i(unsafe { _mm256_inserti128_si256(a.0, b.0, LANE) })
 }
 
 /// Lanewise `max(a, b)` with lanes as `i8`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([
-///   0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127, 1, 3, 5, 7, 2, 3,
-///   5, 12, 13, 16, 27, 28, 29, 30, 31, 32,
-/// ]);
-/// let b = m256i::from([
-///   0_i8, 11, 2, -13, 4, 15, 6, -17, -8, 19, -20, 21, 22, -23, 24, 127, 0, -1,
-///   3, 4, 5, 1, -2, -4, -8, 12, 13, 14, 29, 30, -31, -32,
-/// ]);
+/// let a = m256i::from([0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127, 1, 3, 5, 7, 2, 3, 5, 12, 13, 16, 27, 28, 29, 30, 31, 32]);
+/// let b = m256i::from([0_i8, 11, 2, -13, 4, 15, 6, -17, -8, 19, -20, 21, 22, -23, 24, 127, 0, -1, 3, 4, 5, 1, -2, -4, -8, 12, 13, 14, 29, 30, -31, -32]);
 /// let c: [i8; 32] = max_i8_m256i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [
-///     0, 11, 2, 3, 4, 15, 6, 7, 8, 19, 10, 21, 22, 13, 24, 127, 1, 3, 5, 7, 5,
-///     3, 5, 12, 13, 16, 27, 28, 29, 30, 31, 32
-///   ]
-/// );
+/// assert_eq!(c, [0, 11, 2, 3, 4, 15, 6, 7, 8, 19, 10, 21, 22, 13, 24, 127, 1, 3, 5, 7, 5, 3, 5, 12, 13, 16, 27, 28, 29, 30, 31, 32]);
 /// ```
 /// * **Intrinsic:** [`_mm256_max_epi8`]
 /// * **Assembly:** `vpmaxsb ymm, ymm, ymm`
@@ -1720,11 +1460,8 @@ pub fn max_i8_m256i(a: m256i, b: m256i) -> m256i {
 /// Lanewise `max(a, b)` with lanes as `i16`.
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([0_i16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127]);
-/// let b = m256i::from([
-///   0_i16, 11, 2, -13, 4, 15, 6, -17, -8, 19, -20, 21, 22, -23, -24, 25,
-/// ]);
+/// let a = m256i::from([0_i16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127]);
+/// let b = m256i::from([0_i16, 11, 2, -13, 4, 15, 6, -17, -8, 19, -20, 21, 22, -23, -24, 25]);
 /// let c: [i16; 16] = max_i16_m256i(a, b).into();
 /// assert_eq!(c, [0, 11, 2, 3, 4, 15, 6, 7, 8, 19, 10, 21, 22, 13, 14, 127]);
 /// ```
@@ -1757,22 +1494,10 @@ pub fn max_i32_m256i(a: m256i, b: m256i) -> m256i {
 /// Lanewise `max(a, b)` with lanes as `u8`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([
-///   0_u8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127, 1, 3, 5, 7, 2, 3,
-///   5, 12, 13, 16, 27, 28, 29, 30, 31, 32,
-/// ]);
-/// let b = m256i::from([
-///   0_u8, 255, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127, 0, 1, 3, 4,
-///   5, 1, 2, 4, 8, 12, 13, 14, 29, 30, 31, 32,
-/// ]);
+/// let a = m256i::from([0_u8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127, 1, 3, 5, 7, 2, 3, 5, 12, 13, 16, 27, 28, 29, 30, 31, 32]);
+/// let b = m256i::from([0_u8, 255, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127, 0, 1, 3, 4, 5, 1, 2, 4, 8, 12, 13, 14, 29, 30, 31, 32]);
 /// let c: [u8; 32] = max_u8_m256i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [
-///     0, 255, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127, 1, 3, 5, 7,
-///     5, 3, 5, 12, 13, 16, 27, 28, 29, 30, 31, 32
-///   ]
-/// );
+/// assert_eq!(c, [0, 255, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127, 1, 3, 5, 7, 5, 3, 5, 12, 13, 16, 27, 28, 29, 30, 31, 32]);
 /// ```
 /// * **Intrinsic:** [`_mm256_max_epu8`]
 /// * **Assembly:** `vpmaxub ymm, ymm, ymm`
@@ -1786,16 +1511,10 @@ pub fn max_u8_m256i(a: m256i, b: m256i) -> m256i {
 /// Lanewise `max(a, b)` with lanes as `u16`.
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([0_u16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127]);
-/// let b = m256i::from([
-///   0_u16, 65535, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 25,
-/// ]);
+/// let a = m256i::from([0_u16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127]);
+/// let b = m256i::from([0_u16, 65535, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 25]);
 /// let c: [u16; 16] = max_u16_m256i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [0, 65535, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127]
-/// );
+/// assert_eq!(c, [0, 65535, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127]);
 /// ```
 /// * **Intrinsic:** [`_mm256_max_epu16`]
 /// * **Assembly:** `vpmaxuw ymm, ymm, ymm`
@@ -1826,22 +1545,10 @@ pub fn max_u32_m256i(a: m256i, b: m256i) -> m256i {
 /// Lanewise `min(a, b)` with lanes as `i8`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([
-///   0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127, 1, 3, 5, 7, 2, 3,
-///   5, 12, 13, 16, 27, 28, 29, 30, 31, 32,
-/// ]);
-/// let b = m256i::from([
-///   0_i8, 11, 2, -13, 4, 15, 6, -17, -8, 19, -20, 21, 22, -23, 24, 127, 0, -1,
-///   3, 4, 5, 1, -2, -4, -8, 12, 13, 14, 29, 30, -31, -32,
-/// ]);
+/// let a = m256i::from([0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127, 1, 3, 5, 7, 2, 3, 5, 12, 13, 16, 27, 28, 29, 30, 31, 32]);
+/// let b = m256i::from([0_i8, 11, 2, -13, 4, 15, 6, -17, -8, 19, -20, 21, 22, -23, 24, 127, 0, -1, 3, 4, 5, 1, -2, -4, -8, 12, 13, 14, 29, 30, -31, -32]);
 /// let c: [i8; 32] = min_i8_m256i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [
-///     0, 1, 2, -13, 4, 5, 6, -17, -8, 9, -20, 11, 12, -23, 14, 127, 0, -1, 3,
-///     4, 2, 1, -2, -4, -8, 12, 13, 14, 29, 30, -31, -32
-///   ]
-/// );
+/// assert_eq!(c, [0, 1, 2, -13, 4, 5, 6, -17, -8, 9, -20, 11, 12, -23, 14, 127, 0, -1, 3, 4, 2, 1, -2, -4, -8, 12, 13, 14, 29, 30, -31, -32]);
 /// ```
 /// * **Intrinsic:** [`_mm256_min_epi8`]
 /// * **Assembly:** `vpminsb ymm, ymm, ymm`
@@ -1855,11 +1562,8 @@ pub fn min_i8_m256i(a: m256i, b: m256i) -> m256i {
 /// Lanewise `min(a, b)` with lanes as `i16`.
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([0_i16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127]);
-/// let b = m256i::from([
-///   0_i16, 11, 2, -13, 4, 15, 6, -17, -8, 19, -20, 21, 22, -23, -24, 25,
-/// ]);
+/// let a = m256i::from([0_i16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127]);
+/// let b = m256i::from([0_i16, 11, 2, -13, 4, 15, 6, -17, -8, 19, -20, 21, 22, -23, -24, 25]);
 /// let c: [i16; 16] = min_i16_m256i(a, b).into();
 /// assert_eq!(c, [0, 1, 2, -13, 4, 5, 6, -17, -8, 9, -20, 11, 12, -23, -24, 25]);
 /// ```
@@ -1892,22 +1596,10 @@ pub fn min_i32_m256i(a: m256i, b: m256i) -> m256i {
 /// Lanewise `min(a, b)` with lanes as `u8`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([
-///   0_u8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127, 1, 3, 5, 7, 2, 3,
-///   5, 12, 13, 16, 27, 28, 29, 30, 31, 32,
-/// ]);
-/// let b = m256i::from([
-///   0_u8, 255, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127, 0, 1, 3, 4,
-///   5, 1, 2, 4, 8, 12, 13, 14, 29, 30, 31, 32,
-/// ]);
+/// let a = m256i::from([0_u8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127, 1, 3, 5, 7, 2, 3, 5, 12, 13, 16, 27, 28, 29, 30, 31, 32]);
+/// let b = m256i::from([0_u8, 255, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127, 0, 1, 3, 4, 5, 1, 2, 4, 8, 12, 13, 14, 29, 30, 31, 32]);
 /// let c: [u8; 32] = min_u8_m256i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [
-///     0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127, 0, 1, 3, 4, 2, 1,
-///     2, 4, 8, 12, 13, 14, 29, 30, 31, 32
-///   ]
-/// );
+/// assert_eq!(c, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127, 0, 1, 3, 4, 2, 1, 2, 4, 8, 12, 13, 14, 29, 30, 31, 32]);
 /// ```
 /// * **Intrinsic:** [`_mm256_min_epu8`]
 /// * **Assembly:** `vpminub ymm, ymm, ymm`
@@ -1921,11 +1613,8 @@ pub fn min_u8_m256i(a: m256i, b: m256i) -> m256i {
 /// Lanewise `min(a, b)` with lanes as `u16`.
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([0_u16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127]);
-/// let b = m256i::from([
-///   0_u16, 65535, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 25,
-/// ]);
+/// let a = m256i::from([0_u16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127]);
+/// let b = m256i::from([0_u16, 65535, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 25]);
 /// let c: [u16; 16] = min_u16_m256i(a, b).into();
 /// assert_eq!(c, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 25]);
 /// ```
@@ -1958,10 +1647,7 @@ pub fn min_u32_m256i(a: m256i, b: m256i) -> m256i {
 /// Create an `i32` mask of each sign bit in the `i8` lanes.
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([
-///   0_i8, 11, 2, -13, 4, 15, 6, -17, -8, 19, -20, 21, 22, -23, 24, 127, 0, -1,
-///   3, 4, 5, 1, -2, -4, -8, 12, 13, 14, 29, 30, -31, 32,
-/// ]);
+/// let a = m256i::from([0_i8, 11, 2, -13, 4, 15, 6, -17, -8, 19, -20, 21, 22, -23, 24, 127, 0, -1, 3, 4, 5, 1, -2, -4, -8, 12, 13, 14, 29, 30, -31, 32]);
 /// assert_eq!(0b01000001110000100010010110001000, move_mask_i8_m256i(a));
 /// ```
 /// * **Intrinsic:** [`_mm256_movemask_epi8`]
@@ -1982,33 +1668,19 @@ pub fn move_mask_i8_m256i(a: m256i) -> i32 {
 ///
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([5_u8; 32]);
-/// let b =
-///   m256i::from([7_u8; 32]);
+/// let a = m256i::from([5_u8; 32]);
+/// let b = m256i::from([7_u8; 32]);
 /// //
-/// let c: [u16; 16] = multi_packed_sum_abs_diff_u8_m256i!(a, b, low a 0, low b 0, high a 1, high b 1).into();
+/// let c: [u16; 16] = multi_packed_sum_abs_diff_u8_m256i::<0b101000>(a, b).into();
 /// assert_eq!(c, [8_u16; 16]);
 /// ```
-#[macro_export]
+/// * **Intrinsic:** [`_mm256_mpsadbw_epu8`]
+/// * **Assembly:** ``
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-// TODO: better test example? We'll probably fix this as part of giving the
-// macro overall a better interface some day.
-macro_rules! multi_packed_sum_abs_diff_u8_m256i {
-  ($a:expr, $b:expr, low a $la_pick:expr, low b $lb_pick:expr, high a $ha_pick:expr, high b $hb_pick:expr) => {{
-    let a: $crate::m256i = $a;
-    let b: $crate::m256i = $b;
-    const IMM: ::core::primitive::i32 = ((($la_pick & 0b1) << 2)
-      | ($lb_pick & 0b11)
-      | (($ha_pick & 0b1) << 5)
-      | ($hb_pick & 0b11) << 3)
-      as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_mpsadbw_epu8;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_mpsadbw_epu8;
-    $crate::m256i(unsafe { _mm256_mpsadbw_epu8(a.0, b.0, IMM) })
-  }};
+pub fn multi_packed_sum_abs_diff_u8_m256i<const IMM: i32>(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_mpsadbw_epu8(a.0, b.0, IMM) })
 }
 
 /// Multiply the lower `i32` within each `i64` lane, `i64` output.
@@ -2048,11 +1720,8 @@ pub fn mul_u64_low_bits_m256i(a: m256i, b: m256i) -> m256i {
 /// Multiply the `i16` lanes and keep the high half of each 32-bit output.
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([5_i16, 6, 2, 5, 4, 3, 1, 0, -12, 13, 56, 21, 8, 7, 6, 5]);
-/// let b = m256i::from([
-///   12000_i16, 13000, -2, -8, 0, 1, 2, 3, 8, 7, 6, 5, 234, 654, 123, 978,
-/// ]);
+/// let a = m256i::from([5_i16, 6, 2, 5, 4, 3, 1, 0, -12, 13, 56, 21, 8, 7, 6, 5]);
+/// let b = m256i::from([12000_i16, 13000, -2, -8, 0, 1, 2, 3, 8, 7, 6, 5, 234, 654, 123, 978]);
 /// let c: [i16; 16] = mul_i16_keep_high_m256i(a, b).into();
 /// assert_eq!(c, [0_i16, 1, -1, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0]);
 /// ```
@@ -2068,11 +1737,8 @@ pub fn mul_i16_keep_high_m256i(a: m256i, b: m256i) -> m256i {
 /// Multiply the `u16` lanes and keep the high half of each 32-bit output.
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([5_u16, 6, 2, 5, 4, 3, 1, 0, 12000, 13, 56, 21, 8, 7, 6, 5]);
-/// let b = m256i::from([
-///   12000_u16, 13000, 2000, 800, 0, 1, 2, 3, 8, 7, 6, 5, 234, 654, 123, 978,
-/// ]);
+/// let a = m256i::from([5_u16, 6, 2, 5, 4, 3, 1, 0, 12000, 13, 56, 21, 8, 7, 6, 5]);
+/// let b = m256i::from([12000_u16, 13000, 2000, 800, 0, 1, 2, 3, 8, 7, 6, 5, 234, 654, 123, 978]);
 /// let c: [u16; 16] = mul_u16_keep_high_m256i(a, b).into();
 /// assert_eq!(c, [0_u16, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]);
 /// ```
@@ -2089,19 +1755,10 @@ pub fn mul_u16_keep_high_m256i(a: m256i, b: m256i) -> m256i {
 /// by adding 1, right shift by 1.
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([
-///   0_i16, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300,
-///   1400, 1500,
-/// ]);
-/// let b = m256i::from([
-///   800_i16, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900,
-///   2000, 2100, 2200, 2300,
-/// ]);
+/// let a = m256i::from([0_i16, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500]);
+/// let b = m256i::from([800_i16, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300]);
 /// let c: [i16; 16] = mul_i16_scale_round_m256i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [0_i16, 3, 6, 10, 15, 20, 26, 32, 39, 47, 55, 64, 73, 83, 94, 105]
-/// );
+/// assert_eq!(c, [0_i16, 3, 6, 10, 15, 20, 26, 32, 39, 47, 55, 64, 73, 83, 94, 105]);
 /// ```
 /// * **Intrinsic:** [`_mm256_mulhrs_epi16`]
 /// * **Assembly:** `vpmulhrsw ymm, ymm, ymm`
@@ -2115,16 +1772,10 @@ pub fn mul_i16_scale_round_m256i(a: m256i, b: m256i) -> m256i {
 /// Multiply the `i16` lanes and keep the low half of each 32-bit output.
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([5_i16, 6, 2, 5, 4, 3, 1, 0, -12, 13, 56, 21, 8, 7, 6, 5]);
-/// let b = m256i::from([
-///   -1_i16, 13000, -2, -8, 0, 1, 2, 3, 8, 7, 6, 5, 234, 654, 123, 978,
-/// ]);
+/// let a = m256i::from([5_i16, 6, 2, 5, 4, 3, 1, 0, -12, 13, 56, 21, 8, 7, 6, 5]);
+/// let b = m256i::from([-1_i16, 13000, -2, -8, 0, 1, 2, 3, 8, 7, 6, 5, 234, 654, 123, 978]);
 /// let c: [i16; 16] = mul_i16_keep_low_m256i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [-5, 12464, -4, -40, 0, 3, 2, 0, -96, 91, 336, 105, 1872, 4578, 738, 4890]
-/// );
+/// assert_eq!(c, [-5, 12464, -4, -40, 0, 3, 2, 0, -96, 91, 336, 105, 1872, 4578, 738, 4890]);
 /// ```
 /// * **Intrinsic:** [`_mm256_mullo_epi16`]
 /// * **Assembly:** `vpmullw ymm, ymm, ymm`
@@ -2175,19 +1826,10 @@ pub fn bitor_m256i(a: m256i, b: m256i) -> m256i {
 ///   `b_high`
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([1_i16, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
-/// let b = m256i::from([
-///   17_i16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
-/// ]);
+/// let a = m256i::from([1_i16, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
+/// let b = m256i::from([17_i16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32]);
 /// let c: [i8; 32] = pack_i16_to_i8_m256i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [
-///     1_i8, 2, 3, 4, 5, 6, 7, 8, 17, 18, 19, 20, 21, 22, 23, 24, 9, 10, 11, 12,
-///     13, 14, 15, 16, 25, 26, 27, 28, 29, 30, 31, 32
-///   ]
-/// );
+/// assert_eq!(c, [1_i8, 2, 3, 4, 5, 6, 7, 8, 17, 18, 19, 20, 21, 22, 23, 24, 9, 10, 11, 12, 13, 14, 15, 16, 25, 26, 27, 28, 29, 30, 31, 32]);
 /// ```
 /// * **Intrinsic:** [`_mm256_packs_epi16`]
 /// * **Assembly:** `vpacksswb ymm, ymm, ymm`
@@ -2224,19 +1866,10 @@ pub fn pack_i32_to_i16_m256i(a: m256i, b: m256i) -> m256i {
 ///   `b_high`
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([1_i16, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
-/// let b = m256i::from([
-///   17_i16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
-/// ]);
+/// let a = m256i::from([1_i16, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
+/// let b = m256i::from([17_i16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32]);
 /// let c: [u8; 32] = pack_i16_to_u8_m256i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [
-///     1_u8, 2, 3, 4, 5, 6, 7, 8, 17, 18, 19, 20, 21, 22, 23, 24, 9, 10, 11, 12,
-///     13, 14, 15, 16, 25, 26, 27, 28, 29, 30, 31, 32
-///   ]
-/// );
+/// assert_eq!(c, [1_u8, 2, 3, 4, 5, 6, 7, 8, 17, 18, 19, 20, 21, 22, 23, 24, 9, 10, 11, 12, 13, 14, 15, 16, 25, 26, 27, 28, 29, 30, 31, 32]);
 /// ```
 /// * **Intrinsic:** [`_mm256_packus_epi16`]
 /// * **Assembly:** `vpackuswb ymm, ymm, ymm`
@@ -2288,8 +1921,7 @@ pub fn pack_i32_to_u16_m256i(a: m256i, b: m256i) -> m256i {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 macro_rules! shuffle_abi_i128z_all_m256i {
   ($a:expr, $b:expr, [$low:tt, $high:tt]) => {{
-  const MASK: ::core::primitive::i32 = $crate::shuffle_abi_i128z_all_m256i!(@_convert_tt_to_select $low)
-    | ($crate::shuffle_abi_i128z_all_m256i!(@_convert_tt_to_select $high) << 4);
+  const MASK: ::core::primitive::i32 = $crate::shuffle_abi_i128z_all_m256i!(@_convert_tt_to_select $low) | ($crate::shuffle_abi_i128z_all_m256i!(@_convert_tt_to_select $high) << 4);
     let a: $crate::m256i = $a;
     let b: $crate::m256i = $b;
     #[cfg(target_arch = "x86")]
@@ -2410,14 +2042,8 @@ pub fn shuffle_av_i32_all_m256(a: m256, v: m256i) -> m256 {
 /// * Place into the low 16 bits of four `u64` lanes.
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([
-///   0_u8, 11, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127, 0, 11, 2,
-///   13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127,
-/// ]);
-/// let b = m256i::from([
-///   20_u8, 110, 250, 103, 34, 105, 60, 217, 8, 19, 210, 201, 202, 203, 204,
-///   127, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-/// ]);
+/// let a = m256i::from([0_u8, 11, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127, 0, 11, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127]);
+/// let b = m256i::from([20_u8, 110, 250, 103, 34, 105, 60, 217, 8, 19, 210, 201, 202, 203, 204, 127, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]);
 /// let c: [u64; 4] = sum_of_u8_abs_diff_m256i(a, b).into();
 /// assert_eq!(c, [831_u64, 910, 40, 160]);
 /// ```
@@ -2466,22 +2092,10 @@ macro_rules! shuffle_ai_i32_half_m256i {
 /// If a lane in `v` is negative, that output is zeroed.
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([
-///   3_i8, 11, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127, 7, 11, 2,
-///   13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127,
-/// ]);
-/// let b = m256i::from([
-///   -1_i8, 1, 0, 2, 2, 3, 4, 5, 6, 6, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12,
-///   13, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4,
-/// ]);
+/// let a = m256i::from([3_i8, 11, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127, 7, 11, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127]);
+/// let b = m256i::from([-1_i8, 1, 0, 2, 2, 3, 4, 5, 6, 6, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4]);
 /// let c: [i8; 32] = shuffle_av_i8z_half_m256i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [
-///     0, 11, 3, 2, 2, 13, 4, 15, 6, 6, 17, 8, 8, 19, 19, 20, 20, 21, 21, 22,
-///     22, 23, 23, 22, 21, 20, 19, 8, 17, 6, 15, 4
-///   ]
-/// );
+/// assert_eq!(c, [0, 11, 3, 2, 2, 13, 4, 15, 6, 6, 17, 8, 8, 19, 19, 20, 20, 21, 21, 22, 22, 23, 23, 22, 21, 20, 19, 8, 17, 6, 15, 4]);
 /// ```
 /// * **Intrinsic:** [`_mm256_shuffle_epi8`]
 /// * **Assembly:** `vpshufb ymm, ymm, ymm`
@@ -2497,8 +2111,7 @@ pub fn shuffle_av_i8z_half_m256i(a: m256i, v: m256i) -> m256i {
 /// The lower 128 bits and upper 128 bits have this performed separately.
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([0_i16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+/// let a = m256i::from([0_i16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
 /// let b: [i16; 16] = shuffle_ai_i16_h64half_m256i!(a, [3, 2, 1, 0]).into();
 /// assert_eq!(b, [0, 1, 2, 3, 7, 6, 5, 4, 8, 9, 10, 11, 15, 14, 13, 12]);
 /// ```
@@ -2527,8 +2140,7 @@ macro_rules! shuffle_ai_i16_h64half_m256i {
 /// The lower 128 bits and upper 128 bits have this performed separately.
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([0_i16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+/// let a = m256i::from([0_i16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
 /// let b: [i16; 16] = shuffle_ai_i16_l64half_m256i!(a, [3, 2, 1, 0]).into();
 /// assert_eq!(b, [3, 2, 1, 0, 4, 5, 6, 7, 11, 10, 9, 8, 12, 13, 14, 15]);
 /// ```
@@ -2559,22 +2171,10 @@ macro_rules! shuffle_ai_i16_l64half_m256i {
 /// * If `b` is negative, the output is `-a`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([
-///   3_i8, 11, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127, 7, 11, 2,
-///   13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127,
-/// ]);
-/// let b = m256i::from([
-///   -1_i8, -1, 0, 2, 2, 3, 0, 5, 6, 6, -7, 8, 8, 0, 0, 10, 10, -11, 11, 12, 12,
-///   13, 13, 12, 11, -10, 9, 8, 7, 6, 5, -4,
-/// ]);
+/// let a = m256i::from([3_i8, 11, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127, 7, 11, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127]);
+/// let b = m256i::from([-1_i8, -1, 0, 2, 2, 3, 0, 5, 6, 6, -7, 8, 8, 0, 0, 10, 10, -11, 11, 12, 12, 13, 13, 12, 11, -10, 9, 8, 7, 6, 5, -4]);
 /// let c: [i8; 32] = sign_apply_i8_m256i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [
-///     -3, -11, 0, 13, 4, 15, 0, 17, 8, 19, -20, 21, 22, 0, 0, 127, 7, -11, 2,
-///     13, 4, 15, 6, 17, 8, -19, 20, 21, 22, 23, 24, -127
-///   ]
-/// );
+/// assert_eq!(c, [-3, -11, 0, 13, 4, 15, 0, 17, 8, 19, -20, 21, 22, 0, 0, 127, 7, -11, 2, 13, 4, 15, 6, 17, 8, -19, 20, 21, 22, 23, 24, -127]);
 /// ```
 /// * **Intrinsic:** [`_mm256_sign_epi8`]
 /// * **Assembly:** `vpsignb ymm, ymm, ymm`
@@ -2592,11 +2192,8 @@ pub fn sign_apply_i8_m256i(a: m256i, b: m256i) -> m256i {
 /// * If `b` is negative, the output is `-a`.
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([5_i16, 6, 2, 5, 4, 3, 1, 0, -12, 13, 56, 21, 8, 7, 6, 5]);
-/// let b = m256i::from([
-///   12000_i16, 13000, -2, -8, 0, 1, 2, 3, -8, -7, 6, 5, 0, 0, 0, 978,
-/// ]);
+/// let a = m256i::from([5_i16, 6, 2, 5, 4, 3, 1, 0, -12, 13, 56, 21, 8, 7, 6, 5]);
+/// let b = m256i::from([12000_i16, 13000, -2, -8, 0, 1, 2, 3, -8, -7, 6, 5, 0, 0, 0, 978]);
 /// let c: [i16; 16] = sign_apply_i16_m256i(a, b).into();
 /// assert_eq!(c, [5, 6, -2, -5, 0, 3, 1, 0, 12, -13, 56, 21, 0, 0, 0, 5]);
 /// ```
@@ -2711,10 +2308,7 @@ macro_rules! shl_imm_u16_m256i {
 /// # use safe_arch::*;
 /// let a = m256i::from([1_u32, 2, 3, 4, 1, 2, 3, 4]);
 /// let c: [u32; 8] = shl_imm_u32_m256i!(a, 1).into();
-/// assert_eq!(
-///   c,
-///   [1_u32 << 1, 2 << 1, 3 << 1, 4 << 1, 1 << 1, 2 << 1, 3 << 1, 4 << 1]
-/// );
+/// assert_eq!(c, [1_u32 << 1, 2 << 1, 3 << 1, 4 << 1, 1 << 1, 2 << 1, 3 << 1, 4 << 1]);
 /// ```
 /// * **Intrinsic:** [`_mm256_slli_epi32`]
 /// * **Assembly:** `vpslld ymm, ymm, imm8`
@@ -2793,8 +2387,7 @@ pub fn shl_each_u64_m256i(a: m256i, count: m256i) -> m256i {
 /// Lanewise `i16` shift right by the lower `i64` lane of `count`.
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([5_i16, 6, 2, 5, 4, 3, 1, 0, -12, 13, 56, 21, 8, 7, 6, 5]);
+/// let a = m256i::from([5_i16, 6, 2, 5, 4, 3, 1, 0, -12, 13, 56, 21, 8, 7, 6, 5]);
 /// let count = m128i::from(1_i128);
 /// let b: [i16; 16] = shr_all_i16_m256i(a, count).into();
 /// assert_eq!(b, [2, 3, 1, 2, 2, 1, 0, 0, -6, 6, 28, 10, 4, 3, 3, 2]);
@@ -2829,8 +2422,7 @@ pub fn shr_all_i32_m256i(a: m256i, count: m128i) -> m256i {
 ///
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([1_i16, 2, 3, 4, -1, -2, -3, -4, 1, 2, 3, 4, -1, -2, -3, -4]);
+/// let a = m256i::from([1_i16, 2, 3, 4, -1, -2, -3, -4, 1, 2, 3, 4, -1, -2, -3, -4]);
 /// let c: [i16; 16] = shr_imm_i16_m256i!(a, 1).into();
 /// assert_eq!(c, [0_i16, 1, 1, 2, -1, -1, -2, -2, 0, 1, 1, 2, -1, -1, -2, -2]);
 /// ```
@@ -2946,8 +2538,7 @@ pub fn shr_all_u64_m256i(a: m256i, count: m128i) -> m256i {
 ///
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([1_i16, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
+/// let a = m256i::from([1_i16, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
 /// let c: [u16; 16] = shr_imm_u16_m256i!(a, 1).into();
 /// assert_eq!(c, [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8]);
 /// ```
@@ -3190,22 +2781,10 @@ pub fn sub_saturating_u16_m256i(a: m256i, b: m256i) -> m256i {
 /// * Operates on the high half of each 128 bit portion.
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([
-///   3_i8, 11, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127, 7, 11, 2,
-///   13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127,
-/// ]);
-/// let b = m256i::from([
-///   -1_i8, -1, 0, 2, 2, 3, 0, 5, 6, 6, -7, 8, 8, 0, 0, 10, 10, -11, 11, 12, 12,
-///   13, 13, 12, 11, -10, 9, 8, 7, 6, 5, -4,
-/// ]);
+/// let a = m256i::from([3_i8, 11, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127, 7, 11, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127]);
+/// let b = m256i::from([-1_i8, -1, 0, 2, 2, 3, 0, 5, 6, 6, -7, 8, 8, 0, 0, 10, 10, -11, 11, 12, 12, 13, 13, 12, 11, -10, 9, 8, 7, 6, 5, -4]);
 /// let c: [i8; 32] = unpack_high_i8_m256i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [
-///     8, 6, 19, 6, 20, -7, 21, 8, 22, 8, 23, 0, 24, 0, 127, 10, 8, 11, 19, -10,
-///     20, 9, 21, 8, 22, 7, 23, 6, 24, 5, 127, -4
-///   ]
-/// );
+/// assert_eq!(c, [8, 6, 19, 6, 20, -7, 21, 8, 22, 8, 23, 0, 24, 0, 127, 10, 8, 11, 19, -10, 20, 9, 21, 8, 22, 7, 23, 6, 24, 5, 127, -4]);
 /// ```
 /// * **Intrinsic:** [`_mm256_unpackhi_epi8`]
 /// * **Assembly:** `vpunpckhbw ymm, ymm, ymm`
@@ -3221,11 +2800,8 @@ pub fn unpack_high_i8_m256i(a: m256i, b: m256i) -> m256i {
 /// * Operates on the high half of each 128 bit portion.
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([5_i16, 6, 2, 5, 4, 3, 1, 0, -12, 13, 56, 21, 8, 7, 6, 5]);
-/// let b = m256i::from([
-///   12000_i16, 13000, -2, -8, 0, 1, 2, 3, -8, -7, 6, 5, 0, 0, 0, 978,
-/// ]);
+/// let a = m256i::from([5_i16, 6, 2, 5, 4, 3, 1, 0, -12, 13, 56, 21, 8, 7, 6, 5]);
+/// let b = m256i::from([12000_i16, 13000, -2, -8, 0, 1, 2, 3, -8, -7, 6, 5, 0, 0, 0, 978]);
 /// let c: [i16; 16] = unpack_high_i16_m256i(a, b).into();
 /// assert_eq!(c, [4, 0, 3, 1, 1, 2, 0, 3, 8, 0, 7, 0, 6, 0, 5, 978]);
 /// ```
@@ -3281,22 +2857,10 @@ pub fn unpack_high_i64_m256i(a: m256i, b: m256i) -> m256i {
 /// * Operates on the low half of each 128 bit portion.
 /// ```
 /// # use safe_arch::*;
-/// let a = m256i::from([
-///   3_i8, 11, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127, 7, 11, 2,
-///   13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127,
-/// ]);
-/// let b = m256i::from([
-///   -1_i8, -1, 0, 2, 2, 3, 0, 5, 6, 6, -7, 8, 8, 0, 0, 10, 10, -11, 11, 12, 12,
-///   13, 13, 12, 11, -10, 9, 8, 7, 6, 5, -4,
-/// ]);
+/// let a = m256i::from([3_i8, 11, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127, 7, 11, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127]);
+/// let b = m256i::from([-1_i8, -1, 0, 2, 2, 3, 0, 5, 6, 6, -7, 8, 8, 0, 0, 10, 10, -11, 11, 12, 12, 13, 13, 12, 11, -10, 9, 8, 7, 6, 5, -4]);
 /// let c: [i8; 32] = unpack_low_i8_m256i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [
-///     3, -1, 11, -1, 2, 0, 13, 2, 4, 2, 15, 3, 6, 0, 17, 5, 7, 10, 11, -11, 2,
-///     11, 13, 12, 4, 12, 15, 13, 6, 13, 17, 12
-///   ]
-/// );
+/// assert_eq!(c, [3, -1, 11, -1, 2, 0, 13, 2, 4, 2, 15, 3, 6, 0, 17, 5, 7, 10, 11, -11, 2, 11, 13, 12, 4, 12, 15, 13, 6, 13, 17, 12]);
 /// ```
 /// * **Intrinsic:** [`_mm256_unpacklo_epi8`]
 /// * **Assembly:** `_mm256_unpacklo_epi8`
@@ -3312,16 +2876,10 @@ pub fn unpack_low_i8_m256i(a: m256i, b: m256i) -> m256i {
 /// * Operates on the low half of each 128 bit portion.
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m256i::from([5_i16, 6, 2, 5, 4, 3, 1, 0, -12, 13, 56, 21, 8, 7, 6, 5]);
-/// let b = m256i::from([
-///   12000_i16, 13000, -2, -8, 0, 1, 2, 3, -8, -7, 6, 5, 0, 0, 0, 978,
-/// ]);
+/// let a = m256i::from([5_i16, 6, 2, 5, 4, 3, 1, 0, -12, 13, 56, 21, 8, 7, 6, 5]);
+/// let b = m256i::from([12000_i16, 13000, -2, -8, 0, 1, 2, 3, -8, -7, 6, 5, 0, 0, 0, 978]);
 /// let c: [i16; 16] = unpack_low_i16_m256i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [5, 12000, 6, 13000, 2, -2, 5, -8, -12, -8, 13, -7, 56, 6, 21, 5]
-/// );
+/// assert_eq!(c, [5, 12000, 6, 13000, 2, -2, 5, -8, -12, -8, 13, -7, 56, 6, 21, 5]);
 /// ```
 /// * **Intrinsic:** [`_mm256_unpacklo_epi16`]
 /// * **Assembly:** `vpunpcklwd ymm, ymm, ymm`
