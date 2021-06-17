@@ -1064,32 +1064,22 @@ pub fn zeroed_m128() -> m128 {
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([5.0, 6.0, 7.0, 8.0]);
 /// //
-/// let c = shuffle_abi_f32_all_m128!(a, b, [a:0, a:0, b:0, b:0]).to_array();
+/// let c = shuffle_abi_f32_all_m128::<0>(a, b).to_array();
 /// assert_eq!(c, [1.0, 1.0, 5.0, 5.0]);
 /// //
-/// let c = shuffle_abi_f32_all_m128!(a, b, [a:0, a:1, b:2, b:3]).to_array();
+/// let c = shuffle_abi_f32_all_m128::<0b11_10_01_00>(a, b).to_array();
 /// assert_eq!(c, [1.0, 2.0, 7.0, 8.0]);
 /// //
-/// let c = shuffle_abi_f32_all_m128!(a, b, [a:0, a:2, b:2, b:1]).to_array();
+/// let c = shuffle_abi_f32_all_m128::<0b00_10_10_01>(a, b).to_array();
 /// assert_eq!(c, [1.0, 3.0, 7.0, 6.0]);
 /// ```
 /// * **Intrinsic:** [`_mm_shuffle_ps`]
 /// * **Assembly:** `shufps xmm, xmm, imm8`
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse")))]
-macro_rules! shuffle_abi_f32_all_m128 {
-  ($a:expr, $b:expr, [a:$z:expr, a:$o:expr, b:$t:expr, b:$e:expr]) => {{
-    const MASK: ::core::primitive::i32 =
-      (($z & 0b11) | ($o & 0b11) << 2 | ($t & 0b11) << 4 | ($e & 0b11) << 6)
-        as ::core::primitive::i32;
-    let a: $crate::m128 = $a;
-    let b: $crate::m128 = $b;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm_shuffle_ps;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm_shuffle_ps;
-    $crate::m128(unsafe { _mm_shuffle_ps(a.0, b.0, MASK) })
-  }};
+pub fn shuffle_abi_f32_all_m128<const MASK: i32>(a: m128, b: m128) -> m128 {
+  m128(unsafe { _mm_shuffle_ps(a.0, b.0, MASK) })
 }
 
 /// Lanewise `sqrt(a)`.
@@ -1242,9 +1232,7 @@ pub fn sub_m128_s(a: m128, b: m128) -> m128 {
 /// ```
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse")))]
-pub fn transpose_four_m128(
-  a: &mut m128, b: &mut m128, c: &mut m128, d: &mut m128,
-) {
+pub fn transpose_four_m128(a: &mut m128, b: &mut m128, c: &mut m128, d: &mut m128) {
   unsafe { _MM_TRANSPOSE4_PS(&mut a.0, &mut b.0, &mut c.0, &mut d.0) }
 }
 
