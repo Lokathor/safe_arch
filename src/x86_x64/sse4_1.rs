@@ -309,52 +309,40 @@ pub fn dot_product_m128<const IMM: i32>(a: m128, b: m128) -> m128 {
 ///
 /// * **Intrinsic:** [`_mm_extract_epi32`]
 /// * **Assembly:** `pextrd r32, xmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
 pub fn extract_i32_imm_m128i<const IMM: i32>(a: m128i) -> i32 {
   unsafe { _mm_extract_epi32(a.0, IMM) }
 }
-
-// TODO
 
 /// Gets the `i64` lane requested. Only the lowest bit is considered.
 ///
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([5_i64, 6]);
-/// assert_eq!(extract_i64_imm_m128i!(a, 1), 6_i64);
+/// assert_eq!(extract_i64_imm_m128i::<1>(a), 6_i64);
 /// ```
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg(target_arch = "x86_64")]
-macro_rules! extract_i64_imm_m128i {
-  ($a:expr, $imm:expr) => {{
-    let a: $crate::m128i = $a;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm_extract_epi64;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm_extract_epi64;
-    unsafe { _mm_extract_epi64(a.0, IMM) }
-  }};
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+pub fn extract_i64_imm_m128i<const IMM: i32>(a: m128i) -> i64 {
+  unsafe { _mm_extract_epi64(a.0, IMM) }
 }
 
 /// Gets the `i8` lane requested. Only the lowest 4 bits are considered.
 ///
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m128i::from([0_i8, 1, 2, 3, 4, 5, 6, 101, 8, 9, 10, 11, 12, 13, 14, 15]);
-/// assert_eq!(extract_i8_as_i32_imm_m128i!(a, 7), 101_i32);
+/// let a = m128i::from([0_i8, 1, 2, 3, 4, 5, 6, 101, 8, 9, 10, 11, 12, 13, 14, 15]);
+/// assert_eq!(extract_i8_as_i32_imm_m128i::<7>(a), 101_i32);
 /// ```
-#[macro_export]
-macro_rules! extract_i8_as_i32_imm_m128i {
-  ($a:expr, $imm:expr) => {{
-    let a: $crate::m128i = $a;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm_extract_epi8;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm_extract_epi8;
-    unsafe { _mm_extract_epi8(a.0, IMM) }
-  }};
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+pub fn extract_i8_as_i32_imm_m128i<const IMM: i32>(a: m128i) -> i32 {
+  unsafe { _mm_extract_epi8(a.0, IMM) }
 }
 
 /// Gets the `f32` lane requested. Returns as an `i32` bit pattern.
@@ -362,19 +350,13 @@ macro_rules! extract_i8_as_i32_imm_m128i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128::from_array([5.0, 6.0, 7.0, 8.0]);
-/// assert_eq!(extract_f32_as_i32_bits_imm_m128!(a, 3), 8_f32.to_bits() as i32);
+/// assert_eq!(extract_f32_as_i32_bits_imm_m128::<3>(a), 8_f32.to_bits() as i32);
 /// ```
-#[macro_export]
-macro_rules! extract_f32_as_i32_bits_imm_m128 {
-  ($a:expr, $imm:expr) => {{
-    let a: $crate::m128 = $a;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm_extract_ps;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm_extract_ps;
-    unsafe { _mm_extract_ps(a.0, IMM) }
-  }};
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+pub fn extract_f32_as_i32_bits_imm_m128<const IMM: i32>(a: m128) -> i32 {
+  unsafe { _mm_extract_ps(a.0, IMM) }
 }
 
 /// Round each lane to a whole number, towards negative infinity
@@ -440,21 +422,14 @@ pub fn floor_m128_s(a: m128, b: m128) -> m128 {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([5, 6, 7, 8]);
-/// let b: [i32; 4] = insert_i32_imm_m128i!(a, 23, 1).into();
+/// let b: [i32; 4] = insert_i32_imm_m128i::<1>(a, 23).into();
 /// assert_eq!(b, [5, 23, 7, 8]);
 /// ```
-#[macro_export]
-macro_rules! insert_i32_imm_m128i {
-  ($a:expr, $new:expr, $imm:expr) => {{
-    let a: $crate::m128i = $a;
-    let new: ::core::primitive::i32 = $new;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm_insert_epi32;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm_insert_epi32;
-    $crate::m128i(unsafe { _mm_insert_epi32(a.0, new, IMM) })
-  }};
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+pub fn insert_i32_imm_m128i<const IMM: i32>(a: m128i, new: i32) -> m128i {
+  m128i(unsafe { _mm_insert_epi32(a.0, new, IMM) })
 }
 
 /// Inserts a new value for the `i64` lane specified.
@@ -462,45 +437,30 @@ macro_rules! insert_i32_imm_m128i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([5_i64, 6]);
-/// let b: [i64; 2] = insert_i64_imm_m128i!(a, 23, 1).into();
+/// let b: [i64; 2] = insert_i64_imm_m128i::<1>(a, 23).into();
 /// assert_eq!(b, [5_i64, 23]);
 /// ```
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg(target_arch = "x86_64")]
-macro_rules! insert_i64_imm_m128i {
-  ($a:expr, $new:expr, $imm:expr) => {{
-    let a: $crate::m128i = $a;
-    let new: i64 = $new;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm_insert_epi64;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm_insert_epi64;
-    $crate::m128i(unsafe { _mm_insert_epi64(a.0, new, IMM) })
-  }};
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+pub fn insert_i64_imm_m128i<const IMM: i32>(a: m128i, new: i64) -> m128i {
+  m128i(unsafe { _mm_insert_epi64(a.0, new, IMM) })
 }
 
 /// Inserts a new value for the `i64` lane specified.
 ///
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m128i::from([0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-/// let b: [i8; 16] = insert_i8_imm_m128i!(a, 23, 1).into();
+/// let a = m128i::from([0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+/// let b: [i8; 16] = insert_i8_imm_m128i::<1>(a, 23).into();
 /// assert_eq!(b, [0_i8, 23, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
 /// ```
-#[macro_export]
-macro_rules! insert_i8_imm_m128i {
-  ($a:expr, $new:expr, $imm:expr) => {{
-    let a: $crate::m128i = $a;
-    let new: ::core::primitive::i32 = $new;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm_insert_epi8;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm_insert_epi8;
-    $crate::m128i(unsafe { _mm_insert_epi8(a.0, new, IMM) })
-  }};
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+pub fn insert_i8_imm_m128i<const IMM: i32>(a: m128i, new: i32) -> m128i {
+  m128i(unsafe { _mm_insert_epi8(a.0, new, IMM) })
 }
 
 /// Inserts a lane from `$b` into `$a`, optionally at a new position.
@@ -513,29 +473,17 @@ macro_rules! insert_i8_imm_m128i {
 /// let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
 /// let b = m128::from_array([5.0, 6.0, 7.0, 8.0]);
 /// //
-/// let c = insert_f32_imm_m128!(a, b, from 0, to 3).to_array();
+/// let c = insert_f32_imm_m128::<0b00_11_0000>(a, b).to_array();
 /// assert_eq!(c, [1.0, 2.0, 3.0, 5.0]);
 /// //
-/// let c = insert_f32_imm_m128!(a, b, from 0, to 3, mask 0b0110).to_array();
+/// let c = insert_f32_imm_m128::<0b00_11_0110>(a, b).to_array();
 /// assert_eq!(c, [1.0, 0.0, 0.0, 5.0]);
 /// ```
-#[macro_export]
-macro_rules! insert_f32_imm_m128 {
-  ($a:expr, $b:expr, from $b_lane_src:expr, to $a_lane_dest:expr, mask $clear_lanes:expr) => {{
-    let a: $crate::m128 = $a;
-    let b: m128 = $b;
-    const IMM: ::core::primitive::i32 = ($b_lane_src & 0b11) << 6
-      | ($a_lane_dest & 0b11) << 4
-      | ($clear_lanes & 0b1111);
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm_insert_ps;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm_insert_ps;
-    $crate::m128(unsafe { _mm_insert_ps(a.0, b.0, IMM) })
-  }};
-  ($a:expr, $b:expr, from $b_lane_src:expr, to $a_lane_dest:expr) => {{
-    $crate::insert_f32_imm_m128!($a, $b, from $b_lane_src, to $a_lane_dest, mask 0)
-  }};
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+pub fn insert_f32_imm_m128<const IMM: i32>(a: m128, b: m128) -> m128 {
+  m128(unsafe { _mm_insert_ps(a.0, b.0, IMM) })
 }
 
 /// Lanewise `max(a, b)` with lanes as `i32`.
@@ -556,11 +504,8 @@ pub fn max_i32_m128i(a: m128i, b: m128i) -> m128i {
 /// Lanewise `max(a, b)` with lanes as `i8`.
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m128i::from([0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127]);
-/// let b = m128i::from([
-///   0_i8, 11, 2, -13, 4, 15, 6, -17, -8, 19, -20, 21, 22, -23, 24, 127,
-/// ]);
+/// let a = m128i::from([0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127]);
+/// let b = m128i::from([0_i8, 11, 2, -13, 4, 15, 6, -17, -8, 19, -20, 21, 22, -23, 24, 127]);
 /// let c: [i8; 16] = max_i8_m128i(a, b).into();
 /// assert_eq!(c, [0, 11, 2, 3, 4, 15, 6, 7, 8, 19, 10, 21, 22, 13, 24, 127]);
 /// ```
@@ -619,16 +564,10 @@ pub fn min_i32_m128i(a: m128i, b: m128i) -> m128i {
 /// Lanewise `min(a, b)` with lanes as `i8`.
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m128i::from([0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127]);
-/// let b = m128i::from([
-///   0_i8, 11, 2, -13, 4, 15, 6, -17, -8, 19, -20, 21, 22, -23, 24, 127,
-/// ]);
+/// let a = m128i::from([0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 127]);
+/// let b = m128i::from([0_i8, 11, 2, -13, 4, 15, 6, -17, -8, 19, -20, 21, 22, -23, 24, 127]);
 /// let c: [i8; 16] = min_i8_m128i(a, b).into();
-/// assert_eq!(
-///   c,
-///   [0_i8, 1, 2, -13, 4, 5, 6, -17, -8, 9, -20, 11, 12, -23, 14, 127]
-/// );
+/// assert_eq!(c, [0_i8, 1, 2, -13, 4, 5, 6, -17, -8, 9, -20, 11, 12, -23, 14, 127]);
 /// ```
 #[must_use]
 #[inline(always)]
@@ -694,54 +633,44 @@ pub fn min_position_u16_m128i(a: m128i) -> m128i {
 /// * `b` can be 0, 1, 2, or 3 and specifies to skip the first four times that
 ///   many values in `$b`.
 ///
-/// This is used for some HD codec thing and I don't really get what the point
-/// is but I'm sure someone uses it. If you can write better docs about what
+/// This is used for some HD codec thing, and I don't really get what the point
+/// is, but I'm sure someone uses it. If you can write better docs about what
 /// this does please file a PR.
 ///
 /// ```
 /// # use safe_arch::*;
-/// let a =
-///   m128i::from([0_u8, 1, 56, 3, 255, 5, 127, 7, 128, 9, 100, 101, 123, 13, 154, 125]);
-/// let b =
-///   m128i::from([12_u8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+/// let a = m128i::from([0_u8, 1, 56, 3, 255, 5, 127, 7, 128, 9, 100, 101, 123, 13, 154, 125]);
+/// let b = m128i::from([12_u8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
 /// //
-/// let c: [u16; 8] = multi_packed_sum_abs_diff_u8_m128i!(a, b, a 0, b 0).into();
+/// let c: [u16; 8] = multi_packed_sum_abs_diff_u8_m128i::<0b00_00>(a, b).into();
 /// assert_eq!(c, [66, 319, 301, 390, 376, 263, 253, 236]);
 /// //
-/// let c: [u16; 8] = multi_packed_sum_abs_diff_u8_m128i!(a, b, a 0, b 1).into();
+/// let c: [u16; 8] = multi_packed_sum_abs_diff_u8_m128i::<0b00_01>(a, b).into();
 /// assert_eq!(c, [62, 305, 305, 372, 372, 245, 249, 222]);
 /// //
-/// let c: [u16; 8] = multi_packed_sum_abs_diff_u8_m128i!(a, b, a 0, b 2).into();
+/// let c: [u16; 8] = multi_packed_sum_abs_diff_u8_m128i::<0b00_10>(a, b).into();
 /// assert_eq!(c, [70, 305, 305, 372, 372, 241, 241, 210]);
 /// //
-/// let c: [u16; 8] = multi_packed_sum_abs_diff_u8_m128i!(a, b, a 0, b 3).into();
+/// let c: [u16; 8] = multi_packed_sum_abs_diff_u8_m128i::<0b00_11>(a, b).into();
 /// assert_eq!(c, [78, 305, 305, 372, 372, 241, 241, 210]);
 /// //
-/// let c: [u16; 8] = multi_packed_sum_abs_diff_u8_m128i!(a, b, a 1, b 0).into();
+/// let c: [u16; 8] = multi_packed_sum_abs_diff_u8_m128i::<0b01_00>(a, b).into();
 /// assert_eq!(c, [376, 263, 253, 236, 320, 321, 319, 373]);
 /// //
-/// let c: [u16; 8] = multi_packed_sum_abs_diff_u8_m128i!(a, b, a 1, b 1).into();
+/// let c: [u16; 8] = multi_packed_sum_abs_diff_u8_m128i::<0b01_01>(a, b).into();
 /// assert_eq!(c, [372, 245, 249, 222, 316, 311, 315, 369]);
 /// //
-/// let c: [u16; 8] = multi_packed_sum_abs_diff_u8_m128i!(a, b, a 1, b 2).into();
+/// let c: [u16; 8] = multi_packed_sum_abs_diff_u8_m128i::<0b01_10>(a, b).into();
 /// assert_eq!(c, [372, 241, 241, 210, 300, 295, 299, 353]);
 /// //
-/// let c: [u16; 8] = multi_packed_sum_abs_diff_u8_m128i!(a, b, a 1, b 3).into();
+/// let c: [u16; 8] = multi_packed_sum_abs_diff_u8_m128i::<0b01_11>(a, b).into();
 /// assert_eq!(c, [372, 241, 241, 210, 292, 285, 287, 339]);
 /// ```
-#[macro_export]
-macro_rules! multi_packed_sum_abs_diff_u8_m128i {
-  ($a:expr, $b:expr, a $a_pick:expr, b $b_pick:expr) => {{
-    let a: $crate::m128i = $a;
-    let b: $crate::m128i = $b;
-    const IMM: ::core::primitive::i32 =
-      ((($a_pick & 0b1) << 2) | ($b_pick & 0b11)) as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm_mpsadbw_epu8;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm_mpsadbw_epu8;
-    $crate::m128i(unsafe { _mm_mpsadbw_epu8(a.0, b.0, IMM) })
-  }};
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+pub fn multi_packed_sum_abs_diff_u8_m128i<const IMM: i32>(a: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_mpsadbw_epu8(a.0, b.0, IMM) })
 }
 
 /// Multiplies the odd `i32` lanes and gives the widened (`i64`) results.
@@ -797,72 +726,19 @@ pub fn pack_i32_to_u16_m128i(a: m128i, b: m128i) -> m128i {
 /// # use safe_arch::*;
 /// let a = m128d::from_array([-0.1, 1.6]);
 /// //
-/// assert_eq!(round_m128d!(a, Nearest).to_array(), [0.0, 2.0]);
+/// assert_eq!(round_m128d::<{ round_op!(Nearest) }>(a).to_array(), [0.0, 2.0]);
 /// //
-/// assert_eq!(round_m128d!(a, NegInf).to_array(), [-1.0, 1.0]);
+/// assert_eq!(round_m128d::<{ round_op!(NegInf) }>(a).to_array(), [-1.0, 1.0]);
 /// //
-/// assert_eq!(round_m128d!(a, PosInf).to_array(), [0.0, 2.0]);
+/// assert_eq!(round_m128d::<{ round_op!(PosInf) }>(a).to_array(), [0.0, 2.0]);
 /// //
-/// assert_eq!(round_m128d!(a, Zero).to_array(), [0.0, 1.0]);
+/// assert_eq!(round_m128d::<{ round_op!(Zero) }>(a).to_array(), [0.0, 1.0]);
 /// ```
-#[macro_export]
-macro_rules! round_m128d {
-  ($a:expr, Nearest) => {{
-    let a: $crate::m128d = $a;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::{
-      _mm_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
-    };
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::{
-      _mm_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
-    };
-    $crate::m128d(unsafe {
-      _mm_round_pd(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEAREST_INT)
-    })
-  }};
-  ($a:expr, NegInf) => {{
-    let a: $crate::m128d = $a;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::{
-      _mm_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
-    };
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::{
-      _mm_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
-    };
-    $crate::m128d(unsafe {
-      _mm_round_pd(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEG_INF)
-    })
-  }};
-  ($a:expr, PosInf) => {{
-    let a: $crate::m128d = $a;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::{
-      _mm_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
-    };
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::{
-      _mm_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
-    };
-    $crate::m128d(unsafe {
-      _mm_round_pd(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_POS_INF)
-    })
-  }};
-  ($a:expr, Zero) => {{
-    let a: $crate::m128d = $a;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::{
-      _mm_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
-    };
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::{
-      _mm_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
-    };
-    $crate::m128d(unsafe {
-      _mm_round_pd(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_ZERO)
-    })
-  }};
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+pub fn round_m128d<const MODE: i32>(a: m128d) -> m128d {
+  m128d(unsafe { _mm_round_pd(a.0, MODE) })
 }
 
 /// Rounds `$b` low as specified, keeps `$a` high.
@@ -873,76 +749,19 @@ macro_rules! round_m128d {
 /// //
 /// let b = m128d::from_array([-0.1, f64::NAN]);
 /// //
-/// assert_eq!(round_m128d_s!(a, b, Nearest).to_array(), [0.0, 900.0]);
-/// assert_eq!(round_m128d_s!(a, b, NegInf).to_array(), [-1.0, 900.0]);
+/// assert_eq!(round_m128d_s::<{ round_op!(Nearest) }>(a, b).to_array(), [0.0, 900.0]);
+/// assert_eq!(round_m128d_s::<{ round_op!(NegInf) }>(a, b).to_array(), [-1.0, 900.0]);
 /// //
 /// let b = m128d::from_array([2.4, f64::NAN]);
 /// //
-/// assert_eq!(round_m128d_s!(a, b, PosInf).to_array(), [3.0, 900.0]);
-/// assert_eq!(round_m128d_s!(a, b, Zero).to_array(), [2.0, 900.0]);
+/// assert_eq!(round_m128d_s::<{ round_op!(PosInf) }>(a, b).to_array(), [3.0, 900.0]);
+/// assert_eq!(round_m128d_s::<{ round_op!(Zero) }>(a, b).to_array(), [2.0, 900.0]);
 /// ```
-#[macro_export]
-macro_rules! round_m128d_s {
-  ($a:expr, $b:expr, Nearest) => {{
-    let a: $crate::m128d = $a;
-    let b: $crate::m128d = $b;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::{
-      _mm_round_sd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
-    };
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::{
-      _mm_round_sd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
-    };
-    $crate::m128d(unsafe {
-      _mm_round_sd(a.0, b.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEAREST_INT)
-    })
-  }};
-  ($a:expr, $b:expr, NegInf) => {{
-    let a: $crate::m128d = $a;
-    let b: $crate::m128d = $b;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::{
-      _mm_round_sd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
-    };
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::{
-      _mm_round_sd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
-    };
-    $crate::m128d(unsafe {
-      _mm_round_sd(a.0, b.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEG_INF)
-    })
-  }};
-  ($a:expr, $b:expr, PosInf) => {{
-    let a: $crate::m128d = $a;
-    let b: $crate::m128d = $b;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::{
-      _mm_round_sd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
-    };
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::{
-      _mm_round_sd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
-    };
-    $crate::m128d(unsafe {
-      _mm_round_sd(a.0, b.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_POS_INF)
-    })
-  }};
-  ($a:expr, $b:expr, Zero) => {{
-    let a: $crate::m128d = $a;
-    let b: $crate::m128d = $b;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::{
-      _mm_round_sd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
-    };
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::{
-      _mm_round_sd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
-    };
-    $crate::m128d(unsafe {
-      _mm_round_sd(a.0, b.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_ZERO)
-    })
-  }};
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+pub fn round_m128d_s<const MODE: i32>(a: m128d, b: m128d) -> m128d {
+  m128d(unsafe { _mm_round_sd(a.0, b.0, MODE) })
 }
 
 /// Rounds each lane in the style specified.
@@ -951,72 +770,19 @@ macro_rules! round_m128d_s {
 /// # use safe_arch::*;
 /// let a = m128::from_array([-0.1, 1.6, 3.3, 4.5]);
 /// //
-/// assert_eq!(round_m128!(a, Nearest).to_array(), [0.0, 2.0, 3.0, 4.0]);
+/// assert_eq!(round_m128::<{ round_op!(Nearest) }>(a).to_array(), [0.0, 2.0, 3.0, 4.0]);
 /// //
-/// assert_eq!(round_m128!(a, NegInf).to_array(), [-1.0, 1.0, 3.0, 4.0]);
+/// assert_eq!(round_m128::<{ round_op!(NegInf) }>(a).to_array(), [-1.0, 1.0, 3.0, 4.0]);
 /// //
-/// assert_eq!(round_m128!(a, PosInf).to_array(), [0.0, 2.0, 4.0, 5.0]);
+/// assert_eq!(round_m128::<{ round_op!(PosInf) }>(a).to_array(), [0.0, 2.0, 4.0, 5.0]);
 /// //
-/// assert_eq!(round_m128!(a, Zero).to_array(), [0.0, 1.0, 3.0, 4.0]);
+/// assert_eq!(round_m128::<{ round_op!(Zero) }>(a).to_array(), [0.0, 1.0, 3.0, 4.0]);
 /// ```
-#[macro_export]
-macro_rules! round_m128 {
-  ($a:expr, Nearest) => {{
-    let a: $crate::m128 = $a;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::{
-      _mm_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
-    };
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::{
-      _mm_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
-    };
-    $crate::m128(unsafe {
-      _mm_round_ps(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEAREST_INT)
-    })
-  }};
-  ($a:expr, NegInf) => {{
-    let a: $crate::m128 = $a;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::{
-      _mm_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
-    };
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::{
-      _mm_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
-    };
-    $crate::m128(unsafe {
-      _mm_round_ps(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEG_INF)
-    })
-  }};
-  ($a:expr, PosInf) => {{
-    let a: $crate::m128 = $a;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::{
-      _mm_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
-    };
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::{
-      _mm_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
-    };
-    $crate::m128(unsafe {
-      _mm_round_ps(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_POS_INF)
-    })
-  }};
-  ($a:expr, Zero) => {{
-    let a: $crate::m128 = $a;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::{
-      _mm_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
-    };
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::{
-      _mm_round_ps, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
-    };
-    $crate::m128(unsafe {
-      _mm_round_ps(a.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_ZERO)
-    })
-  }};
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+pub fn round_m128<const MODE: i32>(a: m128) -> m128 {
+  m128(unsafe { _mm_round_ps(a.0, MODE) })
 }
 
 /// Rounds `$b` low as specified, other lanes use `$a`.
@@ -1027,76 +793,19 @@ macro_rules! round_m128 {
 /// //
 /// let b = m128::from_array([-0.1, f32::NAN, f32::NAN, f32::NAN]);
 /// //
-/// assert_eq!(round_m128_s!(a, b, Nearest).to_array(), [0.0, 6.0, 7.0, 8.0]);
-/// assert_eq!(round_m128_s!(a, b, NegInf).to_array(), [-1.0, 6.0, 7.0, 8.0]);
+/// assert_eq!(round_m128_s::<{ round_op!(Nearest) }>(a, b).to_array(), [0.0, 6.0, 7.0, 8.0]);
+/// assert_eq!(round_m128_s::<{ round_op!(NegInf) }>(a, b).to_array(), [-1.0, 6.0, 7.0, 8.0]);
 /// //
 /// let b = m128::from_array([2.4, f32::NAN, f32::NAN, f32::NAN]);
 /// //
-/// assert_eq!(round_m128_s!(a, b, PosInf).to_array(), [3.0, 6.0, 7.0, 8.0]);
-/// assert_eq!(round_m128_s!(a, b, Zero).to_array(), [2.0, 6.0, 7.0, 8.0]);
+/// assert_eq!(round_m128_s::<{ round_op!(PosInf) }>(a, b).to_array(), [3.0, 6.0, 7.0, 8.0]);
+/// assert_eq!(round_m128_s::<{ round_op!(Zero) }>(a, b).to_array(), [2.0, 6.0, 7.0, 8.0]);
 /// ```
-#[macro_export]
-macro_rules! round_m128_s {
-  ($a:expr, $b:expr, Nearest) => {{
-    let a: $crate::m128 = $a;
-    let b: m128 = $b;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::{
-      _mm_round_ss, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
-    };
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::{
-      _mm_round_ss, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
-    };
-    $crate::m128(unsafe {
-      _mm_round_ss(a.0, b.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEAREST_INT)
-    })
-  }};
-  ($a:expr, $b:expr, NegInf) => {{
-    let a: $crate::m128 = $a;
-    let b: m128 = $b;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::{
-      _mm_round_ss, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
-    };
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::{
-      _mm_round_ss, _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
-    };
-    $crate::m128(unsafe {
-      _mm_round_ss(a.0, b.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEG_INF)
-    })
-  }};
-  ($a:expr, $b:expr, PosInf) => {{
-    let a: $crate::m128 = $a;
-    let b: m128 = $b;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::{
-      _mm_round_ss, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
-    };
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::{
-      _mm_round_ss, _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
-    };
-    $crate::m128(unsafe {
-      _mm_round_ss(a.0, b.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_POS_INF)
-    })
-  }};
-  ($a:expr, $b:expr, Zero) => {{
-    let a: $crate::m128 = $a;
-    let b: m128 = $b;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::{
-      _mm_round_ss, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
-    };
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::{
-      _mm_round_ss, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
-    };
-    $crate::m128(unsafe {
-      _mm_round_ss(a.0, b.0, _MM_FROUND_NO_EXC | _MM_FROUND_TO_ZERO)
-    })
-  }};
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
+pub fn round_m128_s<const MODE: i32>(a: m128, b: m128) -> m128 {
+  m128(unsafe { _mm_round_ss(a.0, b.0, MODE) })
 }
 
 /// Tests if all bits are 1.
