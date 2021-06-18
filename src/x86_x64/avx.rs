@@ -940,12 +940,7 @@ pub fn load_unaligned_m256i(a: &[i8; 32]) -> m256i {
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn load_unaligned_hi_lo_m256d(a: &[f64; 2], b: &[f64; 2]) -> m256d {
-  m256d(unsafe {
-    _mm256_loadu2_m128d(
-      a as *const [f64; 2] as *const f64,
-      b as *const [f64; 2] as *const f64,
-    )
-  })
+  m256d(unsafe { _mm256_loadu2_m128d(a as *const [f64; 2] as *const f64, b as *const [f64; 2] as *const f64) })
 }
 
 /// Load data from memory into a register.
@@ -956,12 +951,7 @@ pub fn load_unaligned_hi_lo_m256d(a: &[f64; 2], b: &[f64; 2]) -> m256d {
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn load_unaligned_hi_lo_m256(a: &[f32; 4], b: &[f32; 4]) -> m256 {
-  m256(unsafe {
-    _mm256_loadu2_m128(
-      a as *const [f32; 4] as *const f32,
-      b as *const [f32; 4] as *const f32,
-    )
-  })
+  m256(unsafe { _mm256_loadu2_m128(a as *const [f32; 4] as *const f32, b as *const [f32; 4] as *const f32) })
 }
 
 /// Load data from memory into a register.
@@ -972,12 +962,7 @@ pub fn load_unaligned_hi_lo_m256(a: &[f32; 4], b: &[f32; 4]) -> m256 {
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn load_unaligned_hi_lo_m256i(a: &[i8; 16], b: &[i8; 16]) -> m256i {
-  m256i(unsafe {
-    _mm256_loadu2_m128i(
-      a as *const [i8; 16] as *const __m128i,
-      b as *const [i8; 16] as *const __m128i,
-    )
-  })
+  m256i(unsafe { _mm256_loadu2_m128i(a as *const [i8; 16] as *const __m128i, b as *const [i8; 16] as *const __m128i) })
 }
 
 /// Load data from memory into a register according to a mask.
@@ -1377,56 +1362,6 @@ pub fn reciprocal_m256(a: m256) -> m256 {
   m256(unsafe { _mm256_rcp_ps(a.0) })
 }
 
-/// Turns a round operator token to the correct constant value.
-#[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! round_op {
-  (Nearest) => {{
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::{
-      _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
-    };
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::{
-      _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT,
-    };
-    _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEAREST_INT
-  }};
-  (NegInf) => {{
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::{
-      _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
-    };
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::{
-      _MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF,
-    };
-    _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEG_INF
-  }};
-  (PosInf) => {{
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::{
-      _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
-    };
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::{
-      _MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF,
-    };
-    _MM_FROUND_NO_EXC | _MM_FROUND_TO_POS_INF
-  }};
-  (Zero) => {{
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::{
-      _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
-    };
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::{
-      _mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO,
-    };
-    _MM_FROUND_NO_EXC | _MM_FROUND_TO_ZERO
-  }};
-}
-
 /// Rounds each lane in the style specified.
 ///
 /// * **Intrinsic:** [``]
@@ -1519,12 +1454,10 @@ pub fn set_i32_m256i(
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg(target_arch="x86_64")]
+#[cfg(target_arch = "x86_64")]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 #[cfg(target_arch = "x86_64")]
-pub fn set_i64_m256i(
-  e3: i64, e2: i64, e1: i64, e0: i64,
-) -> m256i {
+pub fn set_i64_m256i(e3: i64, e2: i64, e1: i64, e0: i64) -> m256i {
   m256i(unsafe { _mm256_set_epi64x(e3, e2, e1, e0) })
 }
 
@@ -1535,9 +1468,7 @@ pub fn set_i64_m256i(
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn set_m128_m256(
-  high: m128, low: m128
-) -> m256 {
+pub fn set_m128_m256(high: m128, low: m128) -> m256 {
   m256(unsafe { _mm256_set_m128(high.0, low.0) })
 }
 
@@ -1730,11 +1661,9 @@ pub fn set_reversed_i32_m256i(
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg(target_arch="x86_64")]
+#[cfg(target_arch = "x86_64")]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn set_reversed_i64_m256i(
-  e3: i64, e2: i64, e1: i64, e0: i64,
-) -> m256i {
+pub fn set_reversed_i64_m256i(e3: i64, e2: i64, e1: i64, e0: i64) -> m256i {
   m256i(unsafe { _mm256_setr_epi64x(e3, e2, e1, e0) })
 }
 
@@ -1745,9 +1674,7 @@ pub fn set_reversed_i64_m256i(
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn set_reversed_m128_m256(
-  hi: m128, lo: m128
-) -> m256 {
+pub fn set_reversed_m128_m256(hi: m128, lo: m128) -> m256 {
   m256(unsafe { _mm256_setr_m128(hi.0, lo.0) })
 }
 
@@ -1968,12 +1895,8 @@ pub fn store_unaligned_m256i(addr: &mut [i8; 32], a: m256i) {
 /// * **Assembly:**
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn store_unaligned_hi_lo_m256d(
-  hi_addr: &mut [f64; 2], lo_addr: &mut [f64; 2], a: m256d,
-) {
-  unsafe {
-    _mm256_storeu2_m128d(hi_addr.as_mut_ptr(), lo_addr.as_mut_ptr(), a.0)
-  }
+pub fn store_unaligned_hi_lo_m256d(hi_addr: &mut [f64; 2], lo_addr: &mut [f64; 2], a: m256d) {
+  unsafe { _mm256_storeu2_m128d(hi_addr.as_mut_ptr(), lo_addr.as_mut_ptr(), a.0) }
 }
 
 /// Store data from a register into memory.
@@ -1982,12 +1905,8 @@ pub fn store_unaligned_hi_lo_m256d(
 /// * **Assembly:**
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn store_unaligned_hi_lo_m256(
-  hi_addr: &mut [f32; 4], lo_addr: &mut [f32; 4], a: m256,
-) {
-  unsafe {
-    _mm256_storeu2_m128(hi_addr.as_mut_ptr(), lo_addr.as_mut_ptr(), a.0)
-  }
+pub fn store_unaligned_hi_lo_m256(hi_addr: &mut [f32; 4], lo_addr: &mut [f32; 4], a: m256) {
+  unsafe { _mm256_storeu2_m128(hi_addr.as_mut_ptr(), lo_addr.as_mut_ptr(), a.0) }
 }
 
 /// Store data from a register into memory.
@@ -1996,16 +1915,8 @@ pub fn store_unaligned_hi_lo_m256(
 /// * **Assembly:**
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn store_unaligned_hi_lo_m256i(
-  hi_addr: &mut [i8; 16], lo_addr: &mut [i8; 16], a: m256i,
-) {
-  unsafe {
-    _mm256_storeu2_m128i(
-      hi_addr.as_mut_ptr().cast(),
-      lo_addr.as_mut_ptr().cast(),
-      a.0,
-    )
-  }
+pub fn store_unaligned_hi_lo_m256i(hi_addr: &mut [i8; 16], lo_addr: &mut [i8; 16], a: m256i) {
+  unsafe { _mm256_storeu2_m128i(hi_addr.as_mut_ptr().cast(), lo_addr.as_mut_ptr().cast(), a.0) }
 }
 
 /// Lanewise `a - b` with `f64` lanes.
@@ -2258,7 +2169,8 @@ impl SubAssign for m256d {
 }
 
 impl PartialEq for m256d {
-  /// Performs a comparison to get a mask, then moves the mask and checks for all true.
+  /// Performs a comparison to get a mask, then moves the mask and checks for
+  /// all true.
   #[must_use]
   #[inline(always)]
   fn eq(&self, other: &Self) -> bool {
@@ -2396,7 +2308,8 @@ impl SubAssign for m256 {
 }
 
 impl PartialEq for m256 {
-  /// Performs a comparison to get a mask, then moves the mask and checks for all true.
+  /// Performs a comparison to get a mask, then moves the mask and checks for
+  /// all true.
   #[must_use]
   #[inline(always)]
   fn eq(&self, other: &Self) -> bool {
