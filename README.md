@@ -1,5 +1,5 @@
 [![License:Zlib](https://img.shields.io/badge/License-Zlib-brightgreen.svg)](https://opensource.org/licenses/Zlib)
-![Minimum Rust Version](https://img.shields.io/badge/Min%20Rust-1.43-green.svg)
+![Minimum Rust Version](https://img.shields.io/badge/Min%20Rust-1.51-green.svg)
 [![crates.io](https://img.shields.io/crates/v/safe_arch.svg)](https://crates.io/crates/safe_arch)
 [![docs.rs](https://docs.rs/safe_arch/badge.svg)](https://docs.rs/safe_arch/)
 
