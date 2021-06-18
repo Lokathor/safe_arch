@@ -1071,7 +1071,7 @@ pub fn zeroed_m128() -> m128 {
 /// assert_eq!(c, [1.0, 2.0, 7.0, 8.0]);
 /// //
 /// let c = shuffle_abi_f32_all_m128::<0b00_10_10_01>(a, b).to_array();
-/// assert_eq!(c, [1.0, 3.0, 7.0, 6.0]);
+/// assert_eq!(c, [2.0, 3.0, 7.0, 5.0]);
 /// ```
 /// * **Intrinsic:** [`_mm_shuffle_ps`]
 /// * **Assembly:** `shufps xmm, xmm, imm8`
