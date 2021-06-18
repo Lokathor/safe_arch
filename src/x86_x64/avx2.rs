@@ -1909,96 +1909,51 @@ pub fn pack_i32_to_u16_m256i(a: m256i, b: m256i) -> m256i {
 /// let a = m256i::from([1, 2, 3, 4, 5, 6, 7, 8]);
 /// let b = m256i::from([9, 10, 11, 12, 13, 14, 15, 16]);
 /// //
-/// let c: [i32; 8] = shuffle_abi_i128z_all_m256i!(a, b, [B_Low, Zeroed]).into();
+/// let c: [i32; 8] = shuffle_abi_i128z_all_m256i::<0b_1000_0010>(a, b).into();
 /// assert_eq!(c, [9, 10, 11, 12, 0, 0, 0, 0]);
 /// //
-/// let c: [i32; 8] = shuffle_abi_i128z_all_m256i!(a, b, [Zeroed, A_High]).into();
+/// let c: [i32; 8] = shuffle_abi_i128z_all_m256i::<0b_0001_1000>(a, b).into();
 /// assert_eq!(c, [0, 0, 0, 0, 5, 6, 7, 8]);
 /// ```
 /// * **Intrinsic:** [`_mm256_permute2x128_si256`]
 /// * **Assembly:** `vperm2i128 ymm, ymm, ymm, imm8`
-#[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-macro_rules! shuffle_abi_i128z_all_m256i {
-  ($a:expr, $b:expr, [$low:tt, $high:tt]) => {{
-  const MASK: ::core::primitive::i32 = $crate::shuffle_abi_i128z_all_m256i!(@_convert_tt_to_select $low) | ($crate::shuffle_abi_i128z_all_m256i!(@_convert_tt_to_select $high) << 4);
-    let a: $crate::m256i = $a;
-    let b: $crate::m256i = $b;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_permute2x128_si256;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_permute2x128_si256;
-    $crate::m256i(unsafe { _mm256_permute2x128_si256(a.0, b.0, MASK) })
-  }};
-  (@_convert_tt_to_select A_Low) => {
-    0
-  };
-  (@_convert_tt_to_select A_High) => {
-    1
-  };
-  (@_convert_tt_to_select B_Low) => {
-    2
-  };
-  (@_convert_tt_to_select B_High) => {
-    3
-  };
-  (@_convert_tt_to_select Zeroed) => {
-    0b1000
-  };
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+pub fn shuffle_abi_i128z_all_m256i<const MASK: i32>(a: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_permute2x128_si256(a.0, b.0, MASK) })
 }
 
 /// Shuffle the `f64` lanes in `$a` using an immediate control value.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([5_i64, 6, 7, 8]);
-/// let b: [i64; 4] = shuffle_ai_i64_all_m256i!(a, [3, 2, 1, 0]).into();
+/// let b: [i64; 4] = shuffle_ai_i64_all_m256i::<0b00_01_10_11>(a).into();
 /// assert_eq!(b, [8_i64, 7, 6, 5]);
 /// ```
 /// * **Intrinsic:** [`_mm256_permute4x64_epi64`]
 /// * **Assembly:** `vpermq ymm, ymm, imm8`
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shuffle_ai_i64_all_m256i {
-  ($a:expr, [$z:expr, $o:expr, $t:expr, $h:expr]) => {{
-    let a: $crate::m256i = $a;
-    const ZERO: ::core::primitive::i32 = $z & 0b11;
-    const ONE: ::core::primitive::i32 = $o & 0b11;
-    const TWO: ::core::primitive::i32 = $t & 0b11;
-    const THREE: ::core::primitive::i32 = $h & 0b11;
-    const IMM: ::core::primitive::i32 = ZERO | ONE << 2 | TWO << 4 | THREE << 6;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_permute4x64_epi64;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_permute4x64_epi64;
-    $crate::m256i(unsafe { _mm256_permute4x64_epi64(a.0, IMM) })
-  }};
+pub fn shuffle_ai_i64_all_m256i<const IMM: i32>(a: m256i) -> m256i {
+  m256i(unsafe { _mm256_permute4x64_epi64(a.0, IMM) })
 }
 
 /// Shuffle the `f64` lanes from `$a` using an immediate control value.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256d::from_array([5.0, 6.0, 7.0, 8.0]);
-/// let b: [f64; 4] = shuffle_ai_f64_all_m256d!(a, [3, 2, 1, 0]).to_array();
+/// let b: [f64; 4] = shuffle_ai_f64_all_m256d::<0b00_01_10_11>(a).to_array();
 /// assert_eq!(b, [8.0, 7.0, 6.0, 5.0]);
 /// ```
 /// * **Intrinsic:** [`_mm256_permute4x64_pd`]
 /// * **Assembly:** `vpermpd ymm, ymm, imm8`
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shuffle_ai_f64_all_m256d {
-  ($a:expr, [$z:expr, $o:expr, $t:expr, $h:expr]) => {{
-    let a: $crate::m256d = $a;
-    const ZERO: ::core::primitive::i32 = $z & 0b11;
-    const ONE: ::core::primitive::i32 = $o & 0b11;
-    const TWO: ::core::primitive::i32 = $t & 0b11;
-    const THREE: ::core::primitive::i32 = $h & 0b11;
-    const IMM: ::core::primitive::i32 = ZERO | ONE << 2 | TWO << 4 | THREE << 6;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_permute4x64_pd;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_permute4x64_pd;
-    $crate::m256d(unsafe { _mm256_permute4x64_pd(a.0, IMM) })
-  }};
+pub fn shuffle_ai_f64_all_m256d<const IMM: i32>(a: m256d) -> m256d {
+  m256d(unsafe { _mm256_permute4x64_pd(a.0, IMM) })
 }
 
 /// Shuffle `i32` lanes in `a` using `i32` values in `v`.
@@ -2054,34 +2009,23 @@ pub fn sum_of_u8_abs_diff_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_sad_epu8(a.0, b.0) })
 }
 
-/// Shuffle the `i32` lanes in `$a` using an immediate control value.
+/// Shuffle the `i32` lanes in `a` using an immediate control value.
 ///
 /// Each lane selection value picks only within that 128-bit half of the overall
 /// register.
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([5, 6, 7, 8, 9, 10, 11, 12]);
-/// let b: [i32; 8] = shuffle_ai_i32_half_m256i!(a, [3, 2, 1, 0]).into();
+/// let b: [i32; 8] = shuffle_ai_i32_half_m256i::<0b00_01_10_11>(a).into();
 /// assert_eq!(b, [8, 7, 6, 5, 12, 11, 10, 9]);
 /// ```
 /// * **Intrinsic:** [`_mm256_shuffle_epi32`]
 /// * **Assembly:** `vpshufd ymm, ymm, imm8`
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shuffle_ai_i32_half_m256i {
-  ($a:expr, [$z:expr, $o:expr, $t:expr, $h:expr]) => {{
-    let a: $crate::m256i = $a;
-    const ZERO: ::core::primitive::i32 = $z & 0b11;
-    const ONE: ::core::primitive::i32 = $o & 0b11;
-    const TWO: ::core::primitive::i32 = $t & 0b11;
-    const THREE: ::core::primitive::i32 = $h & 0b11;
-    const IMM: ::core::primitive::i32 = ZERO | ONE << 2 | TWO << 4 | THREE << 6;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_shuffle_epi32;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_shuffle_epi32;
-    $crate::m256i(unsafe { _mm256_shuffle_epi32(a.0, IMM) })
-  }};
+pub fn shuffle_ai_i32_half_m256i<const IMM: i32>(a: m256i) -> m256i {
+  m256i(unsafe { _mm256_shuffle_epi32(a.0, IMM) })
 }
 
 /// Shuffle `i8` lanes in `a` using `i8` values in `v`.
@@ -2112,27 +2056,16 @@ pub fn shuffle_av_i8z_half_m256i(a: m256i, v: m256i) -> m256i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([0_i16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-/// let b: [i16; 16] = shuffle_ai_i16_h64half_m256i!(a, [3, 2, 1, 0]).into();
+/// let b: [i16; 16] = shuffle_ai_i16_h64half_m256i::<0b_00_01_10_11>(a).into();
 /// assert_eq!(b, [0, 1, 2, 3, 7, 6, 5, 4, 8, 9, 10, 11, 15, 14, 13, 12]);
 /// ```
 /// * **Intrinsic:** [`_mm256_shufflehi_epi16`]
 /// * **Assembly:** `vpshufhw ymm, ymm, imm8`
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shuffle_ai_i16_h64half_m256i {
-  ($a:expr, [$z:expr, $o:expr, $t:expr, $h:expr]) => {{
-    let a: $crate::m256i = $a;
-    const ZERO: ::core::primitive::i32 = $z & 0b11;
-    const ONE: ::core::primitive::i32 = $o & 0b11;
-    const TWO: ::core::primitive::i32 = $t & 0b11;
-    const THREE: ::core::primitive::i32 = $h & 0b11;
-    const IMM: ::core::primitive::i32 = ZERO | ONE << 2 | TWO << 4 | THREE << 6;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_shufflehi_epi16;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_shufflehi_epi16;
-    $crate::m256i(unsafe { _mm256_shufflehi_epi16(a.0, IMM) })
-  }};
+pub fn shuffle_ai_i16_h64half_m256i<const IMM: i32>(a: m256i) -> m256i {
+  m256i(unsafe { _mm256_shufflehi_epi16(a.0, IMM) })
 }
 
 /// Shuffle the low `i16` lanes in `$a` using an immediate control value.
@@ -2141,27 +2074,16 @@ macro_rules! shuffle_ai_i16_h64half_m256i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([0_i16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-/// let b: [i16; 16] = shuffle_ai_i16_l64half_m256i!(a, [3, 2, 1, 0]).into();
+/// let b: [i16; 16] = shuffle_ai_i16_l64half_m256i::<0b00_01_10_11>(a).into();
 /// assert_eq!(b, [3, 2, 1, 0, 4, 5, 6, 7, 11, 10, 9, 8, 12, 13, 14, 15]);
 /// ```
 /// * **Intrinsic:** [`_mm256_shufflelo_epi16`]
 /// * **Assembly:** `vpshuflw ymm, ymm, imm8`
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shuffle_ai_i16_l64half_m256i {
-  ($a:expr, [$z:expr, $o:expr, $t:expr, $h:expr]) => {{
-    let a: $crate::m256i = $a;
-    const ZERO: ::core::primitive::i32 = $z & 0b11;
-    const ONE: ::core::primitive::i32 = $o & 0b11;
-    const TWO: ::core::primitive::i32 = $t & 0b11;
-    const THREE: ::core::primitive::i32 = $h & 0b11;
-    const IMM: ::core::primitive::i32 = ZERO | ONE << 2 | TWO << 4 | THREE << 6;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_shufflelo_epi16;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_shufflelo_epi16;
-    $crate::m256i(unsafe { _mm256_shufflelo_epi16(a.0, IMM) })
-  }};
+pub fn shuffle_ai_i16_l64half_m256i<const IMM: i32>(a: m256i) -> m256i {
+  m256i(unsafe { _mm256_shufflelo_epi16(a.0, IMM) })
 }
 
 /// Lanewise `a * signum(b)` with lanes as `i8`
@@ -2283,23 +2205,16 @@ pub fn shl_all_u64_m256i(a: m256i, count: m128i) -> m256i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([1_u16, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4]);
-/// let c: [u16; 16] = shl_imm_u16_m256i!(a, 1).into();
+/// let c: [u16; 16] = shl_imm_u16_m256i::<1>(a).into();
 /// assert_eq!(c, [2, 4, 6, 8, 2, 4, 6, 8, 2, 4, 6, 8, 2, 4, 6, 8]);
 /// ```
 /// * **Intrinsic:** [`_mm256_slli_epi16`]
 /// * **Assembly:** `vpsllw ymm, ymm, imm8`
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shl_imm_u16_m256i {
-  ($a:expr, $imm:expr) => {{
-    let a: $crate::m256i = $a;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_slli_epi16;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_slli_epi16;
-    $crate::m256i(unsafe { _mm256_slli_epi16(a.0, IMM) })
-  }};
+pub fn shl_imm_u16_m256i<const IMM: i32>(a: m256i) -> m256i {
+  m256i(unsafe { _mm256_slli_epi16(a.0, IMM) })
 }
 
 /// Shifts all `u32` lanes left by an immediate.
@@ -2307,23 +2222,16 @@ macro_rules! shl_imm_u16_m256i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([1_u32, 2, 3, 4, 1, 2, 3, 4]);
-/// let c: [u32; 8] = shl_imm_u32_m256i!(a, 1).into();
+/// let c: [u32; 8] = shl_imm_u32_m256i::<1>(a).into();
 /// assert_eq!(c, [1_u32 << 1, 2 << 1, 3 << 1, 4 << 1, 1 << 1, 2 << 1, 3 << 1, 4 << 1]);
 /// ```
 /// * **Intrinsic:** [`_mm256_slli_epi32`]
 /// * **Assembly:** `vpslld ymm, ymm, imm8`
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shl_imm_u32_m256i {
-  ($a:expr, $imm:expr) => {{
-    let a: $crate::m256i = $a;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_slli_epi32;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_slli_epi32;
-    $crate::m256i(unsafe { _mm256_slli_epi32(a.0, IMM) })
-  }};
+pub fn shl_imm_u32_m256i<const IMM: i32>(a: m256i) -> m256i {
+  m256i(unsafe { _mm256_slli_epi32(a.0, IMM) })
 }
 
 /// Shifts all `u64` lanes left by an immediate.
@@ -2331,23 +2239,16 @@ macro_rules! shl_imm_u32_m256i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([1_u64, 2, 3, 4]);
-/// let c: [u64; 4] = shl_imm_u64_m256i!(a, 1).into();
+/// let c: [u64; 4] = shl_imm_u64_m256i::<1>(a).into();
 /// assert_eq!(c, [1_u64 << 1, 2 << 1, 3 << 1, 4 << 1,]);
 /// ```
 /// * **Intrinsic:** [`_mm256_slli_epi64`]
 /// * **Assembly:** `vpsllq ymm, ymm, imm8`
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shl_imm_u64_m256i {
-  ($a:expr, $imm:expr) => {{
-    let a: $crate::m256i = $a;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_slli_epi64;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_slli_epi64;
-    $crate::m256i(unsafe { _mm256_slli_epi64(a.0, IMM) })
-  }};
+pub fn shl_imm_u64_m256i<const IMM: i32>(a: m256i) -> m256i {
+  m256i(unsafe { _mm256_slli_epi64(a.0, IMM) })
 }
 
 /// Lanewise `u32` shift left by the matching `i32` lane in `count`.
@@ -2423,23 +2324,16 @@ pub fn shr_all_i32_m256i(a: m256i, count: m128i) -> m256i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([1_i16, 2, 3, 4, -1, -2, -3, -4, 1, 2, 3, 4, -1, -2, -3, -4]);
-/// let c: [i16; 16] = shr_imm_i16_m256i!(a, 1).into();
+/// let c: [i16; 16] = shr_imm_i16_m256i::<1>(a).into();
 /// assert_eq!(c, [0_i16, 1, 1, 2, -1, -1, -2, -2, 0, 1, 1, 2, -1, -1, -2, -2]);
 /// ```
 /// * **Intrinsic:** [`_mm256_srai_epi16`]
 /// * **Assembly:** `vpsraw ymm, ymm, imm8`
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shr_imm_i16_m256i {
-  ($a:expr, $imm:expr) => {{
-    let a: $crate::m256i = $a;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_srai_epi16;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_srai_epi16;
-    $crate::m256i(unsafe { _mm256_srai_epi16(a.0, IMM) })
-  }};
+pub fn shr_imm_i16_m256i<const IMM: i32>(a: m256i) -> m256i {
+  m256i(unsafe { _mm256_srai_epi16(a.0, IMM) })
 }
 
 /// Shifts all `i32` lanes left by an immediate.
@@ -2447,23 +2341,16 @@ macro_rules! shr_imm_i16_m256i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([1_i32, 2, 3, 4, -1, -2, -3, -4]);
-/// let c: [i32; 8] = shr_imm_i32_m256i!(a, 1).into();
+/// let c: [i32; 8] = shr_imm_i32_m256i::<1>(a).into();
 /// assert_eq!(c, [0, 1, 1, 2, -1, -1, -2, -2]);
 /// ```
 /// * **Intrinsic:** [`_mm256_srai_epi32`]
 /// * **Assembly:** `vpsrad ymm, ymm, imm8`
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shr_imm_i32_m256i {
-  ($a:expr, $imm:expr) => {{
-    let a: $crate::m256i = $a;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_srai_epi32;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_srai_epi32;
-    $crate::m256i(unsafe { _mm256_srai_epi32(a.0, IMM) })
-  }};
+pub fn shr_imm_i32_m256i<const IMM: i32>(a: m256i) -> m256i {
+  m256i(unsafe { _mm256_srai_epi32(a.0, IMM) })
 }
 
 /// Lanewise `i32` shift right by the matching `i32` lane in `count`.
@@ -2539,23 +2426,16 @@ pub fn shr_all_u64_m256i(a: m256i, count: m128i) -> m256i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([1_i16, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
-/// let c: [u16; 16] = shr_imm_u16_m256i!(a, 1).into();
+/// let c: [u16; 16] = shr_imm_u16_m256i::<1>(a).into();
 /// assert_eq!(c, [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8]);
 /// ```
 /// * **Intrinsic:** [`_mm256_srli_epi16`]
 /// * **Assembly:** `vpsrlw ymm, ymm, imm8`
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shr_imm_u16_m256i {
-  ($a:expr, $imm:expr) => {{
-    let a: $crate::m256i = $a;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_srli_epi16;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_srli_epi16;
-    $crate::m256i(unsafe { _mm256_srli_epi16(a.0, IMM) })
-  }};
+pub fn shr_imm_u16_m256i<const IMM: i32>(a: m256i) -> m256i {
+  m256i(unsafe { _mm256_srli_epi16(a.0, IMM) })
 }
 
 /// Shifts all `u32` lanes right by an immediate.
@@ -2563,23 +2443,16 @@ macro_rules! shr_imm_u16_m256i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([1_i32, 2, 3, 4, 5, 6, 7, 8]);
-/// let c: [u32; 8] = shr_imm_u32_m256i!(a, 1).into();
+/// let c: [u32; 8] = shr_imm_u32_m256i::<1>(a).into();
 /// assert_eq!(c, [0, 1, 1, 2, 2, 3, 3, 4]);
 /// ```
 /// * **Intrinsic:** [`_mm256_srli_epi32`]
 /// * **Assembly:** `vpsrld ymm, ymm, imm8`
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shr_imm_u32_m256i {
-  ($a:expr, $imm:expr) => {{
-    let a: $crate::m256i = $a;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_srli_epi32;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_srli_epi32;
-    $crate::m256i(unsafe { _mm256_srli_epi32(a.0, IMM) })
-  }};
+pub fn shr_imm_u32_m256i<const IMM: i32>(a: m256i) -> m256i {
+  m256i(unsafe { _mm256_srli_epi32(a.0, IMM) })
 }
 
 /// Shifts all `u64` lanes right by an immediate.
@@ -2587,23 +2460,16 @@ macro_rules! shr_imm_u32_m256i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m256i::from([1_u64, 2, 3, 4]);
-/// let c: [u64; 4] = shr_imm_u64_m256i!(a, 1).into();
+/// let c: [u64; 4] = shr_imm_u64_m256i::<1>(a).into();
 /// assert_eq!(c, [0, 1, 1, 2]);
 /// ```
 /// * **Intrinsic:** [`_mm256_srli_epi64`]
 /// * **Assembly:** `vpsrlq ymm, ymm, imm8`
-#[macro_export]
+#[must_use]
+#[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
-macro_rules! shr_imm_u64_m256i {
-  ($a:expr, $imm:expr) => {{
-    let a: $crate::m256i = $a;
-    const IMM: ::core::primitive::i32 = $imm as ::core::primitive::i32;
-    #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::_mm256_srli_epi64;
-    #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::_mm256_srli_epi64;
-    $crate::m256i(unsafe { _mm256_srli_epi64(a.0, IMM) })
-  }};
+pub fn shr_imm_u64_m256i<const IMM: i32>(a: m256i) -> m256i {
+  m256i(unsafe { _mm256_srli_epi64(a.0, IMM) })
 }
 
 /// Lanewise `u32` shift right by the matching `u32` lane in `count`.
