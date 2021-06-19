@@ -35,3 +35,4 @@ pub fn rdseed_u32(out: &mut u32) -> i32 {
 pub fn rdseed_u64(out: &mut u64) -> i32 {
   unsafe { _rdseed64_step(out) }
 }
+

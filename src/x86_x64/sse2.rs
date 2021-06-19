@@ -3281,8 +3281,9 @@ impl PartialEq for m128i {
   #[must_use]
   #[inline(always)]
   fn eq(&self, other: &Self) -> bool {
-    move_mask_i8_m128i(cmp_eq_mask_i8_m128i(*self, *other)) == 0b11111111_11111111
+    move_mask_i8_m128i(cmp_eq_mask_i8_m128i(*self, *other)) == 0b1111_1111_1111_1111
   }
 }
 /// Unlike with the floating types, ints have absolute equality.
 impl Eq for m128i {}
+

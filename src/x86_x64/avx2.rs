@@ -188,7 +188,6 @@ pub fn load_masked_i64_m128i(a: &m128i, mask: m128i) -> m128i {
 /// ```
 /// * **Intrinsic:** [`_mm_maskstore_epi32`]
 /// * **Assembly:** `vpmaskmovd m128, xmm, xmm`
-#[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
 pub fn store_masked_i32_m128i(addr: &mut m128i, mask: m128i, a: m128i) {
@@ -208,7 +207,6 @@ pub fn store_masked_i32_m128i(addr: &mut m128i, mask: m128i, a: m128i) {
 /// ```
 /// * **Intrinsic:** [`_mm_maskstore_epi64`]
 /// * **Assembly:** `vpmaskmovq m128, xmm, xmm`
-#[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
 pub fn store_masked_i64_m128i(addr: &mut m128i, mask: m128i, a: m128i) {
@@ -1396,7 +1394,6 @@ pub fn load_masked_i64_m256i(a: &m256i, mask: m256i) -> m256i {
 /// ```
 /// * **Intrinsic:** [`_mm256_maskstore_epi32`]
 /// * **Assembly:** `vpmaskmovd m256, ymm, ymm`
-#[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
 pub fn store_masked_i32_m256i(addr: &mut m256i, mask: m256i, a: m256i) {
@@ -1416,7 +1413,6 @@ pub fn store_masked_i32_m256i(addr: &mut m256i, mask: m256i, a: m256i) {
 /// ```
 /// * **Intrinsic:** [`_mm256_maskstore_epi64`]
 /// * **Assembly:** `vpmaskmovq m256, ymm, ymm`
-#[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
 pub fn store_masked_i64_m256i(addr: &mut m256i, mask: m256i, a: m256i) {
@@ -2913,3 +2909,4 @@ impl PartialEq for m256i {
   }
 }
 impl Eq for m256i {}
+

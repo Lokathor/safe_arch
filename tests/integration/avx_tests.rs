@@ -138,7 +138,7 @@ fn test_cast_to_m256_from_m256d() {
 fn test_cast_to_m256i_from_m256d() {
   let a = load_f64_splat_m256d(&1.0);
   let b: [u64; 4] = cast_to_m256i_from_m256d(a).into();
-  assert_eq!(b, [0x3FF00000_00000000_u64; 4]);
+  assert_eq!(b, [0x3FF0_0000_0000_0000_u64; 4]);
 }
 
 #[test]
@@ -668,7 +668,7 @@ fn test_bitor_m256() {
 fn test_permute_m128d() {
   let a = m128d::from_array([1.0, 2.0]);
   //
-  let b = permute_m128d::<0b_0_1>(a).to_array();
+  let b = permute_m128d::<0b01>(a).to_array();
   assert_eq!(b, [2.0, 1.0]);
 }
 
@@ -676,7 +676,7 @@ fn test_permute_m128d() {
 fn test_permute_m256d() {
   let a = m256d::from_array([1.0, 2.0, 3.0, 4.0]);
   //
-  let b = permute_m256d::<0b_0_1_0_1>(a).to_array();
+  let b = permute_m256d::<0b0101>(a).to_array();
   assert_eq!(b, [2.0, 1.0, 4.0, 3.0]);
 }
 
@@ -986,25 +986,25 @@ fn test_shuffle_m256d() {
   let a = m256d::from_array([1.0, 2.0, 3.0, 4.0]);
   let b = m256d::from_array([5.0, 6.0, 7.0, 8.0]);
   //
-  let c = shuffle_m256d::<0b_0_0_0_0>(a, b).to_array();
+  let c = shuffle_m256d::<0b0000>(a, b).to_array();
   assert_eq!(c, [1.0, 5.0, 3.0, 7.0]);
   //
-  let c = shuffle_m256d::<0b_0_0_0_1>(a, b).to_array();
+  let c = shuffle_m256d::<0b0001>(a, b).to_array();
   assert_eq!(c, [2.0, 5.0, 3.0, 7.0]);
   //
-  let c = shuffle_m256d::<0b_0_0_1_0>(a, b).to_array();
+  let c = shuffle_m256d::<0b0010>(a, b).to_array();
   assert_eq!(c, [1.0, 6.0, 3.0, 7.0]);
   //
-  let c = shuffle_m256d::<0b_0_0_1_1>(a, b).to_array();
+  let c = shuffle_m256d::<0b0011>(a, b).to_array();
   assert_eq!(c, [2.0, 6.0, 3.0, 7.0]);
   //
-  let c = shuffle_m256d::<0b_1_0_0_1>(a, b).to_array();
+  let c = shuffle_m256d::<0b1001>(a, b).to_array();
   assert_eq!(c, [2.0, 5.0, 3.0, 8.0]);
   //
-  let c = shuffle_m256d::<0b_0_1_0_1>(a, b).to_array();
+  let c = shuffle_m256d::<0b0101>(a, b).to_array();
   assert_eq!(c, [2.0, 5.0, 4.0, 7.0]);
   //
-  let c = shuffle_m256d::<0b_1_1_1_1>(a, b).to_array();
+  let c = shuffle_m256d::<0b1111>(a, b).to_array();
   assert_eq!(c, [2.0, 6.0, 4.0, 8.0]);
 }
 

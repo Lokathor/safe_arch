@@ -209,3 +209,4 @@ pub fn sign_apply_i16_m128i(a: m128i, b: m128i) -> m128i {
 pub fn sign_apply_i32_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_sign_epi32(a.0, b.0) })
 }
+
