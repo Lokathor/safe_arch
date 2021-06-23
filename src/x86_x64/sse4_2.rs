@@ -191,3 +191,4 @@ pub fn search_explicit_str_for_mask<const IMM: i32>(
     _mm_cmpestrm(needle.0, needle_len, haystack.0, haystack_len, IMM)
   })
 }
+

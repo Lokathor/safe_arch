@@ -703,3 +703,4 @@ pub fn fused_mul_subadd_m256(a: m256, b: m256, c: m256) -> m256 {
 pub fn fused_mul_subadd_m256d(a: m256d, b: m256d, c: m256d) -> m256d {
   m256d(unsafe { _mm256_fmsubadd_pd(a.0, b.0, c.0) })
 }
+

@@ -73,3 +73,4 @@ pub fn aes_inv_mix_columns_m128i(a: m128i) -> m128i {
 pub fn aes_key_gen_assist_m128i<const IMM: i32>(a: m128i) -> m128i {
   m128i(unsafe { _mm_aeskeygenassist_si128(a.0, IMM) })
 }
+

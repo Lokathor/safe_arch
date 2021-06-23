@@ -103,3 +103,4 @@ pub fn population_extract_u32(a: u32, index: u32) -> u32 {
 pub fn population_extract_u64(a: u64, index: u64) -> u64 {
   unsafe { _pext_u64(a, index) }
 }
+

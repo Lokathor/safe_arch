@@ -877,3 +877,4 @@ pub fn test_all_zeroes_m128i(a: m128i, mask: m128i) -> i32 {
 pub fn test_mixed_ones_and_zeroes_m128i(a: m128i, mask: m128i) -> i32 {
   unsafe { _mm_test_mix_ones_zeros(a.0, mask.0) }
 }
+

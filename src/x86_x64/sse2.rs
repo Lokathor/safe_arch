@@ -3286,3 +3286,4 @@ impl PartialEq for m128i {
 }
 /// Unlike with the floating types, ints have absolute equality.
 impl Eq for m128i {}
+
