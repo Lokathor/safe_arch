@@ -35,3 +35,4 @@ pub fn rdrand_u32(out: &mut u32) -> i32 {
 pub fn rdrand_u64(out: &mut u64) -> i32 {
   unsafe { _rdrand64_step(out) }
 }
+

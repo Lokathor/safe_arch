@@ -121,3 +121,4 @@ fn approx_eq_f32(a: f32, b: f32) -> bool {
 fn approx_eq_f64(a: f64, b: f64) -> bool {
   (a - b).abs() < 0.00000000001
 }
+

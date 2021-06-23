@@ -1428,3 +1428,4 @@ impl PartialEq for m128 {
     move_mask_m128(cmp_eq_mask_m128(*self, *other)) == 0b1111
   }
 }
+

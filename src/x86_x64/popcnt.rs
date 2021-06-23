@@ -24,3 +24,4 @@ pub fn population_count_i32(a: i32) -> i32 {
 pub fn population_count_i64(a: i64) -> i32 {
   unsafe { _popcnt64(a) }
 }
+

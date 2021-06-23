@@ -100,3 +100,4 @@ pub fn duplicate_odd_lanes_m128(a: m128) -> m128 {
 pub fn duplicate_even_lanes_m128(a: m128) -> m128 {
   m128(unsafe { _mm_moveldup_ps(a.0) })
 }
+

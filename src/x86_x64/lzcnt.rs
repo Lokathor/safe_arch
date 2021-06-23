@@ -24,3 +24,4 @@ pub fn leading_zero_count_u32(a: u32) -> u32 {
 pub fn leading_zero_count_u64(a: u64) -> u64 {
   unsafe { _lzcnt_u64(a) }
 }
+

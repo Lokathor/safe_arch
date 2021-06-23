@@ -106,3 +106,4 @@ def pretty_print_intrinsics_and_instructions(args, tree):
 
 doc_helper(sys.argv[2:], xml.parse(filename))
 #pretty_print_intrinsics_and_instructions(sys.argv[2:], xml.parse(filename))
+
