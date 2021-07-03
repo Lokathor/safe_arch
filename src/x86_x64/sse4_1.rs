@@ -689,19 +689,26 @@ pub fn mul_widen_i32_odd_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_mul_epi32(a.0, b.0) })
 }
 
-/// Lanewise `a * b` with lanes as `i32`, keep the low bits of the `i64`
-/// intermediates.
+/// Lanewise `a * b` with 32-bit lanes.
+///
+/// This keeps the low 32-bits from each 64-bit output,
+/// so it actually works for both `i32` and `u32`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m128i::from([1, 2000000, -300, 45689]);
-/// let b = m128i::from([5, 6000000, 700, -89109]);
-/// let c: [i32; 4] = mul_i32_keep_low_m128i(a, b).into();
-/// assert_eq!(c, [5, -138625024, -210000, 223666195]);
+/// let ai = m128i::from([1, 2000000, -300, 45689]);
+/// let bi = m128i::from([5, 6000000, 700, -89109]);
+/// let ci: [i32; 4] = mul_32_m128i(ai, bi).into();
+/// assert_eq!(ci, [5, -138625024, -210000, 223666195]);
+///
+/// let au = m128i::from([u32::MAX, 26, 5678, 1234567890]);
+/// let bu = m128i::from([u32::MAX, 74, 9101112, 765]);
+/// let cu: [u32; 4] = mul_32_m128i(au, bu).into();
+/// assert_eq!(cu, [1, 1924, 136506384, 3846598026]);
 /// ```
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
-pub fn mul_i32_keep_low_m128i(a: m128i, b: m128i) -> m128i {
+pub fn mul_32_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_mullo_epi32(a.0, b.0) })
 }
 
