@@ -2,6 +2,51 @@
 
 use super::*;
 
+/// Fetches the cache line containing `addr` into all levels of the cache hierarchy.
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse")))]
+pub fn prefetch_t0<T>(addr: &T) {
+  unsafe { _mm_prefetch(addr as *const T as *const i8, _MM_HINT_T0) }
+}
+
+/// Fetches into L2 and higher.
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse")))]
+pub fn prefetch_t1<T>(addr: &T) {
+  unsafe { _mm_prefetch(addr as *const T as *const i8, _MM_HINT_T1) }
+}
+
+/// Fetches into L3 and higher or an implementation-specific choice (e.g., L2 if there is no L3).
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse")))]
+pub fn prefetch_t2<T>(addr: &T) {
+  unsafe { _mm_prefetch(addr as *const T as *const i8, _MM_HINT_T2) }
+}
+
+/// Fetch data using the
+///   non-temporal access (NTA) hint. It may be a place closer than main memory
+///   but outside of the cache hierarchy. This is used to reduce access latency
+///   without polluting the cache.
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse")))]
+pub fn prefetch_nta<T>(addr: &T) {
+  unsafe { _mm_prefetch(addr as *const T as *const i8, _MM_HINT_NTA) }
+}
+
+/// Fetches the cache line containing `addr` into all levels of the cache hierarchy, anticipating write
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse")))]
+pub fn prefetch_et0<T>(addr: &T) {
+  unsafe { _mm_prefetch(addr as *const T as *const i8, _MM_HINT_ET0) }
+}
+
+/// Fetches into L2 and higher, anticipating write
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse")))]
+pub fn prefetch_et1<T>(addr: &T) {
+  unsafe { _mm_prefetch(addr as *const T as *const i8, _MM_HINT_ET1) }
+}
+
 /// Lanewise `a + b`.
 /// ```
 /// # use safe_arch::*;
