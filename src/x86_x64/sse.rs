@@ -1170,6 +1170,21 @@ pub fn store_m128(r: &mut m128, a: m128) {
   unsafe { _mm_store_ps(r as *mut m128 as *mut f32, a.0) }
 }
 
+/// Stores the value to the reference given without polluting the caches
+/// ```
+/// # use safe_arch::*;
+/// let a = m128::from_array([10.0, 12.0, 13.0, 14.0]);
+/// let mut b = zeroed_m128();
+/// stream_m128(&mut b, a);
+/// let c = b.to_array();
+/// assert_eq!(c, [10.0, 12.0, 13.0, 14.0]);
+/// ```
+#[inline(always)]
+#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse")))]
+pub fn stream_m128(r: &mut m128, a: m128) {
+  unsafe { _mm_stream_ps(r as *mut m128 as *mut f32, a.0) }
+}
+
 /// Stores the low lane value to the reference given.
 /// ```
 /// # use safe_arch::*;
