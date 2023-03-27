@@ -2601,32 +2601,6 @@ pub fn shr_imm_u64_m128i<const IMM: i32>(a: m128i) -> m128i {
   m128i(unsafe { _mm_srli_epi64(a.0, IMM) })
 }
 
-/// Non-temporal store of i32 without polluting the caches.
-/// 
-/// let a = [i32::MAX];
-/// let mut b = [0i32];
-/// stream_i32(&mut b[0], a[0]);
-/// assert_eq!(b, a);
-/// ```
-#[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn stream_i32(r: &mut i32, a: i32) {
-  unsafe { _mm_stream_si32(r as *mut i32, a) }
-}
-
-/// Non-temporal store of i64 without polluting the caches.
-/// 
-/// let a = [i64::MAX];
-/// let mut b = [0i64];
-/// stream_i64(&mut b[0], a[0]);
-/// assert_eq!(b, a);
-/// ```
-#[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn stream_i64(r: &mut i64, a: i64) {
-  unsafe { _mm_stream_si64(r as *mut i64, a) }
-}
-
 /// Stores the value to the reference given.
 /// ```
 /// # use safe_arch::*;
@@ -2640,21 +2614,6 @@ pub fn stream_i64(r: &mut i64, a: i64) {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
 pub fn store_m128d(r: &mut m128d, a: m128d) {
   unsafe { _mm_store_pd(r as *mut m128d as *mut f64, a.0) }
-}
-
-/// Stores the value to the reference given without polluting the caches.
-/// ```
-/// # use safe_arch::*;
-/// let a = m128d::from_array([10.0, 12.0]);
-/// let mut b = zeroed_m128d();
-/// stream_m128d(&mut b, a);
-/// let c = b.to_array();
-/// assert_eq!(c, [10.0, 12.0]);
-/// ```
-#[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn stream_m128d(r: &mut m128d, a: m128d) {
-  unsafe { _mm_stream_pd(r as *mut m128d as *mut f64, a.0) }
 }
 
 /// Stores the low lane value to the reference given.
@@ -2699,21 +2658,6 @@ pub fn store_splat_m128d(r: &mut m128d, a: m128d) {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
 pub fn store_m128i(r: &mut m128i, a: m128i) {
   unsafe { _mm_store_si128(&mut r.0, a.0) }
-}
-
-/// Stores the value to the reference given without polluting the caches.
-/// ```
-/// # use safe_arch::*;
-/// let a = m128i::from([1, 2, 3, 4]);
-/// let mut b = zeroed_m128i();
-/// stream_m128i(&mut b, a);
-/// let c: [i32; 4] = b.into();
-/// assert_eq!(c, [1, 2, 3, 4]);
-/// ```
-#[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
-pub fn stream_m128i(r: &mut m128i, a: m128i) {
-  unsafe { _mm_stream_si128(&mut r.0, a.0) }
 }
 
 /// Stores the high lane value to the reference given.
