@@ -1,6 +1,7 @@
 #![no_std]
 #![warn(missing_docs)]
 #![allow(unused_imports)]
+#![allow(clippy::too_many_arguments)]
 #![allow(clippy::transmute_ptr_to_ptr)]
 #![cfg_attr(docs_rs, feature(doc_cfg))]
 
@@ -234,6 +235,7 @@ submodule!(pub x86_x64 {
     // Note(Lokathor): This was changed from i64 to u64 at some point, but
     // everyone ever was already casting this value to `u64` so crater didn't
     // even consider it a problem. We will follow suit.
+    #[allow(clippy::unnecessary_cast)]
     unsafe { _rdtsc() as u64 }
   }
 

@@ -170,7 +170,7 @@ pub fn load_m128_splat_m256(a: &m128) -> m256 {
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn load_f64_splat_m256d(a: &f64) -> m256d {
-  m256d(unsafe { _mm256_broadcast_sd(&a) })
+  m256d(unsafe { _mm256_broadcast_sd(a) })
 }
 
 /// Load an `f32` and splat it to all lanes of an `m256d`
@@ -181,7 +181,7 @@ pub fn load_f64_splat_m256d(a: &f64) -> m256d {
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn load_f32_splat_m256(a: &f32) -> m256 {
-  m256(unsafe { _mm256_broadcast_ss(&a) })
+  m256(unsafe { _mm256_broadcast_ss(a) })
 }
 
 /// Bit-preserving cast to `m256` from `m256d`.
@@ -2317,4 +2317,3 @@ impl PartialEq for m256 {
     move_mask_m256(mask) == 0b1111_1111
   }
 }
-

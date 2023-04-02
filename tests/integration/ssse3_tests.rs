@@ -18,14 +18,13 @@ fn atoi_test() {
     let x = mul_i16_horizontal_add_m128i(x, tens);
 
     let x: [u32; 4] = x.into();
-    return x[1] as u64 + x[0] as u64 * 100000000;
+    x[1] as u64 + x[0] as u64 * 100000000
   }
 
   assert_eq!(atoi(*b"1234567812345678"), 1234567812345678);
   assert_eq!(atoi(*b"0000000000000000"), 0000000000000000);
   assert_eq!(atoi(*b"1982379879823749"), 1982379879823749);
 }
-
 
 #[test]
 fn test_abs_i8_m128i() {
