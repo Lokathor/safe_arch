@@ -2317,3 +2317,4 @@ impl PartialEq for m256 {
     move_mask_m256(mask) == 0b1111_1111
   }
 }
+
