@@ -4,6 +4,7 @@
 #![allow(clippy::too_many_arguments)]
 #![allow(clippy::transmute_ptr_to_ptr)]
 #![cfg_attr(docs_rs, feature(doc_cfg))]
+#![feature(doc_cfg)]
 
 //! A crate that safely exposes arch intrinsics via `#[cfg()]`.
 //!
@@ -339,4 +340,17 @@ submodule!(pub aarch64 {
   //! Types and functions for safe `aarch64` intrinsic usage.
   use super::*;
 
+  submodule!(pub float32x4_);
+  submodule!(pub float64x2_);
+  submodule!(pub int8x16_);
+  submodule!(pub int16x8_);
+  submodule!(pub int32x4_);
+  submodule!(pub int64x2_);
+  submodule!(pub uint8x16_);
+  submodule!(pub uint16x8_);
+  submodule!(pub uint32x4_);
+  submodule!(pub uint64x2_);
+
+  #[cfg(target_feature="neon")]
+  submodule!(pub neon);
 });

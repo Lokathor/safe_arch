@@ -46,8 +46,8 @@ mod sse4_2_tests;
 #[test]
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 fn test_m128_size_align() {
-  assert_eq!(core::mem::size_of::<m128>(), 16);
-  assert_eq!(core::mem::align_of::<m128>(), 16);
+  assert_eq!(core::mem::size_of::<float32x4>(), 16);
+  assert_eq!(core::mem::align_of::<float32x4>(), 16);
 }
 
 #[test]
@@ -88,28 +88,28 @@ fn test_m256i_size_align() {
 #[test]
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 fn test_m128_fmt() {
-  let f = format!("{:?}", m128::default());
+  let f = format!("{:?}", float32x4::default());
   assert_eq!(&f, "m128(0.0, 0.0, 0.0, 0.0)");
 
-  let f = format!("{}", m128::default());
+  let f = format!("{}", float32x4::default());
   assert_eq!(&f, "(0, 0, 0, 0)");
 
-  let f = format!("{:b}", m128::default());
+  let f = format!("{:b}", float32x4::default());
   assert_eq!(&f, "(0, 0, 0, 0)");
 
-  let f = format!("{:e}", m128::default());
+  let f = format!("{:e}", float32x4::default());
   assert_eq!(&f, "(0e0, 0e0, 0e0, 0e0)");
 
-  let f = format!("{:E}", m128::default());
+  let f = format!("{:E}", float32x4::default());
   assert_eq!(&f, "(0E0, 0E0, 0E0, 0E0)");
 
-  let f = format!("{:x}", m128::default());
+  let f = format!("{:x}", float32x4::default());
   assert_eq!(&f, "(0, 0, 0, 0)");
 
-  let f = format!("{:X}", m128::default());
+  let f = format!("{:X}", float32x4::default());
   assert_eq!(&f, "(0, 0, 0, 0)");
 
-  let f = format!("{:o}", m128::default());
+  let f = format!("{:o}", float32x4::default());
   assert_eq!(&f, "(0, 0, 0, 0)");
 }
 
