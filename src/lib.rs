@@ -152,6 +152,8 @@ macro_rules! submodule {
 // over to the `core::arch` module correctly.
 // https://github.com/rust-lang/rust/issues/72243
 
+#[cfg(target_arch = "aarch64")]
+use core::arch::aarch64::*;
 #[cfg(target_arch = "x86")]
 use core::arch::x86::*;
 #[cfg(target_arch = "x86_64")]
@@ -330,4 +332,11 @@ submodule!(pub x86_x64 {
       _MM_FROUND_NO_EXC | _MM_FROUND_TO_ZERO
     }};
   }
+});
+
+#[cfg(any(target_arch = "aarch64"))]
+submodule!(pub aarch64 {
+  //! Types and functions for safe `aarch64` intrinsic usage.
+  use super::*;
+
 });
