@@ -1,15 +1,8 @@
-[![License:Zlib](https://img.shields.io/badge/License-Zlib-brightgreen.svg)](https://opensource.org/licenses/Zlib)
-![Minimum Rust Version](https://img.shields.io/badge/Min%20Rust-1.51-green.svg)
-[![crates.io](https://img.shields.io/crates/v/safe_arch.svg)](https://crates.io/crates/safe_arch)
-[![docs.rs](https://docs.rs/safe_arch/badge.svg)](https://docs.rs/safe_arch/)
+# [Docs.rs](https://docs.rs/safe_arch)
 
 # safe_arch
 
 Exposes arch-specific intrinsics as safe function.
-
-## Design
-
-The crate aims to be _as minimal as possible_.
 
 * SIMD types are newtype'd (with a `pub` field) and given appropriate trait
   impls such as `From`, `Into`, `Default`, etc.
@@ -38,6 +31,3 @@ See the [crate docs](https://docs.rs/safe_arch) for more details.
 
 * [Intel Intrinsics Guide](https://software.intel.com/sites/landingpage/IntrinsicsGuide/)
   * [Raw Xml v3.5.2](https://software.intel.com/sites/landingpage/IntrinsicsGuide/files/data-3.5.2.xml) and you can check their [release notes](https://software.intel.com/sites/landingpage/IntrinsicsGuide/files/ReleaseNotes.html) to see if a later version has been put out since this readme file was last updated.
-
-# Black Lives Matter
-
