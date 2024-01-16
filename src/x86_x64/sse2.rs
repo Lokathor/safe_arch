@@ -1953,8 +1953,8 @@ pub fn pack_i32_to_i16_m128i(a: m128i, b: m128i) -> m128i {
 /// # use safe_arch::*;
 /// let a = m128i::from([-1_i16, 2, -3, 4, -5, 6, -7, 8]);
 /// let b = m128i::from([9_i16, 10, 11, 12, 13, -14, 15, -16]);
-/// let c: [u8; 16] = pack_i16_to_i8_m128i(a, b).into();
-/// assert_eq!(c, [255_u8, 2, 253, 4, 251, 6, 249, 8, 9, 10, 11, 12, 13, 242, 15, 240]);
+/// let c: [u8; 16] = pack_i16_to_u8_m128i(a, b).into();
+/// assert_eq!(c, [0, 2, 0, 4, 0, 6, 0, 8, 9, 10, 11, 12, 13, 0, 15, 0]);
 /// ```
 #[must_use]
 #[inline(always)]
