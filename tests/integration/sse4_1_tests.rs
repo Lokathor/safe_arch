@@ -27,13 +27,9 @@ fn test_blend_imm_m128() {
 
 #[test]
 fn test_blend_varying_i8_m128i() {
-  let a =
-    m128i::from([0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-  let b = m128i::from([
-    0_i8, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13, -14, -15,
-  ]);
-  let mask =
-    m128i::from([0_i8, -1, -1, 0, 0, 0, -1, -1, -1, 0, 0, 0, -1, -1, -1, 0]);
+  let a = m128i::from([0_i8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+  let b = m128i::from([0_i8, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13, -14, -15]);
+  let mask = m128i::from([0_i8, -1, -1, 0, 0, 0, -1, -1, -1, 0, 0, 0, -1, -1, -1, 0]);
   let c: [i8; 16] = blend_varying_i8_m128i(a, b, mask).into();
   assert_eq!(c, [0, -1, -2, 3, 4, 5, -6, -7, -8, 9, 10, 11, -12, -13, -14, 15]);
 }
@@ -72,7 +68,7 @@ fn test_ceil_m128() {
 fn test_ceil_m128d_s() {
   let a = m128d::from_array([-0.1, 1.8]);
   let b = m128d::from_array([2.5, 3.0]);
-  assert_eq!((a, b).to_array(), [3.0, 1.8]);
+  assert_eq!(ceil_m128d_s(a, b).to_array(), [3.0, 1.8]);
 }
 
 #[test]
@@ -113,16 +109,14 @@ fn test_convert_to_i64_m128i_from_lower2_i32_m128i() {
 
 #[test]
 fn test_convert_to_i16_m128i_from_lower8_i8_m128i() {
-  let a =
-    m128i::from([0_i8, -1, 2, -3, 4, -5, 6, -7, 8, 9, 10, 11, 12, 13, 14, 15]);
+  let a = m128i::from([0_i8, -1, 2, -3, 4, -5, 6, -7, 8, 9, 10, 11, 12, 13, 14, 15]);
   let c: [i16; 8] = convert_to_i16_m128i_from_lower8_i8_m128i(a).into();
   assert_eq!(c, [0_i16, -1, 2, -3, 4, -5, 6, -7]);
 }
 
 #[test]
 fn test_convert_to_i32_m128i_from_lower4_i8_m128i() {
-  let a =
-    m128i::from([0_i8, -1, 2, -3, 4, -5, 6, -7, 8, 9, 10, 11, 12, 13, 14, 15]);
+  let a = m128i::from([0_i8, -1, 2, -3, 4, -5, 6, -7, 8, 9, 10, 11, 12, 13, 14, 15]);
   let c: [i32; 4] = convert_to_i32_m128i_from_lower4_i8_m128i(a).into();
   assert_eq!(c, [0, -1, 2, -3]);
 }
@@ -150,26 +144,16 @@ fn test_convert_to_u64_m128i_from_lower2_u32_m128i() {
 
 #[test]
 fn test_convert_to_u16_m128i_from_lower8_u8_m128i() {
-  let a =
-    m128i::from([u8::MAX, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+  let a = m128i::from([u8::MAX, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
   let c: [u16; 8] = convert_to_u16_m128i_from_lower8_u8_m128i(a).into();
   assert_eq!(c, [u8::MAX as u16, 1, 2, 3, 4, 5, 6, 7]);
 }
 
 #[test]
 fn test_convert_to_u32_m128i_from_lower4_u8_m128i() {
-  let a =
-    m128i::from([u8::MAX, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+  let a = m128i::from([u8::MAX, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
   let c: [u32; 4] = convert_to_u32_m128i_from_lower4_u8_m128i(a).into();
   assert_eq!(c, [u8::MAX as u32, 1, 2, 3]);
-}
-
-#[test]
-fn test_convert_to_u32_m128i_from_lower4_u8_m128i() {
-  let a =
-    m128i::from([u8::MAX, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-  let c: [u64; 2] = convert_to_u64_m128i_from_lower2_u8_m128i(a).into();
-  assert_eq!(c, [u8::MAX as u64, 1]);
 }
 
 #[test]
@@ -201,7 +185,7 @@ fn test_dot_product_m128d() {
 }
 
 #[test]
-fn test_dot_product_m128d() {
+fn test_dot_product_m128() {
   let a = m128::from_array([1.0, 2.0, 3.0, 4.0]);
   let b = m128::from_array([5.0, 6.0, 7.0, 8.0]);
 
@@ -245,4 +229,18 @@ fn test_dot_product_m128d() {
 fn test_extract_i32_imm_m128i() {
   let a = m128i::from([5, 6, 7, 8]);
   assert_eq!(extract_i32_imm_m128i::<1>(a), 6);
+}
+
+#[test]
+fn test_ptest_i128() {
+  let a = m128i::from([1, 0, 1, 0]);
+  let b = m128i::from([0, 1, 0, 0]);
+
+  assert_eq!(testz_m128i(a, a), 0);
+  assert_eq!(testz_m128i(a, b), 1);
+  assert_eq!(testz_m128i(b, b), 0);
+
+  assert_eq!(testc_m128i(a, a), 1);
+  assert_eq!(testc_m128i(a, b), 0);
+  assert_eq!(testc_m128i(b, b), 1);
 }

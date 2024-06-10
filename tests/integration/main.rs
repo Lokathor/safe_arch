@@ -40,6 +40,9 @@ mod sse3_tests;
 #[cfg(target_feature = "ssse3")]
 mod ssse3_tests;
 
+#[cfg(target_feature = "sse4.1")]
+mod sse4_1_tests;
+
 #[cfg(target_feature = "sse4.2")]
 mod sse4_2_tests;
 

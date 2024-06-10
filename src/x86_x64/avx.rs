@@ -1252,17 +1252,6 @@ pub fn testz_m256i(a: m256i, b: m256i) -> i32 {
   unsafe { _mm256_testz_si256(a.0, b.0) }
 }
 
-/// Computes the bitwise AND of 256 bits in `a` and
-/// `b`, returns 1 if the result is zero, otherwise 0.
-/// * **Intrinsic:** [`_mm_testz_pd`]
-/// * **Assembly:**
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn testz_m128i(a: m128i, b: m128i) -> i32 {
-  unsafe { _mm_testz_si128(a.0, b.0) }
-}
-
 /// Compute the bitwise NOT of `a` and then AND with `b`,
 /// returns 1 if the result is zero, otherwise 0.
 /// * **Intrinsic:** [`_mm256_testc_si256`]
@@ -1272,17 +1261,6 @@ pub fn testz_m128i(a: m128i, b: m128i) -> i32 {
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
 pub fn testc_m256i(a: m256i, b: m256i) -> i32 {
   unsafe { _mm256_testc_si256(a.0, b.0) }
-}
-
-/// Compute the bitwise NOT of `a` and then AND with `b`,
-/// returns 1 if the result is zero, otherwise 0.
-/// * **Intrinsic:** [`_mm_testc_si128`]
-/// * **Assembly:**
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
-pub fn testc_m128i(a: m128i, b: m128i) -> i32 {
-  unsafe { _mm_testc_si128(a.0, b.0) }
 }
 
 /// Collects the sign bit of each lane into a 4-bit value.

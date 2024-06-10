@@ -1251,17 +1251,3 @@ fn test_ptest_i256() {
   assert_eq!(testc_m256i(a, b), 0);
   assert_eq!(testc_m256i(b, b), 1);
 }
-
-#[test]
-fn test_ptest_i128() {
-  let a = m128i::from([1, 0, 1, 0]);
-  let b = m128i::from([0, 1, 0, 0]);
-
-  assert_eq!(testz_m128i(a, a), 0);
-  assert_eq!(testz_m128i(a, b), 1);
-  assert_eq!(testz_m128i(b, b), 0);
-
-  assert_eq!(testc_m128i(a, a), 1);
-  assert_eq!(testc_m128i(a, b), 0);
-  assert_eq!(testc_m128i(b, b), 1);
-}
