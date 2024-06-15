@@ -1156,7 +1156,7 @@ pub fn move_mask_m256d(a: m256d) -> i32 {
 /// Computes the bitwise AND of 256 bits in `a` and
 /// `b`, returns 1 if the result is zero, otherwise 0.
 /// * **Intrinsic:** [`_mm256_testz_ps`]
-/// * **Assembly:**
+/// * **Assembly:** vtestps ymm, ymm
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
@@ -1167,7 +1167,7 @@ pub fn testz_m256(a: m256, b: m256) -> i32 {
 /// Computes the bitwise AND of 256 bits in `a` and
 /// `b`, returns 1 if the result is zero, otherwise 0.
 /// * **Intrinsic:** [`_mm_testz_ps`]
-/// * **Assembly:**
+/// * **Assembly:** vtestps xmm, xmm
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
@@ -1178,7 +1178,7 @@ pub fn testz_m128(a: m128, b: m128) -> i32 {
 /// Compute the bitwise of sign bit NOT of `a` and then AND with `b`,
 /// returns 1 if the result is zero, otherwise 0.
 /// * **Intrinsic:** [`_mm256_testc_ps`]
-/// * **Assembly:**
+/// * **Assembly:** vtestps ymm, ymm
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
@@ -1189,7 +1189,7 @@ pub fn testc_m256(a: m256, b: m256) -> i32 {
 /// Compute the bitwise of sign bit NOT of `a` and then AND with `b`,
 /// returns 1 if the result is zero, otherwise 0.
 /// * **Intrinsic:** [`_mm_testc_ps`]
-/// * **Assembly:**
+/// * **Assembly:** vtestps xmm, xmm
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
@@ -1200,7 +1200,7 @@ pub fn testc_m128(a: m128, b: m128) -> i32 {
 /// Computes the bitwise of sign bit AND of 256 bits in `a` and
 /// `b`, returns 1 if the result is zero, otherwise 0.
 /// * **Intrinsic:** [`_mm256_testz_pd`]
-/// * **Assembly:**
+/// * **Assembly:** vtestpd ymm, ymm
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
@@ -1211,7 +1211,7 @@ pub fn testz_m256d(a: m256d, b: m256d) -> i32 {
 /// Computes the bitwise of sign bitAND of 256 bits in `a` and
 /// `b`, returns 1 if the result is zero, otherwise 0.
 /// * **Intrinsic:** [`_mm_testz_pd`]
-/// * **Assembly:**
+/// * **Assembly:** vtestpd xmm, xmm
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
@@ -1222,7 +1222,7 @@ pub fn testz_m128d(a: m128d, b: m128d) -> i32 {
 /// Compute the bitwise of sign bit NOT of `a` and then AND with `b`,
 /// returns 1 if the result is zero, otherwise 0.
 /// * **Intrinsic:** [`_mm256_testc_pd`]
-/// * **Assembly:**
+/// * **Assembly:** vtestpd ymm, ymm
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
@@ -1233,7 +1233,7 @@ pub fn testc_m256d(a: m256d, b: m256d) -> i32 {
 /// Compute the bitwise of sign bit NOT of `a` and then AND with `b`,
 /// returns 1 if the result is zero, otherwise 0.
 /// * **Intrinsic:** [`_mm_testc_si128`]
-/// * **Assembly:**
+/// * **Assembly:** vptest xmm, xmm
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
@@ -1244,7 +1244,7 @@ pub fn testc_m128d(a: m128d, b: m128d) -> i32 {
 /// Computes the bitwise of sign bit AND of 256 bits in `a` and
 /// `b`, returns 1 if the result is zero, otherwise 0.
 /// * **Intrinsic:** [`_mm256_testz_si256`]
-/// * **Assembly:**
+/// * **Assembly:** vptest ymm, ymm
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
@@ -1255,7 +1255,7 @@ pub fn testz_m256i(a: m256i, b: m256i) -> i32 {
 /// Compute the bitwise NOT of `a` and then AND with `b`,
 /// returns 1 if the result is zero, otherwise 0.
 /// * **Intrinsic:** [`_mm256_testc_si256`]
-/// * **Assembly:**
+/// * **Assembly:** vptest ymm, ymm
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]

@@ -818,7 +818,7 @@ pub fn round_m128_s<const MODE: i32>(a: m128, b: m128) -> m128 {
 /// Computes the bitwise AND of 256 bits in `a` and
 /// `b`, returns 1 if the result is zero, otherwise 0.
 /// * **Intrinsic:** [`_mm_testz_si128`]
-/// * **Assembly:**
+/// * **Assembly:** ptest xmm, xmm
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
@@ -829,7 +829,7 @@ pub fn testz_m128i(a: m128i, b: m128i) -> i32 {
 /// Compute the bitwise NOT of `a` and then AND with `b`,
 /// returns 1 if the result is zero, otherwise 0.
 /// * **Intrinsic:** [`_mm_testc_si128`]
-/// * **Assembly:**
+/// * **Assembly:** ptest xmm, xmm
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.1")))]
