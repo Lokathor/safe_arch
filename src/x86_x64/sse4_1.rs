@@ -838,6 +838,8 @@ pub fn testc_m128i(a: m128i, b: m128i) -> i32 {
 }
 
 /// Tests if all bits are 1.
+/// * **Intrinsic:** [`_mm_test_all_ones`]
+/// * **Assembly:** pcmpeqd xmm, xmm / ptest xmm, xmm
 ///
 /// ```
 /// # use safe_arch::*;
@@ -854,6 +856,8 @@ pub fn test_all_ones_m128i(a: m128i) -> i32 {
 }
 
 /// Returns if all masked bits are 0, `(a & mask) as u128 == 0`
+/// * **Intrinsic:** [`_mm_test_all_zeros`]
+/// * **Assembly:** ptest xmm, xmm
 ///
 /// ```
 /// # use safe_arch::*;
@@ -877,7 +881,9 @@ pub fn test_all_zeroes_m128i(a: m128i, mask: m128i) -> i32 {
 }
 
 /// Returns if, among the masked bits, there's both 0s and 1s
-///
+/// * **Intrinsic:** [`_mm_test_mix_ones_zeros`]
+/// * **Assembly:** ptest xmm, xmm
+/// 
 /// * Zero Flag = `(a & mask) as u128 == 0`
 /// * Carry Flag = `((!a) & mask) as u128 == 0`
 /// * Return `ZeroFlag == 0 && Carry Flag == 0`
