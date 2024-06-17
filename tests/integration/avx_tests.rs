@@ -1181,3 +1181,73 @@ fn test_zero_extend_m128i() {
   let a: [i32; 8] = zero_extend_m128i(m128i::from([1, 2, 3, 4])).into();
   assert_eq!(a, [1, 2, 3, 4, 0, 0, 0, 0]);
 }
+
+#[test]
+fn test_ptest_m256() {
+  let a = m256::from([-1.0, 5.0, -1.0, 0.0, -1.0, 0.0, -1.0, 0.0]);
+  let b = m256::from([0.0, -1.0, 0.0, -1.0, 0.0, -1.0, 0.0, -1.0]);
+
+  assert_eq!(testz_m256(a, a), 0);
+  assert_eq!(testz_m256(a, b), 1);
+  assert_eq!(testz_m256(b, b), 0);
+
+  assert_eq!(testc_m256(a, a), 1);
+  assert_eq!(testc_m256(a, b), 0);
+  assert_eq!(testc_m256(b, b), 1);
+}
+
+#[test]
+fn test_ptest_m128() {
+  let a = m128::from([-1.0, 5.0, -1.0, 0.0]);
+  let b = m128::from([0.0, -1.0, 0.0, -1.0]);
+
+  assert_eq!(testz_m128(a, a), 0);
+  assert_eq!(testz_m128(a, b), 1);
+  assert_eq!(testz_m128(b, b), 0);
+
+  assert_eq!(testc_m128(a, a), 1);
+  assert_eq!(testc_m128(a, b), 0);
+  assert_eq!(testc_m128(b, b), 1);
+}
+
+#[test]
+fn test_ptest_m256d() {
+  let a = m256d::from([-1.0, 5.0, -1.0, 0.0]);
+  let b = m256d::from([0.0, -1.0, 0.0, -1.0]);
+
+  assert_eq!(testz_m256d(a, a), 0);
+  assert_eq!(testz_m256d(a, b), 1);
+  assert_eq!(testz_m256d(b, b), 0);
+
+  assert_eq!(testc_m256d(a, a), 1);
+  assert_eq!(testc_m256d(a, b), 0);
+  assert_eq!(testc_m256d(b, b), 1);
+}
+
+#[test]
+fn test_ptest_m128d() {
+  let a = m128d::from([-1.0, 5.0]);
+  let b = m128d::from([0.0, -1.0]);
+
+  assert_eq!(testz_m128d(a, a), 0);
+  assert_eq!(testz_m128d(a, b), 1);
+  assert_eq!(testz_m128d(b, b), 0);
+
+  assert_eq!(testc_m128d(a, a), 1);
+  assert_eq!(testc_m128d(a, b), 0);
+  assert_eq!(testc_m128d(b, b), 1);
+}
+
+#[test]
+fn test_ptest_i256() {
+  let a = m256i::from([1, 0, 1, 0, 1, 0, 1, 0]);
+  let b = m256i::from([0, 1, 0, 1, 0, 1, 0, 1]);
+
+  assert_eq!(testz_m256i(a, a), 0);
+  assert_eq!(testz_m256i(a, b), 1);
+  assert_eq!(testz_m256i(b, b), 0);
+
+  assert_eq!(testc_m256i(a, a), 1);
+  assert_eq!(testc_m256i(a, b), 0);
+  assert_eq!(testc_m256i(b, b), 1);
+}
