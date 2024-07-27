@@ -283,7 +283,7 @@ submodule!(pub x86_x64 {
 
   /// Turns a round operator token to the correct constant value.
   #[macro_export]
-  #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+  #[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
   macro_rules! round_op {
     (Nearest) => {{
       #[cfg(target_arch = "x86")]

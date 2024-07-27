@@ -8,7 +8,7 @@ use super::*;
 /// * **Assembly:** `lzcnt r32, r32`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "lzcnt")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "lzcnt")))]
 pub fn leading_zero_count_u32(a: u32) -> u32 {
   unsafe { _lzcnt_u32(a) }
 }
@@ -20,7 +20,7 @@ pub fn leading_zero_count_u32(a: u32) -> u32 {
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "lzcnt")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "lzcnt")))]
 pub fn leading_zero_count_u64(a: u64) -> u64 {
   unsafe { _lzcnt_u64(a) }
 }

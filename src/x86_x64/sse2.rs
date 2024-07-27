@@ -12,7 +12,7 @@ use super::*;
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn add_i8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_add_epi8(a.0, b.0) })
 }
@@ -27,7 +27,7 @@ pub fn add_i8_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn add_i16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_add_epi16(a.0, b.0) })
 }
@@ -42,7 +42,7 @@ pub fn add_i16_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn add_i32_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_add_epi32(a.0, b.0) })
 }
@@ -57,7 +57,7 @@ pub fn add_i32_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn add_i64_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_add_epi64(a.0, b.0) })
 }
@@ -72,7 +72,7 @@ pub fn add_i64_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn add_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_add_pd(a.0, b.0) })
 }
@@ -87,7 +87,7 @@ pub fn add_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn add_m128d_s(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_add_sd(a.0, b.0) })
 }
@@ -115,7 +115,7 @@ pub fn add_m128d_s(a: m128d, b: m128d) -> m128d {
 #[must_use]
 #[inline(always)]
 #[rustfmt::skip]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn add_saturating_i8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_adds_epi8(a.0, b.0) })
 }
@@ -130,7 +130,7 @@ pub fn add_saturating_i8_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn add_saturating_i16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_adds_epi16(a.0, b.0) })
 }
@@ -158,7 +158,7 @@ pub fn add_saturating_i16_m128i(a: m128i, b: m128i) -> m128i {
 #[must_use]
 #[inline(always)]
 #[rustfmt::skip]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn add_saturating_u8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_adds_epu8(a.0, b.0) })
 }
@@ -173,7 +173,7 @@ pub fn add_saturating_u8_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn add_saturating_u16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_adds_epu16(a.0, b.0) })
 }
@@ -188,7 +188,7 @@ pub fn add_saturating_u16_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn bitand_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_and_pd(a.0, b.0) })
 }
@@ -203,7 +203,7 @@ pub fn bitand_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn bitand_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_and_si128(a.0, b.0) })
 }
@@ -218,7 +218,7 @@ pub fn bitand_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn bitandnot_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_andnot_pd(a.0, b.0) })
 }
@@ -233,7 +233,7 @@ pub fn bitandnot_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn bitandnot_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_andnot_si128(a.0, b.0) })
 }
@@ -261,7 +261,7 @@ pub fn bitandnot_m128i(a: m128i, b: m128i) -> m128i {
 #[must_use]
 #[inline(always)]
 #[rustfmt::skip]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn average_u8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_avg_epu8(a.0, b.0) })
 }
@@ -276,7 +276,7 @@ pub fn average_u8_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn average_u16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_avg_epu16(a.0, b.0) })
 }
@@ -292,7 +292,7 @@ pub fn average_u16_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn byte_shl_imm_u128_m128i<const IMM: i32>(a: m128i) -> m128i {
   m128i(unsafe { _mm_bslli_si128(a.0, IMM) })
 }
@@ -308,7 +308,7 @@ pub fn byte_shl_imm_u128_m128i<const IMM: i32>(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn byte_shr_imm_u128_m128i<const IMM: i32>(a: m128i) -> m128i {
   m128i(unsafe { _mm_bsrli_si128(a.0, IMM) })
 }
@@ -322,7 +322,7 @@ pub fn byte_shr_imm_u128_m128i<const IMM: i32>(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cast_to_m128_from_m128d(a: m128d) -> m128 {
   m128(unsafe { _mm_castpd_ps(a.0) })
 }
@@ -336,7 +336,7 @@ pub fn cast_to_m128_from_m128d(a: m128d) -> m128 {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cast_to_m128i_from_m128d(a: m128d) -> m128i {
   m128i(unsafe { _mm_castpd_si128(a.0) })
 }
@@ -350,7 +350,7 @@ pub fn cast_to_m128i_from_m128d(a: m128d) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cast_to_m128d_from_m128(a: m128) -> m128d {
   m128d(unsafe { _mm_castps_pd(a.0) })
 }
@@ -364,7 +364,7 @@ pub fn cast_to_m128d_from_m128(a: m128) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cast_to_m128i_from_m128(a: m128) -> m128i {
   m128i(unsafe { _mm_castps_si128(a.0) })
 }
@@ -378,7 +378,7 @@ pub fn cast_to_m128i_from_m128(a: m128) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cast_to_m128d_from_m128i(a: m128i) -> m128d {
   m128d(unsafe { _mm_castsi128_pd(a.0) })
 }
@@ -392,7 +392,7 @@ pub fn cast_to_m128d_from_m128i(a: m128i) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cast_to_m128_from_m128i(a: m128i) -> m128 {
   m128(unsafe { _mm_castsi128_ps(a.0) })
 }
@@ -409,7 +409,7 @@ pub fn cast_to_m128_from_m128i(a: m128i) -> m128 {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_eq_mask_i8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_cmpeq_epi8(a.0, b.0) })
 }
@@ -426,7 +426,7 @@ pub fn cmp_eq_mask_i8_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_eq_mask_i16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_cmpeq_epi16(a.0, b.0) })
 }
@@ -443,7 +443,7 @@ pub fn cmp_eq_mask_i16_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_eq_mask_i32_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_cmpeq_epi32(a.0, b.0) })
 }
@@ -460,7 +460,7 @@ pub fn cmp_eq_mask_i32_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_eq_mask_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmpeq_pd(a.0, b.0) })
 }
@@ -477,7 +477,7 @@ pub fn cmp_eq_mask_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_eq_mask_m128d_s(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmpeq_sd(a.0, b.0) })
 }
@@ -494,7 +494,7 @@ pub fn cmp_eq_mask_m128d_s(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_ge_mask_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmpge_pd(a.0, b.0) })
 }
@@ -511,7 +511,7 @@ pub fn cmp_ge_mask_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_ge_mask_m128d_s(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmpge_sd(a.0, b.0) })
 }
@@ -528,7 +528,7 @@ pub fn cmp_ge_mask_m128d_s(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_gt_mask_i8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_cmpgt_epi8(a.0, b.0) })
 }
@@ -545,7 +545,7 @@ pub fn cmp_gt_mask_i8_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_gt_mask_i16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_cmpgt_epi16(a.0, b.0) })
 }
@@ -562,7 +562,7 @@ pub fn cmp_gt_mask_i16_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_gt_mask_i32_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_cmpgt_epi32(a.0, b.0) })
 }
@@ -579,7 +579,7 @@ pub fn cmp_gt_mask_i32_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_gt_mask_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmpgt_pd(a.0, b.0) })
 }
@@ -596,7 +596,7 @@ pub fn cmp_gt_mask_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_gt_mask_m128d_s(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmpgt_sd(a.0, b.0) })
 }
@@ -613,7 +613,7 @@ pub fn cmp_gt_mask_m128d_s(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_le_mask_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmple_pd(a.0, b.0) })
 }
@@ -630,7 +630,7 @@ pub fn cmp_le_mask_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_le_mask_m128d_s(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmple_sd(a.0, b.0) })
 }
@@ -647,7 +647,7 @@ pub fn cmp_le_mask_m128d_s(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_lt_mask_i8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_cmplt_epi8(a.0, b.0) })
 }
@@ -664,7 +664,7 @@ pub fn cmp_lt_mask_i8_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_lt_mask_i16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_cmplt_epi16(a.0, b.0) })
 }
@@ -681,7 +681,7 @@ pub fn cmp_lt_mask_i16_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_lt_mask_i32_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_cmplt_epi32(a.0, b.0) })
 }
@@ -698,7 +698,7 @@ pub fn cmp_lt_mask_i32_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_lt_mask_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmplt_pd(a.0, b.0) })
 }
@@ -715,7 +715,7 @@ pub fn cmp_lt_mask_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_lt_mask_m128d_s(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmplt_sd(a.0, b.0) })
 }
@@ -732,7 +732,7 @@ pub fn cmp_lt_mask_m128d_s(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_neq_mask_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmpneq_pd(a.0, b.0) })
 }
@@ -749,7 +749,7 @@ pub fn cmp_neq_mask_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_neq_mask_m128d_s(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmpneq_sd(a.0, b.0) })
 }
@@ -766,7 +766,7 @@ pub fn cmp_neq_mask_m128d_s(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_nge_mask_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmpnge_pd(a.0, b.0) })
 }
@@ -783,7 +783,7 @@ pub fn cmp_nge_mask_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_nge_mask_m128d_s(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmpnge_sd(a.0, b.0) })
 }
@@ -800,7 +800,7 @@ pub fn cmp_nge_mask_m128d_s(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_ngt_mask_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmpngt_pd(a.0, b.0) })
 }
@@ -817,7 +817,7 @@ pub fn cmp_ngt_mask_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_ngt_mask_m128d_s(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmpngt_sd(a.0, b.0) })
 }
@@ -834,7 +834,7 @@ pub fn cmp_ngt_mask_m128d_s(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_nle_mask_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmpnle_pd(a.0, b.0) })
 }
@@ -851,7 +851,7 @@ pub fn cmp_nle_mask_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_nle_mask_m128d_s(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmpnle_sd(a.0, b.0) })
 }
@@ -868,7 +868,7 @@ pub fn cmp_nle_mask_m128d_s(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_nlt_mask_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmpnlt_pd(a.0, b.0) })
 }
@@ -885,7 +885,7 @@ pub fn cmp_nlt_mask_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_nlt_mask_m128d_s(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmpnlt_sd(a.0, b.0) })
 }
@@ -902,7 +902,7 @@ pub fn cmp_nlt_mask_m128d_s(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_ordered_mask_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmpord_pd(a.0, b.0) })
 }
@@ -919,7 +919,7 @@ pub fn cmp_ordered_mask_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_ordered_mask_m128d_s(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmpord_sd(a.0, b.0) })
 }
@@ -936,7 +936,7 @@ pub fn cmp_ordered_mask_m128d_s(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_unord_mask_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmpunord_pd(a.0, b.0) })
 }
@@ -953,7 +953,7 @@ pub fn cmp_unord_mask_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_unord_mask_m128d_s(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmpunord_sd(a.0, b.0) })
 }
@@ -969,7 +969,7 @@ pub fn cmp_unord_mask_m128d_s(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_eq_i32_m128d_s(a: m128d, b: m128d) -> i32 {
   unsafe { _mm_comieq_sd(a.0, b.0) }
 }
@@ -985,7 +985,7 @@ pub fn cmp_eq_i32_m128d_s(a: m128d, b: m128d) -> i32 {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_ge_i32_m128d_s(a: m128d, b: m128d) -> i32 {
   unsafe { _mm_comige_sd(a.0, b.0) }
 }
@@ -1001,7 +1001,7 @@ pub fn cmp_ge_i32_m128d_s(a: m128d, b: m128d) -> i32 {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_gt_i32_m128d_s(a: m128d, b: m128d) -> i32 {
   unsafe { _mm_comigt_sd(a.0, b.0) }
 }
@@ -1017,7 +1017,7 @@ pub fn cmp_gt_i32_m128d_s(a: m128d, b: m128d) -> i32 {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_le_i32_m128d_s(a: m128d, b: m128d) -> i32 {
   unsafe { _mm_comile_sd(a.0, b.0) }
 }
@@ -1033,7 +1033,7 @@ pub fn cmp_le_i32_m128d_s(a: m128d, b: m128d) -> i32 {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_lt_i32_m128d_s(a: m128d, b: m128d) -> i32 {
   unsafe { _mm_comilt_sd(a.0, b.0) }
 }
@@ -1049,7 +1049,7 @@ pub fn cmp_lt_i32_m128d_s(a: m128d, b: m128d) -> i32 {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn cmp_neq_i32_m128d_s(a: m128d, b: m128d) -> i32 {
   unsafe { _mm_comineq_sd(a.0, b.0) }
 }
@@ -1066,7 +1066,7 @@ pub fn cmp_neq_i32_m128d_s(a: m128d, b: m128d) -> i32 {
 /// * **Assembly:** `cvtdq2pd xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn convert_to_m128d_from_lower2_i32_m128i(a: m128i) -> m128d {
   m128d(unsafe { _mm_cvtepi32_pd(a.0) })
 }
@@ -1083,7 +1083,7 @@ pub fn convert_to_m128d_from_lower2_i32_m128i(a: m128i) -> m128d {
 /// * **Assembly:** `cvtdq2ps xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn convert_to_m128_from_i32_m128i(a: m128i) -> m128 {
   m128(unsafe { _mm_cvtepi32_ps(a.0) })
 }
@@ -1100,7 +1100,7 @@ pub fn convert_to_m128_from_i32_m128i(a: m128i) -> m128 {
 /// * **Assembly:** `cvtpd2dq xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn convert_to_i32_m128i_from_m128d(a: m128d) -> m128i {
   m128i(unsafe { _mm_cvtpd_epi32(a.0) })
 }
@@ -1116,7 +1116,7 @@ pub fn convert_to_i32_m128i_from_m128d(a: m128d) -> m128i {
 /// * **Assembly:** `cvtpd2ps xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn convert_to_m128_from_m128d(a: m128d) -> m128 {
   m128(unsafe { _mm_cvtpd_ps(a.0) })
 }
@@ -1133,7 +1133,7 @@ pub fn convert_to_m128_from_m128d(a: m128d) -> m128 {
 /// * **Assembly:** `cvtps2dq xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn convert_to_i32_m128i_from_m128(a: m128) -> m128i {
   m128i(unsafe { _mm_cvtps_epi32(a.0) })
 }
@@ -1149,7 +1149,7 @@ pub fn convert_to_i32_m128i_from_m128(a: m128) -> m128i {
 /// * **Assembly:** `cvtps2pd xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn convert_to_m128d_from_lower2_m128(a: m128) -> m128d {
   m128d(unsafe { _mm_cvtps_pd(a.0) })
 }
@@ -1163,7 +1163,7 @@ pub fn convert_to_m128d_from_lower2_m128(a: m128) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn get_f64_from_m128d_s(a: m128d) -> f64 {
   unsafe { _mm_cvtsd_f64(a.0) }
 }
@@ -1177,7 +1177,7 @@ pub fn get_f64_from_m128d_s(a: m128d) -> f64 {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn get_i32_from_m128d_s(a: m128d) -> i32 {
   unsafe { _mm_cvtsd_si32(a.0) }
 }
@@ -1192,7 +1192,7 @@ pub fn get_i32_from_m128d_s(a: m128d) -> i32 {
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn get_i64_from_m128d_s(a: m128d) -> i64 {
   unsafe { _mm_cvtsd_si64(a.0) }
 }
@@ -1210,7 +1210,7 @@ pub fn get_i64_from_m128d_s(a: m128d) -> i64 {
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn convert_m128d_s_replace_m128_s(a: m128, b: m128d) -> m128 {
   m128(unsafe { _mm_cvtsd_ss(a.0, b.0) })
 }
@@ -1224,7 +1224,7 @@ pub fn convert_m128d_s_replace_m128_s(a: m128, b: m128d) -> m128 {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn get_i32_from_m128i_s(a: m128i) -> i32 {
   unsafe { _mm_cvtsi128_si32(a.0) }
 }
@@ -1239,7 +1239,7 @@ pub fn get_i32_from_m128i_s(a: m128i) -> i32 {
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn get_i64_from_m128i_s(a: m128i) -> i64 {
   unsafe { _mm_cvtsi128_si64(a.0) }
 }
@@ -1255,7 +1255,7 @@ pub fn get_i64_from_m128i_s(a: m128i) -> i64 {
 /// * **Assembly:** `cvtsi2sd xmm, r32`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn convert_i32_replace_m128d_s(a: m128d, i: i32) -> m128d {
   m128d(unsafe { _mm_cvtsi32_sd(a.0, i) })
 }
@@ -1269,7 +1269,7 @@ pub fn convert_i32_replace_m128d_s(a: m128d, i: i32) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn set_i32_m128i_s(i: i32) -> m128i {
   m128i(unsafe { _mm_cvtsi32_si128(i) })
 }
@@ -1286,7 +1286,7 @@ pub fn set_i32_m128i_s(i: i32) -> m128i {
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn convert_i64_replace_m128d_s(a: m128d, i: i64) -> m128d {
   m128d(unsafe { _mm_cvtsi64_sd(a.0, i) })
 }
@@ -1301,7 +1301,7 @@ pub fn convert_i64_replace_m128d_s(a: m128d, i: i64) -> m128d {
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn set_i64_m128i_s(i: i64) -> m128i {
   m128i(unsafe { _mm_cvtsi64_si128(i) })
 }
@@ -1318,7 +1318,7 @@ pub fn set_i64_m128i_s(i: i64) -> m128i {
 /// * **Assembly:** `cvtss2sd xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn convert_m128_s_replace_m128d_s(a: m128d, b: m128) -> m128d {
   m128d(unsafe { _mm_cvtss_sd(a.0, b.0) })
 }
@@ -1332,7 +1332,7 @@ pub fn convert_m128_s_replace_m128d_s(a: m128d, b: m128) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn truncate_m128d_to_m128i(a: m128d) -> m128i {
   m128i(unsafe { _mm_cvttpd_epi32(a.0) })
 }
@@ -1346,7 +1346,7 @@ pub fn truncate_m128d_to_m128i(a: m128d) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn truncate_m128_to_m128i(a: m128) -> m128i {
   m128i(unsafe { _mm_cvttps_epi32(a.0) })
 }
@@ -1359,7 +1359,7 @@ pub fn truncate_m128_to_m128i(a: m128) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn truncate_to_i32_m128d_s(a: m128d) -> i32 {
   unsafe { _mm_cvttsd_si32(a.0) }
 }
@@ -1373,7 +1373,7 @@ pub fn truncate_to_i32_m128d_s(a: m128d) -> i32 {
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn truncate_to_i64_m128d_s(a: m128d) -> i64 {
   unsafe { _mm_cvttsd_si64(a.0) }
 }
@@ -1388,7 +1388,7 @@ pub fn truncate_to_i64_m128d_s(a: m128d) -> i64 {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn div_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_div_pd(a.0, b.0) })
 }
@@ -1403,7 +1403,7 @@ pub fn div_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn div_m128d_s(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_div_sd(a.0, b.0) })
 }
@@ -1421,7 +1421,7 @@ pub fn div_m128d_s(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn extract_i16_as_i32_m128i<const LANE: i32>(a: m128i) -> i32 {
   unsafe { _mm_extract_epi16(a.0, LANE) }
 }
@@ -1439,7 +1439,7 @@ pub fn extract_i16_as_i32_m128i<const LANE: i32>(a: m128i) -> i32 {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn insert_i16_from_i32_m128i<const LANE: i32>(a: m128i, i: i32) -> m128i {
   m128i(unsafe { _mm_insert_epi16(a.0, i, LANE) })
 }
@@ -1453,7 +1453,7 @@ pub fn insert_i16_from_i32_m128i<const LANE: i32>(a: m128i, i: i32) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn load_m128d(a: &m128d) -> m128d {
   m128d(unsafe { _mm_load_pd(a as *const m128d as *const f64) })
 }
@@ -1468,7 +1468,7 @@ pub fn load_m128d(a: &m128d) -> m128d {
 #[must_use]
 #[inline(always)]
 #[allow(clippy::trivially_copy_pass_by_ref)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn load_f64_splat_m128d(a: &f64) -> m128d {
   m128d(unsafe { _mm_load1_pd(a) })
 }
@@ -1483,7 +1483,7 @@ pub fn load_f64_splat_m128d(a: &f64) -> m128d {
 #[must_use]
 #[inline(always)]
 #[allow(clippy::trivially_copy_pass_by_ref)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn load_f64_m128d_s(a: &f64) -> m128d {
   m128d(unsafe { _mm_load_sd(a) })
 }
@@ -1497,7 +1497,7 @@ pub fn load_f64_m128d_s(a: &f64) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn load_m128i(a: &m128i) -> m128i {
   m128i(unsafe { _mm_load_si128(a as *const m128i as *const __m128i) })
 }
@@ -1512,7 +1512,7 @@ pub fn load_m128i(a: &m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn load_replace_high_m128d(a: m128d, b: &f64) -> m128d {
   m128d(unsafe { _mm_loadh_pd(a.0, b) })
 }
@@ -1526,7 +1526,7 @@ pub fn load_replace_high_m128d(a: m128d, b: &f64) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn load_i64_m128i_s(a: &m128i) -> m128i {
   m128i(unsafe { _mm_loadl_epi64(a as *const m128i as *const __m128i) })
 }
@@ -1541,7 +1541,7 @@ pub fn load_i64_m128i_s(a: &m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn load_replace_low_m128d(a: m128d, b: &f64) -> m128d {
   m128d(unsafe { _mm_loadl_pd(a.0, b) })
 }
@@ -1555,7 +1555,7 @@ pub fn load_replace_low_m128d(a: m128d, b: &f64) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn load_reverse_m128d(a: &m128d) -> m128d {
   m128d(unsafe { _mm_loadr_pd(a as *const m128d as *const f64) })
 }
@@ -1573,7 +1573,7 @@ pub fn load_reverse_m128d(a: &m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn load_unaligned_m128d(a: &[f64; 2]) -> m128d {
   m128d(unsafe { _mm_loadu_pd(a as *const [f64; 2] as *const f64) })
 }
@@ -1592,7 +1592,7 @@ pub fn load_unaligned_m128d(a: &[f64; 2]) -> m128d {
 #[must_use]
 #[inline(always)]
 #[allow(clippy::cast_ptr_alignment)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn load_unaligned_m128i(a: &[u8; 16]) -> m128i {
   m128i(unsafe { _mm_loadu_si128(a as *const [u8; 16] as *const __m128i) })
 }
@@ -1608,7 +1608,7 @@ pub fn load_unaligned_m128i(a: &[u8; 16]) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn mul_i16_horizontal_add_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_madd_epi16(a.0, b.0) })
 }
@@ -1623,7 +1623,7 @@ pub fn mul_i16_horizontal_add_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn max_u8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_max_epu8(a.0, b.0) })
 }
@@ -1638,7 +1638,7 @@ pub fn max_u8_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn max_i16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_max_epi16(a.0, b.0) })
 }
@@ -1653,7 +1653,7 @@ pub fn max_i16_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn max_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_max_pd(a.0, b.0) })
 }
@@ -1668,7 +1668,7 @@ pub fn max_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn max_m128d_s(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_max_sd(a.0, b.0) })
 }
@@ -1683,7 +1683,7 @@ pub fn max_m128d_s(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn min_u8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_min_epu8(a.0, b.0) })
 }
@@ -1698,7 +1698,7 @@ pub fn min_u8_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn min_i16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_min_epi16(a.0, b.0) })
 }
@@ -1713,7 +1713,7 @@ pub fn min_i16_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn min_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_min_pd(a.0, b.0) })
 }
@@ -1728,7 +1728,7 @@ pub fn min_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn min_m128d_s(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_min_sd(a.0, b.0) })
 }
@@ -1742,7 +1742,7 @@ pub fn min_m128d_s(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn copy_i64_m128i_s(a: m128i) -> m128i {
   m128i(unsafe { _mm_move_epi64(a.0) })
 }
@@ -1757,7 +1757,7 @@ pub fn copy_i64_m128i_s(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn copy_replace_low_f64_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_move_sd(a.0, b.0) })
 }
@@ -1773,7 +1773,7 @@ pub fn copy_replace_low_f64_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn move_mask_i8_m128i(a: m128i) -> i32 {
   unsafe { _mm_movemask_epi8(a.0) }
 }
@@ -1789,7 +1789,7 @@ pub fn move_mask_i8_m128i(a: m128i) -> i32 {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn move_mask_m128d(a: m128d) -> i32 {
   unsafe { _mm_movemask_pd(a.0) }
 }
@@ -1805,7 +1805,7 @@ pub fn move_mask_m128d(a: m128d) -> i32 {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn mul_widen_u32_odd_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_mul_epu32(a.0, b.0) })
 }
@@ -1820,7 +1820,7 @@ pub fn mul_widen_u32_odd_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn mul_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_mul_pd(a.0, b.0) })
 }
@@ -1835,7 +1835,7 @@ pub fn mul_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn mul_m128d_s(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_mul_sd(a.0, b.0) })
 }
@@ -1851,7 +1851,7 @@ pub fn mul_m128d_s(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn mul_i16_keep_high_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_mulhi_epi16(a.0, b.0) })
 }
@@ -1867,7 +1867,7 @@ pub fn mul_i16_keep_high_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn mul_u16_keep_high_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_mulhi_epu16(a.0, b.0) })
 }
@@ -1883,7 +1883,7 @@ pub fn mul_u16_keep_high_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn mul_i16_keep_low_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_mullo_epi16(a.0, b.0) })
 }
@@ -1898,7 +1898,7 @@ pub fn mul_i16_keep_low_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn bitor_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_or_pd(a.0, b.0) })
 }
@@ -1913,7 +1913,7 @@ pub fn bitor_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn bitor_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_or_si128(a.0, b.0) })
 }
@@ -1928,7 +1928,7 @@ pub fn bitor_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn pack_i16_to_i8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_packs_epi16(a.0, b.0) })
 }
@@ -1943,7 +1943,7 @@ pub fn pack_i16_to_i8_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn pack_i32_to_i16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_packs_epi32(a.0, b.0) })
 }
@@ -1958,7 +1958,7 @@ pub fn pack_i32_to_i16_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn pack_i16_to_u8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_packus_epi16(a.0, b.0) })
 }
@@ -1977,7 +1977,7 @@ pub fn pack_i16_to_u8_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn sum_of_u8_abs_diff_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_sad_epu8(a.0, b.0) })
 }
@@ -1993,7 +1993,7 @@ pub fn sum_of_u8_abs_diff_m128i(a: m128i, b: m128i) -> m128i {
 #[inline(always)]
 #[allow(clippy::too_many_arguments)]
 #[allow(clippy::many_single_char_names)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn set_i8_m128i(a: i8, b: i8, c: i8, d: i8, e: i8, f: i8, g: i8, h: i8, i: i8, j: i8, k: i8, l: i8, m: i8, n: i8, o: i8, p: i8) -> m128i {
   m128i(unsafe { _mm_set_epi8(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) })
 }
@@ -2009,7 +2009,7 @@ pub fn set_i8_m128i(a: i8, b: i8, c: i8, d: i8, e: i8, f: i8, g: i8, h: i8, i: i
 #[inline(always)]
 #[allow(clippy::too_many_arguments)]
 #[allow(clippy::many_single_char_names)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn set_i16_m128i(a: i16, b: i16, c: i16, d: i16, e: i16, f: i16, g: i16, h: i16) -> m128i {
   m128i(unsafe { _mm_set_epi16(a, b, c, d, e, f, g, h) })
 }
@@ -2023,7 +2023,7 @@ pub fn set_i16_m128i(a: i16, b: i16, c: i16, d: i16, e: i16, f: i16, g: i16, h: 
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn set_i32_m128i(a: i32, b: i32, c: i32, d: i32) -> m128i {
   m128i(unsafe { _mm_set_epi32(a, b, c, d) })
 }
@@ -2037,7 +2037,7 @@ pub fn set_i32_m128i(a: i32, b: i32, c: i32, d: i32) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn set_i64_m128i(a: i64, b: i64) -> m128i {
   m128i(unsafe { _mm_set_epi64x(a, b) })
 }
@@ -2051,7 +2051,7 @@ pub fn set_i64_m128i(a: i64, b: i64) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn set_m128d(a: f64, b: f64) -> m128d {
   m128d(unsafe { _mm_set_pd(a, b) })
 }
@@ -2065,7 +2065,7 @@ pub fn set_m128d(a: f64, b: f64) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn set_m128d_s(a: f64) -> m128d {
   m128d(unsafe { _mm_set_sd(a) })
 }
@@ -2079,7 +2079,7 @@ pub fn set_m128d_s(a: f64) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn set_splat_m128d(a: f64) -> m128d {
   m128d(unsafe { _mm_set1_pd(a) })
 }
@@ -2093,7 +2093,7 @@ pub fn set_splat_m128d(a: f64) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn set_splat_i8_m128i(i: i8) -> m128i {
   m128i(unsafe { _mm_set1_epi8(i) })
 }
@@ -2107,7 +2107,7 @@ pub fn set_splat_i8_m128i(i: i8) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn set_splat_i16_m128i(i: i16) -> m128i {
   m128i(unsafe { _mm_set1_epi16(i) })
 }
@@ -2121,7 +2121,7 @@ pub fn set_splat_i16_m128i(i: i16) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn set_splat_i32_m128i(i: i32) -> m128i {
   m128i(unsafe { _mm_set1_epi32(i) })
 }
@@ -2135,7 +2135,7 @@ pub fn set_splat_i32_m128i(i: i32) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn set_splat_i64_m128i(i: i64) -> m128i {
   m128i(unsafe { _mm_set1_epi64x(i) })
 }
@@ -2151,7 +2151,7 @@ pub fn set_splat_i64_m128i(i: i64) -> m128i {
 #[inline(always)]
 #[allow(clippy::too_many_arguments)]
 #[allow(clippy::many_single_char_names)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn set_reversed_i8_m128i(a: i8, b: i8, c: i8, d: i8, e: i8, f: i8, g: i8, h: i8, i: i8, j: i8, k: i8, l: i8, m: i8, n: i8, o: i8, p: i8) -> m128i {
   m128i(unsafe { _mm_setr_epi8(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) })
 }
@@ -2167,7 +2167,7 @@ pub fn set_reversed_i8_m128i(a: i8, b: i8, c: i8, d: i8, e: i8, f: i8, g: i8, h:
 #[inline(always)]
 #[allow(clippy::too_many_arguments)]
 #[allow(clippy::many_single_char_names)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn set_reversed_i16_m128i(a: i16, b: i16, c: i16, d: i16, e: i16, f: i16, g: i16, h: i16) -> m128i {
   m128i(unsafe { _mm_setr_epi16(a, b, c, d, e, f, g, h) })
 }
@@ -2181,7 +2181,7 @@ pub fn set_reversed_i16_m128i(a: i16, b: i16, c: i16, d: i16, e: i16, f: i16, g:
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn set_reversed_i32_m128i(a: i32, b: i32, c: i32, d: i32) -> m128i {
   m128i(unsafe { _mm_setr_epi32(a, b, c, d) })
 }
@@ -2195,7 +2195,7 @@ pub fn set_reversed_i32_m128i(a: i32, b: i32, c: i32, d: i32) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn set_reversed_m128d(a: f64, b: f64) -> m128d {
   m128d(unsafe { _mm_setr_pd(a, b) })
 }
@@ -2208,7 +2208,7 @@ pub fn set_reversed_m128d(a: f64, b: f64) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn zeroed_m128i() -> m128i {
   m128i(unsafe { _mm_setzero_si128() })
 }
@@ -2221,7 +2221,7 @@ pub fn zeroed_m128i() -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn zeroed_m128d() -> m128d {
   m128d(unsafe { _mm_setzero_pd() })
 }
@@ -2240,7 +2240,7 @@ pub fn zeroed_m128d() -> m128d {
 /// * **Assembly:** `pshufd xmm, xmm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn shuffle_ai_f32_all_m128i<const MASK: i32>(a: m128i) -> m128i {
   m128i(unsafe { _mm_shuffle_epi32(a.0, MASK) })
 }
@@ -2268,7 +2268,7 @@ pub fn shuffle_ai_f32_all_m128i<const MASK: i32>(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn shuffle_abi_f64_all_m128d<const MASK: i32>(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_shuffle_pd(a.0, b.0, MASK) })
 }
@@ -2284,7 +2284,7 @@ pub fn shuffle_abi_f64_all_m128d<const MASK: i32>(a: m128d, b: m128d) -> m128d {
 /// * **Assembly:** `pshufhw xmm, xmm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn shuffle_ai_i16_h64all_m128i<const MASK: i32>(a: m128i) -> m128i {
   m128i(unsafe { _mm_shufflehi_epi16(a.0, MASK) })
 }
@@ -2301,7 +2301,7 @@ pub fn shuffle_ai_i16_h64all_m128i<const MASK: i32>(a: m128i) -> m128i {
 /// * **Assembly:** `pshuflw xmm, xmm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn shuffle_ai_i16_l64all_m128i<const MASK: i32>(a: m128i) -> m128i {
   m128i(unsafe { _mm_shufflelo_epi16(a.0, MASK) })
 }
@@ -2318,7 +2318,7 @@ pub fn shuffle_ai_i16_l64all_m128i<const MASK: i32>(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn shl_all_u16_m128i(a: m128i, count: m128i) -> m128i {
   m128i(unsafe { _mm_sll_epi16(a.0, count.0) })
 }
@@ -2335,7 +2335,7 @@ pub fn shl_all_u16_m128i(a: m128i, count: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn shl_all_u32_m128i(a: m128i, count: m128i) -> m128i {
   m128i(unsafe { _mm_sll_epi32(a.0, count.0) })
 }
@@ -2352,7 +2352,7 @@ pub fn shl_all_u32_m128i(a: m128i, count: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn shl_all_u64_m128i(a: m128i, count: m128i) -> m128i {
   m128i(unsafe { _mm_sll_epi64(a.0, count.0) })
 }
@@ -2367,7 +2367,7 @@ pub fn shl_all_u64_m128i(a: m128i, count: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn shl_imm_u16_m128i<const IMM: i32>(a: m128i) -> m128i {
   m128i(unsafe { _mm_slli_epi16(a.0, IMM) })
 }
@@ -2382,7 +2382,7 @@ pub fn shl_imm_u16_m128i<const IMM: i32>(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn shl_imm_u32_m128i<const IMM: i32>(a: m128i) -> m128i {
   m128i(unsafe { _mm_slli_epi32(a.0, IMM) })
 }
@@ -2397,7 +2397,7 @@ pub fn shl_imm_u32_m128i<const IMM: i32>(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn shl_imm_u64_m128i<const IMM: i32>(a: m128i) -> m128i {
   m128i(unsafe { _mm_slli_epi64(a.0, IMM) })
 }
@@ -2411,7 +2411,7 @@ pub fn shl_imm_u64_m128i<const IMM: i32>(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn sqrt_m128d(a: m128d) -> m128d {
   m128d(unsafe { _mm_sqrt_pd(a.0) })
 }
@@ -2426,7 +2426,7 @@ pub fn sqrt_m128d(a: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn sqrt_m128d_s(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_sqrt_sd(a.0, b.0) })
 }
@@ -2443,7 +2443,7 @@ pub fn sqrt_m128d_s(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn shr_all_i16_m128i(a: m128i, count: m128i) -> m128i {
   m128i(unsafe { _mm_sra_epi16(a.0, count.0) })
 }
@@ -2460,7 +2460,7 @@ pub fn shr_all_i16_m128i(a: m128i, count: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn shr_all_i32_m128i(a: m128i, count: m128i) -> m128i {
   m128i(unsafe { _mm_sra_epi32(a.0, count.0) })
 }
@@ -2477,7 +2477,7 @@ pub fn shr_all_i32_m128i(a: m128i, count: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn shr_imm_i16_m128i<const IMM: i32>(a: m128i) -> m128i {
   m128i(unsafe { _mm_srai_epi16(a.0, IMM) })
 }
@@ -2494,7 +2494,7 @@ pub fn shr_imm_i16_m128i<const IMM: i32>(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn shr_imm_i32_m128i<const IMM: i32>(a: m128i) -> m128i {
   m128i(unsafe { _mm_srai_epi32(a.0, IMM) })
 }
@@ -2510,7 +2510,7 @@ pub fn shr_imm_i32_m128i<const IMM: i32>(a: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn shr_all_u16_m128i(a: m128i, count: m128i) -> m128i {
   m128i(unsafe { _mm_srl_epi16(a.0, count.0) })
 }
@@ -2526,7 +2526,7 @@ pub fn shr_all_u16_m128i(a: m128i, count: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn shr_all_u32_m128i(a: m128i, count: m128i) -> m128i {
   m128i(unsafe { _mm_srl_epi32(a.0, count.0) })
 }
@@ -2543,7 +2543,7 @@ pub fn shr_all_u32_m128i(a: m128i, count: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn shr_all_u64_m128i(a: m128i, count: m128i) -> m128i {
   m128i(unsafe { _mm_srl_epi64(a.0, count.0) })
 }
@@ -2562,7 +2562,7 @@ pub fn shr_all_u64_m128i(a: m128i, count: m128i) -> m128i {
 /// * **Assembly:** `psrlw xmm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn shr_imm_u16_m128i<const IMM: i32>(a: m128i) -> m128i {
   m128i(unsafe { _mm_srli_epi16(a.0, IMM) })
 }
@@ -2579,7 +2579,7 @@ pub fn shr_imm_u16_m128i<const IMM: i32>(a: m128i) -> m128i {
 /// * **Assembly:** `psrld xmm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn shr_imm_u32_m128i<const IMM: i32>(a: m128i) -> m128i {
   m128i(unsafe { _mm_srli_epi32(a.0, IMM) })
 }
@@ -2596,7 +2596,7 @@ pub fn shr_imm_u32_m128i<const IMM: i32>(a: m128i) -> m128i {
 /// * **Assembly:** `psrlq xmm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn shr_imm_u64_m128i<const IMM: i32>(a: m128i) -> m128i {
   m128i(unsafe { _mm_srli_epi64(a.0, IMM) })
 }
@@ -2611,7 +2611,7 @@ pub fn shr_imm_u64_m128i<const IMM: i32>(a: m128i) -> m128i {
 /// assert_eq!(c, [10.0, 12.0]);
 /// ```
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn store_m128d(r: &mut m128d, a: m128d) {
   unsafe { _mm_store_pd(r as *mut m128d as *mut f64, a.0) }
 }
@@ -2625,7 +2625,7 @@ pub fn store_m128d(r: &mut m128d, a: m128d) {
 /// assert_eq!(f, 10.0);
 /// ```
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn store_m128d_s(r: &mut f64, a: m128d) {
   unsafe { _mm_store_sd(r as *mut f64, a.0) }
 }
@@ -2640,7 +2640,7 @@ pub fn store_m128d_s(r: &mut f64, a: m128d) {
 /// assert_eq!(c, [10.0, 10.0]);
 /// ```
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn store_splat_m128d(r: &mut m128d, a: m128d) {
   unsafe { _mm_store1_pd(r as *mut m128d as *mut f64, a.0) }
 }
@@ -2655,7 +2655,7 @@ pub fn store_splat_m128d(r: &mut m128d, a: m128d) {
 /// assert_eq!(c, [1, 2, 3, 4]);
 /// ```
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn store_m128i(r: &mut m128i, a: m128i) {
   unsafe { _mm_store_si128(&mut r.0, a.0) }
 }
@@ -2669,7 +2669,7 @@ pub fn store_m128i(r: &mut m128i, a: m128i) {
 /// assert_eq!(f, 12.0);
 /// ```
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn store_high_m128d_s(r: &mut f64, a: m128d) {
   unsafe { _mm_storeh_pd(r as *mut f64, a.0) }
 }
@@ -2684,7 +2684,7 @@ pub fn store_high_m128d_s(r: &mut f64, a: m128d) {
 /// ```
 #[inline(always)]
 #[allow(clippy::cast_ptr_alignment)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn store_i64_m128i_s(r: &mut i64, a: m128i) {
   unsafe { _mm_storel_epi64(r as *mut i64 as *mut __m128i, a.0) }
 }
@@ -2699,7 +2699,7 @@ pub fn store_i64_m128i_s(r: &mut i64, a: m128i) {
 /// assert_eq!(c, [12.0, 10.0]);
 /// ```
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn store_reversed_m128d(r: &mut m128d, a: m128d) {
   unsafe { _mm_storer_pd(r as *mut m128d as *mut f64, a.0) }
 }
@@ -2713,7 +2713,7 @@ pub fn store_reversed_m128d(r: &mut m128d, a: m128d) {
 /// assert_eq!(b, [10.0, 12.0]);
 /// ```
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn store_unaligned_m128d(r: &mut [f64; 2], a: m128d) {
   unsafe { _mm_storeu_pd(r.as_mut_ptr(), a.0) }
 }
@@ -2727,7 +2727,7 @@ pub fn store_unaligned_m128d(r: &mut [f64; 2], a: m128d) {
 /// assert_eq!(b, [0_u8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
 /// ```
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn store_unaligned_m128i(r: &mut [u8; 16], a: m128i) {
   unsafe { _mm_storeu_si128(r.as_mut_ptr().cast(), a.0) }
 }
@@ -2742,7 +2742,7 @@ pub fn store_unaligned_m128i(r: &mut [u8; 16], a: m128i) {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn sub_i8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_sub_epi8(a.0, b.0) })
 }
@@ -2757,7 +2757,7 @@ pub fn sub_i8_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn sub_i16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_sub_epi16(a.0, b.0) })
 }
@@ -2772,7 +2772,7 @@ pub fn sub_i16_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn sub_i32_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_sub_epi32(a.0, b.0) })
 }
@@ -2787,7 +2787,7 @@ pub fn sub_i32_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn sub_i64_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_sub_epi64(a.0, b.0) })
 }
@@ -2802,7 +2802,7 @@ pub fn sub_i64_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn sub_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_sub_pd(a.0, b.0) })
 }
@@ -2817,7 +2817,7 @@ pub fn sub_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn sub_m128d_s(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_sub_sd(a.0, b.0) })
 }
@@ -2832,7 +2832,7 @@ pub fn sub_m128d_s(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn sub_saturating_i8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_subs_epi8(a.0, b.0) })
 }
@@ -2847,7 +2847,7 @@ pub fn sub_saturating_i8_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn sub_saturating_i16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_subs_epi16(a.0, b.0) })
 }
@@ -2862,7 +2862,7 @@ pub fn sub_saturating_i16_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn sub_saturating_u8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_subs_epu8(a.0, b.0) })
 }
@@ -2877,7 +2877,7 @@ pub fn sub_saturating_u8_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn sub_saturating_u16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_subs_epu16(a.0, b.0) })
 }
@@ -2892,7 +2892,7 @@ pub fn sub_saturating_u16_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn unpack_high_i8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_unpackhi_epi8(a.0, b.0) })
 }
@@ -2907,7 +2907,7 @@ pub fn unpack_high_i8_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn unpack_high_i16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_unpackhi_epi16(a.0, b.0) })
 }
@@ -2922,7 +2922,7 @@ pub fn unpack_high_i16_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn unpack_high_i32_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_unpackhi_epi32(a.0, b.0) })
 }
@@ -2937,7 +2937,7 @@ pub fn unpack_high_i32_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn unpack_high_i64_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_unpackhi_epi64(a.0, b.0) })
 }
@@ -2952,7 +2952,7 @@ pub fn unpack_high_i64_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn unpack_high_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_unpackhi_pd(a.0, b.0) })
 }
@@ -2967,7 +2967,7 @@ pub fn unpack_high_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn unpack_low_i8_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_unpacklo_epi8(a.0, b.0) })
 }
@@ -2982,7 +2982,7 @@ pub fn unpack_low_i8_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn unpack_low_i16_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_unpacklo_epi16(a.0, b.0) })
 }
@@ -2997,7 +2997,7 @@ pub fn unpack_low_i16_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn unpack_low_i32_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_unpacklo_epi32(a.0, b.0) })
 }
@@ -3012,7 +3012,7 @@ pub fn unpack_low_i32_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn unpack_low_i64_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_unpacklo_epi64(a.0, b.0) })
 }
@@ -3027,7 +3027,7 @@ pub fn unpack_low_i64_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn unpack_low_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_unpacklo_pd(a.0, b.0) })
 }
@@ -3042,7 +3042,7 @@ pub fn unpack_low_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn bitxor_m128d(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_xor_pd(a.0, b.0) })
 }
@@ -3057,7 +3057,7 @@ pub fn bitxor_m128d(a: m128d, b: m128d) -> m128d {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse2")))]
 pub fn bitxor_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_xor_si128(a.0, b.0) })
 }

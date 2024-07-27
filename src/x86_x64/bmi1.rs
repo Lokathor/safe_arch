@@ -8,7 +8,7 @@ use super::*;
 /// * **Assembly:** `andn r32, r32, r32`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi1")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi1")))]
 pub fn bitandnot_u32(a: u32, b: u32) -> u32 {
   unsafe { _andn_u32(a, b) }
 }
@@ -20,7 +20,7 @@ pub fn bitandnot_u32(a: u32, b: u32) -> u32 {
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi1")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi1")))]
 pub fn bitandnot_u64(a: u64, b: u64) -> u64 {
   unsafe { _andn_u64(a, b) }
 }
@@ -31,7 +31,7 @@ pub fn bitandnot_u64(a: u64, b: u64) -> u64 {
 /// * **Assembly:** `bextr r32, r32, r32`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi1")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi1")))]
 pub fn bit_extract_u32(a: u32, start: u32, len: u32) -> u32 {
   unsafe { _bextr_u32(a, start, len) }
 }
@@ -43,7 +43,7 @@ pub fn bit_extract_u32(a: u32, start: u32, len: u32) -> u32 {
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi1")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi1")))]
 pub fn bit_extract_u64(a: u64, start: u32, len: u32) -> u64 {
   unsafe { _bextr_u64(a, start, len) }
 }
@@ -57,7 +57,7 @@ pub fn bit_extract_u64(a: u64, start: u32, len: u32) -> u64 {
 /// * **Assembly:** `bextr r32, r32, r32`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi1")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi1")))]
 pub fn bit_extract2_u32(a: u32, control: u32) -> u32 {
   unsafe { _bextr2_u32(a, control) }
 }
@@ -72,7 +72,7 @@ pub fn bit_extract2_u32(a: u32, control: u32) -> u32 {
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi1")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi1")))]
 pub fn bit_extract2_u64(a: u64, control: u64) -> u64 {
   unsafe { _bextr2_u64(a, control) }
 }
@@ -87,7 +87,7 @@ pub fn bit_extract2_u64(a: u64, control: u64) -> u64 {
 /// * **Assembly:** `blsi r32, r32`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi1")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi1")))]
 pub fn bit_lowest_set_value_u32(a: u32) -> u32 {
   unsafe { _blsi_u32(a) }
 }
@@ -103,7 +103,7 @@ pub fn bit_lowest_set_value_u32(a: u32) -> u32 {
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi1")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi1")))]
 pub fn bit_lowest_set_value_u64(a: u64) -> u64 {
   unsafe { _blsi_u64(a) }
 }
@@ -118,7 +118,7 @@ pub fn bit_lowest_set_value_u64(a: u64) -> u64 {
 /// * **Assembly:** `blsmsk r32, r32`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi1")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi1")))]
 pub fn bit_lowest_set_mask_u32(a: u32) -> u32 {
   unsafe { _blsmsk_u32(a) }
 }
@@ -134,7 +134,7 @@ pub fn bit_lowest_set_mask_u32(a: u32) -> u32 {
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi1")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi1")))]
 pub fn bit_lowest_set_mask_u64(a: u64) -> u64 {
   unsafe { _blsmsk_u64(a) }
 }
@@ -149,7 +149,7 @@ pub fn bit_lowest_set_mask_u64(a: u64) -> u64 {
 /// * **Assembly:** `blsr r32, r32`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi1")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi1")))]
 pub fn bit_lowest_set_reset_u32(a: u32) -> u32 {
   unsafe { _blsr_u32(a) }
 }
@@ -165,7 +165,7 @@ pub fn bit_lowest_set_reset_u32(a: u32) -> u32 {
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi1")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi1")))]
 pub fn bit_lowest_set_reset_u64(a: u64) -> u64 {
   unsafe { _blsr_u64(a) }
 }
@@ -178,7 +178,7 @@ pub fn bit_lowest_set_reset_u64(a: u64) -> u64 {
 /// * **Assembly:** `tzcnt r32, r32`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi1")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi1")))]
 pub fn trailing_zero_count_u32(a: u32) -> u32 {
   unsafe { _tzcnt_u32(a) }
 }
@@ -192,7 +192,7 @@ pub fn trailing_zero_count_u32(a: u32) -> u32 {
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi1")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi1")))]
 pub fn trailing_zero_count_u64(a: u64) -> u64 {
   unsafe { _tzcnt_u64(a) }
 }

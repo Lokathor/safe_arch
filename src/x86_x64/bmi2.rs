@@ -8,7 +8,7 @@ use super::*;
 /// * **Assembly:** `bzhi r32, r32, r32`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi2")))]
 pub fn bit_zero_high_index_u32(a: u32, index: u32) -> u32 {
   unsafe { _bzhi_u32(a, index) }
 }
@@ -20,7 +20,7 @@ pub fn bit_zero_high_index_u32(a: u32, index: u32) -> u32 {
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi2")))]
 pub fn bit_zero_high_index_u64(a: u64, index: u32) -> u64 {
   unsafe { _bzhi_u64(a, index) }
 }
@@ -34,7 +34,7 @@ pub fn bit_zero_high_index_u64(a: u64, index: u32) -> u64 {
 /// * **Assembly:** `mulx r32, r32, m32`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi2")))]
 pub fn mul_extended_u32(a: u32, b: u32, extra: &mut u32) -> u32 {
   unsafe { _mulx_u32(a, b, extra) }
 }
@@ -49,7 +49,7 @@ pub fn mul_extended_u32(a: u32, b: u32, extra: &mut u32) -> u32 {
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi2")))]
 pub fn mul_extended_u64(a: u64, b: u64, extra: &mut u64) -> u64 {
   unsafe { _mulx_u64(a, b, extra) }
 }
@@ -62,7 +62,7 @@ pub fn mul_extended_u64(a: u64, b: u64, extra: &mut u64) -> u64 {
 /// * **Assembly:** `pdep r32, r32, r32`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi2")))]
 pub fn population_deposit_u32(a: u32, index: u32) -> u32 {
   unsafe { _pdep_u32(a, index) }
 }
@@ -76,7 +76,7 @@ pub fn population_deposit_u32(a: u32, index: u32) -> u32 {
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi2")))]
 pub fn population_deposit_u64(a: u64, index: u64) -> u64 {
   unsafe { _pdep_u64(a, index) }
 }
@@ -87,7 +87,7 @@ pub fn population_deposit_u64(a: u64, index: u64) -> u64 {
 /// * **Assembly:** `pext r32, r32, r32`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi2")))]
 pub fn population_extract_u32(a: u32, index: u32) -> u32 {
   unsafe { _pext_u32(a, index) }
 }
@@ -99,7 +99,7 @@ pub fn population_extract_u32(a: u32, index: u32) -> u32 {
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "bmi2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "bmi2")))]
 pub fn population_extract_u64(a: u64, index: u64) -> u64 {
   unsafe { _pext_u64(a, index) }
 }
