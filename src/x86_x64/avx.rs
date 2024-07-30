@@ -8,7 +8,7 @@ use super::*;
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn add_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_add_pd(a.0, b.0) })
 }
@@ -19,7 +19,7 @@ pub fn add_m256d(a: m256d, b: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn add_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_add_ps(a.0, b.0) })
 }
@@ -30,7 +30,7 @@ pub fn add_m256(a: m256, b: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn addsub_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_addsub_pd(a.0, b.0) })
 }
@@ -41,7 +41,7 @@ pub fn addsub_m256d(a: m256d, b: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn addsub_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_addsub_ps(a.0, b.0) })
 }
@@ -52,7 +52,7 @@ pub fn addsub_m256(a: m256, b: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn bitand_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_and_pd(a.0, b.0) })
 }
@@ -63,7 +63,7 @@ pub fn bitand_m256d(a: m256d, b: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn bitand_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_and_ps(a.0, b.0) })
 }
@@ -74,7 +74,7 @@ pub fn bitand_m256(a: m256, b: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn bitandnot_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_andnot_pd(a.0, b.0) })
 }
@@ -85,7 +85,7 @@ pub fn bitandnot_m256d(a: m256d, b: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn bitandnot_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_andnot_ps(a.0, b.0) })
 }
@@ -121,7 +121,7 @@ pub fn blend_m256<const IMM: i32>(a: m256, b: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn blend_varying_m256d(a: m256d, b: m256d, mask: m256d) -> m256d {
   m256d(unsafe { _mm256_blendv_pd(a.0, b.0, mask.0) })
 }
@@ -135,7 +135,7 @@ pub fn blend_varying_m256d(a: m256d, b: m256d, mask: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn blend_varying_m256(a: m256, b: m256, mask: m256) -> m256 {
   m256(unsafe { _mm256_blendv_ps(a.0, b.0, mask.0) })
 }
@@ -146,7 +146,7 @@ pub fn blend_varying_m256(a: m256, b: m256, mask: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn load_m128d_splat_m256d(a: &m128d) -> m256d {
   m256d(unsafe { _mm256_broadcast_pd(&a.0) })
 }
@@ -157,7 +157,7 @@ pub fn load_m128d_splat_m256d(a: &m128d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn load_m128_splat_m256(a: &m128) -> m256 {
   m256(unsafe { _mm256_broadcast_ps(&a.0) })
 }
@@ -168,7 +168,7 @@ pub fn load_m128_splat_m256(a: &m128) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn load_f64_splat_m256d(a: &f64) -> m256d {
   m256d(unsafe { _mm256_broadcast_sd(a) })
 }
@@ -179,7 +179,7 @@ pub fn load_f64_splat_m256d(a: &f64) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn load_f32_splat_m256(a: &f32) -> m256 {
   m256(unsafe { _mm256_broadcast_ss(a) })
 }
@@ -190,7 +190,7 @@ pub fn load_f32_splat_m256(a: &f32) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn cast_to_m256_from_m256d(a: m256d) -> m256 {
   m256(unsafe { _mm256_castpd_ps(a.0) })
 }
@@ -201,7 +201,7 @@ pub fn cast_to_m256_from_m256d(a: m256d) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn cast_to_m256i_from_m256d(a: m256d) -> m256i {
   m256i(unsafe { _mm256_castpd_si256(a.0) })
 }
@@ -212,7 +212,7 @@ pub fn cast_to_m256i_from_m256d(a: m256d) -> m256i {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn cast_to_m256d_from_m256(a: m256) -> m256d {
   m256d(unsafe { _mm256_castps_pd(a.0) })
 }
@@ -223,7 +223,7 @@ pub fn cast_to_m256d_from_m256(a: m256) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn cast_to_m256i_from_m256(a: m256) -> m256i {
   m256i(unsafe { _mm256_castps_si256(a.0) })
 }
@@ -234,7 +234,7 @@ pub fn cast_to_m256i_from_m256(a: m256) -> m256i {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn cast_to_m256d_from_m256i(a: m256i) -> m256d {
   m256d(unsafe { _mm256_castsi256_pd(a.0) })
 }
@@ -245,7 +245,7 @@ pub fn cast_to_m256d_from_m256i(a: m256i) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn cast_to_m256_from_m256i(a: m256i) -> m256 {
   m256(unsafe { _mm256_castsi256_ps(a.0) })
 }
@@ -256,7 +256,7 @@ pub fn cast_to_m256_from_m256i(a: m256i) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn cast_to_m128_from_m256(a: m256) -> m128 {
   m128(unsafe { _mm256_castps256_ps128(a.0) })
 }
@@ -267,7 +267,7 @@ pub fn cast_to_m128_from_m256(a: m256) -> m128 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn cast_to_m128d_from_m256d(a: m256d) -> m128d {
   m128d(unsafe { _mm256_castpd256_pd128(a.0) })
 }
@@ -278,7 +278,7 @@ pub fn cast_to_m128d_from_m256d(a: m256d) -> m128d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn cast_to_m128i_from_m256i(a: m256i) -> m128i {
   m128i(unsafe { _mm256_castsi256_si128(a.0) })
 }
@@ -289,7 +289,7 @@ pub fn cast_to_m128i_from_m256i(a: m256i) -> m128i {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn ceil_m256d(a: m256d) -> m256d {
   m256d(unsafe { _mm256_ceil_pd(a.0) })
 }
@@ -300,14 +300,14 @@ pub fn ceil_m256d(a: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn ceil_m256(a: m256) -> m256 {
   m256(unsafe { _mm256_ceil_ps(a.0) })
 }
 
 /// Turns a comparison operator token to the correct constant value.
 #[macro_export]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 macro_rules! cmp_op {
   (EqualOrdered) => {{
     #[cfg(target_arch = "x86")]
@@ -434,7 +434,7 @@ macro_rules! cmp_op {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn cmp_op_mask_m128<const OP: i32>(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmp_ps(a.0, b.0, OP) })
 }
@@ -447,7 +447,7 @@ pub fn cmp_op_mask_m128<const OP: i32>(a: m128, b: m128) -> m128 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn cmp_op_mask_m128_s<const OP: i32>(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_cmp_ss(a.0, b.0, OP) })
 }
@@ -460,7 +460,7 @@ pub fn cmp_op_mask_m128_s<const OP: i32>(a: m128, b: m128) -> m128 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn cmp_op_mask_m256<const OP: i32>(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_cmp_ps(a.0, b.0, OP) })
 }
@@ -473,7 +473,7 @@ pub fn cmp_op_mask_m256<const OP: i32>(a: m256, b: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn cmp_op_mask_m128d<const OP: i32>(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmp_pd(a.0, b.0, OP) })
 }
@@ -486,7 +486,7 @@ pub fn cmp_op_mask_m128d<const OP: i32>(a: m128d, b: m128d) -> m128d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn cmp_op_mask_m128d_s<const OP: i32>(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_cmp_sd(a.0, b.0, OP) })
 }
@@ -499,7 +499,7 @@ pub fn cmp_op_mask_m128d_s<const OP: i32>(a: m128d, b: m128d) -> m128d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn cmp_op_mask_m256d<const OP: i32>(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_cmp_pd(a.0, b.0, OP) })
 }
@@ -510,7 +510,7 @@ pub fn cmp_op_mask_m256d<const OP: i32>(a: m256d, b: m256d) -> m256d {
 /// * **Assembly:** `vcvtdq2pd ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn convert_to_m256d_from_i32_m128i(a: m128i) -> m256d {
   m256d(unsafe { _mm256_cvtepi32_pd(a.0) })
 }
@@ -521,7 +521,7 @@ pub fn convert_to_m256d_from_i32_m128i(a: m128i) -> m256d {
 /// * **Assembly:** `vcvtdq2ps ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn convert_to_m256_from_i32_m256i(a: m256i) -> m256 {
   m256(unsafe { _mm256_cvtepi32_ps(a.0) })
 }
@@ -532,7 +532,7 @@ pub fn convert_to_m256_from_i32_m256i(a: m256i) -> m256 {
 /// * **Assembly:** `vcvtpd2dq xmm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn convert_to_i32_m128i_from_m256d(a: m256d) -> m128i {
   m128i(unsafe { _mm256_cvtpd_epi32(a.0) })
 }
@@ -543,7 +543,7 @@ pub fn convert_to_i32_m128i_from_m256d(a: m256d) -> m128i {
 /// * **Assembly:** `vcvtpd2ps xmm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn convert_to_m128_from_m256d(a: m256d) -> m128 {
   m128(unsafe { _mm256_cvtpd_ps(a.0) })
 }
@@ -554,7 +554,7 @@ pub fn convert_to_m128_from_m256d(a: m256d) -> m128 {
 /// * **Assembly:** `vcvtps2dq ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn convert_to_i32_m256i_from_m256(a: m256) -> m256i {
   m256i(unsafe { _mm256_cvtps_epi32(a.0) })
 }
@@ -565,7 +565,7 @@ pub fn convert_to_i32_m256i_from_m256(a: m256) -> m256i {
 /// * **Assembly:** `vcvtps2pd ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn convert_to_m256d_from_m128(a: m128) -> m256d {
   m256d(unsafe { _mm256_cvtps_pd(a.0) })
 }
@@ -576,7 +576,7 @@ pub fn convert_to_m256d_from_m128(a: m128) -> m256d {
 /// * **Assembly:** `vmovsd m64, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn convert_to_f64_from_m256d_s(a: m256d) -> f64 {
   unsafe { _mm256_cvtsd_f64(a.0) }
 }
@@ -587,7 +587,7 @@ pub fn convert_to_f64_from_m256d_s(a: m256d) -> f64 {
 /// * **Assembly:** `vmovd r32, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn convert_to_i32_from_m256i_s(a: m256i) -> i32 {
   unsafe { _mm256_cvtsi256_si32(a.0) }
 }
@@ -598,7 +598,7 @@ pub fn convert_to_i32_from_m256i_s(a: m256i) -> i32 {
 /// * **Assembly:** `vmovss m32, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn convert_to_f32_from_m256_s(a: m256) -> f32 {
   unsafe { _mm256_cvtss_f32(a.0) }
 }
@@ -609,7 +609,7 @@ pub fn convert_to_f32_from_m256_s(a: m256) -> f32 {
 /// * **Assembly:** `vcvttpd2dq xmm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn convert_truncate_to_i32_m128i_from_m256d(a: m256d) -> m128i {
   m128i(unsafe { _mm256_cvttpd_epi32(a.0) })
 }
@@ -620,7 +620,7 @@ pub fn convert_truncate_to_i32_m128i_from_m256d(a: m256d) -> m128i {
 /// * **Assembly:** ``
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn convert_truncate_to_i32_m256i_from_m256(a: m256) -> m256i {
   m256i(unsafe { _mm256_cvttps_epi32(a.0) })
 }
@@ -631,7 +631,7 @@ pub fn convert_truncate_to_i32_m256i_from_m256(a: m256) -> m256i {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn div_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_div_pd(a.0, b.0) })
 }
@@ -642,7 +642,7 @@ pub fn div_m256d(a: m256d, b: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn div_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_div_ps(a.0, b.0) })
 }
@@ -657,7 +657,7 @@ pub fn div_m256(a: m256, b: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn dot_product_m256<const IMM: i32>(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_dp_ps(a.0, b.0, IMM) })
 }
@@ -668,7 +668,7 @@ pub fn dot_product_m256<const IMM: i32>(a: m256, b: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn extract_i32_from_m256i<const IMM: i32>(a: m256i) -> i32 {
   unsafe { _mm256_extract_epi32(a.0, IMM) }
 }
@@ -679,7 +679,7 @@ pub fn extract_i32_from_m256i<const IMM: i32>(a: m256i) -> i32 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 #[cfg(target_arch = "x86_64")]
 pub fn extract_i64_from_m256i<const IMM: i32>(a: m256i) -> i64 {
   unsafe { _mm256_extract_epi64(a.0, IMM) }
@@ -691,7 +691,7 @@ pub fn extract_i64_from_m256i<const IMM: i32>(a: m256i) -> i64 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn extract_m128d_from_m256d<const IMM: i32>(a: m256d) -> m128d {
   m128d(unsafe { _mm256_extractf128_pd(a.0, IMM) })
 }
@@ -702,7 +702,7 @@ pub fn extract_m128d_from_m256d<const IMM: i32>(a: m256d) -> m128d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn extract_m128_from_m256<const IMM: i32>(a: m256) -> m128 {
   m128(unsafe { _mm256_extractf128_ps(a.0, IMM) })
 }
@@ -713,7 +713,7 @@ pub fn extract_m128_from_m256<const IMM: i32>(a: m256) -> m128 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn extract_m128i_from_m256i<const IMM: i32>(a: m256i) -> m128i {
   m128i(unsafe { _mm256_extractf128_si256(a.0, IMM) })
 }
@@ -724,7 +724,7 @@ pub fn extract_m128i_from_m256i<const IMM: i32>(a: m256i) -> m128i {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn floor_m256d(a: m256d) -> m256d {
   m256d(unsafe { _mm256_floor_pd(a.0) })
 }
@@ -735,7 +735,7 @@ pub fn floor_m256d(a: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn floor_m256(a: m256) -> m256 {
   m256(unsafe { _mm256_floor_ps(a.0) })
 }
@@ -746,7 +746,7 @@ pub fn floor_m256(a: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn add_horizontal_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_hadd_pd(a.0, b.0) })
 }
@@ -757,7 +757,7 @@ pub fn add_horizontal_m256d(a: m256d, b: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn add_horizontal_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_hadd_ps(a.0, b.0) })
 }
@@ -768,7 +768,7 @@ pub fn add_horizontal_m256(a: m256, b: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn sub_horizontal_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_hsub_pd(a.0, b.0) })
 }
@@ -779,7 +779,7 @@ pub fn sub_horizontal_m256d(a: m256d, b: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn sub_horizontal_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_hsub_ps(a.0, b.0) })
 }
@@ -790,7 +790,7 @@ pub fn sub_horizontal_m256(a: m256, b: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn insert_i8_to_m256i<const IMM: i32>(a: m256i, i: i8) -> m256i {
   m256i(unsafe { _mm256_insert_epi8(a.0, i, IMM) })
 }
@@ -801,7 +801,7 @@ pub fn insert_i8_to_m256i<const IMM: i32>(a: m256i, i: i8) -> m256i {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn insert_i16_to_m256i<const IMM: i32>(a: m256i, i: i16) -> m256i {
   m256i(unsafe { _mm256_insert_epi16(a.0, i, IMM) })
 }
@@ -812,7 +812,7 @@ pub fn insert_i16_to_m256i<const IMM: i32>(a: m256i, i: i16) -> m256i {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn insert_i32_to_m256i<const IMM: i32>(a: m256i, i: i32) -> m256i {
   m256i(unsafe { _mm256_insert_epi32(a.0, i, IMM) })
 }
@@ -823,7 +823,7 @@ pub fn insert_i32_to_m256i<const IMM: i32>(a: m256i, i: i32) -> m256i {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 #[cfg(target_arch = "x86_64")]
 pub fn insert_i64_to_m256i<const IMM: i32>(a: m256i, i: i64) -> m256i {
   m256i(unsafe { _mm256_insert_epi64(a.0, i, IMM) })
@@ -835,7 +835,7 @@ pub fn insert_i64_to_m256i<const IMM: i32>(a: m256i, i: i64) -> m256i {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn insert_m128d_to_m256d<const IMM: i32>(a: m256d, b: m128d) -> m256d {
   m256d(unsafe { _mm256_insertf128_pd(a.0, b.0, IMM) })
 }
@@ -846,7 +846,7 @@ pub fn insert_m128d_to_m256d<const IMM: i32>(a: m256d, b: m128d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn insert_m128_to_m256<const IMM: i32>(a: m256, b: m128) -> m256 {
   m256(unsafe { _mm256_insertf128_ps(a.0, b.0, IMM) })
 }
@@ -861,7 +861,7 @@ pub fn insert_m128_to_m256<const IMM: i32>(a: m256, b: m128) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn insert_m128i_to_m256i_slow_avx<const IMM: i32>(a: m256i, b: m128i) -> m256i {
   m256i(unsafe { _mm256_insertf128_si256(a.0, b.0, IMM) })
 }
@@ -872,7 +872,7 @@ pub fn insert_m128i_to_m256i_slow_avx<const IMM: i32>(a: m256i, b: m128i) -> m25
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn load_m256d(a: &m256d) -> m256d {
   m256d(unsafe { _mm256_load_pd(a as *const m256d as *const f64) })
 }
@@ -883,7 +883,7 @@ pub fn load_m256d(a: &m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn load_m256(a: &m256) -> m256 {
   m256(unsafe { _mm256_load_ps(a as *const m256 as *const f32) })
 }
@@ -894,7 +894,7 @@ pub fn load_m256(a: &m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn load_m256i(a: &m256i) -> m256i {
   m256i(unsafe { _mm256_load_si256(a as *const m256i as *const __m256i) })
 }
@@ -905,7 +905,7 @@ pub fn load_m256i(a: &m256i) -> m256i {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn load_unaligned_m256d(a: &[f64; 4]) -> m256d {
   m256d(unsafe { _mm256_loadu_pd(a as *const [f64; 4] as *const f64) })
 }
@@ -916,7 +916,7 @@ pub fn load_unaligned_m256d(a: &[f64; 4]) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn load_unaligned_m256(a: &[f32; 8]) -> m256 {
   m256(unsafe { _mm256_loadu_ps(a as *const [f32; 8] as *const f32) })
 }
@@ -927,7 +927,7 @@ pub fn load_unaligned_m256(a: &[f32; 8]) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn load_unaligned_m256i(a: &[i8; 32]) -> m256i {
   m256i(unsafe { _mm256_loadu_si256(a as *const [i8; 32] as *const __m256i) })
 }
@@ -938,7 +938,7 @@ pub fn load_unaligned_m256i(a: &[i8; 32]) -> m256i {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn load_unaligned_hi_lo_m256d(a: &[f64; 2], b: &[f64; 2]) -> m256d {
   m256d(unsafe { _mm256_loadu2_m128d(a as *const [f64; 2] as *const f64, b as *const [f64; 2] as *const f64) })
 }
@@ -949,7 +949,7 @@ pub fn load_unaligned_hi_lo_m256d(a: &[f64; 2], b: &[f64; 2]) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn load_unaligned_hi_lo_m256(a: &[f32; 4], b: &[f32; 4]) -> m256 {
   m256(unsafe { _mm256_loadu2_m128(a as *const [f32; 4] as *const f32, b as *const [f32; 4] as *const f32) })
 }
@@ -960,7 +960,7 @@ pub fn load_unaligned_hi_lo_m256(a: &[f32; 4], b: &[f32; 4]) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn load_unaligned_hi_lo_m256i(a: &[i8; 16], b: &[i8; 16]) -> m256i {
   m256i(unsafe { _mm256_loadu2_m128i(a as *const [i8; 16] as *const __m128i, b as *const [i8; 16] as *const __m128i) })
 }
@@ -973,7 +973,7 @@ pub fn load_unaligned_hi_lo_m256i(a: &[i8; 16], b: &[i8; 16]) -> m256i {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn load_masked_m128d(a: &m128d, mask: m128i) -> m128d {
   m128d(unsafe { _mm_maskload_pd(a as *const m128d as *const f64, mask.0) })
 }
@@ -986,7 +986,7 @@ pub fn load_masked_m128d(a: &m128d, mask: m128i) -> m128d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn load_masked_m256d(a: &m256d, mask: m256i) -> m256d {
   m256d(unsafe { _mm256_maskload_pd(a as *const m256d as *const f64, mask.0) })
 }
@@ -999,7 +999,7 @@ pub fn load_masked_m256d(a: &m256d, mask: m256i) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn load_masked_m128(a: &m128, mask: m128i) -> m128 {
   m128(unsafe { _mm_maskload_ps(a as *const m128 as *const f32, mask.0) })
 }
@@ -1012,7 +1012,7 @@ pub fn load_masked_m128(a: &m128, mask: m128i) -> m128 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn load_masked_m256(a: &m256, mask: m256i) -> m256 {
   m256(unsafe { _mm256_maskload_ps(a as *const m256 as *const f32, mask.0) })
 }
@@ -1024,7 +1024,7 @@ pub fn load_masked_m256(a: &m256, mask: m256i) -> m256 {
 /// * **Intrinsic:** [``]
 /// * **Assembly:**
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn store_masked_m128d(addr: &mut m128d, mask: m128i, a: m128d) {
   unsafe { _mm_maskstore_pd(addr as *mut m128d as *mut f64, mask.0, a.0) }
 }
@@ -1036,7 +1036,7 @@ pub fn store_masked_m128d(addr: &mut m128d, mask: m128i, a: m128d) {
 /// * **Intrinsic:** [``]
 /// * **Assembly:**
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn store_masked_m256d(addr: &mut m256d, mask: m256i, a: m256d) {
   unsafe { _mm256_maskstore_pd(addr as *mut m256d as *mut f64, mask.0, a.0) }
 }
@@ -1048,7 +1048,7 @@ pub fn store_masked_m256d(addr: &mut m256d, mask: m256i, a: m256d) {
 /// * **Intrinsic:** [``]
 /// * **Assembly:**
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn store_masked_m128(addr: &mut m128, mask: m128i, a: m128) {
   unsafe { _mm_maskstore_ps(addr as *mut m128 as *mut f32, mask.0, a.0) }
 }
@@ -1060,7 +1060,7 @@ pub fn store_masked_m128(addr: &mut m128, mask: m128i, a: m128) {
 /// * **Intrinsic:** [``]
 /// * **Assembly:**
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn store_masked_m256(addr: &mut m256, mask: m256i, a: m256) {
   unsafe { _mm256_maskstore_ps(addr as *mut m256 as *mut f32, mask.0, a.0) }
 }
@@ -1071,7 +1071,7 @@ pub fn store_masked_m256(addr: &mut m256, mask: m256i, a: m256) {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn max_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_max_pd(a.0, b.0) })
 }
@@ -1082,7 +1082,7 @@ pub fn max_m256d(a: m256d, b: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn max_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_max_ps(a.0, b.0) })
 }
@@ -1093,7 +1093,7 @@ pub fn max_m256(a: m256, b: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn min_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_min_pd(a.0, b.0) })
 }
@@ -1104,7 +1104,7 @@ pub fn min_m256d(a: m256d, b: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn min_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_min_ps(a.0, b.0) })
 }
@@ -1115,7 +1115,7 @@ pub fn min_m256(a: m256, b: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn duplicate_odd_lanes_m256d(a: m256d) -> m256d {
   m256d(unsafe { _mm256_movedup_pd(a.0) })
 }
@@ -1126,7 +1126,7 @@ pub fn duplicate_odd_lanes_m256d(a: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn duplicate_even_lanes_m256(a: m256) -> m256 {
   m256(unsafe { _mm256_movehdup_ps(a.0) })
 }
@@ -1137,7 +1137,7 @@ pub fn duplicate_even_lanes_m256(a: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn duplicate_odd_lanes_m256(a: m256) -> m256 {
   m256(unsafe { _mm256_moveldup_ps(a.0) })
 }
@@ -1148,7 +1148,7 @@ pub fn duplicate_odd_lanes_m256(a: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn move_mask_m256d(a: m256d) -> i32 {
   unsafe { _mm256_movemask_pd(a.0) }
 }
@@ -1159,7 +1159,7 @@ pub fn move_mask_m256d(a: m256d) -> i32 {
 /// * **Assembly:** vtestps ymm, ymm
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn testz_m256(a: m256, b: m256) -> i32 {
   unsafe { _mm256_testz_ps(a.0, b.0) }
 }
@@ -1170,7 +1170,7 @@ pub fn testz_m256(a: m256, b: m256) -> i32 {
 /// * **Assembly:** vtestps xmm, xmm
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn testz_m128(a: m128, b: m128) -> i32 {
   unsafe { _mm_testz_ps(a.0, b.0) }
 }
@@ -1181,7 +1181,7 @@ pub fn testz_m128(a: m128, b: m128) -> i32 {
 /// * **Assembly:** vtestps ymm, ymm
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn testc_m256(a: m256, b: m256) -> i32 {
   unsafe { _mm256_testc_ps(a.0, b.0) }
 }
@@ -1192,7 +1192,7 @@ pub fn testc_m256(a: m256, b: m256) -> i32 {
 /// * **Assembly:** vtestps xmm, xmm
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn testc_m128(a: m128, b: m128) -> i32 {
   unsafe { _mm_testc_ps(a.0, b.0) }
 }
@@ -1203,7 +1203,7 @@ pub fn testc_m128(a: m128, b: m128) -> i32 {
 /// * **Assembly:** vtestpd ymm, ymm
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn testz_m256d(a: m256d, b: m256d) -> i32 {
   unsafe { _mm256_testz_pd(a.0, b.0) }
 }
@@ -1214,7 +1214,7 @@ pub fn testz_m256d(a: m256d, b: m256d) -> i32 {
 /// * **Assembly:** vtestpd xmm, xmm
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn testz_m128d(a: m128d, b: m128d) -> i32 {
   unsafe { _mm_testz_pd(a.0, b.0) }
 }
@@ -1225,7 +1225,7 @@ pub fn testz_m128d(a: m128d, b: m128d) -> i32 {
 /// * **Assembly:** vtestpd ymm, ymm
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn testc_m256d(a: m256d, b: m256d) -> i32 {
   unsafe { _mm256_testc_pd(a.0, b.0) }
 }
@@ -1236,7 +1236,7 @@ pub fn testc_m256d(a: m256d, b: m256d) -> i32 {
 /// * **Assembly:** vptest xmm, xmm
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn testc_m128d(a: m128d, b: m128d) -> i32 {
   unsafe { _mm_testc_pd(a.0, b.0) }
 }
@@ -1247,7 +1247,7 @@ pub fn testc_m128d(a: m128d, b: m128d) -> i32 {
 /// * **Assembly:** vptest ymm, ymm
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn testz_m256i(a: m256i, b: m256i) -> i32 {
   unsafe { _mm256_testz_si256(a.0, b.0) }
 }
@@ -1258,7 +1258,7 @@ pub fn testz_m256i(a: m256i, b: m256i) -> i32 {
 /// * **Assembly:** vptest ymm, ymm
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn testc_m256i(a: m256i, b: m256i) -> i32 {
   unsafe { _mm256_testc_si256(a.0, b.0) }
 }
@@ -1269,7 +1269,7 @@ pub fn testc_m256i(a: m256i, b: m256i) -> i32 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn move_mask_m256(a: m256) -> i32 {
   unsafe { _mm256_movemask_ps(a.0) }
 }
@@ -1280,7 +1280,7 @@ pub fn move_mask_m256(a: m256) -> i32 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn mul_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_mul_pd(a.0, b.0) })
 }
@@ -1291,7 +1291,7 @@ pub fn mul_m256d(a: m256d, b: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn mul_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_mul_ps(a.0, b.0) })
 }
@@ -1302,7 +1302,7 @@ pub fn mul_m256(a: m256, b: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn bitor_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_or_pd(a.0, b.0) })
 }
@@ -1313,7 +1313,7 @@ pub fn bitor_m256d(a: m256d, b: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn bitor_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_or_ps(a.0, b.0) })
 }
@@ -1324,7 +1324,7 @@ pub fn bitor_m256(a: m256, b: m256) -> m256 {
 /// * **Assembly:** `vpermilpd xmm, xmm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn permute_m128d<const MASK: i32>(a: m128d) -> m128d {
   m128d(unsafe { _mm_permute_pd(a.0, MASK) })
 }
@@ -1336,7 +1336,7 @@ pub fn permute_m128d<const MASK: i32>(a: m128d) -> m128d {
 /// * **Assembly:** `vpermilpd ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn permute_m256d<const MASK: i32>(a: m256d) -> m256d {
   m256d(unsafe { _mm256_permute_pd(a.0, MASK) })
 }
@@ -1347,7 +1347,7 @@ pub fn permute_m256d<const MASK: i32>(a: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn permute_m128<const MASK: i32>(a: m128) -> m128 {
   m128(unsafe { _mm_permute_ps(a.0, MASK) })
 }
@@ -1358,7 +1358,7 @@ pub fn permute_m128<const MASK: i32>(a: m128) -> m128 {
 /// * **Assembly:** `vpermilps ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn permute_m256<const MASK: i32>(a: m256) -> m256 {
   m256(unsafe { _mm256_permute_ps(a.0, MASK) })
 }
@@ -1373,7 +1373,7 @@ pub fn permute_m256<const MASK: i32>(a: m256) -> m256 {
 /// * **Assembly:** `vperm2f128 ymm, ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn permute2z_m256d<const MASK: i32>(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_permute2f128_pd(a.0, b.0, MASK) })
 }
@@ -1388,7 +1388,7 @@ pub fn permute2z_m256d<const MASK: i32>(a: m256d, b: m256d) -> m256d {
 /// * **Assembly:** `vperm2f128 ymm, ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn permute2z_m256<const MASK: i32>(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_permute2f128_ps(a.0, b.0, MASK) })
 }
@@ -1406,7 +1406,7 @@ pub fn permute2z_m256<const MASK: i32>(a: m256, b: m256) -> m256 {
 /// * **Assembly:** `vperm2f128 ymm, ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn permute2z_m256i<const MASK: i32>(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_permute2f128_si256(a.0, b.0, MASK) })
 }
@@ -1417,7 +1417,7 @@ pub fn permute2z_m256i<const MASK: i32>(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpermilpd xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn shuffle_av_f64_all_m128d(a: m128d, v: m128i) -> m128d {
   m128d(unsafe { _mm_permutevar_pd(a.0, v.0) })
 }
@@ -1431,7 +1431,7 @@ pub fn shuffle_av_f64_all_m128d(a: m128d, v: m128i) -> m128d {
 /// * **Assembly:** `vpermilpd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn shuffle_av_f64_half_m256d(a: m256d, b: m256i) -> m256d {
   m256d(unsafe { _mm256_permutevar_pd(a.0, b.0) })
 }
@@ -1442,7 +1442,7 @@ pub fn shuffle_av_f64_half_m256d(a: m256d, b: m256i) -> m256d {
 /// * **Assembly:** `vpermilps xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn shuffle_av_f32_all_m128(a: m128, v: m128i) -> m128 {
   m128(unsafe { _mm_permutevar_ps(a.0, v.0) })
 }
@@ -1456,7 +1456,7 @@ pub fn shuffle_av_f32_all_m128(a: m128, v: m128i) -> m128 {
 /// * **Assembly:** `vpermilps ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn shuffle_av_f32_half_m256(a: m256, v: m256i) -> m256 {
   m256(unsafe { _mm256_permutevar_ps(a.0, v.0) })
 }
@@ -1467,7 +1467,7 @@ pub fn shuffle_av_f32_half_m256(a: m256, v: m256i) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn reciprocal_m256(a: m256) -> m256 {
   m256(unsafe { _mm256_rcp_ps(a.0) })
 }
@@ -1478,7 +1478,7 @@ pub fn reciprocal_m256(a: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn round_m256d<const OP: i32>(a: m256d) -> m256d {
   m256d(unsafe { _mm256_round_pd(a.0, OP) })
 }
@@ -1489,7 +1489,7 @@ pub fn round_m256d<const OP: i32>(a: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn round_m256<const OP: i32>(a: m256) -> m256 {
   m256(unsafe { _mm256_round_ps(a.0, OP) })
 }
@@ -1500,7 +1500,7 @@ pub fn round_m256<const OP: i32>(a: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn reciprocal_sqrt_m256(a: m256) -> m256 {
   m256(unsafe { _mm256_rsqrt_ps(a.0) })
 }
@@ -1511,7 +1511,7 @@ pub fn reciprocal_sqrt_m256(a: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 #[rustfmt::skip]
 pub fn set_i8_m256i(
   e31: i8, e30: i8, e29: i8, e28: i8, e27: i8, e26: i8, e25: i8, e24: i8, e23: i8, e22: i8, e21: i8, e20: i8, e19: i8, e18: i8, e17: i8, e16: i8, e15: i8, e14: i8, e13: i8, e12: i8, e11: i8, e10: i8, e9: i8, e8: i8, e7: i8, e6: i8, e5: i8, e4: i8, e3: i8, e2: i8, e1: i8, e0: i8
@@ -1529,7 +1529,7 @@ pub fn set_i8_m256i(
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 #[rustfmt::skip]
 pub fn set_i16_m256i(
   e15: i16, e14: i16, e13: i16, e12: i16, e11: i16, e10: i16, e9: i16, e8: i16,
@@ -1548,7 +1548,7 @@ pub fn set_i16_m256i(
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 #[rustfmt::skip]
 pub fn set_i32_m256i(
   e7: i32, e6: i32, e5: i32, e4: i32, e3: i32, e2: i32, e1: i32, e0: i32,
@@ -1565,7 +1565,7 @@ pub fn set_i32_m256i(
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 #[cfg(target_arch = "x86_64")]
 pub fn set_i64_m256i(e3: i64, e2: i64, e1: i64, e0: i64) -> m256i {
   m256i(unsafe { _mm256_set_epi64x(e3, e2, e1, e0) })
@@ -1577,7 +1577,7 @@ pub fn set_i64_m256i(e3: i64, e2: i64, e1: i64, e0: i64) -> m256i {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn set_m128_m256(high: m128, low: m128) -> m256 {
   m256(unsafe { _mm256_set_m128(high.0, low.0) })
 }
@@ -1588,7 +1588,7 @@ pub fn set_m128_m256(high: m128, low: m128) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 #[rustfmt::skip]
 pub fn set_m128d_m256d(
   high: m128d, low: m128d
@@ -1602,7 +1602,7 @@ pub fn set_m128d_m256d(
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 #[rustfmt::skip]
 pub fn set_m128i_m256i(
   hi: m128i, lo: m128i
@@ -1616,7 +1616,7 @@ pub fn set_m128i_m256i(
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 #[rustfmt::skip]
 pub fn set_m256d(
   e3: f64, e2: f64, e1: f64, e0: f64,
@@ -1630,7 +1630,7 @@ pub fn set_m256d(
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 #[rustfmt::skip]
 pub fn set_m256(
   e7: f32, e6: f32, e5: f32, e4: f32, e3: f32, e2: f32, e1: f32, e0: f32,
@@ -1646,7 +1646,7 @@ pub fn set_m256(
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn set_splat_i8_m256i(i: i8) -> m256i {
   m256i(unsafe { _mm256_set1_epi8(i) })
 }
@@ -1657,7 +1657,7 @@ pub fn set_splat_i8_m256i(i: i8) -> m256i {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn set_splat_i16_m256i(i: i16) -> m256i {
   m256i(unsafe { _mm256_set1_epi16(i) })
 }
@@ -1668,7 +1668,7 @@ pub fn set_splat_i16_m256i(i: i16) -> m256i {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn set_splat_i32_m256i(i: i32) -> m256i {
   m256i(unsafe { _mm256_set1_epi32(i) })
 }
@@ -1680,7 +1680,7 @@ pub fn set_splat_i32_m256i(i: i32) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn set_splat_i64_m256i(i: i64) -> m256i {
   m256i(unsafe { _mm256_set1_epi64x(i) })
 }
@@ -1691,7 +1691,7 @@ pub fn set_splat_i64_m256i(i: i64) -> m256i {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn set_splat_m256d(f: f64) -> m256d {
   m256d(unsafe { _mm256_set1_pd(f) })
 }
@@ -1702,7 +1702,7 @@ pub fn set_splat_m256d(f: f64) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 #[rustfmt::skip]
 pub fn set_splat_m256(
   f: f32,
@@ -1718,7 +1718,7 @@ pub fn set_splat_m256(
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 #[rustfmt::skip]
 pub fn set_reversed_i8_m256i(
   e31: i8, e30: i8, e29: i8, e28: i8, e27: i8, e26: i8, e25: i8, e24: i8, e23: i8, e22: i8, e21: i8, e20: i8, e19: i8, e18: i8, e17: i8, e16: i8, e15: i8, e14: i8, e13: i8, e12: i8, e11: i8, e10: i8, e9: i8, e8: i8, e7: i8, e6: i8, e5: i8, e4: i8, e3: i8, e2: i8, e1: i8, e0: i8
@@ -1736,7 +1736,7 @@ pub fn set_reversed_i8_m256i(
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 #[rustfmt::skip]
 pub fn set_reversed_i16_m256i(
   e15: i16, e14: i16, e13: i16, e12: i16, e11: i16, e10: i16, e9: i16, e8: i16,
@@ -1755,7 +1755,7 @@ pub fn set_reversed_i16_m256i(
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 #[rustfmt::skip]
 pub fn set_reversed_i32_m256i(
   e7: i32, e6: i32, e5: i32, e4: i32, e3: i32, e2: i32, e1: i32, e0: i32,
@@ -1772,7 +1772,7 @@ pub fn set_reversed_i32_m256i(
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn set_reversed_i64_m256i(e3: i64, e2: i64, e1: i64, e0: i64) -> m256i {
   m256i(unsafe { _mm256_setr_epi64x(e3, e2, e1, e0) })
 }
@@ -1783,7 +1783,7 @@ pub fn set_reversed_i64_m256i(e3: i64, e2: i64, e1: i64, e0: i64) -> m256i {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn set_reversed_m128_m256(hi: m128, lo: m128) -> m256 {
   m256(unsafe { _mm256_setr_m128(hi.0, lo.0) })
 }
@@ -1794,7 +1794,7 @@ pub fn set_reversed_m128_m256(hi: m128, lo: m128) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 #[rustfmt::skip]
 pub fn set_reversed_m128d_m256d(
   hi: m128d, lo: m128d
@@ -1808,7 +1808,7 @@ pub fn set_reversed_m128d_m256d(
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 #[rustfmt::skip]
 pub fn set_reversed_m128i_m256i(
   hi: m128i, lo: m128i
@@ -1822,7 +1822,7 @@ pub fn set_reversed_m128i_m256i(
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 #[rustfmt::skip]
 pub fn set_reversed_m256d(
   e3: f64, e2: f64, e1: f64, e0: f64,
@@ -1836,7 +1836,7 @@ pub fn set_reversed_m256d(
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 #[rustfmt::skip]
 pub fn set_reversed_m256(
   e7: f32, e6: f32, e5: f32, e4: f32, e3: f32, e2: f32, e1: f32, e0: f32,
@@ -1852,7 +1852,7 @@ pub fn set_reversed_m256(
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn zeroed_m256d() -> m256d {
   m256d(unsafe { _mm256_setzero_pd() })
 }
@@ -1863,7 +1863,7 @@ pub fn zeroed_m256d() -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn zeroed_m256() -> m256 {
   m256(unsafe { _mm256_setzero_ps() })
 }
@@ -1874,7 +1874,7 @@ pub fn zeroed_m256() -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn zeroed_m256i() -> m256i {
   m256i(unsafe { _mm256_setzero_si256() })
 }
@@ -1895,7 +1895,7 @@ pub fn zeroed_m256i() -> m256i {
 /// * **Assembly:** `vshufpd ymm, ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn shuffle_m256d<const IMM: i32>(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_shuffle_pd(a.0, b.0, IMM) })
 }
@@ -1912,7 +1912,7 @@ pub fn shuffle_m256d<const IMM: i32>(a: m256d, b: m256d) -> m256d {
 /// * **Assembly:** `vshufps ymm, ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn shuffle_m256<const IMM: i32>(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_shuffle_ps(a.0, b.0, IMM) })
 }
@@ -1923,7 +1923,7 @@ pub fn shuffle_m256<const IMM: i32>(a: m256, b: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn sqrt_m256d(a: m256d) -> m256d {
   m256d(unsafe { _mm256_sqrt_pd(a.0) })
 }
@@ -1934,7 +1934,7 @@ pub fn sqrt_m256d(a: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn sqrt_m256(a: m256) -> m256 {
   m256(unsafe { _mm256_sqrt_ps(a.0) })
 }
@@ -1944,7 +1944,7 @@ pub fn sqrt_m256(a: m256) -> m256 {
 /// * **Intrinsic:** [``]
 /// * **Assembly:**
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn store_m256d(addr: &mut m256d, a: m256d) {
   unsafe { _mm256_store_pd(addr as *mut m256d as *mut f64, a.0) }
 }
@@ -1954,7 +1954,7 @@ pub fn store_m256d(addr: &mut m256d, a: m256d) {
 /// * **Intrinsic:** [``]
 /// * **Assembly:**
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn store_m256(addr: &mut m256, a: m256) {
   unsafe { _mm256_store_ps(addr as *mut m256 as *mut f32, a.0) }
 }
@@ -1964,7 +1964,7 @@ pub fn store_m256(addr: &mut m256, a: m256) {
 /// * **Intrinsic:** [``]
 /// * **Assembly:**
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn store_m256i(addr: &mut m256i, a: m256i) {
   unsafe { _mm256_store_si256(addr as *mut m256i as *mut __m256i, a.0) }
 }
@@ -1974,7 +1974,7 @@ pub fn store_m256i(addr: &mut m256i, a: m256i) {
 /// * **Intrinsic:** [``]
 /// * **Assembly:**
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn store_unaligned_m256d(addr: &mut [f64; 4], a: m256d) {
   unsafe { _mm256_storeu_pd(addr.as_mut_ptr(), a.0) }
 }
@@ -1984,7 +1984,7 @@ pub fn store_unaligned_m256d(addr: &mut [f64; 4], a: m256d) {
 /// * **Intrinsic:** [``]
 /// * **Assembly:**
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn store_unaligned_m256(addr: &mut [f32; 8], a: m256) {
   unsafe { _mm256_storeu_ps(addr.as_mut_ptr(), a.0) }
 }
@@ -1994,7 +1994,7 @@ pub fn store_unaligned_m256(addr: &mut [f32; 8], a: m256) {
 /// * **Intrinsic:** [``]
 /// * **Assembly:**
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn store_unaligned_m256i(addr: &mut [i8; 32], a: m256i) {
   unsafe { _mm256_storeu_si256(addr as *mut [i8; 32] as *mut __m256i, a.0) }
 }
@@ -2004,7 +2004,7 @@ pub fn store_unaligned_m256i(addr: &mut [i8; 32], a: m256i) {
 /// * **Intrinsic:** [``]
 /// * **Assembly:**
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn store_unaligned_hi_lo_m256d(hi_addr: &mut [f64; 2], lo_addr: &mut [f64; 2], a: m256d) {
   unsafe { _mm256_storeu2_m128d(hi_addr.as_mut_ptr(), lo_addr.as_mut_ptr(), a.0) }
 }
@@ -2014,7 +2014,7 @@ pub fn store_unaligned_hi_lo_m256d(hi_addr: &mut [f64; 2], lo_addr: &mut [f64; 2
 /// * **Intrinsic:** [``]
 /// * **Assembly:**
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn store_unaligned_hi_lo_m256(hi_addr: &mut [f32; 4], lo_addr: &mut [f32; 4], a: m256) {
   unsafe { _mm256_storeu2_m128(hi_addr.as_mut_ptr(), lo_addr.as_mut_ptr(), a.0) }
 }
@@ -2024,7 +2024,7 @@ pub fn store_unaligned_hi_lo_m256(hi_addr: &mut [f32; 4], lo_addr: &mut [f32; 4]
 /// * **Intrinsic:** [``]
 /// * **Assembly:**
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn store_unaligned_hi_lo_m256i(hi_addr: &mut [i8; 16], lo_addr: &mut [i8; 16], a: m256i) {
   unsafe { _mm256_storeu2_m128i(hi_addr.as_mut_ptr().cast(), lo_addr.as_mut_ptr().cast(), a.0) }
 }
@@ -2035,7 +2035,7 @@ pub fn store_unaligned_hi_lo_m256i(hi_addr: &mut [i8; 16], lo_addr: &mut [i8; 16
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn sub_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_sub_pd(a.0, b.0) })
 }
@@ -2046,7 +2046,7 @@ pub fn sub_m256d(a: m256d, b: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn sub_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_sub_ps(a.0, b.0) })
 }
@@ -2057,7 +2057,7 @@ pub fn sub_m256(a: m256, b: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn unpack_hi_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_unpackhi_pd(a.0, b.0) })
 }
@@ -2068,7 +2068,7 @@ pub fn unpack_hi_m256d(a: m256d, b: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn unpack_hi_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_unpackhi_ps(a.0, b.0) })
 }
@@ -2079,7 +2079,7 @@ pub fn unpack_hi_m256(a: m256, b: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn unpack_lo_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_unpacklo_pd(a.0, b.0) })
 }
@@ -2090,7 +2090,7 @@ pub fn unpack_lo_m256d(a: m256d, b: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn unpack_lo_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_unpacklo_ps(a.0, b.0) })
 }
@@ -2101,7 +2101,7 @@ pub fn unpack_lo_m256(a: m256, b: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn bitxor_m256d(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_xor_pd(a.0, b.0) })
 }
@@ -2112,7 +2112,7 @@ pub fn bitxor_m256d(a: m256d, b: m256d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn bitxor_m256(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_xor_ps(a.0, b.0) })
 }
@@ -2123,7 +2123,7 @@ pub fn bitxor_m256(a: m256, b: m256) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn zero_extend_m128d(a: m128d) -> m256d {
   m256d(unsafe { _mm256_zextpd128_pd256(a.0) })
 }
@@ -2134,7 +2134,7 @@ pub fn zero_extend_m128d(a: m128d) -> m256d {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn zero_extend_m128(a: m128) -> m256 {
   m256(unsafe { _mm256_zextps128_ps256(a.0) })
 }
@@ -2145,7 +2145,7 @@ pub fn zero_extend_m128(a: m128) -> m256 {
 /// * **Assembly:**
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn zero_extend_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_zextsi128_si256(a.0) })
 }

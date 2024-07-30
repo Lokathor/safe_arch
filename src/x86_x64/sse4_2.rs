@@ -10,7 +10,7 @@ use super::*;
 /// * **Assembly:** `pcmpgtq xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse4.2")))]
 pub fn cmp_gt_mask_i64_m128i(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_cmpgt_epi64(a.0, b.0) })
 }
@@ -21,7 +21,7 @@ pub fn cmp_gt_mask_i64_m128i(a: m128i, b: m128i) -> m128i {
 /// * **Assembly:** `crc32 r32, r8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse4.2")))]
 pub fn crc32_u8(crc: u32, v: u8) -> u32 {
   unsafe { _mm_crc32_u8(crc, v) }
 }
@@ -32,7 +32,7 @@ pub fn crc32_u8(crc: u32, v: u8) -> u32 {
 /// * **Assembly:** `crc32 r32, r16`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse4.2")))]
 pub fn crc32_u16(crc: u32, v: u16) -> u32 {
   unsafe { _mm_crc32_u16(crc, v) }
 }
@@ -43,7 +43,7 @@ pub fn crc32_u16(crc: u32, v: u16) -> u32 {
 /// * **Assembly:** `crc32 r32, r32`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse4.2")))]
 pub fn crc32_u32(crc: u32, v: u32) -> u32 {
   unsafe { _mm_crc32_u32(crc, v) }
 }
@@ -57,7 +57,7 @@ pub fn crc32_u32(crc: u32, v: u32) -> u32 {
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse4.2")))]
 pub fn crc32_u64(crc: u64, v: u64) -> u64 {
   unsafe { _mm_crc32_u64(crc, v) }
 }
@@ -113,7 +113,7 @@ pub const STR_CMP_UNIT_MASK: i32 = _SIDD_UNIT_MASK;
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse4.2")))]
 pub fn search_implicit_str_for_index<const IMM: i32>(
   needle: m128i, haystack: m128i,
 ) -> i32 {
@@ -136,7 +136,7 @@ pub fn search_implicit_str_for_index<const IMM: i32>(
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse4.2")))]
 pub fn search_explicit_str_for_index<const IMM: i32>(
   needle: m128i, needle_len: i32, haystack: m128i, haystack_len: i32,
 ) -> i32 {
@@ -160,7 +160,7 @@ pub fn search_explicit_str_for_index<const IMM: i32>(
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse4.2")))]
 pub fn search_implicit_str_for_mask<const IMM: i32>(
   needle: m128i, haystack: m128i,
 ) -> m128i {
@@ -183,7 +183,7 @@ pub fn search_implicit_str_for_mask<const IMM: i32>(
 #[must_use]
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "sse4.2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse4.2")))]
 pub fn search_explicit_str_for_mask<const IMM: i32>(
   needle: m128i, needle_len: i32, haystack: m128i, haystack_len: i32,
 ) -> m128i {

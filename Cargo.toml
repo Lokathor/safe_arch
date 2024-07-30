@@ -22,5 +22,5 @@ opt-level = 3
 [package.metadata.docs.rs]
 # This makes docs.rs build with all features enabled and
 # also it will indicate what fn needs what cpu feature.
-rustdoc-args = ["-C","target-cpu=native","--cfg","docs_rs"]
+rustdoc-args = ["-C", "target-cpu=native"]
 all-features = true

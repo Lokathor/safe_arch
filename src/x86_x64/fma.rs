@@ -28,7 +28,7 @@ use super::*;
 ///   * `vfmadd231ps xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_add_m128(a: m128, b: m128, c: m128) -> m128 {
   m128(unsafe { _mm_fmadd_ps(a.0, b.0, c.0) })
 }
@@ -49,7 +49,7 @@ pub fn fused_mul_add_m128(a: m128, b: m128, c: m128) -> m128 {
 ///   * `vfmadd231ss xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_add_m128_s(a: m128, b: m128, c: m128) -> m128 {
   m128(unsafe { _mm_fmadd_ss(a.0, b.0, c.0) })
 }
@@ -70,7 +70,7 @@ pub fn fused_mul_add_m128_s(a: m128, b: m128, c: m128) -> m128 {
 ///   * `vfmadd231pd xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_add_m128d(a: m128d, b: m128d, c: m128d) -> m128d {
   m128d(unsafe { _mm_fmadd_pd(a.0, b.0, c.0) })
 }
@@ -91,7 +91,7 @@ pub fn fused_mul_add_m128d(a: m128d, b: m128d, c: m128d) -> m128d {
 ///   * `vfmadd231sd xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_add_m128d_s(a: m128d, b: m128d, c: m128d) -> m128d {
   m128d(unsafe { _mm_fmadd_sd(a.0, b.0, c.0) })
 }
@@ -112,7 +112,7 @@ pub fn fused_mul_add_m128d_s(a: m128d, b: m128d, c: m128d) -> m128d {
 ///   * `vfmadd231ps ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_add_m256(a: m256, b: m256, c: m256) -> m256 {
   m256(unsafe { _mm256_fmadd_ps(a.0, b.0, c.0) })
 }
@@ -133,7 +133,7 @@ pub fn fused_mul_add_m256(a: m256, b: m256, c: m256) -> m256 {
 ///   * `vfmadd231pd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_add_m256d(a: m256d, b: m256d, c: m256d) -> m256d {
   m256d(unsafe { _mm256_fmadd_pd(a.0, b.0, c.0) })
 }
@@ -158,7 +158,7 @@ pub fn fused_mul_add_m256d(a: m256d, b: m256d, c: m256d) -> m256d {
 ///   * `vfmsub231ps xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_sub_m128(a: m128, b: m128, c: m128) -> m128 {
   m128(unsafe { _mm_fmsub_ps(a.0, b.0, c.0) })
 }
@@ -179,7 +179,7 @@ pub fn fused_mul_sub_m128(a: m128, b: m128, c: m128) -> m128 {
 ///   * `vfmsub231ss xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_sub_m128_s(a: m128, b: m128, c: m128) -> m128 {
   m128(unsafe { _mm_fmsub_ss(a.0, b.0, c.0) })
 }
@@ -200,7 +200,7 @@ pub fn fused_mul_sub_m128_s(a: m128, b: m128, c: m128) -> m128 {
 ///   * `vfmsub231pd xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_sub_m128d(a: m128d, b: m128d, c: m128d) -> m128d {
   m128d(unsafe { _mm_fmsub_pd(a.0, b.0, c.0) })
 }
@@ -221,7 +221,7 @@ pub fn fused_mul_sub_m128d(a: m128d, b: m128d, c: m128d) -> m128d {
 ///   * `vfmsub231sd xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_sub_m128d_s(a: m128d, b: m128d, c: m128d) -> m128d {
   m128d(unsafe { _mm_fmsub_sd(a.0, b.0, c.0) })
 }
@@ -242,7 +242,7 @@ pub fn fused_mul_sub_m128d_s(a: m128d, b: m128d, c: m128d) -> m128d {
 ///   * `vfmsub231ps ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_sub_m256(a: m256, b: m256, c: m256) -> m256 {
   m256(unsafe { _mm256_fmsub_ps(a.0, b.0, c.0) })
 }
@@ -263,7 +263,7 @@ pub fn fused_mul_sub_m256(a: m256, b: m256, c: m256) -> m256 {
 ///   * `vfmsub231pd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_sub_m256d(a: m256d, b: m256d, c: m256d) -> m256d {
   m256d(unsafe { _mm256_fmsub_pd(a.0, b.0, c.0) })
 }
@@ -288,7 +288,7 @@ pub fn fused_mul_sub_m256d(a: m256d, b: m256d, c: m256d) -> m256d {
 ///   * `vfnmadd231ps xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_neg_add_m128(a: m128, b: m128, c: m128) -> m128 {
   m128(unsafe { _mm_fnmadd_ps(a.0, b.0, c.0) })
 }
@@ -309,7 +309,7 @@ pub fn fused_mul_neg_add_m128(a: m128, b: m128, c: m128) -> m128 {
 ///   * `vfnmadd231ss xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_neg_add_m128_s(a: m128, b: m128, c: m128) -> m128 {
   m128(unsafe { _mm_fnmadd_ss(a.0, b.0, c.0) })
 }
@@ -330,7 +330,7 @@ pub fn fused_mul_neg_add_m128_s(a: m128, b: m128, c: m128) -> m128 {
 ///   * `vfnmadd231pd xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_neg_add_m128d(a: m128d, b: m128d, c: m128d) -> m128d {
   m128d(unsafe { _mm_fnmadd_pd(a.0, b.0, c.0) })
 }
@@ -351,7 +351,7 @@ pub fn fused_mul_neg_add_m128d(a: m128d, b: m128d, c: m128d) -> m128d {
 ///   * `vfnmadd231sd xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_neg_add_m128d_s(a: m128d, b: m128d, c: m128d) -> m128d {
   m128d(unsafe { _mm_fnmadd_sd(a.0, b.0, c.0) })
 }
@@ -372,7 +372,7 @@ pub fn fused_mul_neg_add_m128d_s(a: m128d, b: m128d, c: m128d) -> m128d {
 ///   * `vfnmadd231ps ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_neg_add_m256(a: m256, b: m256, c: m256) -> m256 {
   m256(unsafe { _mm256_fnmadd_ps(a.0, b.0, c.0) })
 }
@@ -393,7 +393,7 @@ pub fn fused_mul_neg_add_m256(a: m256, b: m256, c: m256) -> m256 {
 ///   * `vfnmadd231pd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_neg_add_m256d(a: m256d, b: m256d, c: m256d) -> m256d {
   m256d(unsafe { _mm256_fnmadd_pd(a.0, b.0, c.0) })
 }
@@ -418,7 +418,7 @@ pub fn fused_mul_neg_add_m256d(a: m256d, b: m256d, c: m256d) -> m256d {
 ///   * `vfnmsub231ps xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_neg_sub_m128(a: m128, b: m128, c: m128) -> m128 {
   m128(unsafe { _mm_fnmsub_ps(a.0, b.0, c.0) })
 }
@@ -439,7 +439,7 @@ pub fn fused_mul_neg_sub_m128(a: m128, b: m128, c: m128) -> m128 {
 ///   * `vfnmsub231ss xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_neg_sub_m128_s(a: m128, b: m128, c: m128) -> m128 {
   m128(unsafe { _mm_fnmsub_ss(a.0, b.0, c.0) })
 }
@@ -460,7 +460,7 @@ pub fn fused_mul_neg_sub_m128_s(a: m128, b: m128, c: m128) -> m128 {
 ///   * `vfnmsub231pd xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_neg_sub_m128d(a: m128d, b: m128d, c: m128d) -> m128d {
   m128d(unsafe { _mm_fnmsub_pd(a.0, b.0, c.0) })
 }
@@ -481,7 +481,7 @@ pub fn fused_mul_neg_sub_m128d(a: m128d, b: m128d, c: m128d) -> m128d {
 ///   * `vfnmsub231sd xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_neg_sub_m128d_s(a: m128d, b: m128d, c: m128d) -> m128d {
   m128d(unsafe { _mm_fnmsub_sd(a.0, b.0, c.0) })
 }
@@ -502,7 +502,7 @@ pub fn fused_mul_neg_sub_m128d_s(a: m128d, b: m128d, c: m128d) -> m128d {
 ///   * `vfnmsub231ps ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_neg_sub_m256(a: m256, b: m256, c: m256) -> m256 {
   m256(unsafe { _mm256_fnmsub_ps(a.0, b.0, c.0) })
 }
@@ -523,7 +523,7 @@ pub fn fused_mul_neg_sub_m256(a: m256, b: m256, c: m256) -> m256 {
 ///   * `vfnmsub231pd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_neg_sub_m256d(a: m256d, b: m256d, c: m256d) -> m256d {
   m256d(unsafe { _mm256_fnmsub_pd(a.0, b.0, c.0) })
 }
@@ -548,7 +548,7 @@ pub fn fused_mul_neg_sub_m256d(a: m256d, b: m256d, c: m256d) -> m256d {
 ///   * `vfmaddsub231ps xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_addsub_m128(a: m128, b: m128, c: m128) -> m128 {
   m128(unsafe { _mm_fmaddsub_ps(a.0, b.0, c.0) })
 }
@@ -569,7 +569,7 @@ pub fn fused_mul_addsub_m128(a: m128, b: m128, c: m128) -> m128 {
 ///   * `vfmaddsub231pd xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_addsub_m128d(a: m128d, b: m128d, c: m128d) -> m128d {
   m128d(unsafe { _mm_fmaddsub_pd(a.0, b.0, c.0) })
 }
@@ -590,7 +590,7 @@ pub fn fused_mul_addsub_m128d(a: m128d, b: m128d, c: m128d) -> m128d {
 ///   * `vfmaddsub231ps ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_addsub_m256(a: m256, b: m256, c: m256) -> m256 {
   m256(unsafe { _mm256_fmaddsub_ps(a.0, b.0, c.0) })
 }
@@ -611,7 +611,7 @@ pub fn fused_mul_addsub_m256(a: m256, b: m256, c: m256) -> m256 {
 ///   * `vfmaddsub231pd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_addsub_m256d(a: m256d, b: m256d, c: m256d) -> m256d {
   m256d(unsafe { _mm256_fmaddsub_pd(a.0, b.0, c.0) })
 }
@@ -636,7 +636,7 @@ pub fn fused_mul_addsub_m256d(a: m256d, b: m256d, c: m256d) -> m256d {
 ///   * `vfmsubadd231ps xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_subadd_m128(a: m128, b: m128, c: m128) -> m128 {
   m128(unsafe { _mm_fmsubadd_ps(a.0, b.0, c.0) })
 }
@@ -657,7 +657,7 @@ pub fn fused_mul_subadd_m128(a: m128, b: m128, c: m128) -> m128 {
 ///   * `vfmsubadd231pd xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_subadd_m128d(a: m128d, b: m128d, c: m128d) -> m128d {
   m128d(unsafe { _mm_fmsubadd_pd(a.0, b.0, c.0) })
 }
@@ -678,7 +678,7 @@ pub fn fused_mul_subadd_m128d(a: m128d, b: m128d, c: m128d) -> m128d {
 ///   * `vfmsubadd231ps ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_subadd_m256(a: m256, b: m256, c: m256) -> m256 {
   m256(unsafe { _mm256_fmsubadd_ps(a.0, b.0, c.0) })
 }
@@ -699,7 +699,7 @@ pub fn fused_mul_subadd_m256(a: m256, b: m256, c: m256) -> m256 {
 ///   * `vfmsubadd231pd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "fma")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "fma")))]
 pub fn fused_mul_subadd_m256d(a: m256d, b: m256d, c: m256d) -> m256d {
   m256d(unsafe { _mm256_fmsubadd_pd(a.0, b.0, c.0) })
 }

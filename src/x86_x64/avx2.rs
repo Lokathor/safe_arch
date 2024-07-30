@@ -20,7 +20,7 @@ use super::*;
 /// * **Assembly:** `vpblendd xmm, xmm, xmm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn blend_imm_i32_m128i<const IMM: i32>(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_blend_epi32(a.0, b.0, IMM) })
 }
@@ -36,7 +36,7 @@ pub fn blend_imm_i32_m128i<const IMM: i32>(a: m128i, b: m128i) -> m128i {
 /// * **Assembly:** `vpbroadcastb xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn splat_i8_m128i_s_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_broadcastb_epi8(a.0) })
 }
@@ -52,7 +52,7 @@ pub fn splat_i8_m128i_s_m128i(a: m128i) -> m128i {
 /// * **Assembly:** `vpbroadcastw xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn splat_i16_m128i_s_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_broadcastw_epi16(a.0) })
 }
@@ -68,7 +68,7 @@ pub fn splat_i16_m128i_s_m128i(a: m128i) -> m128i {
 /// * **Assembly:** `vpbroadcastd xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn splat_i32_m128i_s_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_broadcastd_epi32(a.0) })
 }
@@ -84,7 +84,7 @@ pub fn splat_i32_m128i_s_m128i(a: m128i) -> m128i {
 /// * **Assembly:** `vpbroadcastq xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn splat_i64_m128i_s_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_broadcastq_epi64(a.0) })
 }
@@ -100,7 +100,7 @@ pub fn splat_i64_m128i_s_m128i(a: m128i) -> m128i {
 /// * **Assembly:** `movddup xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn splat_m128d_s_m128d(a: m128d) -> m128d {
   m128d(unsafe { _mm_broadcastsd_pd(a.0) })
 }
@@ -116,7 +116,7 @@ pub fn splat_m128d_s_m128d(a: m128d) -> m128d {
 /// * **Assembly:** `vbroadcasti128 ymm, m128`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn splat_m128i_m256i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_broadcastsi128_si256(a.0) })
 }
@@ -132,7 +132,7 @@ pub fn splat_m128i_m256i(a: m128i) -> m256i {
 /// * **Assembly:** `vbroadcastss xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn splat_m128_s_m128(a: m128) -> m128 {
   m128(unsafe { _mm_broadcastss_ps(a.0) })
 }
@@ -151,7 +151,7 @@ pub fn splat_m128_s_m128(a: m128) -> m128 {
 /// * **Assembly:** `vpmaskmovd xmm, xmm, m128`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn load_masked_i32_m128i(a: &m128i, mask: m128i) -> m128i {
   m128i(unsafe { _mm_maskload_epi32(a as *const m128i as *const i32, mask.0) })
 }
@@ -170,7 +170,7 @@ pub fn load_masked_i32_m128i(a: &m128i, mask: m128i) -> m128i {
 /// * **Assembly:** `vpmaskmovq xmm, xmm, m128`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn load_masked_i64_m128i(a: &m128i, mask: m128i) -> m128i {
   m128i(unsafe { _mm_maskload_epi64(a as *const m128i as *const i64, mask.0) })
 }
@@ -189,7 +189,7 @@ pub fn load_masked_i64_m128i(a: &m128i, mask: m128i) -> m128i {
 /// * **Intrinsic:** [`_mm_maskstore_epi32`]
 /// * **Assembly:** `vpmaskmovd m128, xmm, xmm`
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn store_masked_i32_m128i(addr: &mut m128i, mask: m128i, a: m128i) {
   unsafe { _mm_maskstore_epi32(addr as *mut m128i as *mut i32, mask.0, a.0) };
 }
@@ -208,7 +208,7 @@ pub fn store_masked_i32_m128i(addr: &mut m128i, mask: m128i, a: m128i) {
 /// * **Intrinsic:** [`_mm_maskstore_epi64`]
 /// * **Assembly:** `vpmaskmovq m128, xmm, xmm`
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn store_masked_i64_m128i(addr: &mut m128i, mask: m128i, a: m128i) {
   unsafe { _mm_maskstore_epi64(addr as *mut m128i as *mut i64, mask.0, a.0) };
 }
@@ -228,7 +228,7 @@ pub fn store_masked_i64_m128i(addr: &mut m128i, mask: m128i, a: m128i) {
 /// * **Assembly:** `vpsllvd xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shl_each_u32_m128i(a: m128i, count: m128i) -> m128i {
   m128i(unsafe { _mm_sllv_epi32(a.0, count.0) })
 }
@@ -248,7 +248,7 @@ pub fn shl_each_u32_m128i(a: m128i, count: m128i) -> m128i {
 /// * **Assembly:** `vpsllvq xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shl_each_u64_m128i(a: m128i, count: m128i) -> m128i {
   m128i(unsafe { _mm_sllv_epi64(a.0, count.0) })
 }
@@ -268,7 +268,7 @@ pub fn shl_each_u64_m128i(a: m128i, count: m128i) -> m128i {
 /// * **Assembly:** `vpsravd xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shr_each_i32_m128i(a: m128i, count: m128i) -> m128i {
   m128i(unsafe { _mm_srav_epi32(a.0, count.0) })
 }
@@ -288,7 +288,7 @@ pub fn shr_each_i32_m128i(a: m128i, count: m128i) -> m128i {
 /// * **Assembly:** `vpsrlvd xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shr_each_u32_m128i(a: m128i, count: m128i) -> m128i {
   m128i(unsafe { _mm_srlv_epi32(a.0, count.0) })
 }
@@ -308,7 +308,7 @@ pub fn shr_each_u32_m128i(a: m128i, count: m128i) -> m128i {
 /// * **Assembly:** `vpsrlvq xmm, xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shr_each_u64_m128i(a: m128i, count: m128i) -> m128i {
   m128i(unsafe { _mm_srlv_epi64(a.0, count.0) })
 }
@@ -324,7 +324,7 @@ pub fn shr_each_u64_m128i(a: m128i, count: m128i) -> m128i {
 /// * **Assembly:** `vpabsb ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn abs_i8_m256i(a: m256i) -> m256i {
   m256i(unsafe { _mm256_abs_epi8(a.0) })
 }
@@ -340,7 +340,7 @@ pub fn abs_i8_m256i(a: m256i) -> m256i {
 /// * **Assembly:** `vpabsw ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn abs_i16_m256i(a: m256i) -> m256i {
   m256i(unsafe { _mm256_abs_epi16(a.0) })
 }
@@ -356,7 +356,7 @@ pub fn abs_i16_m256i(a: m256i) -> m256i {
 /// * **Assembly:** `vpabsd ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn abs_i32_m256i(a: m256i) -> m256i {
   m256i(unsafe { _mm256_abs_epi32(a.0) })
 }
@@ -373,7 +373,7 @@ pub fn abs_i32_m256i(a: m256i) -> m256i {
 /// * **Assembly:** `vpaddb ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn add_i8_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_add_epi8(a.0, b.0) })
 }
@@ -390,7 +390,7 @@ pub fn add_i8_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpaddw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn add_i16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_add_epi16(a.0, b.0) })
 }
@@ -407,7 +407,7 @@ pub fn add_i16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpaddd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn add_i32_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_add_epi32(a.0, b.0) })
 }
@@ -424,7 +424,7 @@ pub fn add_i32_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpaddq ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn add_i64_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_add_epi64(a.0, b.0) })
 }
@@ -441,7 +441,7 @@ pub fn add_i64_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpaddsb ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn add_saturating_i8_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_adds_epi8(a.0, b.0) })
 }
@@ -458,7 +458,7 @@ pub fn add_saturating_i8_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpaddsw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn add_saturating_i16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_adds_epi16(a.0, b.0) })
 }
@@ -475,7 +475,7 @@ pub fn add_saturating_i16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpaddusb ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn add_saturating_u8_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_adds_epu8(a.0, b.0) })
 }
@@ -492,7 +492,7 @@ pub fn add_saturating_u8_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpaddusw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn add_saturating_u16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_adds_epu16(a.0, b.0) })
 }
@@ -521,7 +521,7 @@ pub fn add_saturating_u16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpalignr ymm, ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn combined_byte_shr_imm_m256i<const IMM: i32>(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_alignr_epi8(a.0, b.0, IMM) })
 }
@@ -538,7 +538,7 @@ pub fn combined_byte_shr_imm_m256i<const IMM: i32>(a: m256i, b: m256i) -> m256i 
 /// * **Assembly:** `vpand ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn bitand_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_and_si256(a.0, b.0) })
 }
@@ -555,7 +555,7 @@ pub fn bitand_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpandn ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn bitandnot_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_andnot_si256(a.0, b.0) })
 }
@@ -572,7 +572,7 @@ pub fn bitandnot_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpavgb ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn average_u8_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_avg_epu8(a.0, b.0) })
 }
@@ -589,7 +589,7 @@ pub fn average_u8_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpavgw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn average_u16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_avg_epu16(a.0, b.0) })
 }
@@ -612,7 +612,7 @@ pub fn average_u16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpblendw ymm, ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn blend_imm_i16_m256i<const IMM: i32>(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_blend_epi16(a.0, b.0, IMM) })
 }
@@ -633,7 +633,7 @@ pub fn blend_imm_i16_m256i<const IMM: i32>(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpblendd ymm, ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn blend_imm_i32_m256i<const IMM: i32>(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_blend_epi32(a.0, b.0, IMM) })
 }
@@ -662,7 +662,7 @@ pub fn blend_imm_i32_m256i<const IMM: i32>(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpavgw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn blend_varying_i8_m256i(a: m256i, b: m256i, mask: m256i) -> m256i {
   m256i(unsafe { _mm256_blendv_epi8(a.0, b.0, mask.0) })
 }
@@ -678,7 +678,7 @@ pub fn blend_varying_i8_m256i(a: m256i, b: m256i, mask: m256i) -> m256i {
 /// * **Assembly:** `vpbroadcastb ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn set_splat_i8_m128i_s_m256i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_broadcastb_epi8(a.0) })
 }
@@ -694,7 +694,7 @@ pub fn set_splat_i8_m128i_s_m256i(a: m128i) -> m256i {
 /// * **Assembly:** `vpbroadcastw ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn set_splat_i16_m128i_s_m256i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_broadcastw_epi16(a.0) })
 }
@@ -710,7 +710,7 @@ pub fn set_splat_i16_m128i_s_m256i(a: m128i) -> m256i {
 /// * **Assembly:** `vpbroadcastd ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn set_splat_i32_m128i_s_m256i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_broadcastd_epi32(a.0) })
 }
@@ -726,7 +726,7 @@ pub fn set_splat_i32_m128i_s_m256i(a: m128i) -> m256i {
 /// * **Assembly:** `vpbroadcastq ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn set_splat_i64_m128i_s_m256i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_broadcastq_epi64(a.0) })
 }
@@ -742,7 +742,7 @@ pub fn set_splat_i64_m128i_s_m256i(a: m128i) -> m256i {
 /// * **Assembly:** `vbroadcastsd ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn set_splat_m128d_s_m256d(a: m128d) -> m256d {
   m256d(unsafe { _mm256_broadcastsd_pd(a.0) })
 }
@@ -758,7 +758,7 @@ pub fn set_splat_m128d_s_m256d(a: m128d) -> m256d {
 /// * **Assembly:** `vbroadcastss ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn set_splat_m128_s_m256(a: m128) -> m256 {
   m256(unsafe { _mm256_broadcastss_ps(a.0) })
 }
@@ -776,7 +776,7 @@ pub fn set_splat_m128_s_m256(a: m128) -> m256 {
 /// * **Assembly:** `vpslldq ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn byte_shl_imm_u128_m256i<const IMM: i32>(a: m256i) -> m256i {
   m256i(unsafe { _mm256_bslli_epi128(a.0, IMM) })
 }
@@ -794,7 +794,7 @@ pub fn byte_shl_imm_u128_m256i<const IMM: i32>(a: m256i) -> m256i {
 /// * **Assembly:** `vpsrldq ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn byte_shr_imm_u128_m256i<const IMM: i32>(a: m256i) -> m256i {
   m256i(unsafe { _mm256_bsrli_epi128(a.0, IMM) })
 }
@@ -815,7 +815,7 @@ pub fn byte_shr_imm_u128_m256i<const IMM: i32>(a: m256i) -> m256i {
 /// * **Assembly:** `vpcmpeqb ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn cmp_eq_mask_i8_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_cmpeq_epi8(a.0, b.0) })
 }
@@ -836,7 +836,7 @@ pub fn cmp_eq_mask_i8_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpcmpeqw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn cmp_eq_mask_i16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_cmpeq_epi16(a.0, b.0) })
 }
@@ -857,7 +857,7 @@ pub fn cmp_eq_mask_i16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpcmpeqd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn cmp_eq_mask_i32_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_cmpeq_epi32(a.0, b.0) })
 }
@@ -878,7 +878,7 @@ pub fn cmp_eq_mask_i32_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpcmpeqq ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn cmp_eq_mask_i64_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_cmpeq_epi64(a.0, b.0) })
 }
@@ -899,7 +899,7 @@ pub fn cmp_eq_mask_i64_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpcmpgtb ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn cmp_gt_mask_i8_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_cmpgt_epi8(a.0, b.0) })
 }
@@ -920,7 +920,7 @@ pub fn cmp_gt_mask_i8_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpcmpgtw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn cmp_gt_mask_i16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_cmpgt_epi16(a.0, b.0) })
 }
@@ -941,7 +941,7 @@ pub fn cmp_gt_mask_i16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpcmpgtd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn cmp_gt_mask_i32_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_cmpgt_epi32(a.0, b.0) })
 }
@@ -962,7 +962,7 @@ pub fn cmp_gt_mask_i32_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpcmpgtq ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn cmp_gt_mask_i64_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_cmpgt_epi64(a.0, b.0) })
 }
@@ -978,7 +978,7 @@ pub fn cmp_gt_mask_i64_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpmovsxwd ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn convert_to_i32_m256i_from_i16_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepi16_epi32(a.0) })
 }
@@ -994,7 +994,7 @@ pub fn convert_to_i32_m256i_from_i16_m128i(a: m128i) -> m256i {
 /// * **Assembly:** `vpmovsxwq ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn convert_to_i64_m256i_from_lower4_i16_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepi16_epi64(a.0) })
 }
@@ -1010,7 +1010,7 @@ pub fn convert_to_i64_m256i_from_lower4_i16_m128i(a: m128i) -> m256i {
 /// * **Assembly:** `vpmovsxdq ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn convert_to_i64_m256i_from_i32_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepi32_epi64(a.0) })
 }
@@ -1026,7 +1026,7 @@ pub fn convert_to_i64_m256i_from_i32_m128i(a: m128i) -> m256i {
 /// * **Assembly:** `vpmovsxbw ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn convert_to_i16_m256i_from_i8_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepi8_epi16(a.0) })
 }
@@ -1042,7 +1042,7 @@ pub fn convert_to_i16_m256i_from_i8_m128i(a: m128i) -> m256i {
 /// * **Assembly:** `vpmovsxbd ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn convert_to_i32_m256i_from_lower8_i8_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepi8_epi32(a.0) })
 }
@@ -1058,7 +1058,7 @@ pub fn convert_to_i32_m256i_from_lower8_i8_m128i(a: m128i) -> m256i {
 /// * **Assembly:** `vpmovsxbq ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn convert_to_i64_m256i_from_lower4_i8_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepi8_epi64(a.0) })
 }
@@ -1074,7 +1074,7 @@ pub fn convert_to_i64_m256i_from_lower4_i8_m128i(a: m128i) -> m256i {
 /// * **Assembly:** `vpmovzxwd ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn convert_to_i32_m256i_from_u16_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepu16_epi32(a.0) })
 }
@@ -1090,7 +1090,7 @@ pub fn convert_to_i32_m256i_from_u16_m128i(a: m128i) -> m256i {
 /// * **Assembly:** `vpmovzxwq ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn convert_to_i64_m256i_from_lower4_u16_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepu16_epi64(a.0) })
 }
@@ -1106,7 +1106,7 @@ pub fn convert_to_i64_m256i_from_lower4_u16_m128i(a: m128i) -> m256i {
 /// * **Assembly:** `vpmovzxdq ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn convert_to_i64_m256i_from_u32_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepu32_epi64(a.0) })
 }
@@ -1122,7 +1122,7 @@ pub fn convert_to_i64_m256i_from_u32_m128i(a: m128i) -> m256i {
 /// * **Assembly:** `vpmovzxbw ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn convert_to_i16_m256i_from_u8_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepu8_epi16(a.0) })
 }
@@ -1138,7 +1138,7 @@ pub fn convert_to_i16_m256i_from_u8_m128i(a: m128i) -> m256i {
 /// * **Assembly:** `vpmovzxbd ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn convert_to_i16_m256i_from_lower8_u8_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepu8_epi32(a.0) })
 }
@@ -1154,7 +1154,7 @@ pub fn convert_to_i16_m256i_from_lower8_u8_m128i(a: m128i) -> m256i {
 /// * **Assembly:** `vpmovzxbq ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn convert_to_i16_m256i_from_lower4_u8_m128i(a: m128i) -> m256i {
   m256i(unsafe { _mm256_cvtepu8_epi64(a.0) })
 }
@@ -1173,7 +1173,7 @@ pub fn convert_to_i16_m256i_from_lower4_u8_m128i(a: m128i) -> m256i {
 /// * **Intrinsic:** [`_mm256_extract_epi16`]
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn extract_i16_as_i32_m256i<const LANE: i32>(a: m256i) -> i32 {
   unsafe { _mm256_extract_epi16(a.0, LANE) }
 }
@@ -1195,7 +1195,7 @@ pub fn extract_i16_as_i32_m256i<const LANE: i32>(a: m256i) -> i32 {
 /// * **Intrinsic:** [`_mm256_extract_epi8`]
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn extract_i8_as_i32_m256i<const LANE: i32>(a: m256i) -> i32 {
   unsafe { _mm256_extract_epi8(a.0, LANE) }
 }
@@ -1215,7 +1215,7 @@ pub fn extract_i8_as_i32_m256i<const LANE: i32>(a: m256i) -> i32 {
 /// * **Assembly:** `vextracti128 xmm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn extract_m128i_m256i<const LANE: i32>(a: m256i) -> m128i {
   m128i(unsafe { _mm256_extracti128_si256(a.0, LANE) })
 }
@@ -1235,7 +1235,7 @@ pub fn extract_m128i_m256i<const LANE: i32>(a: m256i) -> m128i {
 /// * **Assembly:** `vphaddw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn add_horizontal_i16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_hadd_epi16(a.0, b.0) })
 }
@@ -1263,7 +1263,7 @@ pub fn add_horizontal_i16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vphaddsw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 #[rustfmt::skip]
 pub fn add_horizontal_saturating_i16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_hadds_epi16(a.0, b.0) })
@@ -1284,7 +1284,7 @@ pub fn add_horizontal_saturating_i16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vphaddd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn add_horizontal_i32_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_hadd_epi32(a.0, b.0) })
 }
@@ -1304,7 +1304,7 @@ pub fn add_horizontal_i32_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vphsubw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn sub_horizontal_i16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_hsub_epi16(a.0, b.0) })
 }
@@ -1324,7 +1324,7 @@ pub fn sub_horizontal_i16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vphsubd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn sub_horizontal_i32_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_hsub_epi32(a.0, b.0) })
 }
@@ -1352,7 +1352,7 @@ pub fn sub_horizontal_i32_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vphsubsw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 #[rustfmt::skip]
 pub fn sub_horizontal_saturating_i16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_hsubs_epi16(a.0, b.0) })
@@ -1371,7 +1371,7 @@ pub fn sub_horizontal_saturating_i16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpmaddwd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn mul_i16_horizontal_add_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_madd_epi16(a.0, b.0) })
 }
@@ -1403,7 +1403,7 @@ pub fn mul_i16_horizontal_add_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpmaddubsw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 #[rustfmt::skip]
 pub fn mul_u8i8_add_horizontal_saturating_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_maddubs_epi16(a.0, b.0) })
@@ -1423,7 +1423,7 @@ pub fn mul_u8i8_add_horizontal_saturating_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpmaskmovd ymm, ymm, m256`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn load_masked_i32_m256i(a: &m256i, mask: m256i) -> m256i {
   m256i(unsafe { _mm256_maskload_epi32(a as *const m256i as *const i32, mask.0) })
 }
@@ -1442,7 +1442,7 @@ pub fn load_masked_i32_m256i(a: &m256i, mask: m256i) -> m256i {
 /// * **Assembly:** `vpmaskmovq ymm, ymm, m256`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn load_masked_i64_m256i(a: &m256i, mask: m256i) -> m256i {
   m256i(unsafe { _mm256_maskload_epi64(a as *const m256i as *const i64, mask.0) })
 }
@@ -1465,7 +1465,7 @@ pub fn load_masked_i64_m256i(a: &m256i, mask: m256i) -> m256i {
 /// * **Intrinsic:** [`_mm256_maskstore_epi32`]
 /// * **Assembly:** `vpmaskmovd m256, ymm, ymm`
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn store_masked_i32_m256i(addr: &mut m256i, mask: m256i, a: m256i) {
   unsafe { _mm256_maskstore_epi32(addr as *mut m256i as *mut i32, mask.0, a.0) };
 }
@@ -1484,7 +1484,7 @@ pub fn store_masked_i32_m256i(addr: &mut m256i, mask: m256i, a: m256i) {
 /// * **Intrinsic:** [`_mm256_maskstore_epi64`]
 /// * **Assembly:** `vpmaskmovq m256, ymm, ymm`
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn store_masked_i64_m256i(addr: &mut m256i, mask: m256i, a: m256i) {
   unsafe { _mm256_maskstore_epi64(addr as *mut m256i as *mut i64, mask.0, a.0) };
 }
@@ -1501,7 +1501,7 @@ pub fn store_masked_i64_m256i(addr: &mut m256i, mask: m256i, a: m256i) {
 /// * **Assembly:** `vinserti128 ymm, ymm, xmm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn insert_m128i_to_m256i<const LANE: i32>(a: m256i, b: m128i) -> m256i {
   m256i(unsafe { _mm256_inserti128_si256(a.0, b.0, LANE) })
 }
@@ -1530,7 +1530,7 @@ pub fn insert_m128i_to_m256i<const LANE: i32>(a: m256i, b: m128i) -> m256i {
 /// * **Assembly:** `vpmaxsb ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn max_i8_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_max_epi8(a.0, b.0) })
 }
@@ -1547,7 +1547,7 @@ pub fn max_i8_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpmaxsw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn max_i16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_max_epi16(a.0, b.0) })
 }
@@ -1564,7 +1564,7 @@ pub fn max_i16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpmaxsd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn max_i32_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_max_epi32(a.0, b.0) })
 }
@@ -1593,7 +1593,7 @@ pub fn max_i32_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpmaxub ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn max_u8_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_max_epu8(a.0, b.0) })
 }
@@ -1610,7 +1610,7 @@ pub fn max_u8_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpmaxuw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn max_u16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_max_epu16(a.0, b.0) })
 }
@@ -1627,7 +1627,7 @@ pub fn max_u16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpmaxud ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn max_u32_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_max_epu32(a.0, b.0) })
 }
@@ -1656,7 +1656,7 @@ pub fn max_u32_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpminsb ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn min_i8_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_min_epi8(a.0, b.0) })
 }
@@ -1673,7 +1673,7 @@ pub fn min_i8_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpminsw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn min_i16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_min_epi16(a.0, b.0) })
 }
@@ -1690,7 +1690,7 @@ pub fn min_i16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpminsd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn min_i32_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_min_epi32(a.0, b.0) })
 }
@@ -1719,7 +1719,7 @@ pub fn min_i32_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpminub ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn min_u8_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_min_epu8(a.0, b.0) })
 }
@@ -1736,7 +1736,7 @@ pub fn min_u8_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpminuw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn min_u16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_min_epu16(a.0, b.0) })
 }
@@ -1753,7 +1753,7 @@ pub fn min_u16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpminud ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn min_u32_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_min_epu32(a.0, b.0) })
 }
@@ -1771,7 +1771,7 @@ pub fn min_u32_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpmovmskb r32, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn move_mask_i8_m256i(a: m256i) -> i32 {
   unsafe { _mm256_movemask_epi8(a.0) }
 }
@@ -1795,7 +1795,7 @@ pub fn move_mask_i8_m256i(a: m256i) -> i32 {
 /// * **Assembly:** ``
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn multi_packed_sum_abs_diff_u8_m256i<const IMM: i32>(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_mpsadbw_epu8(a.0, b.0, IMM) })
 }
@@ -1812,7 +1812,7 @@ pub fn multi_packed_sum_abs_diff_u8_m256i<const IMM: i32>(a: m256i, b: m256i) ->
 /// * **Assembly:** `vpmuldq ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn mul_i64_low_bits_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_mul_epi32(a.0, b.0) })
 }
@@ -1829,7 +1829,7 @@ pub fn mul_i64_low_bits_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpmuludq ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn mul_u64_low_bits_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_mul_epu32(a.0, b.0) })
 }
@@ -1846,7 +1846,7 @@ pub fn mul_u64_low_bits_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpmulhw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn mul_i16_keep_high_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_mulhi_epi16(a.0, b.0) })
 }
@@ -1863,7 +1863,7 @@ pub fn mul_i16_keep_high_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpmulhuw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn mul_u16_keep_high_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_mulhi_epu16(a.0, b.0) })
 }
@@ -1886,7 +1886,7 @@ pub fn mul_u16_keep_high_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpmulhrsw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn mul_i16_scale_round_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_mulhrs_epi16(a.0, b.0) })
 }
@@ -1903,7 +1903,7 @@ pub fn mul_i16_scale_round_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpmullw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn mul_i16_keep_low_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_mullo_epi16(a.0, b.0) })
 }
@@ -1920,7 +1920,7 @@ pub fn mul_i16_keep_low_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpmulld ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn mul_i32_keep_low_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_mullo_epi32(a.0, b.0) })
 }
@@ -1937,7 +1937,7 @@ pub fn mul_i32_keep_low_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpor ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn bitor_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_or_si256(a.0, b.0) })
 }
@@ -1963,7 +1963,7 @@ pub fn bitor_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpacksswb ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn pack_i16_to_i8_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_packs_epi16(a.0, b.0) })
 }
@@ -1983,7 +1983,7 @@ pub fn pack_i16_to_i8_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpackssdw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn pack_i32_to_i16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_packs_epi32(a.0, b.0) })
 }
@@ -2009,7 +2009,7 @@ pub fn pack_i32_to_i16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpackuswb ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn pack_i16_to_u8_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_packus_epi16(a.0, b.0) })
 }
@@ -2029,7 +2029,7 @@ pub fn pack_i16_to_u8_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpackusdw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn pack_i32_to_u16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_packs_epi32(a.0, b.0) })
 }
@@ -2053,7 +2053,7 @@ pub fn pack_i32_to_u16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vperm2i128 ymm, ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shuffle_abi_i128z_all_m256i<const MASK: i32>(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_permute2x128_si256(a.0, b.0, MASK) })
 }
@@ -2069,7 +2069,7 @@ pub fn shuffle_abi_i128z_all_m256i<const MASK: i32>(a: m256i, b: m256i) -> m256i
 /// * **Assembly:** `vpermq ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shuffle_ai_i64_all_m256i<const IMM: i32>(a: m256i) -> m256i {
   m256i(unsafe { _mm256_permute4x64_epi64(a.0, IMM) })
 }
@@ -2085,7 +2085,7 @@ pub fn shuffle_ai_i64_all_m256i<const IMM: i32>(a: m256i) -> m256i {
 /// * **Assembly:** `vpermpd ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shuffle_ai_f64_all_m256d<const IMM: i32>(a: m256d) -> m256d {
   m256d(unsafe { _mm256_permute4x64_pd(a.0, IMM) })
 }
@@ -2102,7 +2102,7 @@ pub fn shuffle_ai_f64_all_m256d<const IMM: i32>(a: m256d) -> m256d {
 /// * **Assembly:** `vpermd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shuffle_av_i32_all_m256i(a: m256i, v: m256i) -> m256i {
   m256i(unsafe { _mm256_permutevar8x32_epi32(a.0, v.0) })
 }
@@ -2119,7 +2119,7 @@ pub fn shuffle_av_i32_all_m256i(a: m256i, v: m256i) -> m256i {
 /// * **Assembly:** `vpermps ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shuffle_av_i32_all_m256(a: m256, v: m256i) -> m256 {
   m256(unsafe { _mm256_permutevar8x32_ps(a.0, v.0) })
 }
@@ -2144,7 +2144,7 @@ pub fn shuffle_av_i32_all_m256(a: m256, v: m256i) -> m256 {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn sum_of_u8_abs_diff_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_sad_epu8(a.0, b.0) })
 }
@@ -2163,7 +2163,7 @@ pub fn sum_of_u8_abs_diff_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpshufd ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shuffle_ai_i32_half_m256i<const IMM: i32>(a: m256i) -> m256i {
   m256i(unsafe { _mm256_shuffle_epi32(a.0, IMM) })
 }
@@ -2197,7 +2197,7 @@ pub fn shuffle_ai_i32_half_m256i<const IMM: i32>(a: m256i) -> m256i {
 /// * **Assembly:** `vpshufb ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shuffle_av_i8z_half_m256i(a: m256i, v: m256i) -> m256i {
   m256i(unsafe { _mm256_shuffle_epi8(a.0, v.0) })
 }
@@ -2215,7 +2215,7 @@ pub fn shuffle_av_i8z_half_m256i(a: m256i, v: m256i) -> m256i {
 /// * **Assembly:** `vpshufhw ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shuffle_ai_i16_h64half_m256i<const IMM: i32>(a: m256i) -> m256i {
   m256i(unsafe { _mm256_shufflehi_epi16(a.0, IMM) })
 }
@@ -2233,7 +2233,7 @@ pub fn shuffle_ai_i16_h64half_m256i<const IMM: i32>(a: m256i) -> m256i {
 /// * **Assembly:** `vpshuflw ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shuffle_ai_i16_l64half_m256i<const IMM: i32>(a: m256i) -> m256i {
   m256i(unsafe { _mm256_shufflelo_epi16(a.0, IMM) })
 }
@@ -2266,7 +2266,7 @@ pub fn shuffle_ai_i16_l64half_m256i<const IMM: i32>(a: m256i) -> m256i {
 /// * **Assembly:** `vpsignb ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn sign_apply_i8_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_sign_epi8(a.0, b.0) })
 }
@@ -2287,7 +2287,7 @@ pub fn sign_apply_i8_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpsignw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn sign_apply_i16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_sign_epi16(a.0, b.0) })
 }
@@ -2308,7 +2308,7 @@ pub fn sign_apply_i16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpsignd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn sign_apply_i32_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_sign_epi32(a.0, b.0) })
 }
@@ -2325,7 +2325,7 @@ pub fn sign_apply_i32_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpsllw ymm, ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shl_all_u16_m256i(a: m256i, count: m128i) -> m256i {
   m256i(unsafe { _mm256_sll_epi16(a.0, count.0) })
 }
@@ -2342,7 +2342,7 @@ pub fn shl_all_u16_m256i(a: m256i, count: m128i) -> m256i {
 /// * **Assembly:** `vpslld ymm, ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shl_all_u32_m256i(a: m256i, count: m128i) -> m256i {
   m256i(unsafe { _mm256_sll_epi32(a.0, count.0) })
 }
@@ -2359,7 +2359,7 @@ pub fn shl_all_u32_m256i(a: m256i, count: m128i) -> m256i {
 /// * **Assembly:** `vpsllq ymm, ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shl_all_u64_m256i(a: m256i, count: m128i) -> m256i {
   m256i(unsafe { _mm256_sll_epi64(a.0, count.0) })
 }
@@ -2376,7 +2376,7 @@ pub fn shl_all_u64_m256i(a: m256i, count: m128i) -> m256i {
 /// * **Assembly:** `vpsllw ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shl_imm_u16_m256i<const IMM: i32>(a: m256i) -> m256i {
   m256i(unsafe { _mm256_slli_epi16(a.0, IMM) })
 }
@@ -2393,7 +2393,7 @@ pub fn shl_imm_u16_m256i<const IMM: i32>(a: m256i) -> m256i {
 /// * **Assembly:** `vpslld ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shl_imm_u32_m256i<const IMM: i32>(a: m256i) -> m256i {
   m256i(unsafe { _mm256_slli_epi32(a.0, IMM) })
 }
@@ -2410,7 +2410,7 @@ pub fn shl_imm_u32_m256i<const IMM: i32>(a: m256i) -> m256i {
 /// * **Assembly:** `vpsllq ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shl_imm_u64_m256i<const IMM: i32>(a: m256i) -> m256i {
   m256i(unsafe { _mm256_slli_epi64(a.0, IMM) })
 }
@@ -2427,7 +2427,7 @@ pub fn shl_imm_u64_m256i<const IMM: i32>(a: m256i) -> m256i {
 /// * **Assembly:** `vpsllvd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shl_each_u32_m256i(a: m256i, count: m256i) -> m256i {
   m256i(unsafe { _mm256_sllv_epi32(a.0, count.0) })
 }
@@ -2444,7 +2444,7 @@ pub fn shl_each_u32_m256i(a: m256i, count: m256i) -> m256i {
 /// * **Assembly:** `vpsllvq ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shl_each_u64_m256i(a: m256i, count: m256i) -> m256i {
   m256i(unsafe { _mm256_sllv_epi64(a.0, count.0) })
 }
@@ -2461,7 +2461,7 @@ pub fn shl_each_u64_m256i(a: m256i, count: m256i) -> m256i {
 /// * **Assembly:** `vpsraw ymm, ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shr_all_i16_m256i(a: m256i, count: m128i) -> m256i {
   m256i(unsafe { _mm256_sra_epi16(a.0, count.0) })
 }
@@ -2478,7 +2478,7 @@ pub fn shr_all_i16_m256i(a: m256i, count: m128i) -> m256i {
 /// * **Assembly:** `vpsrad ymm, ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shr_all_i32_m256i(a: m256i, count: m128i) -> m256i {
   m256i(unsafe { _mm256_sra_epi32(a.0, count.0) })
 }
@@ -2495,7 +2495,7 @@ pub fn shr_all_i32_m256i(a: m256i, count: m128i) -> m256i {
 /// * **Assembly:** `vpsraw ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shr_imm_i16_m256i<const IMM: i32>(a: m256i) -> m256i {
   m256i(unsafe { _mm256_srai_epi16(a.0, IMM) })
 }
@@ -2512,7 +2512,7 @@ pub fn shr_imm_i16_m256i<const IMM: i32>(a: m256i) -> m256i {
 /// * **Assembly:** `vpsrad ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shr_imm_i32_m256i<const IMM: i32>(a: m256i) -> m256i {
   m256i(unsafe { _mm256_srai_epi32(a.0, IMM) })
 }
@@ -2529,7 +2529,7 @@ pub fn shr_imm_i32_m256i<const IMM: i32>(a: m256i) -> m256i {
 /// * **Assembly:** `vpsravd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shr_each_i32_m256i(a: m256i, count: m256i) -> m256i {
   m256i(unsafe { _mm256_srav_epi32(a.0, count.0) })
 }
@@ -2546,7 +2546,7 @@ pub fn shr_each_i32_m256i(a: m256i, count: m256i) -> m256i {
 /// * **Assembly:** `vpsrlw ymm, ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shr_all_u16_m256i(a: m256i, count: m128i) -> m256i {
   m256i(unsafe { _mm256_srl_epi16(a.0, count.0) })
 }
@@ -2563,7 +2563,7 @@ pub fn shr_all_u16_m256i(a: m256i, count: m128i) -> m256i {
 /// * **Assembly:** `vpsrld ymm, ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shr_all_u32_m256i(a: m256i, count: m128i) -> m256i {
   m256i(unsafe { _mm256_srl_epi32(a.0, count.0) })
 }
@@ -2580,7 +2580,7 @@ pub fn shr_all_u32_m256i(a: m256i, count: m128i) -> m256i {
 /// * **Assembly:** `vpsrlq ymm, ymm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shr_all_u64_m256i(a: m256i, count: m128i) -> m256i {
   m256i(unsafe { _mm256_srl_epi64(a.0, count.0) })
 }
@@ -2597,7 +2597,7 @@ pub fn shr_all_u64_m256i(a: m256i, count: m128i) -> m256i {
 /// * **Assembly:** `vpsrlw ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shr_imm_u16_m256i<const IMM: i32>(a: m256i) -> m256i {
   m256i(unsafe { _mm256_srli_epi16(a.0, IMM) })
 }
@@ -2614,7 +2614,7 @@ pub fn shr_imm_u16_m256i<const IMM: i32>(a: m256i) -> m256i {
 /// * **Assembly:** `vpsrld ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shr_imm_u32_m256i<const IMM: i32>(a: m256i) -> m256i {
   m256i(unsafe { _mm256_srli_epi32(a.0, IMM) })
 }
@@ -2631,7 +2631,7 @@ pub fn shr_imm_u32_m256i<const IMM: i32>(a: m256i) -> m256i {
 /// * **Assembly:** `vpsrlq ymm, ymm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shr_imm_u64_m256i<const IMM: i32>(a: m256i) -> m256i {
   m256i(unsafe { _mm256_srli_epi64(a.0, IMM) })
 }
@@ -2648,7 +2648,7 @@ pub fn shr_imm_u64_m256i<const IMM: i32>(a: m256i) -> m256i {
 /// * **Assembly:** `vpsrlvd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shr_each_u32_m256i(a: m256i, count: m256i) -> m256i {
   m256i(unsafe { _mm256_srlv_epi32(a.0, count.0) })
 }
@@ -2665,7 +2665,7 @@ pub fn shr_each_u32_m256i(a: m256i, count: m256i) -> m256i {
 /// * **Assembly:** `vpsrlvq ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn shr_each_u64_m256i(a: m256i, count: m256i) -> m256i {
   m256i(unsafe { _mm256_srlv_epi64(a.0, count.0) })
 }
@@ -2682,7 +2682,7 @@ pub fn shr_each_u64_m256i(a: m256i, count: m256i) -> m256i {
 /// * **Assembly:** `vpsubb ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn sub_i8_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_sub_epi8(a.0, b.0) })
 }
@@ -2699,7 +2699,7 @@ pub fn sub_i8_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpsubw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn sub_i16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_sub_epi16(a.0, b.0) })
 }
@@ -2716,7 +2716,7 @@ pub fn sub_i16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpsubd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn sub_i32_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_sub_epi32(a.0, b.0) })
 }
@@ -2733,7 +2733,7 @@ pub fn sub_i32_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpsubq ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn sub_i64_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_sub_epi64(a.0, b.0) })
 }
@@ -2750,7 +2750,7 @@ pub fn sub_i64_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpsubsb ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn sub_saturating_i8_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_subs_epi8(a.0, b.0) })
 }
@@ -2767,7 +2767,7 @@ pub fn sub_saturating_i8_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpsubsw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn sub_saturating_i16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_subs_epi16(a.0, b.0) })
 }
@@ -2784,7 +2784,7 @@ pub fn sub_saturating_i16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpsubusb ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn sub_saturating_u8_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_subs_epu8(a.0, b.0) })
 }
@@ -2801,7 +2801,7 @@ pub fn sub_saturating_u8_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpsubusw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn sub_saturating_u16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_subs_epu16(a.0, b.0) })
 }
@@ -2832,7 +2832,7 @@ pub fn sub_saturating_u16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpunpckhbw ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn unpack_high_i8_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_unpackhi_epi8(a.0, b.0) })
 }
@@ -2851,7 +2851,7 @@ pub fn unpack_high_i8_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpunpckhwd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn unpack_high_i16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_unpackhi_epi16(a.0, b.0) })
 }
@@ -2870,7 +2870,7 @@ pub fn unpack_high_i16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpunpckhdq ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn unpack_high_i32_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_unpackhi_epi32(a.0, b.0) })
 }
@@ -2889,7 +2889,7 @@ pub fn unpack_high_i32_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpunpckhqdq ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn unpack_high_i64_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_unpackhi_epi64(a.0, b.0) })
 }
@@ -2920,7 +2920,7 @@ pub fn unpack_high_i64_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `_mm256_unpacklo_epi8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn unpack_low_i8_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_unpacklo_epi8(a.0, b.0) })
 }
@@ -2939,7 +2939,7 @@ pub fn unpack_low_i8_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpunpcklwd ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn unpack_low_i16_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_unpacklo_epi16(a.0, b.0) })
 }
@@ -2958,7 +2958,7 @@ pub fn unpack_low_i16_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpunpckldq ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn unpack_low_i32_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_unpacklo_epi32(a.0, b.0) })
 }
@@ -2977,7 +2977,7 @@ pub fn unpack_low_i32_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpunpcklqdq ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn unpack_low_i64_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_unpacklo_epi64(a.0, b.0) })
 }
@@ -2994,7 +2994,7 @@ pub fn unpack_low_i64_m256i(a: m256i, b: m256i) -> m256i {
 /// * **Assembly:** `vpxor ymm, ymm, ymm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "avx2")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
 pub fn bitxor_m256i(a: m256i, b: m256i) -> m256i {
   m256i(unsafe { _mm256_xor_si256(a.0, b.0) })
 }

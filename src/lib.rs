@@ -3,7 +3,7 @@
 #![allow(unused_imports)]
 #![allow(clippy::too_many_arguments)]
 #![allow(clippy::transmute_ptr_to_ptr)]
-#![cfg_attr(docs_rs, feature(doc_cfg))]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
 //! A crate that safely exposes arch intrinsics via `#[cfg()]`.
 //!
@@ -283,7 +283,7 @@ submodule!(pub x86_x64 {
 
   /// Turns a round operator token to the correct constant value.
   #[macro_export]
-  #[cfg_attr(docs_rs, doc(cfg(target_feature = "avx")))]
+  #[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
   macro_rules! round_op {
     (Nearest) => {{
       #[cfg(target_arch = "x86")]

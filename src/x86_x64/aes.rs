@@ -8,7 +8,7 @@ use super::*;
 /// * **Assembly:** `aesdec xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "aes")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "aes")))]
 pub fn aes_decrypt_m128i(a: m128i, round_key: m128i) -> m128i {
   m128i(unsafe { _mm_aesdec_si128(a.0, round_key.0) })
 }
@@ -20,7 +20,7 @@ pub fn aes_decrypt_m128i(a: m128i, round_key: m128i) -> m128i {
 /// * **Assembly:** `aesdeclast xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "aes")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "aes")))]
 pub fn aes_decrypt_last_m128i(a: m128i, round_key: m128i) -> m128i {
   m128i(unsafe { _mm_aesdeclast_si128(a.0, round_key.0) })
 }
@@ -31,7 +31,7 @@ pub fn aes_decrypt_last_m128i(a: m128i, round_key: m128i) -> m128i {
 /// * **Assembly:** `aesenc xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "aes")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "aes")))]
 pub fn aes_encrypt_m128i(a: m128i, round_key: m128i) -> m128i {
   m128i(unsafe { _mm_aesenc_si128(a.0, round_key.0) })
 }
@@ -43,7 +43,7 @@ pub fn aes_encrypt_m128i(a: m128i, round_key: m128i) -> m128i {
 /// * **Assembly:** `aesenclast xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "aes")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "aes")))]
 pub fn aes_encrypt_last_m128i(a: m128i, round_key: m128i) -> m128i {
   m128i(unsafe { _mm_aesenclast_si128(a.0, round_key.0) })
 }
@@ -54,7 +54,7 @@ pub fn aes_encrypt_last_m128i(a: m128i, round_key: m128i) -> m128i {
 /// * **Assembly:** `aesimc xmm, xmm`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "aes")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "aes")))]
 pub fn aes_inv_mix_columns_m128i(a: m128i) -> m128i {
   m128i(unsafe { _mm_aesimc_si128(a.0) })
 }
@@ -69,7 +69,7 @@ pub fn aes_inv_mix_columns_m128i(a: m128i) -> m128i {
 /// * **Assembly:** `aeskeygenassist xmm, xmm, imm8`
 #[must_use]
 #[inline(always)]
-#[cfg_attr(docs_rs, doc(cfg(target_feature = "aes")))]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "aes")))]
 pub fn aes_key_gen_assist_m128i<const IMM: i32>(a: m128i) -> m128i {
   m128i(unsafe { _mm_aeskeygenassist_si128(a.0, IMM) })
 }
