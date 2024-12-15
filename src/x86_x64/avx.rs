@@ -97,6 +97,9 @@ pub fn bitandnot_m256(a: m256, b: m256) -> m256 {
 ///
 /// * **Intrinsic:** [``]
 /// * **Assembly:**
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn blend_m256d<const IMM: i32>(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_blend_pd(a.0, b.0, IMM) })
 }
@@ -108,6 +111,9 @@ pub fn blend_m256d<const IMM: i32>(a: m256d, b: m256d) -> m256d {
 ///
 /// * **Intrinsic:** [``]
 /// * **Assembly:**
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn blend_m256<const IMM: i32>(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_blend_ps(a.0, b.0, IMM) })
 }
@@ -1470,6 +1476,40 @@ pub fn shuffle_av_f32_half_m256(a: m256, v: m256i) -> m256 {
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn reciprocal_m256(a: m256) -> m256 {
   m256(unsafe { _mm256_rcp_ps(a.0) })
+}
+
+/// Turns a round operator token to the correct constant value.
+#[macro_export]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
+macro_rules! round_op {
+  (Nearest) => {{
+    #[cfg(target_arch = "x86")]
+    use ::core::arch::x86::{_MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT};
+    #[cfg(target_arch = "x86_64")]
+    use ::core::arch::x86_64::{_MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT};
+    _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEAREST_INT
+  }};
+  (NegInf) => {{
+    #[cfg(target_arch = "x86")]
+    use ::core::arch::x86::{_MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF};
+    #[cfg(target_arch = "x86_64")]
+    use ::core::arch::x86_64::{_MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF};
+    _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEG_INF
+  }};
+  (PosInf) => {{
+    #[cfg(target_arch = "x86")]
+    use ::core::arch::x86::{_MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF};
+    #[cfg(target_arch = "x86_64")]
+    use ::core::arch::x86_64::{_MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF};
+    _MM_FROUND_NO_EXC | _MM_FROUND_TO_POS_INF
+  }};
+  (Zero) => {{
+    #[cfg(target_arch = "x86")]
+    use ::core::arch::x86::{_mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO};
+    #[cfg(target_arch = "x86_64")]
+    use ::core::arch::x86_64::{_mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO};
+    _MM_FROUND_NO_EXC | _MM_FROUND_TO_ZERO
+  }};
 }
 
 /// Rounds each lane in the style specified.

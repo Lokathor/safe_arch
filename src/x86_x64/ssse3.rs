@@ -48,6 +48,9 @@ pub fn abs_i32_m128i(a: m128i) -> m128i {
 ///
 /// * **Intrinsic:** [`_mm_alignr_epi8`]
 /// * **Assembly:** `palignr xmm, xmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "ssse3")))]
 pub fn combined_byte_shr_imm_m128i<const IMM: i32>(
   a: m128i, b: m128i,
 ) -> m128i {
