@@ -97,6 +97,9 @@ pub fn bitandnot_m256(a: m256, b: m256) -> m256 {
 ///
 /// * **Intrinsic:** [``]
 /// * **Assembly:**
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn blend_m256d<const IMM: i32>(a: m256d, b: m256d) -> m256d {
   m256d(unsafe { _mm256_blend_pd(a.0, b.0, IMM) })
 }
@@ -108,6 +111,9 @@ pub fn blend_m256d<const IMM: i32>(a: m256d, b: m256d) -> m256d {
 ///
 /// * **Intrinsic:** [``]
 /// * **Assembly:**
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
 pub fn blend_m256<const IMM: i32>(a: m256, b: m256) -> m256 {
   m256(unsafe { _mm256_blend_ps(a.0, b.0, IMM) })
 }

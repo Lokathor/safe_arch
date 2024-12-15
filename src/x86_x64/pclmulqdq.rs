@@ -12,6 +12,9 @@ use super::*;
 ///
 /// * **Intrinsic:** [`_mm_clmulepi64_si128`]
 /// * **Assembly:** `pclmulqdq xmm, xmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "pclmulqdq")))]
 pub fn mul_i64_carryless_m128i<const IMM: i32>(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_clmulepi64_si128(a.0, b.0, IMM) })
 }

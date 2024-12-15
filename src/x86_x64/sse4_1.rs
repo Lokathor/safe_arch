@@ -9,6 +9,9 @@ use super::*;
 ///
 /// * **Intrinsic:** [`_mm_blend_epi16`]
 /// * **Assembly:** `pblendw xmm, xmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse4.1")))]
 pub fn blend_imm_i16_m128i<const IMM: i32>(a: m128i, b: m128i) -> m128i {
   m128i(unsafe { _mm_blend_epi16(a.0, b.0, IMM) })
 }
@@ -20,6 +23,9 @@ pub fn blend_imm_i16_m128i<const IMM: i32>(a: m128i, b: m128i) -> m128i {
 ///
 /// * **Intrinsic:** [`_mm_blend_pd`]
 /// * **Assembly:** `blendpd xmm, xmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse4.1")))]
 pub fn blend_imm_m128d<const IMM: i32>(a: m128d, b: m128d) -> m128d {
   m128d(unsafe { _mm_blend_pd(a.0, b.0, IMM) })
 }
@@ -31,6 +37,9 @@ pub fn blend_imm_m128d<const IMM: i32>(a: m128d, b: m128d) -> m128d {
 ///
 /// * **Intrinsic:** [`_mm_blend_ps`]
 /// * **Assembly:** `blendps xmm, xmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "sse4.1")))]
 pub fn blend_imm_m128<const IMM: i32>(a: m128, b: m128) -> m128 {
   m128(unsafe { _mm_blend_ps(a.0, b.0, IMM) })
 }
