@@ -1606,7 +1606,6 @@ pub fn set_i32_m256i(
 #[inline(always)]
 #[cfg(target_arch = "x86_64")]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
-#[cfg(target_arch = "x86_64")]
 pub fn set_i64_m256i(e3: i64, e2: i64, e1: i64, e0: i64) -> m256i {
   m256i(unsafe { _mm256_set_epi64x(e3, e2, e1, e0) })
 }
