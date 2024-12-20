@@ -2,7 +2,8 @@
 
 use super::*;
 
-/// Fetches the cache line containing `addr` into all levels of the cache hierarchy.
+/// Fetches the cache line containing `addr` into all levels of the cache
+/// hierarchy.
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "sse")))]
 pub fn prefetch_t0<T>(addr: &T) {
@@ -16,7 +17,8 @@ pub fn prefetch_t1<T>(addr: &T) {
   unsafe { _mm_prefetch(addr as *const T as *const i8, _MM_HINT_T1) }
 }
 
-/// Fetches into L3 and higher or an implementation-specific choice (e.g., L2 if there is no L3).
+/// Fetches into L3 and higher or an implementation-specific choice (e.g., L2 if
+/// there is no L3).
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "sse")))]
 pub fn prefetch_t2<T>(addr: &T) {
@@ -33,7 +35,8 @@ pub fn prefetch_nta<T>(addr: &T) {
   unsafe { _mm_prefetch(addr as *const T as *const i8, _MM_HINT_NTA) }
 }
 
-/// Fetches the cache line containing `addr` into all levels of the cache hierarchy, anticipating write
+/// Fetches the cache line containing `addr` into all levels of the cache
+/// hierarchy, anticipating write
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "sse")))]
 pub fn prefetch_et0<T>(addr: &T) {
@@ -638,7 +641,7 @@ pub fn convert_i32_replace_m128_s(a: m128, i: i32) -> m128 {
 /// * **Assembly:** `cvtsi2ss xmm, r64`
 #[must_use]
 #[inline(always)]
-#[cfg(arch = "x86_64")]
+#[cfg(target_arch = "x86_64")]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "sse")))]
 pub fn convert_i64_replace_m128_s(a: m128, i: i64) -> m128 {
   m128(unsafe { _mm_cvtsi64_ss(a.0, i) })
@@ -678,7 +681,7 @@ pub fn get_i32_from_m128_s(a: m128) -> i32 {
 /// ```
 #[must_use]
 #[inline(always)]
-#[cfg(arch = "x86_64")]
+#[cfg(target_arch = "x86_64")]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "sse")))]
 pub fn get_i64_from_m128_s(a: m128) -> i64 {
   unsafe { _mm_cvttss_si64(a.0) }
@@ -1473,4 +1476,3 @@ impl PartialEq for m128 {
     move_mask_m128(cmp_eq_mask_m128(*self, *other)) == 0b1111
   }
 }
-
