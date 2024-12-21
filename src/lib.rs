@@ -133,6 +133,41 @@ use core::{
 
 pub mod naming_conventions;
 
+/// Turns a round operator token to the correct constant value.
+#[macro_export]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx")))]
+// Note(Lokathor): keep this at the crate root.
+macro_rules! round_op {
+  (Nearest) => {{
+    #[cfg(target_arch = "x86")]
+    use ::core::arch::x86::{_MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT};
+    #[cfg(target_arch = "x86_64")]
+    use ::core::arch::x86_64::{_MM_FROUND_NO_EXC, _MM_FROUND_TO_NEAREST_INT};
+    _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEAREST_INT
+  }};
+  (NegInf) => {{
+    #[cfg(target_arch = "x86")]
+    use ::core::arch::x86::{_MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF};
+    #[cfg(target_arch = "x86_64")]
+    use ::core::arch::x86_64::{_MM_FROUND_NO_EXC, _MM_FROUND_TO_NEG_INF};
+    _MM_FROUND_NO_EXC | _MM_FROUND_TO_NEG_INF
+  }};
+  (PosInf) => {{
+    #[cfg(target_arch = "x86")]
+    use ::core::arch::x86::{_MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF};
+    #[cfg(target_arch = "x86_64")]
+    use ::core::arch::x86_64::{_MM_FROUND_NO_EXC, _MM_FROUND_TO_POS_INF};
+    _MM_FROUND_NO_EXC | _MM_FROUND_TO_POS_INF
+  }};
+  (Zero) => {{
+    #[cfg(target_arch = "x86")]
+    use ::core::arch::x86::{_mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO};
+    #[cfg(target_arch = "x86_64")]
+    use ::core::arch::x86_64::{_mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO};
+    _MM_FROUND_NO_EXC | _MM_FROUND_TO_ZERO
+  }};
+}
+
 /// Declares a private mod and then a glob `use` with the visibility specified.
 macro_rules! submodule {
   ($v:vis $name:ident) => {
