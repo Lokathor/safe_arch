@@ -70,6 +70,19 @@ jobs:
         path: sde-external-*
         key: ${{ runner.os }}-sde-9.58.0-2025-06-16
 
+    - name: Set SDE path from cache
+      if: steps.cache-sde.outputs.cache-hit == 'true'
+      shell: bash
+      run: |
+        set -euo pipefail
+        SDE_DIR=$(find . -maxdepth 1 -type d -name "sde-external-*")
+        if [ -z "$SDE_DIR" ]; then
+          echo "Error: SDE directory not found after cache restore"
+          exit 1
+        fi
+        echo "Found SDE directory: $SDE_DIR"
+        echo "$SDE_DIR" >> $GITHUB_PATH
+
     - name: Install Intel SDE
       if: steps.cache-sde.outputs.cache-hit != 'true'
       shell: bash
