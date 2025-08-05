@@ -130,7 +130,7 @@ pub fn set_splat_i64_m512i(i: i64) -> m512i {
 /// # use safe_arch::*;
 /// let a = set_splat_m512d(5.0);
 /// let b: [f64; 8] = a.into();
-/// assert_eq!(b, [5.0_i64; 8]);
+/// assert_eq!(b, [5.0_f64; 8]);
 /// ```
 /// * **Intrinsic:** [`_mm512_set1_pd`]
 /// * **Assembly:** `vbroadcastsd zmm, r/m64`
@@ -204,8 +204,8 @@ pub fn load_m512d(a: &[f64; 8]) -> m512d {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn load_m512i(a: &m512i) -> m512i {
-  m512i(unsafe { _mm512_loadu_si512(a as *const m512i as *const __m512i) })
+pub fn load_m512i(a: &[i32; 16]) -> m512i {
+  m512i(unsafe { _mm512_loadu_si512(a.as_ptr() as *const __m512i) })
 }
 
 /// Store a register into memory.
@@ -347,9 +347,9 @@ pub fn add_m512(a: m512, b: m512) -> m512 {
 /// Lanewise `a + b` with lanes as `f64`.
 /// ```
 /// # use safe_arch::*;
-/// let a = set_splat_m512(5.0);
-/// let b = set_splat_m512(10.0);
-/// let c: [f64; 8] = add_m512(a, b).into();
+/// let a = set_splat_m512d(5.0);
+/// let b = set_splat_m512d(10.0);
+/// let c: [f64; 8] = add_m512d(a, b).into();
 /// assert_eq!(c, [15.0_f64; 8]);
 /// ```
 /// * **Intrinsic:** [`_mm512_add_pd`]
@@ -551,12 +551,12 @@ pub fn div_m512(a: m512, b: m512) -> m512 {
 /// Lanewise `a / b` with lanes as `f64`.
 /// ```
 /// # use safe_arch::*;
-/// let a = set_splat_m512(50.0);
-/// let b = set_splat_m512(10.0);
+/// let a = set_splat_m512d(50.0);
+/// let b = set_splat_m512d(10.0);
 /// let c: [f64; 8] = div_m512d(a, b).into();
 /// assert_eq!(c, [5.0_f64; 8]);
 /// ```
-/// * **Intrinsic:** [`_mm512_div_ps`]
+/// * **Intrinsic:** [`_mm512_div_pd`]
 /// * **Assembly:** `vdivps zmm, zmm, zmm`
 #[must_use]
 #[inline(always)]
@@ -586,9 +586,9 @@ pub fn fmadd_m512(a: m512, b: m512, c: m512) -> m512 {
 /// Fused multiply-add. Computes `(a * b) + c` with a single rounding.
 /// ```
 /// # use safe_arch::*;
-/// let a = set_splat_m512(2.0);
-/// let b = set_splat_m512(3.0);
-/// let c = set_splat_m512(1.0);
+/// let a = set_splat_m512d(2.0);
+/// let b = set_splat_m512d(3.0);
+/// let c = set_splat_m512d(1.0);
 /// let d: [f64; 8] = fmadd_m512d(a, b, c).into();
 /// assert_eq!(d, [7.0_f64; 8]);
 /// ```
@@ -794,7 +794,7 @@ pub fn cmp_gt_i16_mask_m512i(a: m512i, b: m512i) -> mmask32 {
 /// ```
 /// # use safe_arch::*;
 /// let a = set_splat_i16_m512i(10);
-/// let b = set_spl import_i16_m512i(5);
+/// let b = set_splat_i16_m512i(5);
 /// let mask = cmp_gt_u16_mask_m512i(a, b);
 /// assert_eq!(mask, 0xFFFFFFFF);
 /// ```
@@ -999,12 +999,12 @@ pub fn bitand_m512(a: m512, b: m512) -> m512 {
 /// Bitwise `a & b` with lanes as `f64`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m512::from([1.0_f64; 8]);
-/// let b = m512::from([1.0_f64; 8]);
+/// let a = m512d::from([1.0_f64; 8]);
+/// let b = m512d::from([1.0_f64; 8]);
 /// let c: [f64; 8] = bitand_m512d(a, b).into();
 /// assert_eq!(c, [1.0_f64; 8]);
 /// ```
-/// * **Intrinsic:** [`_mm512_and_ps`]
+/// * **Intrinsic:** [`_mm512_and_pd`]
 /// * **Assembly:** `vandpd zmm, zmm, zmm`
 #[must_use]
 #[inline(always)]
@@ -1050,8 +1050,8 @@ pub fn bitandnot_m512(a: m512, b: m512) -> m512 {
 /// Bitwise `(!a) & b` with lanes as `f64`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m512::from([0.0_f64; 8]);
-/// let b = m512::from([1.0_f64; 8]);
+/// let a = m512d::from([0.0_f64; 8]);
+/// let b = m512d::from([1.0_f64; 8]);
 /// let c: [f64; 8] = bitandnot_m512d(a, b).into();
 /// // The result is not 1.0 due to floating point bit patterns
 /// ```
@@ -1135,9 +1135,9 @@ pub fn bitor_m512(a: m512, b: m512) -> m512 {
 /// Bitwise `a | b` with lanes as `f64`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m512::from([0.0_f64; 8]);
-/// let b = m512::from([1.0_f64; 8]);
-/// let c: [f64; 16] = bitor_m512d(a, b).into();
+/// let a = m512d::from([0.0_f64; 8]);
+/// let b = m512d::from([1.0_f64; 8]);
+/// let c: [f64; 8] = bitor_m512d(a, b).into();
 /// assert_eq!(c, [1.0_f64; 8]);
 /// ```
 /// * **Intrinsic:** [`_mm512_or_pd`]
@@ -1186,10 +1186,10 @@ pub fn bitxor_m512(a: m512, b: m512) -> m512 {
 /// Bitwise `a ^ b` with lanes as `f64`.
 /// ```
 /// # use safe_arch::*;
-/// let a = m512::from([1.0_f64; 8]);
-/// let b = m512::from([1.0_f64; 8]);
+/// let a = m512d::from([1.0_f64; 8]);
+/// let b = m512d::from([1.0_f64; 8]);
 /// let c: [f64; 8] = bitxor_m512d(a, b).into();
-/// assert_eq!(c, [0.f64; 8]);
+/// assert_eq!(c, [0.0_f64; 8]);
 /// ```
 /// * **Intrinsic:** [`_mm512_xor_pd`]
 /// * **Assembly:** `vxorpd zmm, zmm, zmm`
@@ -1437,7 +1437,7 @@ pub fn convert_to_i8_m256i_from_i16_m512i(a: m512i) -> m256i {
 /// # use safe_arch::*;
 /// let a = set_splat_m512d(5.5);
 /// let b: [i64; 8] = convert_m512d_i64_m512i(a).into();
-/// assert_eq!(b, [5_i64; 8]);
+/// assert_eq!(b, [6_i64; 8]);
 /// ```
 /// * **Intrinsic:** [`_mm512_cvtpd_epi64`]
 /// * **Assembly:** `vcvtpd2dq zmm, zmm`
@@ -1453,7 +1453,7 @@ pub fn convert_m512d_i64_m512i(a: m512d) -> m512i {
 /// # use safe_arch::*;
 /// let a = set_splat_m512(5.5);
 /// let b: [i32; 16] = convert_m512_i32_m512i(a).into();
-/// assert_eq!(b, [5_i32; 16]);
+/// assert_eq!(b, [6_i32; 16]);
 /// ```
 /// * **Intrinsic:** [`_mm512_cvtps_epi32`]
 /// * **Assembly:** `vcvtps2dq zmm, zmm`
@@ -1483,7 +1483,7 @@ pub fn convert_truncate_m512_i32_m512i(a: m512) -> m512i {
 /// Convert `f64` values to `i64` values with truncation.
 /// ```
 /// # use safe_arch::*;
-/// let a = set_splat_m512(5.9);
+/// let a = set_splat_m512d(5.9);
 /// let b: [i64; 8] = convert_truncate_m512d_i64_m512i(a).into();
 /// assert_eq!(b, [5_i64; 8]);
 /// ```
@@ -1504,8 +1504,16 @@ pub fn convert_truncate_m512d_i64_m512i(a: m512d) -> m512i {
 /// let a = m512i::from([1_i32; 16]);
 /// let b = m512i::from([2_i32; 16]);
 /// let c: [i16; 32] = pack_i32_to_i16_m512i(a, b).into();
-/// assert_eq!(c, [1_i16, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2,
-///                1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2]);
+/// assert_eq!(c, [
+///   1, 1, 1, 1,
+///   2, 2, 2, 2,
+///   1, 1, 1, 1,
+///   2, 2, 2, 2,
+///   1, 1, 1, 1,
+///   2, 2, 2, 2,
+///   1, 1, 1, 1,
+///   2, 2, 2, 2,
+/// ]);
 /// ```
 /// * **Intrinsic:** [`_mm512_packs_epi32`]
 /// * **Assembly:** `vpackssdw zmm, zmm, zmm`
@@ -1522,10 +1530,16 @@ pub fn pack_i32_to_i16_m512i(a: m512i, b: m512i) -> m512i {
 /// let a = m512i::from([1_i16; 32]);
 /// let b = m512i::from([2_i16; 32]);
 /// let c: [u8; 64] = pack_i16_to_u8_m512i(a, b).into();
-/// let expected = [1_u8; 16].iter().chain([2_u8; 16].iter())
-///   .chain([1_u8; 16].iter()).chain([2_u8; 16].iter())
-///   .copied().collect::<Vec<_>>();
-/// assert_eq!(&c[..], &expected[..]);
+/// assert_eq!(c, [
+///   1, 1, 1, 1, 1, 1, 1, 1,
+///   2, 2, 2, 2, 2, 2, 2, 2,
+///   1, 1, 1, 1, 1, 1, 1, 1,
+///   2, 2, 2, 2, 2, 2, 2, 2,
+///   1, 1, 1, 1, 1, 1, 1, 1,
+///   2, 2, 2, 2, 2, 2, 2, 2,
+///   1, 1, 1, 1, 1, 1, 1, 1,
+///   2, 2, 2, 2, 2, 2, 2, 2
+/// ]);
 /// ```
 /// * **Intrinsic:** [`_mm512_packus_epi16`]
 /// * **Assembly:** `vpackuswb zmm, zmm, zmm`
@@ -1995,8 +2009,8 @@ pub fn max_m512(a: m512, b: m512) -> m512 {
 /// Lanewise `max(a, b)` with lanes as `f64`.
 /// ```
 /// # use safe_arch::*;
-/// let a = set_splat_m512(1.0);
-/// let b = set_splat_m512(2.0);
+/// let a = set_splat_m512d(1.0);
+/// let b = set_splat_m512d(2.0);
 /// let c: [f64; 8] = max_m512d(a, b).into();
 /// assert_eq!(c, [2.0_f64; 8]);
 /// ```
@@ -2029,8 +2043,8 @@ pub fn min_m512(a: m512, b: m512) -> m512 {
 /// Lanewise `min(a, b)` with lanes as `f64`.
 /// ```
 /// # use safe_arch::*;
-/// let a = set_splat_m512(1.0);
-/// let b = set_splat_m512(2.0);
+/// let a = set_splat_m512d(1.0);
+/// let b = set_splat_m512d(2.0);
 /// let c: [f64; 8] = min_m512d(a, b).into();
 /// assert_eq!(c, [1.0_f64; 8]);
 /// ```
@@ -2259,7 +2273,12 @@ pub fn prefetch_et0<T>(p: &T) {
 }
 
 /// Lanewise `sqrt` on `f64` lanes.
-///
+/// ```
+/// # use safe_arch::*;
+/// let input = m512d::from([1.0_f64, 4.0, 9.0, 16.0, 25.0, 36.0, 49.0, 64.0]);
+/// let output: [f64; 8] = sqrt_m512d(input).into();
+/// assert_eq!(output, [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
+/// ```
 /// * **Intrinsic:** [`_mm512_sqrt_pd`]
 /// * **Assembly:**
 #[must_use]
@@ -2270,7 +2289,14 @@ pub fn sqrt_m512d(a: m512d) -> m512d {
 }
 
 /// Lanewise `sqrt` on `f32` lanes.
-///
+/// ```
+/// # use safe_arch::*;
+/// let input = m512::from([1.0_f32, 4.0, 9.0, 16.0, 25.0, 36.0, 49.0, 64.0,
+///                         81.0, 100.0, 121.0, 144.0, 169.0, 196.0, 225.0, 256.0]);
+/// let output: [f32; 16] = sqrt_m512(input).into();
+/// assert_eq!(output, [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0,
+///                     9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0]);
+/// ```
 /// * **Intrinsic:** [`_mm512_sqrt_ps`]
 /// * **Assembly:**
 #[must_use]
