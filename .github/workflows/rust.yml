@@ -3,6 +3,7 @@ name: Rust
 on:
   push: {}
   pull_request: {}
+  workflow_dispatch: {}
   schedule:
     #       Min Hr Day Month Weekday; so this should be 1:05am each day.
     - cron: '5  1  *   *     *'
@@ -43,3 +44,95 @@ jobs:
       run: cargo test --target ${{ matrix.rust.target }}
     - name: Run tests with all features
       run: cargo test --target ${{ matrix.rust.target }} --all-features
+
+  avx512_emulated_test:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        rust:
+          - { target: x86_64-pc-windows-msvc, toolchain: stable }
+          - { target: x86_64-pc-windows-msvc, toolchain: nightly }
+    steps:
+    - uses: actions/checkout@v3
+    
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: ${{ matrix.rust.toolchain }}
+        target: ${{ matrix.rust.target }}
+        profile: minimal
+        default: true
+    
+    # Download and install Intel SDE
+    - name: Install Intel SDE
+      shell: powershell
+      run: |
+        $sdeVersion = "9.53.0"
+        $sdeDate = "2025-06-16"
+        $sdeUrl = "https://downloadmirror.intel.com/684899/sde-external-${sdeVersion}-${sdeDate}-win.tar.xz"
+        
+        # Download SDE
+        Write-Host "Downloading Intel SDE..."
+        Invoke-WebRequest -Uri $sdeUrl -OutFile "sde.tar.xz"
+        
+        # Extract using 7zip (comes with GitHub Actions Windows runners)
+        Write-Host "Extracting Intel SDE..."
+        7z x sde.tar.xz
+        7z x sde.tar
+        
+        # Find the SDE directory and add to PATH
+        $sdeDir = Get-ChildItem -Directory -Filter "sde-external-*" | Select-Object -First 1
+        $sdePath = Join-Path (Get-Location) $sdeDir.Name
+        Write-Host "Adding $sdePath to PATH"
+        echo "$sdePath" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        
+        # Verify installation
+        & "$sdePath\sde64.exe" --version
+    
+    # Cache SDE to speedup future CI runs
+    - name: Cache Intel SDE
+      uses: actions/cache@v3
+      with:
+        path: sde-external-*
+        key: ${{ runner.os }}-sde-${$sdeDate}
+
+    # Set RUSTFLAGS to enable AVX512
+    - name: Set RUSTFLAGS for AVX512
+      run: |
+        echo "RUSTFLAGS=-C target-feature=+avx512f,+avx512dq,+avx512cd,+avx512bw,+avx512vl" >> $env:GITHUB_ENV
+        echo "RUSTDOCFLAGS=-C target-feature=+avx512f,+avx512dq,+avx512cd,+avx512bw,+avx512vl" >> $env:GITHUB_ENV
+      shell: powershell
+    
+    # Build tests with AVX512 features
+    - name: Build tests with AVX512
+      run: cargo test --target ${{ matrix.rust.target }} --all-features --no-run
+    
+    # Run tests under SDE emulation
+    - name: Run tests under Intel SDE (Sapphire Rapids)
+      shell: powershell
+      run: |
+        # Get all test executables
+        $testExes = Get-ChildItem -Path "target\${{ matrix.rust.target }}\debug\deps" -Filter "*.exe" | 
+                    Where-Object { $_.Name -match "^[^-]+-[a-f0-9]+\.exe$" }
+        
+        $failed = $false
+        foreach ($exe in $testExes) {
+          Write-Host "Running test: $($exe.Name)"
+          & sde64 -spr -- $exe.FullName
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "Test failed: $($exe.Name)"
+            $failed = $true
+          }
+        }
+        
+        if ($failed) {
+          exit 1
+        }
+    
+    # Also run doc tests under SDE
+    - name: Run doc tests under Intel SDE
+      shell: powershell
+      run: |
+        # This is trickier as cargo doesn't directly support running doc tests through a wrapper
+        # We'll need to use CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_RUNNER
+        $env:CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_RUNNER = "sde64 -spr --"
+        cargo test --target ${{ matrix.rust.target }} --doc
