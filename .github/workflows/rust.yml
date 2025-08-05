@@ -83,10 +83,12 @@ jobs:
       if: steps.cache-sde.outputs.cache-hit != 'true'
       shell: powershell
       run: |
-        $sdeVersion = "${{ env.SDE_VERSION }}"
-        $sdeDate = "${{ env.SDE_DATE }}"
-        $sdeID = "${{ env.SDE_ID }}"
-        $sdeFilename = "${{ env.SDE_FILENAME }}"
+        $sdeVersion = $env:SDE_VERSION
+        $sdeDate = $env:SDE_DATE
+        $sdeID = $env:SDE_ID
+        $sdeFilename = $env:SDE_FILENAME
+
+        Write-Host "Resolved SDE filename: $sdeFilename"
 
         # Direct download URL pattern discovered from the Python script
         # These URLs work without cookie/license acceptance as of 2020
