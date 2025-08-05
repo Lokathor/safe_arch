@@ -21,13 +21,13 @@ jobs:
         # - { target: i586-pc-windows-msvc, toolchain: beta }
         # - { target: i586-pc-windows-msvc, toolchain: nightly }
         # x86
-        - { target: i686-pc-windows-msvc, toolchain: 1.59.0 }
-        - { target: i686-pc-windows-msvc, toolchain: stable }
+        # - { target: i686-pc-windows-msvc, toolchain: 1.59.0 }
+        # - { target: i686-pc-windows-msvc, toolchain: stable }
         - { target: i686-pc-windows-msvc, toolchain: beta }
         - { target: i686-pc-windows-msvc, toolchain: nightly }
         # x86_64
-        - { target: x86_64-pc-windows-msvc, toolchain: 1.59.0 }
-        - { target: x86_64-pc-windows-msvc, toolchain: stable }
+        # - { target: x86_64-pc-windows-msvc, toolchain: 1.59.0 }
+        # - { target: x86_64-pc-windows-msvc, toolchain: stable }
         - { target: x86_64-pc-windows-msvc, toolchain: beta }
         - { target: x86_64-pc-windows-msvc, toolchain: nightly }
     steps:
@@ -54,6 +54,7 @@ jobs:
           # To be enabled after 1.89 is stable
           # - { target: x86_64-pc-windows-msvc, toolchain: 1.89.0 }
           # - { target: x86_64-pc-windows-msvc, toolchain: stable }
+          - { target: x86_64-pc-windows-msvc, toolchain: beta }
           - { target: x86_64-pc-windows-msvc, toolchain: nightly }
     steps:
     - uses: actions/checkout@v3

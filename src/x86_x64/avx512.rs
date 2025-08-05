@@ -841,6 +841,57 @@ pub fn cmp_gt_mask_m512(a: m512, b: m512) -> mmask16 {
   unsafe { _mm512_cmp_ps_mask(a.0, b.0, _CMP_GT_OQ) }
 }
 
+/// Compare `i8` lanes for `a == b`, mask output.
+/// ```
+/// # use safe_arch::*;
+/// let a = set_splat_i8_m512i(10);
+/// let b = set_splat_i8_m512i(10);
+/// let mask = cmp_eq_mask_i8_m512i(a, b);
+/// assert_eq!(mask, 0xFFFFFFFFFFFFFFFF);
+/// ```
+/// * **Intrinsic:** [`_mm512_cmp_epi8_mask`]
+/// * **Assembly:** `vpcmpb k, zmm, zmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn cmp_eq_mask_i8_m512i(a: m512i, b: m512i) -> mmask64 {
+  unsafe { _mm512_cmp_epi8_mask(a.0, b.0, _MM_CMPINT_EQ) }
+}
+
+/// Compare `f32` lanes for `a == b`, mask output.
+/// ```
+/// # use safe_arch::*;
+/// let a = set_splat_m512(10.0);
+/// let b = set_splat_m512(10.0);
+/// let mask = cmp_eq_mask_f32_m512(a, b);
+/// assert_eq!(mask, 0xFFFF);
+/// ```
+/// * **Intrinsic:** [`_mm512_cmp_ps_mask`]
+/// * **Assembly:** `vcmpps k, zmm, zmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn cmp_eq_mask_f32_m512(a: m512, b: m512) -> mmask16 {
+  unsafe { _mm512_cmp_ps_mask(a.0, b.0, _CMP_EQ_OQ) }
+}
+
+/// Compare `f64` lanes for `a == b`, mask output.
+/// ```
+/// # use safe_arch::*;
+/// let a = set_splat_m512d(10.0);
+/// let b = set_splat_m512d(10.0);
+/// let mask = cmp_eq_mask_f64_m512d(a, b);
+/// assert_eq!(mask, 0xFF);
+/// ```
+/// * **Intrinsic:** [`_mm512_cmp_pd_mask`]
+/// * **Assembly:** `vcmppd k, zmm, zmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn cmp_eq_mask_f64_m512d(a: m512d, b: m512d) -> mmask8 {
+  unsafe { _mm512_cmp_pd_mask(a.0, b.0, _CMP_EQ_OQ) }
+}
+
 /// Compare `f64` lanes for `a > b`, mask output.
 /// ```
 /// # use safe_arch::*;
@@ -2304,4 +2355,416 @@ pub fn sqrt_m512d(a: m512d) -> m512d {
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
 pub fn sqrt_m512(a: m512) -> m512 {
   m512(unsafe { _mm512_sqrt_ps(a.0) })
+}
+
+/// Cast from `m512i` to `m512` (reinterpret bits).
+/// ```
+/// # use safe_arch::*;
+/// let a = set_splat_i32_m512i(0x3F800000_i32); // 1.0f32 in bits
+/// let b = cast_to_m512_from_m512i(a);
+/// let arr: [f32; 16] = b.into();
+/// assert_eq!(arr[0], 1.0_f32);
+/// ```
+/// * **Intrinsic:** [`_mm512_castsi512_ps`]
+/// * **Assembly:** (no-op, just reinterpretation)
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn cast_to_m512_from_m512i(a: m512i) -> m512 {
+  unsafe { m512(_mm512_castsi512_ps(a.0)) }
+}
+
+/// Cast from `m512i` to `m512d` (reinterpret bits).
+/// ```
+/// # use safe_arch::*;
+/// let a = set_splat_i64_m512i(0x3FF0000000000000_i64); // 1.0f64 in bits
+/// let b = cast_to_m512d_from_m512i(a);
+/// let arr: [f64; 8] = b.into();
+/// assert_eq!(arr[0], 1.0_f64);
+/// ```
+/// * **Intrinsic:** [`_mm512_castsi512_pd`]
+/// * **Assembly:** (no-op, just reinterpretation)
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn cast_to_m512d_from_m512i(a: m512i) -> m512d {
+  unsafe { m512d(_mm512_castsi512_pd(a.0)) }
+}
+
+/// Cast from `m512` to `m512i` (reinterpret bits).
+/// ```
+/// # use safe_arch::*;
+/// let a = set_splat_m512(1.0_f32);
+/// let b = cast_to_m512i_from_m512(a);
+/// let arr: [i32; 16] = b.into();
+/// assert_eq!(arr[0], 0x3F800000_i32);
+/// ```
+/// * **Intrinsic:** [`_mm512_castps_si512`]
+/// * **Assembly:** (no-op, just reinterpretation)
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn cast_to_m512i_from_m512(a: m512) -> m512i {
+  unsafe { m512i(_mm512_castps_si512(a.0)) }
+}
+
+/// Cast from `m512d` to `m512i` (reinterpret bits).
+/// ```
+/// # use safe_arch::*;
+/// let a = set_splat_m512d(1.0_f64);
+/// let b = cast_to_m512i_from_m512d(a);
+/// let arr: [i64; 8] = b.into();
+/// assert_eq!(arr[0], 0x3FF0000000000000_i64);
+/// ```
+/// * **Intrinsic:** [`_mm512_castpd_si512`]
+/// * **Assembly:** (no-op, just reinterpretation)
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn cast_to_m512i_from_m512d(a: m512d) -> m512i {
+  unsafe { m512i(_mm512_castpd_si512(a.0)) }
+}
+
+/// Cast from `m512` to `m512d` (reinterpret bits).
+/// Note: This does NOT convert float values to double values!
+/// ```
+/// # use safe_arch::*;
+/// let a = set_splat_m512(1.0_f32);
+/// let b = cast_to_m512d_from_m512(a);
+/// // b now contains garbage values, not 1.0_f64!
+/// ```
+/// * **Intrinsic:** [`_mm512_castps_pd`]
+/// * **Assembly:** (no-op, just reinterpretation)
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn cast_to_m512d_from_m512(a: m512) -> m512d {
+  unsafe { m512d(_mm512_castps_pd(a.0)) }
+}
+
+/// Cast from `m512d` to `m512` (reinterpret bits).
+/// Note: This does NOT convert double values to float values!
+/// ```
+/// # use safe_arch::*;
+/// let a = set_splat_m512d(1.0_f64);
+/// let b = cast_to_m512_from_m512d(a);
+/// // b now contains garbage values, not 1.0_f32!
+/// ```
+/// * **Intrinsic:** [`_mm512_castpd_ps`]
+/// * **Assembly:** (no-op, just reinterpretation)
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn cast_to_m512_from_m512d(a: m512d) -> m512 {
+  unsafe { m512(_mm512_castpd_ps(a.0)) }
+}
+
+// m512i implementations
+impl Not for m512i {
+  type Output = Self;
+  /// Not a direct intrinsic, but it's very useful and the implementation is
+  /// simple enough.
+  ///
+  /// Negates the bits by performing an `xor` with an all-1s bit pattern.
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m512i::from([0_u128, 0, 0, 0]);
+  /// let c: [u128; 4] = (!a).into();
+  /// assert_eq!(c, [u128::MAX, u128::MAX, u128::MAX, u128::MAX]);
+  /// ```
+  #[must_use]
+  #[inline(always)]
+  fn not(self) -> Self {
+    let all_bits = set_splat_i16_m512i(-1);
+    self ^ all_bits
+  }
+}
+
+impl BitAnd for m512i {
+  type Output = Self;
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m512i::from([0_i64, 0, 1, 1, 0, 0, 1, 1]);
+  /// let b = m512i::from([0_i64, 1, 0, 1, 0, 1, 0, 1]);
+  /// let c: [i64; 8] = (a & b).into();
+  /// assert_eq!(c, [0_i64, 0, 0, 1, 0, 0, 0, 1]);
+  /// ```
+  #[must_use]
+  #[inline(always)]
+  fn bitand(self, rhs: Self) -> Self {
+    bitand_m512i(self, rhs)
+  }
+}
+impl BitAndAssign for m512i {
+  #[inline(always)]
+  fn bitand_assign(&mut self, rhs: Self) {
+    *self = *self & rhs;
+  }
+}
+
+impl BitOr for m512i {
+  type Output = Self;
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m512i::from([0_i64, 0, 1, 1, 0, 0, 1, 1]);
+  /// let b = m512i::from([0_i64, 1, 0, 1, 0, 1, 0, 1]);
+  /// let c: [i64; 8] = (a | b).into();
+  /// assert_eq!(c, [0_i64, 1, 1, 1, 0, 1, 1, 1]);
+  /// ```
+  #[must_use]
+  #[inline(always)]
+  fn bitor(self, rhs: Self) -> Self {
+    bitor_m512i(self, rhs)
+  }
+}
+impl BitOrAssign for m512i {
+  #[inline(always)]
+  fn bitor_assign(&mut self, rhs: Self) {
+    *self = *self | rhs;
+  }
+}
+
+impl BitXor for m512i {
+  type Output = Self;
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m512i::from([0_i64, 0, 1, 1, 0, 0, 1, 1]);
+  /// let b = m512i::from([0_i64, 1, 0, 1, 0, 1, 0, 1]);
+  /// let c: [i64; 8] = (a ^ b).into();
+  /// assert_eq!(c, [0_i64, 1, 1, 0, 0, 1, 1, 0]);
+  /// ```
+  #[must_use]
+  #[inline(always)]
+  fn bitxor(self, rhs: Self) -> Self {
+    bitxor_m512i(self, rhs)
+  }
+}
+impl BitXorAssign for m512i {
+  #[inline(always)]
+  fn bitxor_assign(&mut self, rhs: Self) {
+    *self = *self ^ rhs;
+  }
+}
+
+impl PartialEq for m512i {
+  #[must_use]
+  #[inline(always)]
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m512i::from([0_i64, 0, 1, 1, 0, 0, 1, 1]);
+  /// let b = m512i::from([0_i64, 1, 0, 1, 0, 1, 0, 1]);
+  /// assert_eq!(a, a);
+  /// assert_ne!(a, b);
+  /// ```
+  fn eq(&self, other: &Self) -> bool {
+    let mask = cmp_eq_mask_i8_m512i(*self, *other);
+    mask == 0xFFFFFFFFFFFFFFFF_u64
+  }
+}
+impl Eq for m512i {}
+
+// m512 (f32) implementations
+impl Not for m512 {
+  type Output = Self;
+  /// Bitwise NOT operation on `m512`.
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m512::from([0.0_f32; 16]);
+  /// let c = !a;
+  /// // Note: This is a bitwise NOT, not a logical NOT
+  /// ```
+  #[must_use]
+  #[inline(always)]
+  fn not(self) -> Self {
+    let all_bits = cast_to_m512_from_m512i(set_splat_i32_m512i(-1));
+    self ^ all_bits
+  }
+}
+
+impl BitAnd for m512 {
+  type Output = Self;
+  /// Bitwise AND operation on `m512`.
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m512::from_bits([0xFFFFFFFF_u32; 16]);
+  /// let b = m512::from_bits([0x00000000_u32; 16]);
+  /// let c = a & b;
+  /// assert_eq!(c.to_bits(), [0x00000000_u32; 16]);
+  /// ```
+  #[must_use]
+  #[inline(always)]
+  fn bitand(self, rhs: Self) -> Self {
+    bitand_m512(self, rhs)
+  }
+}
+impl BitAndAssign for m512 {
+  #[inline(always)]
+  fn bitand_assign(&mut self, rhs: Self) {
+    *self = *self & rhs;
+  }
+}
+
+impl BitOr for m512 {
+  type Output = Self;
+  /// Bitwise OR operation on `m512`.
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m512::from_bits([0xFFFFFFFF_u32; 16]);
+  /// let b = m512::from_bits([0x00000000_u32; 16]);
+  /// let c = a | b;
+  /// assert_eq!(c.to_bits(), [0xFFFFFFFF_u32; 16]);
+  /// ```
+  #[must_use]
+  #[inline(always)]
+  fn bitor(self, rhs: Self) -> Self {
+    bitor_m512(self, rhs)
+  }
+}
+impl BitOrAssign for m512 {
+  #[inline(always)]
+  fn bitor_assign(&mut self, rhs: Self) {
+    *self = *self | rhs;
+  }
+}
+
+impl BitXor for m512 {
+  type Output = Self;
+  /// Bitwise XOR operation on `m512`.
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m512::from_bits([0xFFFFFFFF_u32; 16]);
+  /// let b = m512::from_bits([0xFFFFFFFF_u32; 16]);
+  /// let c = a ^ b;
+  /// assert_eq!(c.to_bits(), [0x00000000_u32; 16]);
+  /// ```
+  #[must_use]
+  #[inline(always)]
+  fn bitxor(self, rhs: Self) -> Self {
+    bitxor_m512(self, rhs)
+  }
+}
+impl BitXorAssign for m512 {
+  #[inline(always)]
+  fn bitxor_assign(&mut self, rhs: Self) {
+    *self = *self ^ rhs;
+  }
+}
+
+impl PartialEq for m512 {
+  #[must_use]
+  #[inline(always)]
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m512::from([1.0_f32; 16]);
+  /// let b = m512::from([2.0_f32; 16]);
+  /// assert_eq!(a, a);
+  /// assert_ne!(a, b);
+  /// ```
+  fn eq(&self, other: &Self) -> bool {
+    let mask = cmp_eq_mask_f32_m512(*self, *other);
+    mask == 0xFFFF
+  }
+}
+
+// m512d (f64) implementations
+impl Not for m512d {
+  type Output = Self;
+  /// Bitwise NOT operation on `m512d`.
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m512d::from([0.0_f64; 8]);
+  /// let c = !a;
+  /// // Note: This is a bitwise NOT, not a logical NOT
+  /// ```
+  #[must_use]
+  #[inline(always)]
+  fn not(self) -> Self {
+    let all_bits = cast_to_m512d_from_m512i(set_splat_i64_m512i(-1));
+    self ^ all_bits
+  }
+}
+
+impl BitAnd for m512d {
+  type Output = Self;
+  /// Bitwise AND operation on `m512d`.
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m512d::from_bits([0xFFFFFFFFFFFFFFFF_u64; 8]);
+  /// let b = m512d::from_bits([0x0000000000000000_u64; 8]);
+  /// let c = a & b;
+  /// assert_eq!(c.to_bits(), [0x0000000000000000_u64; 8]);
+  /// ```
+  #[must_use]
+  #[inline(always)]
+  fn bitand(self, rhs: Self) -> Self {
+    bitand_m512d(self, rhs)
+  }
+}
+impl BitAndAssign for m512d {
+  #[inline(always)]
+  fn bitand_assign(&mut self, rhs: Self) {
+    *self = *self & rhs;
+  }
+}
+
+impl BitOr for m512d {
+  type Output = Self;
+  /// Bitwise OR operation on `m512d`.
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m512d::from_bits([0xFFFFFFFFFFFFFFFF_u64; 8]);
+  /// let b = m512d::from_bits([0x0000000000000000_u64; 8]);
+  /// let c = a | b;
+  /// assert_eq!(c.to_bits(), [0xFFFFFFFFFFFFFFFF_u64; 8]);
+  /// ```
+  #[must_use]
+  #[inline(always)]
+  fn bitor(self, rhs: Self) -> Self {
+    bitor_m512d(self, rhs)
+  }
+}
+impl BitOrAssign for m512d {
+  #[inline(always)]
+  fn bitor_assign(&mut self, rhs: Self) {
+    *self = *self | rhs;
+  }
+}
+
+impl BitXor for m512d {
+  type Output = Self;
+  /// Bitwise XOR operation on `m512d`.
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m512d::from_bits([0xFFFFFFFFFFFFFFFF_u64; 8]);
+  /// let b = m512d::from_bits([0xFFFFFFFFFFFFFFFF_u64; 8]);
+  /// let c = a ^ b;
+  /// assert_eq!(c.to_bits(), [0x0000000000000000_u64; 8]);
+  /// ```
+  #[must_use]
+  #[inline(always)]
+  fn bitxor(self, rhs: Self) -> Self {
+    bitxor_m512d(self, rhs)
+  }
+}
+impl BitXorAssign for m512d {
+  #[inline(always)]
+  fn bitxor_assign(&mut self, rhs: Self) {
+    *self = *self ^ rhs;
+  }
+}
+
+impl PartialEq for m512d {
+  #[must_use]
+  #[inline(always)]
+  /// ```
+  /// # use safe_arch::*;
+  /// let a = m512d::from([1.0_f64; 8]);
+  /// let b = m512d::from([2.0_f64; 8]);
+  /// assert_eq!(a, a);
+  /// assert_ne!(a, b);
+  /// ```
+  fn eq(&self, other: &Self) -> bool {
+    let mask = cmp_eq_mask_f64_m512d(*self, *other);
+    mask == 0xFF
+  }
 }
