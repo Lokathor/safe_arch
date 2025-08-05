@@ -45,23 +45,23 @@ jobs:
     - name: Run tests with all features
       run: cargo test --target ${{ matrix.rust.target }} --all-features
 
-      avx512_emulated_test:
-        runs-on: windows-latest
-        strategy:
-          matrix:
-            rust:
-              # - { target: x86_64-pc-windows-msvc, toolchain: 1.89.0 }
-              # - { target: x86_64-pc-windows-msvc, toolchain: stable }
-              - { target: x86_64-pc-windows-msvc, toolchain: nightly }
-        steps:
-        - uses: actions/checkout@v3
-        
-        - uses: actions-rs/toolchain@v1
-          with:
-            toolchain: ${{ matrix.rust.toolchain }}
-            target: ${{ matrix.rust.target }}
-            profile: minimal
-            default: true
+  avx512_emulated_test:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        rust:
+          # - { target: x86_64-pc-windows-msvc, toolchain: 1.89.0 }
+          # - { target: x86_64-pc-windows-msvc, toolchain: stable }
+          - { target: x86_64-pc-windows-msvc, toolchain: nightly }
+    steps:
+    - uses: actions/checkout@v3
+    
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: ${{ matrix.rust.toolchain }}
+        target: ${{ matrix.rust.target }}
+        profile: minimal
+        default: true
         
     - name: Cache Intel SDE
       id: cache-sde
