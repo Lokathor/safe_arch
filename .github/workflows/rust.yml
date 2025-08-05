@@ -68,7 +68,8 @@ jobs:
       run: |
         $sdeVersion = "9.53.0"
         $sdeDate = "2025-06-16"
-        $sdeUrl = "https://downloadmirror.intel.com/684899/sde-external-${sdeVersion}-${sdeDate}-win.tar.xz"
+        $sdeID = "684897"
+        $sdeUrl = "https://downloadmirror.intel.com/${sdeID}/sde-external-${sdeVersion}-${sdeDate}-win.tar.xz"
         
         $sdeFilename = "sde-external-${sdeVersion}-${sdeDate}-win.tar.xz"
         
