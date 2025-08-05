@@ -66,9 +66,9 @@ jobs:
     - name: Install Intel SDE
       shell: powershell
       run: |
-        $sdeVersion = "9.53.0"
+        $sdeVersion = "9.58.0"
         $sdeDate = "2025-06-16"
-        $sdeID = "684897"        
+        $sdeID = "859732"        
         $sdeFilename = "sde-external-${sdeVersion}-${sdeDate}-win.tar.xz"
         
         # Direct download URL pattern discovered from the Python script
