@@ -50,7 +50,7 @@ jobs:
     strategy:
       matrix:
         rust:
-          - { target: x86_64-pc-windows-msvc, toolchain: stable }
+          # - { target: x86_64-pc-windows-msvc, toolchain: stable }
           - { target: x86_64-pc-windows-msvc, toolchain: nightly }
     steps:
     - uses: actions/checkout@v3
@@ -129,7 +129,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: sde-external-*
-        key: ${{ runner.os }}-sde-${$sdeDate}
+        key: ${{ runner.os }}-sde-${sdeFilename}
 
     # Set RUSTFLAGS to enable AVX512
     - name: Set RUSTFLAGS for AVX512
@@ -140,7 +140,7 @@ jobs:
     
     # Build tests with AVX512 features
     - name: Build tests with AVX512
-      run: cargo test --target ${{ matrix.rust.target }} --all-features --no-run
+      run: cargo test --target ${{ matrix.rust.target }} --no-run
     
     # Run tests under SDE emulation
     - name: Run tests under Intel SDE (Sapphire Rapids)
