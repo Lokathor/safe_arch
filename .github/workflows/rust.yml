@@ -118,7 +118,7 @@ jobs:
         echo "$sdePath" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
         
         # Verify installation
-        & "$sdePath\sde64.exe" --version
+        & "$sdePath\sde.exe" --version
         if ($LASTEXITCODE -ne 0) {
           Write-Error "Failed to verify SDE installation"
           exit 1
