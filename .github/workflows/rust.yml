@@ -68,15 +68,13 @@ jobs:
       run: |
         $sdeVersion = "9.53.0"
         $sdeDate = "2025-06-16"
-        $sdeID = "684897"
-        $sdeUrl = "https://downloadmirror.intel.com/${sdeID}/sde-external-${sdeVersion}-${sdeDate}-win.tar.xz"
-        
+        $sdeID = "684897"        
         $sdeFilename = "sde-external-${sdeVersion}-${sdeDate}-win.tar.xz"
         
         # Direct download URL pattern discovered from the Python script
         # These URLs work without cookie/license acceptance as of 2020
         $downloadUrls = @(
-          "https://downloadmirror.intel.com/813591/${sdeFilename}",
+          "https://downloadmirror.intel.com/${sdeID}/${sdeFilename}",
           "https://software.intel.com/content/dam/develop/external/us/en/protected/${sdeFilename}"
         )
         
