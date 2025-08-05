@@ -209,6 +209,10 @@ submodule!(pub x86_x64 {
   submodule!(pub m256d_);
   submodule!(pub m256i_);
 
+  submodule!(pub m512_);
+  submodule!(pub m512d_);
+  submodule!(pub m512i_);
+
   // Note(Lokathor): We only include these sub-modules with the actual functions
   // if the feature is enabled. Ae *also* have a cfg attribute on the inside of
   // the modules as a "double-verification" of sorts. Technically either way on
@@ -232,6 +236,8 @@ submodule!(pub x86_x64 {
   submodule!(pub avx);
   #[cfg(target_feature = "avx2")]
   submodule!(pub avx2);
+  #[cfg(target_feature = "avx512f")]
+  submodule!(pub avx512);
 
   // These features aren't as easy to remember the progression of and they each
   // only add a small handful of functions.

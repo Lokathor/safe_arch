@@ -10,6 +10,9 @@ mod adx_tests;
 #[cfg(target_feature = "avx")]
 mod avx_tests;
 
+#[cfg(target_feature = "avx512f")]
+mod avx512_tests;
+
 #[cfg(target_feature = "bmi1")]
 mod bmi1_tests;
 
