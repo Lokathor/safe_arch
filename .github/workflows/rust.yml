@@ -70,23 +70,60 @@ jobs:
         $sdeDate = "2025-06-16"
         $sdeUrl = "https://downloadmirror.intel.com/684899/sde-external-${sdeVersion}-${sdeDate}-win.tar.xz"
         
-        # Download SDE
-        Write-Host "Downloading Intel SDE..."
-        Invoke-WebRequest -Uri $sdeUrl -OutFile "sde.tar.xz"
+        $sdeFilename = "sde-external-${sdeVersion}-${sdeDate}-win.tar.xz"
         
-        # Extract using 7zip (comes with GitHub Actions Windows runners)
+        # Direct download URL pattern discovered from the Python script
+        # These URLs work without cookie/license acceptance as of 2020
+        $downloadUrls = @(
+          "https://downloadmirror.intel.com/813591/${sdeFilename}",
+          "https://software.intel.com/content/dam/develop/external/us/en/protected/${sdeFilename}"
+        )
+        
+        $downloaded = $false
+        foreach ($url in $downloadUrls) {
+          try {
+            Write-Host "Attempting to download Intel SDE from: $url"
+            $ProgressPreference = 'SilentlyContinue'  # Speed up download
+            Invoke-WebRequest -Uri $url -OutFile $sdeFilename -ErrorAction Stop
+            $downloaded = $true
+            Write-Host "Successfully downloaded Intel SDE"
+            break
+          }
+          catch {
+            Write-Warning "Failed to download from ${url}: $_"
+          }
+        }
+        
+        if (-not $downloaded) {
+          Write-Error "Failed to download Intel SDE from any source"
+          exit 1
+        }
+        
+        # Extract Intel SDE
         Write-Host "Extracting Intel SDE..."
-        7z x sde.tar.xz
-        7z x sde.tar
+        7z x $sdeFilename -y
+        $tarFile = $sdeFilename -replace '\.xz$', ''
+        7z x $tarFile -y
         
-        # Find the SDE directory and add to PATH
+        # Find the SDE directory
         $sdeDir = Get-ChildItem -Directory -Filter "sde-external-*" | Select-Object -First 1
-        $sdePath = Join-Path (Get-Location) $sdeDir.Name
-        Write-Host "Adding $sdePath to PATH"
+        if (-not $sdeDir) {
+          Write-Error "Could not find extracted SDE directory"
+          exit 1
+        }
+        
+        $sdePath = $sdeDir.FullName
+        Write-Host "Intel SDE extracted to: $sdePath"
+        
+        # Add to PATH
         echo "$sdePath" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
         
         # Verify installation
         & "$sdePath\sde64.exe" --version
+        if ($LASTEXITCODE -ne 0) {
+          Write-Error "Failed to verify SDE installation"
+          exit 1
+        }
     
     # Cache SDE to speedup future CI runs
     - name: Cache Intel SDE
