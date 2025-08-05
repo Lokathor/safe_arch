@@ -153,7 +153,7 @@ jobs:
         $failed = $false
         foreach ($exe in $testExes) {
           Write-Host "Running test: $($exe.Name)"
-          & sde64 -spr -- $exe.FullName
+          & sde -spr -- $exe.FullName
           if ($LASTEXITCODE -ne 0) {
             Write-Host "Test failed: $($exe.Name)"
             $failed = $true
@@ -170,5 +170,5 @@ jobs:
       run: |
         # This is trickier as cargo doesn't directly support running doc tests through a wrapper
         # We'll need to use CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_RUNNER
-        $env:CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_RUNNER = "sde64 -spr --"
+        $env:CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_RUNNER = "sde -spr --"
         cargo test --target ${{ matrix.rust.target }} --doc
