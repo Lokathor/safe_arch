@@ -50,6 +50,7 @@ jobs:
     strategy:
       matrix:
         rust:
+          # - { target: x86_64-pc-windows-msvc, toolchain: 1.89.0 }
           # - { target: x86_64-pc-windows-msvc, toolchain: stable }
           - { target: x86_64-pc-windows-msvc, toolchain: nightly }
     steps:
@@ -62,74 +63,65 @@ jobs:
         profile: minimal
         default: true
     
-    # Download and install Intel SDE
+    - name: Cache Intel SDE
+      uses: actions/cache@v3
+      id: cache-sde
+      with:
+        path: sde-external-*
+        key: ${{ runner.os }}-sde-${{ env.SDE_VERSION }}
+
+    - name: Set up environment variables
+      run: |
+        echo "SDE_VERSION=9.58.0" >> $env:GITHUB_ENV
+        echo "SDE_DATE=2025-06-16" >> $env:GITHUB_ENV
+        echo "SDE_ID=859732" >> $env:GITHUB_ENV
+        echo "SDE_FILENAME=sde-external-9.58.0-2025-06-16-win.tar.xz" >> $env:GITHUB_ENV
+      shell: bash
+
+    # Only install if cache didn't hit
     - name: Install Intel SDE
+      if: steps.cache-sde.outputs.cache-hit != 'true'
       shell: powershell
       run: |
-        $sdeVersion = "9.58.0"
-        $sdeDate = "2025-06-16"
-        $sdeID = "859732"        
-        $sdeFilename = "sde-external-${sdeVersion}-${sdeDate}-win.tar.xz"
-        
-        # Direct download URL pattern discovered from the Python script
-        # These URLs work without cookie/license acceptance as of 2020
+        $sdeVersion = "${{ env.SDE_VERSION }}"
+        $sdeDate = "${{ env.SDE_DATE }}"
+        $sdeID = "${{ env.SDE_ID }}"
+        $sdeFilename = "${{ env.SDE_FILENAME }}"
+
         $downloadUrls = @(
           "https://downloadmirror.intel.com/${sdeID}/${sdeFilename}",
           "https://software.intel.com/content/dam/develop/external/us/en/protected/${sdeFilename}"
         )
-        
+
         $downloaded = $false
         foreach ($url in $downloadUrls) {
           try {
             Write-Host "Attempting to download Intel SDE from: $url"
-            $ProgressPreference = 'SilentlyContinue'  # Speed up download
+            $ProgressPreference = 'SilentlyContinue'
             Invoke-WebRequest -Uri $url -OutFile $sdeFilename -ErrorAction Stop
             $downloaded = $true
-            Write-Host "Successfully downloaded Intel SDE"
             break
           }
           catch {
             Write-Warning "Failed to download from ${url}: $_"
           }
         }
-        
+
         if (-not $downloaded) {
-          Write-Error "Failed to download Intel SDE from any source"
+          Write-Error "Download failed from all URLs"
           exit 1
         }
-        
-        # Extract Intel SDE
-        Write-Host "Extracting Intel SDE..."
+
+        # Extract
         7z x $sdeFilename -y
         $tarFile = $sdeFilename -replace '\.xz$', ''
         7z x $tarFile -y
-        
-        # Find the SDE directory
+
+        # Set path
         $sdeDir = Get-ChildItem -Directory -Filter "sde-external-*" | Select-Object -First 1
-        if (-not $sdeDir) {
-          Write-Error "Could not find extracted SDE directory"
-          exit 1
-        }
-        
-        $sdePath = $sdeDir.FullName
-        Write-Host "Intel SDE extracted to: $sdePath"
-        
-        # Add to PATH
-        echo "$sdePath" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-        
-        # Verify installation
-        & "$sdePath\sde.exe" --version
-        if ($LASTEXITCODE -ne 0) {
-          Write-Error "Failed to verify SDE installation"
-          exit 1
-        }
-    
-    # Cache SDE to speedup future CI runs
-    - name: Cache Intel SDE
-      uses: actions/cache@v3
-      with:
-        path: sde-external-*
-        key: ${{ runner.os }}-sde-${sdeFilename}
+        echo "$($sdeDir.FullName)" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+        & "$($sdeDir.FullName)\sde.exe" --version
 
     # Set RUSTFLAGS to enable AVX512
     - name: Set RUSTFLAGS for AVX512
