@@ -2380,6 +2380,198 @@ pub fn reduce_add_m512d(a: m512d) -> f64 {
 
 // Max/min operations
 
+/// Lanewise maximum for signed `i8` lanes.
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i8_m512i(1);
+/// let b = set_splat_i8_m512i(5);
+/// let c: [i8; 64] = max_i8_m512i(a, b).into();
+/// assert_eq!(c, [5_i8; 64]);
+/// ```
+/// * **Intrinsic:** [`_mm512_max_epi8`]
+/// * **Assembly:** `vpmaxsb zmm, zmm, zmm`
+#[must_use] #[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn max_i8_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_max_epi8(a.0, b.0) })
+}
+
+/// Lanewise maximum for unsigned `u8` lanes.
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i8_m512i(1);
+/// let b = set_splat_i8_m512i(5);
+/// let c: [u8; 64] = max_u8_m512i(a, b).into();
+/// assert_eq!(c, [5_u8; 64]);
+/// ```
+/// * **Intrinsic:** [`_mm512_max_epu8`]
+/// * **Assembly:** `vpmaxub zmm, zmm, zmm`
+#[must_use] #[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn max_u8_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_max_epu8(a.0, b.0) })
+}
+
+/// Lanewise maximum for signed `i16` lanes.
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i16_m512i(1);
+/// let b = set_splat_i16_m512i(5);
+/// let c: [i16; 32] = max_i16_m512i(a, b).into();
+/// assert_eq!(c, [5_i16; 32]);
+/// ```
+/// * **Intrinsic:** [`_mm512_max_epi16`]
+/// * **Assembly:** `vpmaxsw zmm, zmm, zmm`
+#[must_use] #[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn max_i16_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_max_epi16(a.0, b.0) })
+}
+
+/// Lanewise maximum for unsigned `u16` lanes.
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i16_m512i(1);
+/// let b = set_splat_i16_m512i(5);
+/// let c: [u16; 32] = max_u16_m512i(a, b).into();
+/// assert_eq!(c, [5_u16; 32]);
+/// ```
+/// * **Intrinsic:** [`_mm512_max_epu16`]
+/// * **Assembly:** `vpmaxuw zmm, zmm, zmm`
+#[must_use] #[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn max_u16_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_max_epu16(a.0, b.0) })
+}
+
+/// Lanewise maximum for signed `i32` lanes.
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i32_m512i(1);
+/// let b = set_splat_i32_m512i(5);
+/// let c: [i32; 16] = max_i32_m512i(a, b).into();
+/// assert_eq!(c, [5_i32; 16]);
+/// ```
+/// * **Intrinsic:** [`_mm512_max_epi32`]
+/// * **Assembly:** `vpmaxsd zmm, zmm, zmm`
+#[must_use] #[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn max_i32_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_max_epi32(a.0, b.0) })
+}
+
+/// Lanewise maximum for unsigned `u32` lanes.
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i32_m512i(1);
+/// let b = set_splat_i32_m512i(5);
+/// let c: [u32; 16] = max_u32_m512i(a, b).into();
+/// assert_eq!(c, [5_u32; 16]);
+/// ```
+/// * **Intrinsic:** [`_mm512_max_epu32`]
+/// * **Assembly:** `vpmaxud zmm, zmm, zmm`
+#[must_use] #[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn max_u32_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_max_epu32(a.0, b.0) })
+}
+
+/// Lanewise minimum for signed `i8` lanes.
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i8_m512i(1);
+/// let b = set_splat_i8_m512i(5);
+/// let c: [i8; 64] = min_i8_m512i(a, b).into();
+/// assert_eq!(c, [1_i8; 64]);
+/// ```
+/// * **Intrinsic:** [`_mm512_min_epi8`]
+/// * **Assembly:** `vpminsb zmm, zmm, zmm`
+#[must_use] #[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn min_i8_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_min_epi8(a.0, b.0) })
+}
+
+/// Lanewise minimum for unsigned `u8` lanes.
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i8_m512i(1);
+/// let b = set_splat_i8_m512i(5);
+/// let c: [u8; 64] = min_u8_m512i(a, b).into();
+/// assert_eq!(c, [1_u8; 64]);
+/// ```
+/// * **Intrinsic:** [`_mm512_min_epu8`]
+/// * **Assembly:** `vpminub zmm, zmm, zmm`
+#[must_use] #[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn min_u8_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_min_epu8(a.0, b.0) })
+}
+
+/// Lanewise minimum for signed `i16` lanes.
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i16_m512i(1);
+/// let b = set_splat_i16_m512i(5);
+/// let c: [i16; 32] = min_i16_m512i(a, b).into();
+/// assert_eq!(c, [1_i16; 32]);
+/// ```
+/// * **Intrinsic:** [`_mm512_min_epi16`]
+/// * **Assembly:** `vpminsw zmm, zmm, zmm`
+#[must_use] #[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn min_i16_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_min_epi16(a.0, b.0) })
+}
+
+/// Lanewise minimum for unsigned `u16` lanes.
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i16_m512i(1);
+/// let b = set_splat_i16_m512i(5);
+/// let c: [u16; 32] = min_u16_m512i(a, b).into();
+/// assert_eq!(c, [1_u16; 32]);
+/// ```
+/// * **Intrinsic:** [`_mm512_min_epu16`]
+/// * **Assembly:** `vpminuw zmm, zmm, zmm`
+#[must_use] #[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn min_u16_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_min_epu16(a.0, b.0) })
+}
+
+/// Lanewise minimum for signed `i32` lanes.
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i32_m512i(1);
+/// let b = set_splat_i32_m512i(5);
+/// let c: [i32; 16] = min_i32_m512i(a, b).into();
+/// assert_eq!(c, [1_i32; 16]);
+/// ```
+/// * **Intrinsic:** [`_mm512_min_epi32`]
+/// * **Assembly:** `vpminsd zmm, zmm, zmm`
+#[must_use] #[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn min_i32_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_min_epi32(a.0, b.0) })
+}
+
+/// Lanewise minimum for unsigned `u32` lanes.
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i32_m512i(1);
+/// let b = set_splat_i32_m512i(5);
+/// let c: [u32; 16] = min_u32_m512i(a, b).into();
+/// assert_eq!(c, [1_u32; 16]);
+/// ```
+/// * **Intrinsic:** [`_mm512_min_epu32`]
+/// * **Assembly:** `vpminud zmm, zmm, zmm`
+#[must_use] #[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn min_u32_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_min_epu32(a.0, b.0) })
+}
+
 /// Lanewise `max(a, b)` with lanes as `f32`.
 /// ```
 /// # use safe_arch::*;
