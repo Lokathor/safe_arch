@@ -1218,7 +1218,7 @@ pub fn blend_varying_i8_m512i(a: m512i, b: m512i, mask: mmask64) -> m512i {
 /// let a = set_splat_i16_m512i(10);
 /// let b = set_splat_i16_m512i(20);
 /// let mask = 0xAAAAAAAA;
-/// let c: [i16; 32] = blend_i16_m512i(a, b, mask).into();
+/// let c: [i16; 32] = blend_varying_i16_m512i(a, b, mask).into();
 /// for (i, &val) in c.iter().enumerate() {
 ///   assert_eq!(val, if (mask >> i) & 1 == 1 { 20 } else { 10 });
 /// }
@@ -1228,7 +1228,7 @@ pub fn blend_varying_i8_m512i(a: m512i, b: m512i, mask: mmask64) -> m512i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn blend_i16_m512i(a: m512i, b: m512i, mask: mmask32) -> m512i {
+pub fn blend_varying_i16_m512i(a: m512i, b: m512i, mask: mmask32) -> m512i {
   m512i(unsafe { _mm512_mask_blend_epi16(mask, a.0, b.0) })
 }
 
@@ -1238,7 +1238,7 @@ pub fn blend_i16_m512i(a: m512i, b: m512i, mask: mmask32) -> m512i {
 /// let a = set_splat_i32_m512i(10);
 /// let b = set_splat_i32_m512i(20);
 /// let mask = 0xAAAA;
-/// let c: [i32; 16] = blend_i32_m512i(a, b, mask).into();
+/// let c: [i32; 16] = blend_varying_i32_m512i(a, b, mask).into();
 /// for (i, &val) in c.iter().enumerate() {
 ///   assert_eq!(val, if (mask >> i) & 1 == 1 { 20 } else { 10 });
 /// }
@@ -1248,7 +1248,7 @@ pub fn blend_i16_m512i(a: m512i, b: m512i, mask: mmask32) -> m512i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn blend_i32_m512i(a: m512i, b: m512i, mask: mmask16) -> m512i {
+pub fn blend_varying_i32_m512i(a: m512i, b: m512i, mask: mmask16) -> m512i {
   m512i(unsafe { _mm512_mask_blend_epi32(mask, a.0, b.0) })
 }
 
@@ -1738,16 +1738,16 @@ pub fn to_mmask8_m512i(a: m512i) -> mmask8 {
     unsafe { _mm512_movepi64_mask(a.0) }
 }
 
-/// Extracts a 16-bit mask from each of the 16 `f32` lanes’ MSB by reinterpreting
-/// the `m512` as integer bits and pulling out the sign bit of each lane.
+/// Extracts a 16-bit mask from each of the 16 `f32` lanes’ MSB.
 ///
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
-/// // Make a vector of all -0.0f32 (sign bit set)
+/// // Build a vector of all -0.0f32 (sign bit set)
 /// let a = set_splat_m512(-0.0);
 /// let m: mmask16 = to_mmask16_m512(a);
 /// assert_eq!(m, !0u16);
+///
 /// // And with +0.0 (no sign-bits)
 /// let b = set_splat_m512(0.0);
 /// let m2: mmask16 = to_mmask16_m512(b);
@@ -1757,23 +1757,23 @@ pub fn to_mmask8_m512i(a: m512i) -> mmask8 {
 /// * **Assembly:** `vpmovmd2w k, zmm, zmm`
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512dq")))]
 pub fn to_mmask16_m512(a: m512) -> mmask16 {
-    // cast the PS register to integer bits, then extract MSBs
     let ai: __m512i = unsafe { _mm512_castps_si512(a.0) };
     unsafe { _mm512_movepi32_mask(ai) }
 }
 
-/// Extracts an 8-bit mask from each of the 8 `f64` lanes’ MSB by reinterpreting
-/// the `m512d` as integer bits and pulling out the sign bit of each lane.
+/// Extracts an 8-bit mask from each of the 8 `f64` lanes’ MSB.
 ///
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
-/// // Make a vector of all -0.0f64 (sign bit set)
+/// // All lanes have the sign bit set (−0.0)
 /// let a = set_splat_m512d(-0.0);
 /// let m: mmask8 = to_mmask8_m512d(a);
 /// assert_eq!(m, !0u8);
-/// // And with +0.0 (no sign-bits)
+///
+/// // All lanes positive zero — no sign bits
 /// let b = set_splat_m512d(0.0);
 /// let m2: mmask8 = to_mmask8_m512d(b);
 /// assert_eq!(m2, 0);
@@ -1782,8 +1782,8 @@ pub fn to_mmask16_m512(a: m512) -> mmask16 {
 /// * **Assembly:** `vpmovmq2d k, zmm, zmm`
 #[must_use]
 #[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512dq")))]
 pub fn to_mmask8_m512d(a: m512d) -> mmask8 {
-    // cast the PD register to integer bits, then extract MSBs
     let ai: __m512i = unsafe { _mm512_castpd_si512(a.0) };
     unsafe { _mm512_movepi64_mask(ai) }
 }
