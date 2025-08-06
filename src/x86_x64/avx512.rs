@@ -1,6 +1,7 @@
 #![cfg(target_feature = "avx512f")]
 #![allow(non_camel_case_types)]
 use super::*;
+use ::core::arch::x86_64::*;
 
 /// Mask type for 8-element operations
 pub type mmask8 = u8;
@@ -603,412 +604,350 @@ pub fn fmadd_m512d(a: m512d, b: m512d, c: m512d) -> m512d {
 
 // Comparison operations
 
-/// Compare `i8` lanes for equality, mask output.
-/// ```
+/// Compare `i8` lanes under `OP`, returning a 64-bit mask.
+/// ```rust
 /// # use safe_arch::*;
 /// let a = set_splat_i8_m512i(5);
 /// let b = set_splat_i8_m512i(5);
-/// let mask = cmp_eq_i8_mask_mmask16(a, b);
-/// assert_eq!(mask, 0xFFFFFFFFFFFFFFFF);
+/// let m = cmp_op_mask_i8::<{ _MM_CMPINT_EQ }>(a, b);
+/// assert_eq!(m, u64::MAX);
 /// ```
-/// * **Intrinsic:** [`_mm512_cmpeq_epi8_mask`]
-/// * **Assembly:** `vpcmpeqb k, zmm, zmm`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn cmp_eq_i8_mask_mmask16(a: m512i, b: m512i) -> mmask64 {
-  unsafe { _mm512_cmpeq_epi8_mask(a.0, b.0) }
+/// * **Intrinsic:** `_mm512_cmp_epi8_mask`  
+/// * **Assembly:** `VPCMPB k, zmm, zmm, imm8`
+#[must_use] #[inline(always)]
+#[cfg(target_feature = "avx512bw")]
+pub fn cmp_op_mask_i8<const OP: i32>(a: m512i, b: m512i) -> mmask64 {
+    unsafe { _mm512_cmp_epi8_mask(a.0, b.0, OP) }
 }
 
-/// Compare `u8` lanes for equality, mask output.
-/// ```
+/// Compare `u8` lanes under `OP`, returning a 64-bit mask.
+/// ```rust
 /// # use safe_arch::*;
-/// let a = set_splat_i8_m512i(5);
+/// let a = set_splat_i8_m512i(3);
 /// let b = set_splat_i8_m512i(5);
-/// let mask = cmp_eq_u8_mask_mmask16(a, b);
-/// assert_eq!(mask, 0xFFFFFFFFFFFFFFFF);
+/// // unsigned <  → 3<5
+/// let m = cmp_op_mask_u8::<{ _MM_CMPINT_LT }>(a, b);
+/// assert_eq!(m, u64::MAX);
 /// ```
-/// * **Intrinsic:** [`_mm512_cmpeq_epu8_mask`]
-/// * **Assembly:** `vpcmpeqb k, zmm, zmm`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn cmp_eq_u8_mask_mmask16(a: m512i, b: m512i) -> mmask64 {
-  unsafe { _mm512_cmpeq_epu8_mask(a.0, b.0) }
+/// * **Intrinsic:** `_mm512_cmp_epu8_mask`  
+/// * **Assembly:** `VPCMPUB k, zmm, zmm, imm8`
+#[must_use] #[inline(always)]
+#[cfg(target_feature = "avx512bw")]
+pub fn cmp_op_mask_u8<const OP: i32>(a: m512i, b: m512i) -> mmask64 {
+    unsafe { _mm512_cmp_epu8_mask(a.0, b.0, OP) }
 }
 
-/// Compare `i16` lanes for equality, mask output.
-/// ```
+/// Compare `i16` lanes under `OP`, returning a 32-bit mask.
+/// ```rust
 /// # use safe_arch::*;
 /// let a = set_splat_i16_m512i(5);
 /// let b = set_splat_i16_m512i(5);
-/// let mask = cmp_eq_i16_mask_mmask16(a, b);
-/// assert_eq!(mask, 0xFFFFFFFF);
+/// let m = cmp_op_mask_i16::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// assert_eq!(m, u32::MAX);
 /// ```
-/// * **Intrinsic:** [`_mm512_cmp_epi16_mask`]
-/// * **Assembly:** `vpcmpw k, zmm, zmm, imm8`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn cmp_eq_i16_mask_mmask16(a: m512i, b: m512i) -> mmask32 {
-  unsafe { _mm512_cmp_epi16_mask(a.0, b.0, _MM_CMPINT_EQ) }
+/// * **Intrinsic:** `_mm512_cmp_epi16_mask`  
+/// * **Assembly:** `VPCMPW k, zmm, zmm, imm8`
+#[must_use] #[inline(always)]
+#[cfg(target_feature = "avx512bw")]
+pub fn cmp_op_mask_i16<const OP: i32>(a: m512i, b: m512i) -> mmask32 {
+    unsafe { _mm512_cmp_epi16_mask(a.0, b.0, OP) }
 }
 
-/// Compare `i32` lanes for equality, mask output.
+/// Compare `u16` lanes under `OP`, returning a 32-bit mask.
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i16_m512i(3);
+/// let b = set_splat_i16_m512i(5);
+/// // unsigned <= → 3<=5
+/// let m = cmp_op_mask_u16::<{ ::core::arch::x86_64::_MM_CMPINT_LE }>(a, b);
+/// assert_eq!(m, u32::MAX);
 /// ```
+/// * **Intrinsic:** `_mm512_cmp_epu16_mask`  
+/// * **Assembly:** `VPCMPUW k, zmm, zmm, imm8`
+#[must_use] #[inline(always)]
+#[cfg(target_feature = "avx512bw")]
+pub fn cmp_op_mask_u16<const OP: i32>(a: m512i, b: m512i) -> mmask32 {
+    unsafe { _mm512_cmp_epu16_mask(a.0, b.0, OP) }
+}
+
+/// Compare `i32` lanes under `OP`, returning a 16-bit mask.
+/// ```rust
 /// # use safe_arch::*;
 /// let a = set_splat_i32_m512i(5);
+/// let b = set_splat_i32_m512i(2);
+/// // signed > → 5>2
+/// let m = cmp_op_mask_i32::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(b, a);
+/// assert_eq!(m, u16::MAX);
+/// ```
+/// * **Intrinsic:** `_mm512_cmp_epi32_mask`  
+/// * **Assembly:** `VPCMPD k, zmm, zmm, imm8`
+#[must_use] #[inline(always)]
+#[cfg(target_feature = "avx512f")]
+pub fn cmp_op_mask_i32<const OP: i32>(a: m512i, b: m512i) -> mmask16 {
+    unsafe { _mm512_cmp_epi32_mask(a.0, b.0, OP) }
+}
+
+/// Compare `u32` lanes under `OP`, returning a 16-bit mask.
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i32_m512i(2);
 /// let b = set_splat_i32_m512i(5);
-/// let mask = cmp_eq_i32_mask_mmask16(a, b);
-/// assert_eq!(mask, 0xFFFF);
+/// // unsigned < → 2<5
+/// let m = cmp_op_mask_u32::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(a, b);
+/// assert_eq!(m, u16::MAX);
 /// ```
-/// * **Intrinsic:** [`_mm512_cmp_epi32_mask`]
-/// * **Assembly:** `vpcmpd k, zmm, zmm, imm8`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_eq_i32_mask_mmask16(a: m512i, b: m512i) -> mmask16 {
-  unsafe { _mm512_cmp_epi32_mask(a.0, b.0, _MM_CMPINT_EQ) }
+/// * **Intrinsic:** `_mm512_cmp_epu32_mask`  
+/// * **Assembly:** `VPCMPUD k, zmm, zmm, imm8`
+#[must_use] #[inline(always)]
+#[cfg(target_feature = "avx512f")]
+pub fn cmp_op_mask_u32<const OP: i32>(a: m512i, b: m512i) -> mmask16 {
+    unsafe { _mm512_cmp_epu32_mask(a.0, b.0, OP) }
 }
 
-/// Compare `f32` lanes for equality, mask output.
-/// ```
+/// Compare `i64` lanes under `OP`, returning an 8-bit mask.
+/// ```rust
 /// # use safe_arch::*;
-/// let a = set_splat_m512(5.0);
+/// let a = set_splat_i64_m512i(5);
+/// let b = set_splat_i64_m512i(5);
+/// let m = cmp_op_mask_i64::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// assert_eq!(m, u8::MAX);
+/// ```
+/// * **Intrinsic:** `_mm512_cmp_epi64_mask`  
+/// * **Assembly:** `VPCMPQ k, zmm, zmm, imm8`
+#[must_use] #[inline(always)]
+#[cfg(target_feature = "avx512f")]
+pub fn cmp_op_mask_i64<const OP: i32>(a: m512i, b: m512i) -> mmask8 {
+    unsafe { _mm512_cmp_epi64_mask(a.0, b.0, OP) }
+}
+
+/// Compare `u64` lanes under `OP`, returning an 8-bit mask.
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i64_m512i(3);
+/// let b = set_splat_i64_m512i(5);
+/// // unsigned <= → 3<=5
+/// let m = cmp_op_mask_u64::<{ ::core::arch::x86_64::_MM_CMPINT_LE }>(a, b);
+/// assert_eq!(m, u8::MAX);
+/// ```
+/// * **Intrinsic:** `_mm512_cmp_epu64_mask`  
+/// * **Assembly:** `VPCMPUQ k, zmm, zmm, imm8`
+#[must_use] #[inline(always)]
+#[cfg(target_feature = "avx512f")]
+pub fn cmp_op_mask_u64<const OP: i32>(a: m512i, b: m512i) -> mmask8 {
+    unsafe { _mm512_cmp_epu64_mask(a.0, b.0, OP) }
+}
+
+/// Compare `f32` lanes under `OP`, returning a 16-bit mask.
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_m512(3.0);
 /// let b = set_splat_m512(5.0);
-/// let mask = cmp_eq_mask_mmask16(a, b);
-/// assert_eq!(mask, 0xFFFF);
+/// // < : 3<5
+/// let m = cmp_op_mask_f32::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(a, b);
+/// assert_eq!(m, u16::MAX);
 /// ```
-/// * **Intrinsic:** [`_mm512_cmp_ps_mask`]
-/// * **Assembly:** `vcmpps k, zmm, zmm, imm8`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_eq_mask_mmask16(a: m512, b: m512) -> mmask16 {
-  unsafe { _mm512_cmp_ps_mask(a.0, b.0, _CMP_EQ_OQ) }
+/// * **Intrinsic:** `_mm512_cmp_ps_mask`  
+/// * **Assembly:** `VPCMPPS k, zmm, zmm, imm8`
+#[must_use] #[inline(always)]
+#[cfg(target_feature = "avx512f")]
+pub fn cmp_op_mask_f32<const OP: i32>(a: m512, b: m512) -> mmask16 {
+    unsafe { _mm512_cmp_ps_mask(a.0, b.0, OP) }
 }
 
-/// Compare `f64` lanes for equality, mask output.
-/// ```
+/// Compare `f64` lanes under `OP`, returning an 8-bit mask.
+/// ```rust
 /// # use safe_arch::*;
-/// let a = set_splat_m512d(5.0);
-/// let b = set_splat_m512d(5.0);
-/// let mask = cmp_eq_mask_mmask8(a, b);
-/// assert_eq!(mask, 0xFF);
+/// let a = set_splat_m512d(3.0);
+/// let b = set_splat_m512d(3.0);
+/// let m = cmp_op_mask_f64::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// assert_eq!(m, u8::MAX);
 /// ```
-/// * **Intrinsic:** [`_mm512_cmp_pd_mask`]
-/// * **Assembly:** `vcmppd k, zmm, zmm, imm8`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_eq_mask_mmask8(a: m512d, b: m512d) -> mmask8 {
-  unsafe { _mm512_cmp_pd_mask(a.0, b.0, _CMP_EQ_OQ) }
+/// * **Intrinsic:** `_mm512_cmp_pd_mask`  
+/// * **Assembly:** `VPCMPPD k, zmm, zmm, imm8`
+#[must_use] #[inline(always)]
+#[cfg(target_feature = "avx512f")]
+pub fn cmp_op_mask_f64<const OP: i32>(a: m512d, b: m512d) -> mmask8 {
+    unsafe { _mm512_cmp_pd_mask(a.0, b.0, OP) }
 }
 
-/// Compare `i8` lanes for `a > b`, mask output.
-/// ```
+//
+// 2) Full-width vector versions
+//
+
+/// `i8` version: expands your `mmask64` into a `m512i` of all-ones or zeros.
+/// ```rust
 /// # use safe_arch::*;
-/// let a = set_splat_i8_m512i(10);
+/// let a = set_splat_i8_m512i(5);
 /// let b = set_splat_i8_m512i(5);
-/// let mask = cmp_gt_i8_mask_mmask16(a, b);
-/// assert_eq!(mask, 0xFFFFFFFFFFFFFFFF);
+/// let v = cmp_op_mask_i8_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// assert_eq!(v, set_splat_i8_m512i(-1));
 /// ```
-/// * **Intrinsic:** [`_mm512_cmpgt_epi8_mask`]
-/// * **Assembly:** `vpcmpgtb k, zmm, zmm`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn cmp_gt_i8_mask_mmask16(a: m512i, b: m512i) -> mmask64 {
-  unsafe { _mm512_cmpgt_epi8_mask(a.0, b.0) }
+/// * **Intrinsic:** `_mm512_cmp_epi8_mask`, `_mm512_maskz_mov_epi8`
+/// * **Assembly:** `VPCMPB k, zmm, zmm, imm8` + `VPMOVM2B zmm, k`
+#[must_use] #[inline(always)]
+#[cfg(target_feature = "avx512bw")]
+pub fn cmp_op_mask_i8_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
+    let m = cmp_op_mask_i8::<OP>(a, b);
+    m512i(unsafe { _mm512_maskz_mov_epi8(m, _mm512_set1_epi8(-1)) })
 }
 
-/// Compare `u8` lanes for `a > b`, mask output.
-/// ```
+/// `u8` version: expands your `mmask64` into a `m512i` of all-ones or zeros.
+/// ```rust
 /// # use safe_arch::*;
-/// let a = set_splat_i8_m512i(10);
+/// let a = set_splat_i8_m512i(3);
 /// let b = set_splat_i8_m512i(5);
-/// let mask = cmp_gt_u8_mask_mmask16(a, b);
-/// assert_eq!(mask, 0xFFFFFFFFFFFFFFFF);
+/// let v = cmp_op_mask_u8_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(a, b);
+/// assert_eq!(v, set_splat_i8_m512i(-1));
 /// ```
-/// * **Intrinsic:** [`_mm512_cmpgt_epu8_mask`]
-/// * **Assembly:** `vpcmpub k, zmm, zmm, imm8`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn cmp_gt_u8_mask_mmask16(a: m512i, b: m512i) -> mmask64 {
-  unsafe { _mm512_cmpgt_epu8_mask(a.0, b.0) }
+/// * **Intrinsic:** `_mm512_cmp_epu8_mask`, `_mm512_maskz_mov_epi8`
+/// * **Assembly:** `VPCMPUB k, zmm, zmm, imm8` + `VPMOVM2B zmm, k`
+#[must_use] #[inline(always)]
+#[cfg(target_feature = "avx512bw")]
+pub fn cmp_op_mask_u8_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
+    let m = cmp_op_mask_u8::<OP>(a, b);
+    m512i(unsafe { _mm512_maskz_mov_epi8(m, _mm512_set1_epi8(-1)) })
 }
 
-/// Compare `i8` lanes for `a >= b`, mask output.
-/// ```
+/// `i16` version: expands your `mmask32` into a `m512i` of all-ones or zeros.
+/// ```rust
 /// # use safe_arch::*;
-/// let a = set_splat_i8_m512i(10);
-/// let b = set_splat_i8_m512i(10);
-/// let mask = cmp_ge_i8_mask_mmask16(a, b);
-/// assert_eq!(mask, 0xFFFFFFFFFFFFFFFF);
-/// ```
-/// * **Intrinsic:** [`_mm512_cmpge_epi8_mask`]
-/// * **Assembly:** `vpcmpb k, zmm, zmm, imm8`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn cmp_ge_i8_mask_mmask16(a: m512i, b: m512i) -> mmask64 {
-  unsafe { _mm512_cmpge_epi8_mask(a.0, b.0) }
-}
-
-/// Compare `u8` lanes for `a >= b`, mask output.
-/// ```
-/// # use safe_arch::*;
-/// let a = set_splat_i8_m512i(10);
-/// let b = set_splat_i8_m512i(10);
-/// let mask = cmp_ge_u8_mask_mmask16(a, b);
-/// assert_eq!(mask, 0xFFFFFFFFFFFFFFFF);
-/// ```
-/// * **Intrinsic:** [`_mm512_cmpge_epu8_mask`]
-/// * **Assembly:** `vpcmpub k, zmm, zmm, imm8`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn cmp_ge_u8_mask_mmask16(a: m512i, b: m512i) -> mmask64 {
-  unsafe { _mm512_cmpge_epu8_mask(a.0, b.0) }
-}
-
-/// Compare `i16` lanes for `a > b`, mask output.
-/// ```
-/// # use safe_arch::*;
-/// let a = set_splat_i16_m512i(10);
+/// let a = set_splat_i16_m512i(5);
 /// let b = set_splat_i16_m512i(5);
-/// let mask = cmp_gt_i16_mask_mmask16(a, b);
-/// assert_eq!(mask, 0xFFFFFFFF);
+/// let v = cmp_op_mask_i16_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// assert_eq!(v, set_splat_i16_m512i(-1));
 /// ```
-/// * **Intrinsic:** [`_mm512_cmp_epi16_mask`]
-/// * **Assembly:** `vpcmpw k, zmm, zmm, imm8`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn cmp_gt_i16_mask_mmask16(a: m512i, b: m512i) -> mmask32 {
-  unsafe { _mm512_cmp_epi16_mask(a.0, b.0, _MM_CMPINT_NLE) }
+/// * **Intrinsic:** `_mm512_cmp_epi16_mask`, `_mm512_maskz_mov_epi16`
+/// * **Assembly:** `VPCMPW k, zmm, zmm, imm8` + `VPMOVM2W zmm, k`
+#[must_use] #[inline(always)]
+#[cfg(target_feature = "avx512bw")]
+pub fn cmp_op_mask_i16_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
+    let m = cmp_op_mask_i16::<OP>(a, b);
+    m512i(unsafe { _mm512_maskz_mov_epi16(m, _mm512_set1_epi16(-1)) })
 }
 
-/// Compare `u16` lanes for `a > b`, mask output.
-/// ```
+/// `u16` version: expands your `mmask32` into a `m512i` of all-ones or zeros.
+/// ```rust
 /// # use safe_arch::*;
-/// let a = set_splat_i16_m512i(10);
+/// let a = set_splat_i16_m512i(3);
 /// let b = set_splat_i16_m512i(5);
-/// let mask = cmp_gt_u16_mask_mmask16(a, b);
-/// assert_eq!(mask, 0xFFFFFFFF);
+/// let v = cmp_op_mask_u16_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_LE }>(a, b);
+/// assert_eq!(v, set_splat_i16_m512i(-1));
 /// ```
-/// * **Intrinsic:** [`_mm512_cmp_epu16_mask`]
-/// * **Assembly:** `vpcmpuw k, zmm, zmm, imm8`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn cmp_gt_u16_mask_mmask16(a: m512i, b: m512i) -> mmask32 {
-  unsafe { _mm512_cmp_epu16_mask(a.0, b.0, _MM_CMPINT_NLE) }
+/// * **Intrinsic:** `_mm512_cmp_epu16_mask`, `_mm512_maskz_mov_epi16`
+/// * **Assembly:** `VPCMPUW k, zmm, zmm, imm8` + `VPMOVM2W zmm, k`
+#[must_use] #[inline(always)]
+#[cfg(target_feature = "avx512bw")]
+pub fn cmp_op_mask_u16_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
+    let m = cmp_op_mask_u16::<OP>(a, b);
+    m512i(unsafe { _mm512_maskz_mov_epi16(m, _mm512_set1_epi16(-1)) })
 }
 
-/// Compare `i32` lanes for `a > b`, mask output.
-/// ```
+/// `i32` version: expands your `mmask16` into a `m512i` of all-ones or zeros.
+/// ```rust
 /// # use safe_arch::*;
-/// let a = set_splat_i32_m512i(10);
+/// let a = set_splat_i32_m512i(5);
+/// let b = set_splat_i32_m512i(2);
+/// let v = cmp_op_mask_i32_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(b, a);
+/// assert_eq!(v, set_splat_i32_m512i(-1));
+/// ```
+/// * **Intrinsic:** `_mm512_cmp_epi32_mask`, `_mm512_maskz_mov_epi32`
+/// * **Assembly:** `VPCMPD k, zmm, zmm, imm8` + `VPMOVM2D zmm, k`
+#[must_use] #[inline(always)]
+#[cfg(target_feature = "avx512f")]
+pub fn cmp_op_mask_i32_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
+    let m = cmp_op_mask_i32::<OP>(a, b);
+    m512i(unsafe { _mm512_maskz_mov_epi32(m, _mm512_set1_epi32(-1)) })
+}
+
+/// `u32` version: expands your `mmask16` into a `m512i` of all-ones or zeros.
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i32_m512i(2);
 /// let b = set_splat_i32_m512i(5);
-/// let mask = cmp_gt_i32_mask_mmask16(a, b);
-/// assert_eq!(mask, 0xFFFF);
+/// let v = cmp_op_mask_u32_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(a, b);
+/// assert_eq!(v, set_splat_i32_m512i(-1));
 /// ```
-/// * **Intrinsic:** [`_mm512_cmp_epi32_mask`]
-/// * **Assembly:** `vpcmpd k, zmm, zmm, imm8`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_gt_i32_mask_mmask16(a: m512i, b: m512i) -> mmask16 {
-  unsafe { _mm512_cmp_epi32_mask(a.0, b.0, _MM_CMPINT_NLE) }
+/// * **Intrinsic:** `_mm512_cmp_epu32_mask`, `_mm512_maskz_mov_epi32`
+/// * **Assembly:** `VPCMPUD k, zmm, zmm, imm8` + `VPMOVM2D zmm, k`
+#[must_use] #[inline(always)]
+#[cfg(target_feature = "avx512f")]
+pub fn cmp_op_mask_u32_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
+    let m = cmp_op_mask_u32::<OP>(a, b);
+    m512i(unsafe { _mm512_maskz_mov_epi32(m, _mm512_set1_epi32(-1)) })
 }
 
-/// Compare `f32` lanes for `a > b`, mask output.
-/// ```
+/// `i64` version: expands your `mmask8` into a `m512i` of all-ones or zeros.
+/// ```rust
 /// # use safe_arch::*;
-/// let a = set_splat_m512(10.0);
+/// let a = set_splat_i64_m512i(5);
+/// let b = set_splat_i64_m512i(5);
+/// let v = cmp_op_mask_i64_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// assert_eq!(v, set_splat_i64_m512i(-1));
+/// ```
+/// * **Intrinsic:** `_mm512_cmp_epi64_mask`, `_mm512_maskz_mov_epi64`
+/// * **Assembly:** `VPCMPQ k, zmm, zmm, imm8` + `VPMOVM2Q zmm, k`
+#[must_use] #[inline(always)]
+#[cfg(target_feature = "avx512f")]
+pub fn cmp_op_mask_i64_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
+    let m = cmp_op_mask_i64::<OP>(a, b);
+    m512i(unsafe { _mm512_maskz_mov_epi64(m, _mm512_set1_epi64(-1)) })
+}
+
+/// `u64` version: expands your `mmask8` into a `m512i` of all-ones or zeros.
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i64_m512i(3);
+/// let b = set_splat_i64_m512i(5);
+/// let v = cmp_op_mask_u64_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_LE }>(a, b);
+/// assert_eq!(v, set_splat_i64_m512i(-1));
+/// ```
+/// * **Intrinsic:** `_mm512_cmp_epu64_mask`, `_mm512_maskz_mov_epi64`
+/// * **Assembly:** `VPCMPUQ k, zmm, zmm, imm8` + `VPMOVM2Q zmm, k`
+#[must_use] #[inline(always)]
+#[cfg(target_feature = "avx512f")]
+pub fn cmp_op_mask_u64_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
+    let m = cmp_op_mask_u64::<OP>(a, b);
+    m512i(unsafe { _mm512_maskz_mov_epi64(m, _mm512_set1_epi64(-1)) })
+}
+
+/// `f32` version: expands your `mmask16` into a `m512` of all-ones or zeros.
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_m512(3.0);
 /// let b = set_splat_m512(5.0);
-/// let mask = cmp_gt_mask_mmask16(a, b);
-/// assert_eq!(mask, 0xFFFF);
+/// let v = cmp_op_mask_f32_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(a, b);
+/// assert_eq!(v.to_bits(), [u32::MAX; 16]);
 /// ```
-/// * **Intrinsic:** [`_mm512_cmp_ps_mask`]
-/// * **Assembly:** `vcmpps k, zmm, zmm, imm8`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_gt_mask_mmask16(a: m512, b: m512) -> mmask16 {
-  unsafe { _mm512_cmp_ps_mask(a.0, b.0, _CMP_GT_OQ) }
+/// * **Intrinsic:** `_mm512_cmp_ps_mask`, `_mm512_maskz_mov_ps`
+/// * **Assembly:** `VCMPPS k, zmm, zmm, imm8` + masked move
+#[must_use] #[inline(always)]
+#[cfg(target_feature = "avx512f")]
+pub fn cmp_op_mask_f32_m512i<const OP: i32>(a: m512, b: m512) -> m512 {
+    let m = unsafe { _mm512_cmp_ps_mask(a.0, b.0, OP) };
+    m512(unsafe {
+        let ones = _mm512_castsi512_ps(_mm512_set1_epi32(-1));
+        _mm512_maskz_mov_ps(m, ones)
+    })
 }
 
-/// Compare `i8` lanes for `a == b`, mask output.
-/// ```
+/// `f64` version: expands your `mmask8` into a `m512d` of all-ones or zeros.
+/// ```rust
 /// # use safe_arch::*;
-/// let a = set_splat_i8_m512i(10);
-/// let b = set_splat_i8_m512i(10);
-/// let mask = cmp_eq_mask_i8_mmask64(a, b);
-/// assert_eq!(mask, 0xFFFFFFFFFFFFFFFF);
+/// let a = set_splat_m512d(3.0);
+/// let b = set_splat_m512d(3.0);
+/// let v = cmp_op_mask_f64_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// assert_eq!(v.to_bits(), [u64::MAX; 8]);
 /// ```
-/// * **Intrinsic:** [`_mm512_cmp_epi8_mask`]
-/// * **Assembly:** `vpcmpb k, zmm, zmm, imm8`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn cmp_eq_mask_i8_mmask64(a: m512i, b: m512i) -> mmask64 {
-  unsafe { _mm512_cmp_epi8_mask(a.0, b.0, _MM_CMPINT_EQ) }
-}
-
-/// Compare `f32` lanes for `a == b`, mask output.
-/// ```
-/// # use safe_arch::*;
-/// let a = set_splat_m512(10.0);
-/// let b = set_splat_m512(10.0);
-/// let mask = cmp_eq_mask_f32_mmask16(a, b);
-/// assert_eq!(mask, 0xFFFF);
-/// ```
-/// * **Intrinsic:** [`_mm512_cmp_ps_mask`]
-/// * **Assembly:** `vcmpps k, zmm, zmm, imm8`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_eq_mask_f32_mmask16(a: m512, b: m512) -> mmask16 {
-  unsafe { _mm512_cmp_ps_mask(a.0, b.0, _CMP_EQ_OQ) }
-}
-
-/// Compare `f64` lanes for `a == b`, mask output.
-/// ```
-/// # use safe_arch::*;
-/// let a = set_splat_m512d(10.0);
-/// let b = set_splat_m512d(10.0);
-/// let mask = cmp_eq_mask_f64_mmask8(a, b);
-/// assert_eq!(mask, 0xFF);
-/// ```
-/// * **Intrinsic:** [`_mm512_cmp_pd_mask`]
-/// * **Assembly:** `vcmppd k, zmm, zmm, imm8`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_eq_mask_f64_mmask8(a: m512d, b: m512d) -> mmask8 {
-  unsafe { _mm512_cmp_pd_mask(a.0, b.0, _CMP_EQ_OQ) }
-}
-
-/// Compare `f64` lanes for `a > b`, mask output.
-/// ```
-/// # use safe_arch::*;
-/// let a = set_splat_m512d(10.0);
-/// let b = set_splat_m512d(5.0);
-/// let mask = cmp_gt_mask_mmask8(a, b);
-/// assert_eq!(mask, 0xFF);
-/// ```
-/// * **Intrinsic:** [`_mm512_cmp_pd_mask`]
-/// * **Assembly:** `vcmppd k, zmm, zmm, imm8`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_gt_mask_mmask8(a: m512d, b: m512d) -> mmask8 {
-  unsafe { _mm512_cmp_pd_mask(a.0, b.0, _CMP_GT_OQ) }
-}
-
-/// Compare `f32` lanes for `a >= b`, mask output.
-/// ```
-/// # use safe_arch::*;
-/// let a = set_splat_m512(10.0);
-/// let b = set_splat_m512(10.0);
-/// let mask = cmp_ge_mask_mmask16(a, b);
-/// assert_eq!(mask, 0xFFFF);
-/// ```
-/// * **Intrinsic:** [`_mm512_cmp_ps_mask`]
-/// * **Assembly:** `vcmpps k, zmm, zmm, imm8`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_ge_mask_mmask16(a: m512, b: m512) -> mmask16 {
-  unsafe { _mm512_cmp_ps_mask(a.0, b.0, _CMP_GE_OQ) }
-}
-
-/// Compare `f64` lanes for `a >= b`, mask output.
-/// ```
-/// # use safe_arch::*;
-/// let a = set_splat_m512d(10.0);
-/// let b = set_splat_m512d(10.0);
-/// let mask = cmp_ge_mask_mmask8(a, b);
-/// assert_eq!(mask, 0xFF);
-/// ```
-/// * **Intrinsic:** [`_mm512_cmp_pd_mask`]
-/// * **Assembly:** `vcmppd k, zmm, zmm, imm8`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_ge_mask_mmask8(a: m512d, b: m512d) -> mmask8 {
-  unsafe { _mm512_cmp_pd_mask(a.0, b.0, _CMP_GE_OQ) }
-}
-
-/// Compare `f32` lanes for `a < b`, mask output.
-/// ```
-/// # use safe_arch::*;
-/// let a = set_splat_m512(5.0);
-/// let b = set_splat_m512(10.0);
-/// let mask = cmp_lt_mask_mmask16(a, b);
-/// assert_eq!(mask, 0xFFFF);
-/// ```
-/// * **Intrinsic:** [`_mm512_cmp_ps_mask`]
-/// * **Assembly:** `vcmpps k, zmm, zmm, imm8`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_lt_mask_mmask16(a: m512, b: m512) -> mmask16 {
-  unsafe { _mm512_cmp_ps_mask(a.0, b.0, _CMP_LT_OQ) }
-}
-
-/// Compare `f64` lanes for `a < b`, mask output.
-/// ```
-/// # use safe_arch::*;
-/// let a = set_splat_m512d(5.0);
-/// let b = set_splat_m512d(10.0);
-/// let mask = cmp_lt_mask_mmask8(a, b);
-/// assert_eq!(mask, 0xFF);
-/// ```
-/// * **Intrinsic:** [`_mm512_cmp_pd_mask`]
-/// * **Assembly:** `vcmppd k, zmm, zmm, imm8`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_lt_mask_mmask8(a: m512d, b: m512d) -> mmask8 {
-  unsafe { _mm512_cmp_pd_mask(a.0, b.0, _CMP_LT_OQ) }
-}
-
-/// Compare `f32` lanes for `a <= b`, mask output.
-/// ```
-/// # use safe_arch::*;
-/// let a = set_splat_m512(10.0);
-/// let b = set_splat_m512(10.0);
-/// let mask = cmp_le_mask_mmask16(a, b);
-/// assert_eq!(mask, 0xFFFF);
-/// ```
-/// * **Intrinsic:** [`_mm512_cmp_ps_mask`]
-/// * **Assembly:** `vcmpps k, zmm, zmm, imm8`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_le_mask_mmask16(a: m512, b: m512) -> mmask16 {
-  unsafe { _mm512_cmp_ps_mask(a.0, b.0, _CMP_LE_OQ) }
-}
-
-/// Compare `f64` lanes for `a <= b`, mask output.
-/// ```
-/// # use safe_arch::*;
-/// let a = set_splat_m512d(10.0);
-/// let b = set_splat_m512d(10.0);
-/// let mask = cmp_le_mask_mmask8(a, b);
-/// assert_eq!(mask, 0xFF);
-/// ```
-/// * **Intrinsic:** [`_mm512_cmp_pd_mask`]
-/// * **Assembly:** `vcmpps k, zmm, zmm, imm8`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_le_mask_mmask8(a: m512d, b: m512d) -> mmask8 {
-  unsafe { _mm512_cmp_pd_mask(a.0, b.0, _CMP_LE_OQ) }
+/// * **Intrinsic:** `_mm512_cmp_pd_mask`, `_mm512_maskz_mov_pd`
+/// * **Assembly:** `VCMPPD k, zmm, zmm, imm8` + masked move
+#[must_use] #[inline(always)]
+#[cfg(target_feature = "avx512f")]
+pub fn cmp_op_mask_f64_m512i<const OP: i32>(a: m512d, b: m512d) -> m512d {
+    let m = unsafe { _mm512_cmp_pd_mask(a.0, b.0, OP) };
+    m512d(unsafe {
+        let ones = _mm512_castsi512_pd(_mm512_set1_epi64(-1));
+        _mm512_maskz_mov_pd(m, ones)
+    })
 }
 
 // Bitwise operations
@@ -1850,7 +1789,7 @@ pub fn insert_m256d_to_m512d<const LANE: i32>(a: m512d, b: m256d) -> m512d {
 #[must_use]
 #[inline(always)]
 #[cfg(target_feature = "avx512f")]
-pub fn maskz_mov_f32_m512(mask: __mmask16) -> m512 {
+pub fn maskz_mov_f32_m512(mask: mmask16) -> m512 {
     let ones: __m512 = unsafe { _mm512_castsi512_ps(_mm512_set1_epi32(-1)) };
     m512(unsafe { _mm512_maskz_mov_ps(mask, ones) })
 }
@@ -1870,7 +1809,7 @@ pub fn maskz_mov_f32_m512(mask: __mmask16) -> m512 {
 #[must_use]
 #[inline(always)]
 #[cfg(target_feature = "avx512f")]
-pub fn maskz_mov_f64_m512d(mask: __mmask8) -> m512d {
+pub fn maskz_mov_f64_m512d(mask: mmask8) -> m512d {
     let ones: __m512d = unsafe { _mm512_castsi512_pd(_mm512_set1_epi64(-1)) };
     m512d(unsafe { _mm512_maskz_mov_pd(mask, ones) })
 }
@@ -1890,7 +1829,7 @@ pub fn maskz_mov_f64_m512d(mask: __mmask8) -> m512d {
 #[must_use]
 #[inline(always)]
 #[cfg(target_feature = "avx512f")]
-pub fn maskz_mov_i64_m512i(mask: __mmask8) -> m512i {
+pub fn maskz_mov_i64_m512i(mask: mmask8) -> m512i {
     let ones: __m512i = unsafe { _mm512_set1_epi64(-1) };
     m512i(unsafe { _mm512_maskz_mov_epi64(mask, ones) })
 }
@@ -1910,7 +1849,7 @@ pub fn maskz_mov_i64_m512i(mask: __mmask8) -> m512i {
 #[must_use]
 #[inline(always)]
 #[cfg(target_feature = "avx512f")]
-pub fn maskz_mov_i32_m512i(mask: __mmask16) -> m512i {
+pub fn maskz_mov_i32_m512i(mask: mmask16) -> m512i {
     let ones: __m512i = unsafe { _mm512_set1_epi32(-1) };
     m512i(unsafe { _mm512_maskz_mov_epi32(mask, ones) })
 }
@@ -1930,7 +1869,7 @@ pub fn maskz_mov_i32_m512i(mask: __mmask16) -> m512i {
 #[must_use]
 #[inline(always)]
 #[cfg(target_feature = "avx512bw")]
-pub fn maskz_mov_i16_m512i(mask: __mmask32) -> m512i {
+pub fn maskz_mov_i16_m512i(mask: mmask32) -> m512i {
     let ones: __m512i = unsafe { _mm512_set1_epi16(-1) };
     m512i(unsafe { _mm512_maskz_mov_epi16(mask, ones) })
 }
@@ -1950,7 +1889,7 @@ pub fn maskz_mov_i16_m512i(mask: __mmask32) -> m512i {
 #[must_use]
 #[inline(always)]
 #[cfg(target_feature = "avx512bw")]
-pub fn maskz_mov_i8_m512i(mask: __mmask64) -> m512i {
+pub fn maskz_mov_i8_m512i(mask: mmask64) -> m512i {
     let ones: __m512i = unsafe { _mm512_set1_epi8(-1) };
     m512i(unsafe { _mm512_maskz_mov_epi8(mask, ones) })
 }
@@ -2415,34 +2354,6 @@ pub fn store_masked_m512d(mem_addr: &mut [f64; 8], mask: mmask8, a: m512d) {
     unsafe { _mm512_mask_storeu_pd(mem_addr.as_mut_ptr() as *mut f64, mask, a.0) }
 }
 
-// Prefetch operations
-
-/// Prefetch data into L1 cache (temporal).
-/// ```
-/// # use safe_arch::*;
-/// let data = [1.0_f32; 16];
-/// prefetch_t0(&data);
-/// ```
-/// * **Intrinsic:** [`_mm_prefetch`]
-/// * **Assembly:** `prefetcht0 m8`
-#[inline(always)]
-pub fn prefetch_t0<T>(p: &T) {
-  unsafe { _mm_prefetch(p as *const T as *const i8, _MM_HINT_T0) }
-}
-
-/// Prefetch data into L1 cache (non-temporal).
-/// ```
-/// # use safe_arch::*;
-/// let data = [1.0_f32; 16];
-/// prefetch_et0(&data);
-/// ```
-/// * **Intrinsic:** [`_mm_prefetch`]
-/// * **Assembly:** `prefetchnta m8`
-#[inline(always)]
-pub fn prefetch_et0<T>(p: &T) {
-  unsafe { _mm_prefetch(p as *const T as *const i8, _MM_HINT_ET0) }
-}
-
 /// Lanewise `sqrt` on `f64` lanes.
 /// ```
 /// # use safe_arch::*;
@@ -2677,10 +2588,11 @@ impl PartialEq for m512i {
   /// assert_ne!(a, b);
   /// ```
   fn eq(&self, other: &Self) -> bool {
-    let mask = cmp_eq_mask_i8_mmask64(*self, *other);
-    mask == 0xFFFFFFFFFFFFFFFF_u64
+    let mask = cmp_op_mask_i32::<_MM_CMPINT_EQ>(*self, *other);
+    mask == 0xFFFF_u16
   }
 }
+
 impl Eq for m512i {}
 
 // m512 (f32) implementations
@@ -2781,7 +2693,7 @@ impl PartialEq for m512 {
   /// assert_ne!(a, b);
   /// ```
   fn eq(&self, other: &Self) -> bool {
-    let mask = cmp_eq_mask_f32_mmask16(*self, *other);
+    let mask = cmp_op_mask_f32::<_MM_CMPINT_EQ>(*self, *other);
     mask == 0xFFFF
   }
 }
@@ -2884,7 +2796,7 @@ impl PartialEq for m512d {
   /// assert_ne!(a, b);
   /// ```
   fn eq(&self, other: &Self) -> bool {
-    let mask = cmp_eq_mask_f64_mmask8(*self, *other);
+    let mask = cmp_op_mask_f64::<_MM_CMPINT_EQ>(*self, *other);
     mask == 0xFF
   }
 }
