@@ -1931,6 +1931,114 @@ pub fn shl_all_u16_m512i(a: m512i, count: u16) -> m512i {
     shl_each_u16_m512i(a, cnt)
 }
 
+/// Lanewise logical left shift for all `i16` lanes by the same runtime count.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i16_m512i(1);
+/// let b: [i16; 32] = shl_all_i16_m512i(a, 3).into();
+/// assert_eq!(b, [8_i16; 32]);
+/// ```
+/// * **Implementation:** broadcast `count` and call [`shl_each_u16_m512i`]
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn shl_all_i16_m512i(a: m512i, count: i16) -> m512i {
+    let cnt = m512i(unsafe { _mm512_set1_epi16(count) });
+    shl_each_u16_m512i(a, cnt)
+}
+
+/// Lanewise arithmetic right shift for all `i16` lanes by the same runtime count.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i16_m512i(-4);
+/// let b: [i16; 32] = shr_all_i16_m512i(a, 1).into();
+/// assert_eq!(b, [-2_i16; 32]);
+/// ```
+/// * **Implementation:** broadcast `count` and call [`_mm512_srav_epi16`]
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn shr_all_i16_m512i(a: m512i, count: i16) -> m512i {
+    let cnt = m512i(unsafe { _mm512_set1_epi16(count) });
+    m512i(unsafe { _mm512_srav_epi16(a.0, cnt.0) })
+}
+
+/// Lanewise logical left shift for all `i32` lanes by the same runtime count.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i32_m512i(1);
+/// let b: [i32; 16] = shl_all_i32_m512i(a, 4).into();
+/// assert_eq!(b, [16_i32; 16]);
+/// ```
+/// * **Implementation:** broadcast `count` and call [`shl_each_u32_m512i`]
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn shl_all_i32_m512i(a: m512i, count: i32) -> m512i {
+    let cnt = m512i(unsafe { _mm512_set1_epi32(count) });
+    shl_each_u32_m512i(a, cnt)
+}
+
+/// Lanewise arithmetic right shift for all `i32` lanes by the same runtime count.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i32_m512i(-16);
+/// let b: [i32; 16] = shr_all_i32_m512i(a, 2).into();
+/// assert_eq!(b, [-4_i32; 16]);
+/// ```
+/// * **Implementation:** broadcast `count` and call [`_mm512_srav_epi32`]
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn shr_all_i32_m512i(a: m512i, count: i32) -> m512i {
+    let cnt = m512i(unsafe { _mm512_set1_epi32(count) });
+    m512i(unsafe { _mm512_srav_epi32(a.0, cnt.0) })
+}
+
+/// Lanewise logical left shift for all `i64` lanes by the same runtime count.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i64_m512i(1);
+/// let b: [i64; 8] = shl_all_i64_m512i(a, 5).into();
+/// assert_eq!(b, [32_i64; 8]);
+/// ```
+/// * **Implementation:** broadcast `count` and call [`shl_each_u64_m512i`]
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn shl_all_i64_m512i(a: m512i, count: i64) -> m512i {
+    let cnt = m512i(unsafe { _mm512_set1_epi64(count) });
+    shl_each_u64_m512i(a, cnt)
+}
+
+/// Lanewise arithmetic right shift for all `i64` lanes by the same runtime count.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i64_m512i(-32);
+/// let b: [i64; 8] = shr_all_i64_m512i(a, 3).into();
+/// assert_eq!(b, [-4_i64; 8]);
+/// ```
+/// * **Implementation:** broadcast `count` and call [`_mm512_srav_epi64`]
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn shr_all_i64_m512i(a: m512i, count: i64) -> m512i {
+    let cnt = m512i(unsafe { _mm512_set1_epi64(count) });
+    m512i(unsafe { _mm512_srav_epi64(a.0, cnt.0) })
+}
+
 /// Lanewise logical right shift for all `u16` lanes by the same runtime count.
 ///
 /// # Examples
