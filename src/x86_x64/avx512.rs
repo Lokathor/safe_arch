@@ -1851,6 +1851,176 @@ pub fn shl_each_u64_m512i(a: m512i, count: m512i) -> m512i {
   m512i(unsafe { _mm512_sllv_epi64(a.0, count.0) })
 }
 
+/// Lanewise logical right shift for `u16` lanes by the matching `u16` count lane.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i16_m512i(0x8000_u16 as i16);
+/// let count = set_splat_i16_m512i(15);
+/// let b: [u16; 32] = shr_each_u16_m512i(a, count).into();
+/// // 0x8000 >> 15 = 1
+/// assert_eq!(b, [1_u16; 32]);
+/// ```
+/// * **Intrinsic:** [`_mm512_srlv_epi16`]
+/// * **Assembly:** `vpsrlvw zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn shr_each_u16_m512i(a: m512i, count: m512i) -> m512i {
+    m512i(unsafe { _mm512_srlv_epi16(a.0, count.0) })
+}
+
+/// Lanewise logical right shift for `u32` lanes by the matching `u32` count lane.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i32_m512i(0x8000_0000_u32 as i32);
+/// let count = set_splat_i32_m512i(31);
+/// let b: [u32; 16] = shr_each_u32_m512i(a, count).into();
+/// // 0x8000_0000 >> 31 = 1
+/// assert_eq!(b, [1_u32; 16]);
+/// ```
+/// * **Intrinsic:** [`_mm512_srlv_epi32`]
+/// * **Assembly:** `vpsrlvd zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn shr_each_u32_m512i(a: m512i, count: m512i) -> m512i {
+    m512i(unsafe { _mm512_srlv_epi32(a.0, count.0) })
+}
+
+/// Lanewise logical right shift for `u64` lanes by the matching `u64` count lane.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i64_m512i(0x8000_0000_0000_0000_u64 as i64);
+/// let count = set_splat_i64_m512i(63);
+/// let b: [u64; 8] = shr_each_u64_m512i(a, count).into();
+/// // 0x8000_0000_0000_0000 >> 63 = 1
+/// assert_eq!(b, [1_u64; 8]);
+/// ```
+/// * **Intrinsic:** [`_mm512_srlv_epi64`]
+/// * **Assembly:** `vpsrlvq zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn shr_each_u64_m512i(a: m512i, count: m512i) -> m512i {
+    m512i(unsafe { _mm512_srlv_epi64(a.0, count.0) })
+}
+
+// Immediate shifts (same shift for all lanes)
+
+/// Lanewise logical left shift for all `u16` lanes by a constant `IMM`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i16_m512i(1);
+/// let b: [u16; 32] = shl_all_u16_m512i::<3>(a).into();
+/// assert_eq!(b, [8_u16; 32]);
+/// ```
+/// * **Intrinsic:** [`_mm512_slli_epi16`]
+/// * **Assembly:** `vpslliw zmm, zmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn shl_all_u16_m512i<const IMM: u32>(a: m512i) -> m512i {
+    m512i(unsafe { _mm512_slli_epi16(a.0, IMM) })
+}
+
+/// Lanewise logical right shift for all `u16` lanes by a constant `IMM`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i16_m512i(0x8000_u16 as i16);
+/// let b: [u16; 32] = shr_all_u16_m512i::<15>(a).into();
+/// assert_eq!(b, [1_u16; 32]);
+/// ```
+/// * **Intrinsic:** [`_mm512_srli_epi16`]
+/// * **Assembly:** `vpsrliw zmm, zmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn shr_all_u16_m512i<const IMM: u32>(a: m512i) -> m512i {
+    m512i(unsafe { _mm512_srli_epi16(a.0, IMM) })
+}
+
+/// Lanewise logical left shift for all `u32` lanes by a constant `IMM`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i32_m512i(1);
+/// let b: [u32; 16] = shl_all_u32_m512i::<4>(a).into();
+/// assert_eq!(b, [16_u32; 16]);
+/// ```
+/// * **Intrinsic:** [`_mm512_slli_epi32`]
+/// * **Assembly:** `vpslld zmm, zmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn shl_all_u32_m512i<const IMM: u32>(a: m512i) -> m512i {
+    m512i(unsafe { _mm512_slli_epi32(a.0, IMM) })
+}
+
+/// Lanewise logical right shift for all `u32` lanes by a constant `IMM`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i32_m512i(0x8000_0000_u32 as i32);
+/// let b: [u32; 16] = shr_all_u32_m512i::<31>(a).into();
+/// assert_eq!(b, [1_u32; 16]);
+/// ```
+/// * **Intrinsic:** [`_mm512_srli_epi32`]
+/// * **Assembly:** `vpsrld zmm, zmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn shr_all_u32_m512i<const IMM: u32>(a: m512i) -> m512i {
+    m512i(unsafe { _mm512_srli_epi32(a.0, IMM) })
+}
+
+/// Lanewise logical left shift for all `u64` lanes by a constant `IMM`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i64_m512i(1);
+/// let b: [u64; 8] = shl_all_u64_m512i::<5>(a).into();
+/// assert_eq!(b, [32_u64; 8]);
+/// ```
+/// * **Intrinsic:** [`_mm512_slli_epi64`]
+/// * **Assembly:** `vpsllq zmm, zmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn shl_all_u64_m512i<const IMM: u32>(a: m512i) -> m512i {
+    m512i(unsafe { _mm512_slli_epi64(a.0, IMM) })
+}
+
+/// Lanewise logical right shift for all `u64` lanes by a constant `IMM`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i64_m512i(0x8000_0000_0000_0000_u64 as i64);
+/// let b: [u64; 8] = shr_all_u64_m512i::<63>(a).into();
+/// assert_eq!(b, [1_u64; 8]);
+/// ```
+/// * **Intrinsic:** [`_mm512_srli_epi64`]
+/// * **Assembly:** `vpsrlq zmm, zmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn shr_all_u64_m512i<const IMM: u32>(a: m512i) -> m512i {
+    m512i(unsafe { _mm512_srli_epi64(a.0, IMM) })
+}
+
 // Extract and insert operations
 
 /// Extracts a 64-bit mask from each of the 64 `i8` lanes’ MSB.
