@@ -608,7 +608,7 @@ pub fn fmadd_m512d(a: m512d, b: m512d, c: m512d) -> m512d {
 /// # use safe_arch::*;
 /// let a = set_splat_i8_m512i(5);
 /// let b = set_splat_i8_m512i(5);
-/// let mask = cmp_eq_i8_mask_m512i(a, b);
+/// let mask = cmp_eq_i8_mask_mmask16(a, b);
 /// assert_eq!(mask, 0xFFFFFFFFFFFFFFFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmpeq_epi8_mask`]
@@ -616,7 +616,7 @@ pub fn fmadd_m512d(a: m512d, b: m512d, c: m512d) -> m512d {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn cmp_eq_i8_mask_m512i(a: m512i, b: m512i) -> mmask64 {
+pub fn cmp_eq_i8_mask_mmask16(a: m512i, b: m512i) -> mmask64 {
   unsafe { _mm512_cmpeq_epi8_mask(a.0, b.0) }
 }
 
@@ -625,7 +625,7 @@ pub fn cmp_eq_i8_mask_m512i(a: m512i, b: m512i) -> mmask64 {
 /// # use safe_arch::*;
 /// let a = set_splat_i8_m512i(5);
 /// let b = set_splat_i8_m512i(5);
-/// let mask = cmp_eq_u8_mask_m512i(a, b);
+/// let mask = cmp_eq_u8_mask_mmask16(a, b);
 /// assert_eq!(mask, 0xFFFFFFFFFFFFFFFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmpeq_epu8_mask`]
@@ -633,7 +633,7 @@ pub fn cmp_eq_i8_mask_m512i(a: m512i, b: m512i) -> mmask64 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn cmp_eq_u8_mask_m512i(a: m512i, b: m512i) -> mmask64 {
+pub fn cmp_eq_u8_mask_mmask16(a: m512i, b: m512i) -> mmask64 {
   unsafe { _mm512_cmpeq_epu8_mask(a.0, b.0) }
 }
 
@@ -642,7 +642,7 @@ pub fn cmp_eq_u8_mask_m512i(a: m512i, b: m512i) -> mmask64 {
 /// # use safe_arch::*;
 /// let a = set_splat_i16_m512i(5);
 /// let b = set_splat_i16_m512i(5);
-/// let mask = cmp_eq_i16_mask_m512i(a, b);
+/// let mask = cmp_eq_i16_mask_mmask16(a, b);
 /// assert_eq!(mask, 0xFFFFFFFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmp_epi16_mask`]
@@ -650,7 +650,7 @@ pub fn cmp_eq_u8_mask_m512i(a: m512i, b: m512i) -> mmask64 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn cmp_eq_i16_mask_m512i(a: m512i, b: m512i) -> mmask32 {
+pub fn cmp_eq_i16_mask_mmask16(a: m512i, b: m512i) -> mmask32 {
   unsafe { _mm512_cmp_epi16_mask(a.0, b.0, _MM_CMPINT_EQ) }
 }
 
@@ -659,7 +659,7 @@ pub fn cmp_eq_i16_mask_m512i(a: m512i, b: m512i) -> mmask32 {
 /// # use safe_arch::*;
 /// let a = set_splat_i32_m512i(5);
 /// let b = set_splat_i32_m512i(5);
-/// let mask = cmp_eq_i32_mask_m512i(a, b);
+/// let mask = cmp_eq_i32_mask_mmask16(a, b);
 /// assert_eq!(mask, 0xFFFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmp_epi32_mask`]
@@ -667,7 +667,7 @@ pub fn cmp_eq_i16_mask_m512i(a: m512i, b: m512i) -> mmask32 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_eq_i32_mask_m512i(a: m512i, b: m512i) -> mmask16 {
+pub fn cmp_eq_i32_mask_mmask16(a: m512i, b: m512i) -> mmask16 {
   unsafe { _mm512_cmp_epi32_mask(a.0, b.0, _MM_CMPINT_EQ) }
 }
 
@@ -676,7 +676,7 @@ pub fn cmp_eq_i32_mask_m512i(a: m512i, b: m512i) -> mmask16 {
 /// # use safe_arch::*;
 /// let a = set_splat_m512(5.0);
 /// let b = set_splat_m512(5.0);
-/// let mask = cmp_eq_mask_m512(a, b);
+/// let mask = cmp_eq_mask_mmask16(a, b);
 /// assert_eq!(mask, 0xFFFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmp_ps_mask`]
@@ -684,7 +684,7 @@ pub fn cmp_eq_i32_mask_m512i(a: m512i, b: m512i) -> mmask16 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_eq_mask_m512(a: m512, b: m512) -> mmask16 {
+pub fn cmp_eq_mask_mmask16(a: m512, b: m512) -> mmask16 {
   unsafe { _mm512_cmp_ps_mask(a.0, b.0, _CMP_EQ_OQ) }
 }
 
@@ -693,7 +693,7 @@ pub fn cmp_eq_mask_m512(a: m512, b: m512) -> mmask16 {
 /// # use safe_arch::*;
 /// let a = set_splat_m512d(5.0);
 /// let b = set_splat_m512d(5.0);
-/// let mask = cmp_eq_mask_m512d(a, b);
+/// let mask = cmp_eq_mask_mmask8(a, b);
 /// assert_eq!(mask, 0xFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmp_pd_mask`]
@@ -701,7 +701,7 @@ pub fn cmp_eq_mask_m512(a: m512, b: m512) -> mmask16 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_eq_mask_m512d(a: m512d, b: m512d) -> mmask8 {
+pub fn cmp_eq_mask_mmask8(a: m512d, b: m512d) -> mmask8 {
   unsafe { _mm512_cmp_pd_mask(a.0, b.0, _CMP_EQ_OQ) }
 }
 
@@ -710,7 +710,7 @@ pub fn cmp_eq_mask_m512d(a: m512d, b: m512d) -> mmask8 {
 /// # use safe_arch::*;
 /// let a = set_splat_i8_m512i(10);
 /// let b = set_splat_i8_m512i(5);
-/// let mask = cmp_gt_i8_mask_m512i(a, b);
+/// let mask = cmp_gt_i8_mask_mmask16(a, b);
 /// assert_eq!(mask, 0xFFFFFFFFFFFFFFFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmpgt_epi8_mask`]
@@ -718,7 +718,7 @@ pub fn cmp_eq_mask_m512d(a: m512d, b: m512d) -> mmask8 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn cmp_gt_i8_mask_m512i(a: m512i, b: m512i) -> mmask64 {
+pub fn cmp_gt_i8_mask_mmask16(a: m512i, b: m512i) -> mmask64 {
   unsafe { _mm512_cmpgt_epi8_mask(a.0, b.0) }
 }
 
@@ -727,7 +727,7 @@ pub fn cmp_gt_i8_mask_m512i(a: m512i, b: m512i) -> mmask64 {
 /// # use safe_arch::*;
 /// let a = set_splat_i8_m512i(10);
 /// let b = set_splat_i8_m512i(5);
-/// let mask = cmp_gt_u8_mask_m512i(a, b);
+/// let mask = cmp_gt_u8_mask_mmask16(a, b);
 /// assert_eq!(mask, 0xFFFFFFFFFFFFFFFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmpgt_epu8_mask`]
@@ -735,7 +735,7 @@ pub fn cmp_gt_i8_mask_m512i(a: m512i, b: m512i) -> mmask64 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn cmp_gt_u8_mask_m512i(a: m512i, b: m512i) -> mmask64 {
+pub fn cmp_gt_u8_mask_mmask16(a: m512i, b: m512i) -> mmask64 {
   unsafe { _mm512_cmpgt_epu8_mask(a.0, b.0) }
 }
 
@@ -744,7 +744,7 @@ pub fn cmp_gt_u8_mask_m512i(a: m512i, b: m512i) -> mmask64 {
 /// # use safe_arch::*;
 /// let a = set_splat_i8_m512i(10);
 /// let b = set_splat_i8_m512i(10);
-/// let mask = cmp_ge_i8_mask_m512i(a, b);
+/// let mask = cmp_ge_i8_mask_mmask16(a, b);
 /// assert_eq!(mask, 0xFFFFFFFFFFFFFFFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmpge_epi8_mask`]
@@ -752,7 +752,7 @@ pub fn cmp_gt_u8_mask_m512i(a: m512i, b: m512i) -> mmask64 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn cmp_ge_i8_mask_m512i(a: m512i, b: m512i) -> mmask64 {
+pub fn cmp_ge_i8_mask_mmask16(a: m512i, b: m512i) -> mmask64 {
   unsafe { _mm512_cmpge_epi8_mask(a.0, b.0) }
 }
 
@@ -761,7 +761,7 @@ pub fn cmp_ge_i8_mask_m512i(a: m512i, b: m512i) -> mmask64 {
 /// # use safe_arch::*;
 /// let a = set_splat_i8_m512i(10);
 /// let b = set_splat_i8_m512i(10);
-/// let mask = cmp_ge_u8_mask_m512i(a, b);
+/// let mask = cmp_ge_u8_mask_mmask16(a, b);
 /// assert_eq!(mask, 0xFFFFFFFFFFFFFFFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmpge_epu8_mask`]
@@ -769,7 +769,7 @@ pub fn cmp_ge_i8_mask_m512i(a: m512i, b: m512i) -> mmask64 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn cmp_ge_u8_mask_m512i(a: m512i, b: m512i) -> mmask64 {
+pub fn cmp_ge_u8_mask_mmask16(a: m512i, b: m512i) -> mmask64 {
   unsafe { _mm512_cmpge_epu8_mask(a.0, b.0) }
 }
 
@@ -778,7 +778,7 @@ pub fn cmp_ge_u8_mask_m512i(a: m512i, b: m512i) -> mmask64 {
 /// # use safe_arch::*;
 /// let a = set_splat_i16_m512i(10);
 /// let b = set_splat_i16_m512i(5);
-/// let mask = cmp_gt_i16_mask_m512i(a, b);
+/// let mask = cmp_gt_i16_mask_mmask16(a, b);
 /// assert_eq!(mask, 0xFFFFFFFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmp_epi16_mask`]
@@ -786,7 +786,7 @@ pub fn cmp_ge_u8_mask_m512i(a: m512i, b: m512i) -> mmask64 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn cmp_gt_i16_mask_m512i(a: m512i, b: m512i) -> mmask32 {
+pub fn cmp_gt_i16_mask_mmask16(a: m512i, b: m512i) -> mmask32 {
   unsafe { _mm512_cmp_epi16_mask(a.0, b.0, _MM_CMPINT_NLE) }
 }
 
@@ -795,7 +795,7 @@ pub fn cmp_gt_i16_mask_m512i(a: m512i, b: m512i) -> mmask32 {
 /// # use safe_arch::*;
 /// let a = set_splat_i16_m512i(10);
 /// let b = set_splat_i16_m512i(5);
-/// let mask = cmp_gt_u16_mask_m512i(a, b);
+/// let mask = cmp_gt_u16_mask_mmask16(a, b);
 /// assert_eq!(mask, 0xFFFFFFFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmp_epu16_mask`]
@@ -803,7 +803,7 @@ pub fn cmp_gt_i16_mask_m512i(a: m512i, b: m512i) -> mmask32 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn cmp_gt_u16_mask_m512i(a: m512i, b: m512i) -> mmask32 {
+pub fn cmp_gt_u16_mask_mmask16(a: m512i, b: m512i) -> mmask32 {
   unsafe { _mm512_cmp_epu16_mask(a.0, b.0, _MM_CMPINT_NLE) }
 }
 
@@ -812,7 +812,7 @@ pub fn cmp_gt_u16_mask_m512i(a: m512i, b: m512i) -> mmask32 {
 /// # use safe_arch::*;
 /// let a = set_splat_i32_m512i(10);
 /// let b = set_splat_i32_m512i(5);
-/// let mask = cmp_gt_i32_mask_m512i(a, b);
+/// let mask = cmp_gt_i32_mask_mmask16(a, b);
 /// assert_eq!(mask, 0xFFFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmp_epi32_mask`]
@@ -820,7 +820,7 @@ pub fn cmp_gt_u16_mask_m512i(a: m512i, b: m512i) -> mmask32 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_gt_i32_mask_m512i(a: m512i, b: m512i) -> mmask16 {
+pub fn cmp_gt_i32_mask_mmask16(a: m512i, b: m512i) -> mmask16 {
   unsafe { _mm512_cmp_epi32_mask(a.0, b.0, _MM_CMPINT_NLE) }
 }
 
@@ -829,7 +829,7 @@ pub fn cmp_gt_i32_mask_m512i(a: m512i, b: m512i) -> mmask16 {
 /// # use safe_arch::*;
 /// let a = set_splat_m512(10.0);
 /// let b = set_splat_m512(5.0);
-/// let mask = cmp_gt_mask_m512(a, b);
+/// let mask = cmp_gt_mask_mmask16(a, b);
 /// assert_eq!(mask, 0xFFFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmp_ps_mask`]
@@ -837,7 +837,7 @@ pub fn cmp_gt_i32_mask_m512i(a: m512i, b: m512i) -> mmask16 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_gt_mask_m512(a: m512, b: m512) -> mmask16 {
+pub fn cmp_gt_mask_mmask16(a: m512, b: m512) -> mmask16 {
   unsafe { _mm512_cmp_ps_mask(a.0, b.0, _CMP_GT_OQ) }
 }
 
@@ -846,7 +846,7 @@ pub fn cmp_gt_mask_m512(a: m512, b: m512) -> mmask16 {
 /// # use safe_arch::*;
 /// let a = set_splat_i8_m512i(10);
 /// let b = set_splat_i8_m512i(10);
-/// let mask = cmp_eq_mask_i8_m512i(a, b);
+/// let mask = cmp_eq_mask_i8_mmask64(a, b);
 /// assert_eq!(mask, 0xFFFFFFFFFFFFFFFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmp_epi8_mask`]
@@ -854,7 +854,7 @@ pub fn cmp_gt_mask_m512(a: m512, b: m512) -> mmask16 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn cmp_eq_mask_i8_m512i(a: m512i, b: m512i) -> mmask64 {
+pub fn cmp_eq_mask_i8_mmask64(a: m512i, b: m512i) -> mmask64 {
   unsafe { _mm512_cmp_epi8_mask(a.0, b.0, _MM_CMPINT_EQ) }
 }
 
@@ -863,7 +863,7 @@ pub fn cmp_eq_mask_i8_m512i(a: m512i, b: m512i) -> mmask64 {
 /// # use safe_arch::*;
 /// let a = set_splat_m512(10.0);
 /// let b = set_splat_m512(10.0);
-/// let mask = cmp_eq_mask_f32_m512(a, b);
+/// let mask = cmp_eq_mask_f32_mmask16(a, b);
 /// assert_eq!(mask, 0xFFFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmp_ps_mask`]
@@ -871,7 +871,7 @@ pub fn cmp_eq_mask_i8_m512i(a: m512i, b: m512i) -> mmask64 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_eq_mask_f32_m512(a: m512, b: m512) -> mmask16 {
+pub fn cmp_eq_mask_f32_mmask16(a: m512, b: m512) -> mmask16 {
   unsafe { _mm512_cmp_ps_mask(a.0, b.0, _CMP_EQ_OQ) }
 }
 
@@ -880,7 +880,7 @@ pub fn cmp_eq_mask_f32_m512(a: m512, b: m512) -> mmask16 {
 /// # use safe_arch::*;
 /// let a = set_splat_m512d(10.0);
 /// let b = set_splat_m512d(10.0);
-/// let mask = cmp_eq_mask_f64_m512d(a, b);
+/// let mask = cmp_eq_mask_f64_mmask8(a, b);
 /// assert_eq!(mask, 0xFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmp_pd_mask`]
@@ -888,7 +888,7 @@ pub fn cmp_eq_mask_f32_m512(a: m512, b: m512) -> mmask16 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_eq_mask_f64_m512d(a: m512d, b: m512d) -> mmask8 {
+pub fn cmp_eq_mask_f64_mmask8(a: m512d, b: m512d) -> mmask8 {
   unsafe { _mm512_cmp_pd_mask(a.0, b.0, _CMP_EQ_OQ) }
 }
 
@@ -897,7 +897,7 @@ pub fn cmp_eq_mask_f64_m512d(a: m512d, b: m512d) -> mmask8 {
 /// # use safe_arch::*;
 /// let a = set_splat_m512d(10.0);
 /// let b = set_splat_m512d(5.0);
-/// let mask = cmp_gt_mask_m512d(a, b);
+/// let mask = cmp_gt_mask_mmask8(a, b);
 /// assert_eq!(mask, 0xFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmp_pd_mask`]
@@ -905,7 +905,7 @@ pub fn cmp_eq_mask_f64_m512d(a: m512d, b: m512d) -> mmask8 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_gt_mask_m512d(a: m512d, b: m512d) -> mmask8 {
+pub fn cmp_gt_mask_mmask8(a: m512d, b: m512d) -> mmask8 {
   unsafe { _mm512_cmp_pd_mask(a.0, b.0, _CMP_GT_OQ) }
 }
 
@@ -914,7 +914,7 @@ pub fn cmp_gt_mask_m512d(a: m512d, b: m512d) -> mmask8 {
 /// # use safe_arch::*;
 /// let a = set_splat_m512(10.0);
 /// let b = set_splat_m512(10.0);
-/// let mask = cmp_ge_mask_m512(a, b);
+/// let mask = cmp_ge_mask_mmask16(a, b);
 /// assert_eq!(mask, 0xFFFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmp_ps_mask`]
@@ -922,7 +922,7 @@ pub fn cmp_gt_mask_m512d(a: m512d, b: m512d) -> mmask8 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_ge_mask_m512(a: m512, b: m512) -> mmask16 {
+pub fn cmp_ge_mask_mmask16(a: m512, b: m512) -> mmask16 {
   unsafe { _mm512_cmp_ps_mask(a.0, b.0, _CMP_GE_OQ) }
 }
 
@@ -931,7 +931,7 @@ pub fn cmp_ge_mask_m512(a: m512, b: m512) -> mmask16 {
 /// # use safe_arch::*;
 /// let a = set_splat_m512d(10.0);
 /// let b = set_splat_m512d(10.0);
-/// let mask = cmp_ge_mask_m512d(a, b);
+/// let mask = cmp_ge_mask_mmask8(a, b);
 /// assert_eq!(mask, 0xFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmp_pd_mask`]
@@ -939,7 +939,7 @@ pub fn cmp_ge_mask_m512(a: m512, b: m512) -> mmask16 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_ge_mask_m512d(a: m512d, b: m512d) -> mmask8 {
+pub fn cmp_ge_mask_mmask8(a: m512d, b: m512d) -> mmask8 {
   unsafe { _mm512_cmp_pd_mask(a.0, b.0, _CMP_GE_OQ) }
 }
 
@@ -948,7 +948,7 @@ pub fn cmp_ge_mask_m512d(a: m512d, b: m512d) -> mmask8 {
 /// # use safe_arch::*;
 /// let a = set_splat_m512(5.0);
 /// let b = set_splat_m512(10.0);
-/// let mask = cmp_lt_mask_m512(a, b);
+/// let mask = cmp_lt_mask_mmask16(a, b);
 /// assert_eq!(mask, 0xFFFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmp_ps_mask`]
@@ -956,7 +956,7 @@ pub fn cmp_ge_mask_m512d(a: m512d, b: m512d) -> mmask8 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_lt_mask_m512(a: m512, b: m512) -> mmask16 {
+pub fn cmp_lt_mask_mmask16(a: m512, b: m512) -> mmask16 {
   unsafe { _mm512_cmp_ps_mask(a.0, b.0, _CMP_LT_OQ) }
 }
 
@@ -965,7 +965,7 @@ pub fn cmp_lt_mask_m512(a: m512, b: m512) -> mmask16 {
 /// # use safe_arch::*;
 /// let a = set_splat_m512d(5.0);
 /// let b = set_splat_m512d(10.0);
-/// let mask = cmp_lt_mask_m512d(a, b);
+/// let mask = cmp_lt_mask_mmask8(a, b);
 /// assert_eq!(mask, 0xFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmp_pd_mask`]
@@ -973,7 +973,7 @@ pub fn cmp_lt_mask_m512(a: m512, b: m512) -> mmask16 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_lt_mask_m512d(a: m512d, b: m512d) -> mmask8 {
+pub fn cmp_lt_mask_mmask8(a: m512d, b: m512d) -> mmask8 {
   unsafe { _mm512_cmp_pd_mask(a.0, b.0, _CMP_LT_OQ) }
 }
 
@@ -982,7 +982,7 @@ pub fn cmp_lt_mask_m512d(a: m512d, b: m512d) -> mmask8 {
 /// # use safe_arch::*;
 /// let a = set_splat_m512(10.0);
 /// let b = set_splat_m512(10.0);
-/// let mask = cmp_le_mask_m512(a, b);
+/// let mask = cmp_le_mask_mmask16(a, b);
 /// assert_eq!(mask, 0xFFFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmp_ps_mask`]
@@ -990,7 +990,7 @@ pub fn cmp_lt_mask_m512d(a: m512d, b: m512d) -> mmask8 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_le_mask_m512(a: m512, b: m512) -> mmask16 {
+pub fn cmp_le_mask_mmask16(a: m512, b: m512) -> mmask16 {
   unsafe { _mm512_cmp_ps_mask(a.0, b.0, _CMP_LE_OQ) }
 }
 
@@ -999,7 +999,7 @@ pub fn cmp_le_mask_m512(a: m512, b: m512) -> mmask16 {
 /// # use safe_arch::*;
 /// let a = set_splat_m512d(10.0);
 /// let b = set_splat_m512d(10.0);
-/// let mask = cmp_le_mask_m512d(a, b);
+/// let mask = cmp_le_mask_mmask8(a, b);
 /// assert_eq!(mask, 0xFF);
 /// ```
 /// * **Intrinsic:** [`_mm512_cmp_pd_mask`]
@@ -1007,7 +1007,7 @@ pub fn cmp_le_mask_m512(a: m512, b: m512) -> mmask16 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn cmp_le_mask_m512d(a: m512d, b: m512d) -> mmask8 {
+pub fn cmp_le_mask_mmask8(a: m512d, b: m512d) -> mmask8 {
   unsafe { _mm512_cmp_pd_mask(a.0, b.0, _CMP_LE_OQ) }
 }
 
@@ -2677,7 +2677,7 @@ impl PartialEq for m512i {
   /// assert_ne!(a, b);
   /// ```
   fn eq(&self, other: &Self) -> bool {
-    let mask = cmp_eq_mask_i8_m512i(*self, *other);
+    let mask = cmp_eq_mask_i8_mmask64(*self, *other);
     mask == 0xFFFFFFFFFFFFFFFF_u64
   }
 }
@@ -2781,7 +2781,7 @@ impl PartialEq for m512 {
   /// assert_ne!(a, b);
   /// ```
   fn eq(&self, other: &Self) -> bool {
-    let mask = cmp_eq_mask_f32_m512(*self, *other);
+    let mask = cmp_eq_mask_f32_mmask16(*self, *other);
     mask == 0xFFFF
   }
 }
@@ -2884,7 +2884,7 @@ impl PartialEq for m512d {
   /// assert_ne!(a, b);
   /// ```
   fn eq(&self, other: &Self) -> bool {
-    let mask = cmp_eq_mask_f64_m512d(*self, *other);
+    let mask = cmp_eq_mask_f64_mmask8(*self, *other);
     mask == 0xFF
   }
 }
