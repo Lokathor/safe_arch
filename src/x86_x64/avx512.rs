@@ -1741,7 +1741,7 @@ pub fn shl_each_u64_m512i(a: m512i, count: m512i) -> m512i {
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
 pub fn extract_m256i_from_m512i<const LANE: i32>(a: m512i) -> m256i {
-  m256i(unsafe { _mm512_extracti64x4_epi64(a.0, LANE) })
+    m256i(unsafe { _mm512_extracti64x4_epi64(a.0, LANE) })
 }
 
 /// Extract 256-bit float from `a` at the specified index.
@@ -1795,7 +1795,7 @@ pub fn extract_m256d_from_m512d<const LANE: i32>(a: m512d) -> m256d {
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
 pub fn insert_m256i_to_m512i<const LANE: i32>(a: m512i, b: m256i) -> m512i {
-  m512i(unsafe { _mm512_inserti64x4(a.0, b.0, LANE) })
+    m512i(unsafe { _mm512_inserti64x4(a.0, b.0, LANE) })
 }
 
 /// Insert 256-bit single-precision float into `a` at the specified index.
@@ -1834,6 +1834,126 @@ pub fn insert_m256d_to_m512d<const LANE: i32>(a: m512d, b: m256d) -> m512d {
 }
 
 // Cast operations
+
+/// Expand a `__mmask16` into a full-width `__m512` mask vector for `f32` lanes.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let full = maskz_mov_f32_m512(!0u16);
+/// assert_eq!(full.to_bits(), [u32::MAX; 16]);
+/// let none = maskz_mov_f32_m512(0);
+/// assert_eq!(none, set_splat_m512(0.0));
+/// ```
+/// * **Intrinsic:** `_mm512_maskz_mov_ps`  
+/// * **Assembly:** `VMOVDQU32 zmm{dest}{mask}{z}, zmmones`
+#[must_use]
+#[inline(always)]
+#[cfg(target_feature = "avx512f")]
+pub fn maskz_mov_f32_m512(mask: __mmask16) -> m512 {
+    let ones: __m512 = unsafe { _mm512_castsi512_ps(_mm512_set1_epi32(-1)) };
+    m512(unsafe { _mm512_maskz_mov_ps(mask, ones) })
+}
+
+/// Expand a `__mmask16` into a full-width `__m512d` mask vector for `f64` lanes.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let full = maskz_mov_f64_m512d(!0u8);
+/// assert_eq!(full.to_bits(), [u64::MAX; 8]);
+/// let none = maskz_mov_f64_m512d(0);
+/// assert_eq!(none, set_splat_m512d(0.0));
+/// ```
+/// * **Intrinsic:** `_mm512_maskz_mov_pd`  
+/// * **Assembly:** `VMOVDQU64 zmm{dest}{mask}{z}, zmmones`
+#[must_use]
+#[inline(always)]
+#[cfg(target_feature = "avx512f")]
+pub fn maskz_mov_f64_m512d(mask: __mmask8) -> m512d {
+    let ones: __m512d = unsafe { _mm512_castsi512_pd(_mm512_set1_epi64(-1)) };
+    m512d(unsafe { _mm512_maskz_mov_pd(mask, ones) })
+}
+
+/// Expand a `mmask8` into a full-width `__m512i` mask vector for 8 lanes of `i64`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let full = maskz_mov_i64_m512i(!0u8);
+/// assert_eq!(full, set_splat_i64_m512i(-1));
+/// let none = maskz_mov_i64_m512i(0);
+/// assert_eq!(none, set_splat_i64_m512i(0));
+/// ```
+/// * **Intrinsic:** `_mm512_maskz_mov_epi64`  
+/// * **Assembly:** `VMOVDQU64 zmm{dest}{mask}{z}, zmmones`
+#[must_use]
+#[inline(always)]
+#[cfg(target_feature = "avx512f")]
+pub fn maskz_mov_i64_m512i(mask: __mmask8) -> m512i {
+    let ones: __m512i = unsafe { _mm512_set1_epi64(-1) };
+    m512i(unsafe { _mm512_maskz_mov_epi64(mask, ones) })
+}
+
+/// Expand a `mmask16` into a full-width `__m512i` mask vector for 16 lanes of `i32`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let full = maskz_mov_i32_m512i(!0u16);
+/// assert_eq!(full, set_splat_i32_m512i(-1));
+/// let none = maskz_mov_i32_m512i(0);
+/// assert_eq!(none, set_splat_i32_m512i(0));
+/// ```
+/// * **Intrinsic:** `_mm512_maskz_mov_epi32`  
+/// * **Assembly:** `VMOVDQU32 zmm{dest}{mask}{z}, zmmones`
+#[must_use]
+#[inline(always)]
+#[cfg(target_feature = "avx512f")]
+pub fn maskz_mov_i32_m512i(mask: __mmask16) -> m512i {
+    let ones: __m512i = unsafe { _mm512_set1_epi32(-1) };
+    m512i(unsafe { _mm512_maskz_mov_epi32(mask, ones) })
+}
+
+/// Expand a `mmask32` into a full-width `__m512i` mask vector for 32 lanes of `i16`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let full = maskz_mov_i16_m512i(!0u32);
+/// assert_eq!(full.to_array(), [i16::MAX; 32]);
+/// let none = maskz_mov_i16_m512i(0);
+/// assert_eq!(none.to_array(), [0; 32]);
+/// ```
+/// * **Intrinsic:** `_mm512_maskz_mov_epi16`  
+/// * **Assembly:** `VMOVDQU16 zmm{dest}{mask}{z}, zmmones`
+#[must_use]
+#[inline(always)]
+#[cfg(target_feature = "avx512bw")]
+pub fn maskz_mov_i16_m512i(mask: __mmask32) -> m512i {
+    let ones: __m512i = unsafe { _mm512_set1_epi16(-1) };
+    m512i(unsafe { _mm512_maskz_mov_epi16(mask, ones) })
+}
+
+/// Expand a `mmask64` into a full-width `__m512i` mask vector for 64 lanes of `i8`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let full = maskz_mov_i8_m512i(!0u64);
+/// assert_eq!(full.to_array(), [i8::MAX; 64]);
+/// let none = maskz_mov_i8_m512i(0);
+/// assert_eq!(none.to_array(), [0; 64]);
+/// ```
+/// * **Intrinsic:** `_mm512_maskz_mov_epi8`  
+/// * **Assembly:** `VMOVDQU8 zmm{dest}{mask}{z}, zmmones`
+#[must_use]
+#[inline(always)]
+#[cfg(target_feature = "avx512bw")]
+pub fn maskz_mov_i8_m512i(mask: __mmask64) -> m512i {
+    let ones: __m512i = unsafe { _mm512_set1_epi8(-1) };
+    m512i(unsafe { _mm512_maskz_mov_epi8(mask, ones) })
+}
 
 /// Cast `m256i` to `m512i` (no conversion, upper bits undefined).
 /// ```

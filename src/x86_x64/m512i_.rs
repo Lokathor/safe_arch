@@ -25,6 +25,47 @@ unsafe impl bytemuck::Pod for m512i {}
 #[cfg(feature = "bytemuck")]
 unsafe impl bytemuck::TransparentWrapper<__m512i> for m512i {}
 
+impl m512i {
+  /// Transmutes the `m512i` to an array.
+  ///
+  /// Same as `m.into()`, just lets you be more explicit about what's happening.
+  #[must_use]
+  #[inline(always)]
+  pub fn to_array(self) -> [i32; 16] {
+    self.into()
+  }
+
+  /// Transmutes an array into `m512i`.
+  ///
+  /// Same as `m512i::from(arr)`, it just lets you be more explicit about what's
+  /// happening.
+  #[must_use]
+  #[inline(always)]
+  pub fn from_array(f: [i32; 16]) -> Self {
+    f.into()
+  }
+
+  //
+
+  /// Converts into the bit patterns of these doubles (`[u64;8]`).
+  ///
+  /// Like [`f64::to_bits`](f64::to_bits), but all eight lanes at once.
+  #[must_use]
+  #[inline(always)]
+  pub fn to_bits(self) -> [i32; 16] {
+    unsafe { core::mem::transmute(self) }
+  }
+
+  /// Converts from the bit patterns of these doubles (`[u64;8]`).
+  ///
+  /// Like [`f64::from_bits`](f64::from_bits), but all eight lanes at once.
+  #[must_use]
+  #[inline(always)]
+  pub fn from_bits(bits: [i32; 16]) -> Self {
+    unsafe { core::mem::transmute(bits) }
+  }
+}
+
 impl Clone for m512i {
   #[must_use]
   #[inline(always)]
