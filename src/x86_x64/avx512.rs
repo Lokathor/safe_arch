@@ -532,6 +532,59 @@ pub fn mul_i32_keep_low_m512i(a: m512i, b: m512i) -> m512i {
   m512i(unsafe { _mm512_mullo_epi32(a.0, b.0) })
 }
 
+/// Multiply the `i16` lanes and keep the high half of each 32‐bit product.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// // 0x4000×0x4000 = 0x1000_0000 → high 16 bits = 0x1000 (4096)
+/// let a = set_splat_i16_m512i(0x4000);
+/// let b = set_splat_i16_m512i(0x4000);
+/// let c: [i16; 32] = mul_i16_keep_high_m512i(a, b).into();
+/// assert_eq!(c, [0x1000_i16; 32]);
+///
+/// // Test a negative case: -0x4000×0x4000 = -0x1000_0000 → high 16 bits = 0xF000 (-4096)
+/// let a2 = set_splat_i16_m512i(-0x4000);
+/// let c2: [i16; 32] = mul_i16_keep_high_m512i(a2, b).into();
+/// assert_eq!(c2, [(-0x1000_i16); 32]);
+/// ```
+/// * **Intrinsic:** [`_mm512_mulhi_epi16`]  
+/// * **Assembly:** `vpmulhw zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg(target_feature = "avx512f")]
+pub fn mul_i16_keep_high_m512i(a: m512i, b: m512i) -> m512i {
+  m512i(unsafe { _mm512_mulhi_epi16(a.0, b.0) })
+}
+
+/// Multiply the `u16` lanes and keep the high half of each 32‐bit product.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// // 0x8000×0x8000 = 0x4000_0000 → high 16 bits = 0x4000 (16384)
+/// let a = set_splat_i16_m512i(0x8000u16 as i16);
+/// let b = set_splat_i16_m512i(0x8000u16 as i16);
+/// let c: [u16; 32] = mul_u16_keep_high_m512i(a, b).into();
+/// assert_eq!(c, [0x4000_u16; 32]);
+///
+/// // A mixed‐value test:  
+/// let a2 = set_splat_i16_m512i(0x1234);
+/// let b2 = set_splat_i16_m512i(0x00FF);
+/// // 0x1234×0x00FF = 0x1234 × 255 = 0x1234×0x00FF = 0x1234×0x00FF = 0x1234×0x00FF = 0x2FE * 0x100 + ... 
+/// // actually 0x1234=4660, ×255=1_188_300 = 0x122A6C → high16 = 0x0012 (18)
+/// let c2: [u16; 32] = mul_u16_keep_high_m512i(a2, b2).into();
+/// assert_eq!(c2, [0x0012_u16; 32]);
+/// ```
+/// * **Intrinsic:** [`_mm512_mulhi_epu16`]  
+/// * **Assembly:** `vpmulhuw zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg(target_feature = "avx512f")]
+pub fn mul_u16_keep_high_m512i(a: m512i, b: m512i) -> m512i {
+  m512i(unsafe { _mm512_mulhi_epu16(a.0, b.0) })
+}
+
 /// Lanewise `a / b` with lanes as `f32`.
 /// ```
 /// # use safe_arch::*;
