@@ -2672,6 +2672,31 @@ pub fn cast_m512d_to_m256d(a: m512d) -> m256d {
 
 // Permutation operations
 
+/// Shuffle the 32-bit lanes within each 128-bit chunk of a 512-bit vector.
+///
+/// This is the AVX-512 version of AVX2’s `_mm256_shuffle_epi32`, operating
+/// in four-lane groups inside the ZMM register.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// // [a0,a1,a2,a3,  a4,a5,a6,a7,  …]
+/// let a = m512i::from([0,1,2,3,  4,5,6,7,  8,9,10,11, 12,13,14,15]);
+/// // IMM = 0b_10_11_00_01 = 0x2D means
+/// //   for each 4-lane chunk pick lanes [1,0,3,2]
+/// let c: [i32;16] = shuffle_i32_m512i::<0x2D>(a).into();
+/// assert_eq!(&c[0..4], &[1,0,3,2]);
+/// assert_eq!(&c[4..8], &[5,4,7,6]);
+/// ```
+/// * **Intrinsic:** [`_mm512_shuffle_epi32`]
+/// * **Assembly:** `vpshufd zmm, zmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn shuffle_i32_m512i<const IMM: i32>(a: m512i) -> m512i {
+    m512i(unsafe { _mm512_shuffle_epi32(a.0, IMM) })
+}
+
 /// Shuffle `i32` values between `a` and `b` using variable indices.
 /// ```
 /// # use safe_arch::*;
