@@ -915,14 +915,14 @@ pub fn cmp_op_mask_u64_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// # use safe_arch::*;
 /// let a = set_splat_m512(3.0);
 /// let b = set_splat_m512(5.0);
-/// let v = cmp_op_mask_f32_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(a, b);
+/// let v = cmp_op_mask_m512::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(a, b);
 /// assert_eq!(v.to_bits(), [u32::MAX; 16]);
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_ps_mask`, `_mm512_maskz_mov_ps`
 /// * **Assembly:** `VCMPPS k, zmm, zmm, imm8` + masked move
 #[must_use] #[inline(always)]
 #[cfg(target_feature = "avx512f")]
-pub fn cmp_op_mask_f32_m512i<const OP: i32>(a: m512, b: m512) -> m512 {
+pub fn cmp_op_mask_m512<const OP: i32>(a: m512, b: m512) -> m512 {
     let m = unsafe { _mm512_cmp_ps_mask(a.0, b.0, OP) };
     m512(unsafe {
         let ones = _mm512_castsi512_ps(_mm512_set1_epi32(-1));
@@ -935,14 +935,14 @@ pub fn cmp_op_mask_f32_m512i<const OP: i32>(a: m512, b: m512) -> m512 {
 /// # use safe_arch::*;
 /// let a = set_splat_m512d(3.0);
 /// let b = set_splat_m512d(3.0);
-/// let v = cmp_op_mask_f64_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// let v = cmp_op_mask_m512d::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
 /// assert_eq!(v.to_bits(), [u64::MAX; 8]);
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_pd_mask`, `_mm512_maskz_mov_pd`
 /// * **Assembly:** `VCMPPD k, zmm, zmm, imm8` + masked move
 #[must_use] #[inline(always)]
 #[cfg(target_feature = "avx512f")]
-pub fn cmp_op_mask_f64_m512i<const OP: i32>(a: m512d, b: m512d) -> m512d {
+pub fn cmp_op_mask_m512d<const OP: i32>(a: m512d, b: m512d) -> m512d {
     let m = unsafe { _mm512_cmp_pd_mask(a.0, b.0, OP) };
     m512d(unsafe {
         let ones = _mm512_castsi512_pd(_mm512_set1_epi64(-1));
