@@ -1913,112 +1913,112 @@ pub fn shr_each_u64_m512i(a: m512i, count: m512i) -> m512i {
 
 // Immediate shifts (same shift for all lanes)
 
-/// Lanewise logical left shift for all `u16` lanes by a constant `IMM`.
+/// Lanewise logical left shift for all `u16` lanes by the same runtime count.
 ///
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
 /// let a = set_splat_i16_m512i(1);
-/// let b: [u16; 32] = shl_all_u16_m512i::<3>(a).into();
+/// let b: [u16; 32] = shl_all_u16_m512i(a, 3).into();
 /// assert_eq!(b, [8_u16; 32]);
 /// ```
-/// * **Intrinsic:** [`_mm512_slli_epi16`]
-/// * **Assembly:** `vpslliw zmm, zmm, imm8`
+/// * **Implementation:** broadcast `count` and call `shl_each_u16_m512i`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn shl_all_u16_m512i<const IMM: u32>(a: m512i) -> m512i {
-    m512i(unsafe { _mm512_slli_epi16(a.0, IMM) })
+pub fn shl_all_u16_m512i(a: m512i, count: u16) -> m512i {
+    let cnt = m512i(unsafe { _mm512_set1_epi16(count as i16) });
+    shl_each_u16_m512i(a, cnt)
 }
 
-/// Lanewise logical right shift for all `u16` lanes by a constant `IMM`.
+/// Lanewise logical right shift for all `u16` lanes by the same runtime count.
 ///
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
 /// let a = set_splat_i16_m512i(0x8000_u16 as i16);
-/// let b: [u16; 32] = shr_all_u16_m512i::<15>(a).into();
+/// let b: [u16; 32] = shr_all_u16_m512i(a, 15).into();
 /// assert_eq!(b, [1_u16; 32]);
 /// ```
-/// * **Intrinsic:** [`_mm512_srli_epi16`]
-/// * **Assembly:** `vpsrliw zmm, zmm, imm8`
+/// * **Implementation:** broadcast `count` and call `shr_each_u16_m512i`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn shr_all_u16_m512i<const IMM: u32>(a: m512i) -> m512i {
-    m512i(unsafe { _mm512_srli_epi16(a.0, IMM) })
+pub fn shr_all_u16_m512i(a: m512i, count: u16) -> m512i {
+    let cnt = m512i(unsafe { _mm512_set1_epi16(count as i16) });
+    shr_each_u16_m512i(a, cnt)
 }
 
-/// Lanewise logical left shift for all `u32` lanes by a constant `IMM`.
+/// Lanewise logical left shift for all `u32` lanes by the same runtime count.
 ///
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
 /// let a = set_splat_i32_m512i(1);
-/// let b: [u32; 16] = shl_all_u32_m512i::<4>(a).into();
+/// let b: [u32; 16] = shl_all_u32_m512i(a, 4).into();
 /// assert_eq!(b, [16_u32; 16]);
 /// ```
-/// * **Intrinsic:** [`_mm512_slli_epi32`]
-/// * **Assembly:** `vpslld zmm, zmm, imm8`
+/// * **Implementation:** broadcast `count` and call `shl_each_u32_m512i`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn shl_all_u32_m512i<const IMM: u32>(a: m512i) -> m512i {
-    m512i(unsafe { _mm512_slli_epi32(a.0, IMM) })
+pub fn shl_all_u32_m512i(a: m512i, count: u32) -> m512i {
+    let cnt = m512i(unsafe { _mm512_set1_epi32(count as i32) });
+    shl_each_u32_m512i(a, cnt)
 }
 
-/// Lanewise logical right shift for all `u32` lanes by a constant `IMM`.
+/// Lanewise logical right shift for all `u32` lanes by the same runtime count.
 ///
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
 /// let a = set_splat_i32_m512i(0x8000_0000_u32 as i32);
-/// let b: [u32; 16] = shr_all_u32_m512i::<31>(a).into();
+/// let b: [u32; 16] = shr_all_u32_m512i(a, 31).into();
 /// assert_eq!(b, [1_u32; 16]);
 /// ```
-/// * **Intrinsic:** [`_mm512_srli_epi32`]
-/// * **Assembly:** `vpsrld zmm, zmm, imm8`
+/// * **Implementation:** broadcast `count` and call `shr_each_u32_m512i`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn shr_all_u32_m512i<const IMM: u32>(a: m512i) -> m512i {
-    m512i(unsafe { _mm512_srli_epi32(a.0, IMM) })
+pub fn shr_all_u32_m512i(a: m512i, count: u32) -> m512i {
+    let cnt = m512i(unsafe { _mm512_set1_epi32(count as i32) });
+    shr_each_u32_m512i(a, cnt)
 }
 
-/// Lanewise logical left shift for all `u64` lanes by a constant `IMM`.
+/// Lanewise logical left shift for all `u64` lanes by the same runtime count.
 ///
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
 /// let a = set_splat_i64_m512i(1);
-/// let b: [u64; 8] = shl_all_u64_m512i::<5>(a).into();
+/// let b: [u64; 8] = shl_all_u64_m512i(a, 5).into();
 /// assert_eq!(b, [32_u64; 8]);
 /// ```
-/// * **Intrinsic:** [`_mm512_slli_epi64`]
-/// * **Assembly:** `vpsllq zmm, zmm, imm8`
+/// * **Implementation:** broadcast `count` and call `shl_each_u64_m512i`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn shl_all_u64_m512i<const IMM: u32>(a: m512i) -> m512i {
-    m512i(unsafe { _mm512_slli_epi64(a.0, IMM) })
+pub fn shl_all_u64_m512i(a: m512i, count: u64) -> m512i {
+    let cnt = m512i(unsafe { _mm512_set1_epi64(count as i64) });
+    shl_each_u64_m512i(a, cnt)
 }
 
-/// Lanewise logical right shift for all `u64` lanes by a constant `IMM`.
+/// Lanewise logical right shift for all `u64` lanes by the same runtime count.
 ///
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
 /// let a = set_splat_i64_m512i(0x8000_0000_0000_0000_u64 as i64);
-/// let b: [u64; 8] = shr_all_u64_m512i::<63>(a).into();
+/// let b: [u64; 8] = shr_all_u64_m512i(a, 63).into();
 /// assert_eq!(b, [1_u64; 8]);
 /// ```
-/// * **Intrinsic:** [`_mm512_srli_epi64`]
-/// * **Assembly:** `vpsrlq zmm, zmm, imm8`
+/// * **Implementation:** broadcast `count` and call `shr_each_u64_m512i`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn shr_all_u64_m512i<const IMM: u32>(a: m512i) -> m512i {
-    m512i(unsafe { _mm512_srli_epi64(a.0, IMM) })
+pub fn shr_all_u64_m512i(a: m512i, count: u64) -> m512i {
+    let cnt = m512i(unsafe { _mm512_set1_epi64(count as i64) });
+    shr_each_u64_m512i(a, cnt)
 }
 
 // Extract and insert operations
