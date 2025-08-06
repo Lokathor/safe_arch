@@ -532,6 +532,28 @@ pub fn mul_i32_keep_low_m512i(a: m512i, b: m512i) -> m512i {
   m512i(unsafe { _mm512_mullo_epi32(a.0, b.0) })
 }
 
+/// Signed widening multiply of the 32-bit lanes → 64-bit lanes.
+///
+/// * **Intrinsic:** [`_mm512_mul_epi32`]
+/// * **Assembly:** `vpmulldq zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg(target_feature = "avx512dq")]
+pub fn mul_i32_wide_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_mul_epi32(a.0, b.0) })
+}
+
+/// Unsigned widening multiply of the 32-bit lanes → 64-bit lanes.
+///
+/// * **Intrinsic:** [`_mm512_mul_epu32`]
+/// * **Assembly:** `vpmuludq zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg(target_feature = "avx512dq")]
+pub fn mul_u32_wide_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_mul_epu32(a.0, b.0) })
+}
+
 /// Multiply the `i16` lanes and keep the high half of each 32‐bit product.
 ///
 /// # Examples
@@ -1894,6 +1916,51 @@ pub fn extract_m256_from_m512<const LANE: i32>(a: m512) -> m256 {
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
 pub fn extract_m256d_from_m512d<const LANE: i32>(a: m512d) -> m256d {
     m256d(unsafe { _mm512_extractf64x4_pd(a.0, LANE) })
+}
+
+/// Extracts a 256-bit integer vector of eight `i32` lanes from `a` at the specified index.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = m512i::from([
+///     1_i32, 2, 3, 4,     // low half
+///     5, 6, 7, 8,         // low half
+///     9, 10, 11, 12,      // high half
+///     13, 14, 15, 16,     // high half
+/// ]);
+/// let lo: [i32; 8] = extract_m256i32_from_m512i::<0>(a).into();
+/// assert_eq!(lo, [1, 2, 3, 4, 5, 6, 7, 8]);
+/// let hi: [i32; 8] = extract_m256i32_from_m512i::<1>(a).into();
+/// assert_eq!(hi, [9, 10, 11, 12, 13, 14, 15, 16]);
+/// ```
+/// * **Intrinsic:** [`_mm512_extracti32x8_epi32`]
+/// * **Assembly:** `vextracti32x8 ymm, zmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512dq")))]
+pub fn extract_m256i32_from_m512i<const LANE: i32>(a: m512i) -> m256i {
+    m256i(unsafe { _mm512_extracti32x8_epi32(a.0, LANE) })
+}
+
+/// Inserts a 256-bit integer vector of eight `i32` lanes `b` into `a` at the specified index.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = m512i::from([1_i32; 16]);
+/// let b = m256i::from([10_i32, 11, 12, 13, 14, 15, 16, 17]);
+/// let c: [i32; 16] = insert_m256i32_to_m512i::<1>(a, b).into();
+/// // low half unchanged, high half replaced by `b`
+/// assert_eq!(c, [1,1,1,1,1,1,1,1,10,11,12,13,14,15,16,17]);
+/// ```
+/// * **Intrinsic:** [`_mm512_inserti32x8`]
+/// * **Assembly:** `vinserti32x8 zmm, zmm, ymm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512dq")))]
+pub fn insert_m256i32_to_m512i<const LANE: i32>(a: m512i, b: m256i) -> m512i {
+    m512i(unsafe { _mm512_inserti32x8(a.0, b.0, LANE) })
 }
 
 /// Insert 256-bit integer into `a` at the specified index.
