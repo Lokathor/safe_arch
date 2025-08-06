@@ -1426,7 +1426,7 @@ pub fn convert_to_i8_m256i_from_i16_m512i(a: m512i) -> m256i {
 /// ```
 /// # use safe_arch::*;
 /// let a = set_splat_m512d(5.5);
-/// let b: [i64; 8] = convert_m512d_i64_m512i(a).into();
+/// let b: [i64; 8] = convert_to_i64_m512i_from_m512d(a).into();
 /// assert_eq!(b, [6_i64; 8]);
 /// ```
 /// * **Intrinsic:** [`_mm512_cvtpd_epi64`]
@@ -1434,7 +1434,7 @@ pub fn convert_to_i8_m256i_from_i16_m512i(a: m512i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn convert_m512d_i64_m512i(a: m512d) -> m512i {
+pub fn convert_to_i64_m512i_from_m512d(a: m512d) -> m512i {
   m512i(unsafe { _mm512_cvtpd_epi64(a.0) })
 }
 
@@ -1442,7 +1442,7 @@ pub fn convert_m512d_i64_m512i(a: m512d) -> m512i {
 /// ```
 /// # use safe_arch::*;
 /// let a = set_splat_m512(5.5);
-/// let b: [i32; 16] = convert_m512_i32_m512i(a).into();
+/// let b: [i32; 16] = convert_to_i32_m512i_from_m512(a).into();
 /// assert_eq!(b, [6_i32; 16]);
 /// ```
 /// * **Intrinsic:** [`_mm512_cvtps_epi32`]
@@ -1450,7 +1450,7 @@ pub fn convert_m512d_i64_m512i(a: m512d) -> m512i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn convert_m512_i32_m512i(a: m512) -> m512i {
+pub fn convert_to_i32_m512i_from_m512(a: m512) -> m512i {
   m512i(unsafe { _mm512_cvtps_epi32(a.0) })
 }
 
