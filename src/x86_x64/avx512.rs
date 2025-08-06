@@ -1394,7 +1394,7 @@ pub fn blend_varying_i32_m512i(a: m512i, b: m512i, mask: mmask16) -> m512i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn blend_m512(a: m512, b: m512, mask: mmask16) -> m512 {
+pub fn blend_varying_m512(a: m512, b: m512, mask: mmask16) -> m512 {
   m512(unsafe { _mm512_mask_blend_ps(mask, a.0, b.0) })
 }
 
@@ -1414,7 +1414,7 @@ pub fn blend_m512(a: m512, b: m512, mask: mmask16) -> m512 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn blend_m512d(a: m512d, b: m512d, mask: mmask8) -> m512d {
+pub fn blend_varying_m512d(a: m512d, b: m512d, mask: mmask8) -> m512d {
   m512d(unsafe { _mm512_mask_blend_pd(mask, a.0, b.0) })
 }
 
