@@ -62,6 +62,57 @@ pub fn zeroed_m512() -> m512 {
     m512(unsafe { _mm512_setzero_ps() })
 }
 
+/// Shuffle the `f64` lanes from `a` and `b` together using an immediate control
+/// value, across all eight double-precision lanes in the ZMM register.
+/// 
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = m512d::from([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
+/// let b = m512d::from([10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0]);
+/// // IMM = 0 selects A0,B0, A2,B2, A4,B4, A6,B6
+/// let c: [f64; 8] = shuffle_m512d::<0>(a, b).into();
+/// assert_eq!(c, [1.0, 10.0, 3.0, 12.0, 5.0, 14.0, 7.0, 16.0]);
+/// ```
+/// * **Intrinsic:** [`_mm512_shuffle_pd`]
+/// * **Assembly:** `vshufpd zmm, zmm, zmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn shuffle_m512d<const IMM: i32>(a: m512d, b: m512d) -> m512d {
+    m512d(unsafe { _mm512_shuffle_pd(a.0, b.0, IMM) })
+}
+
+/// Shuffle the `f32` lanes from `a` and `b` together using an immediate control
+/// value, across all sixteen single-precision lanes in the ZMM register.
+/// 
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = m512::from([
+///     1.0, 2.0, 3.0, 4.0,   5.0, 6.0, 7.0, 8.0,
+///     9.0, 10.0,11.0,12.0,  13.0,14.0,15.0,16.0,
+/// ]);
+/// let b = m512::from([
+///     10.0,11.0,12.0,13.0,  14.0,15.0,16.0,17.0,
+///     18.0,19.0,20.0,21.0,  22.0,23.0,24.0,25.0,
+/// ]);
+/// // IMM = 0: each 4-lane block produces [a0,a0,b0,b0]
+/// let c: [f32; 16] = shuffle_m512::<0>(a, b).into();
+/// assert_eq!(&c[0..4], &[1.0, 1.0, 10.0, 10.0]);
+/// assert_eq!(&c[4..8], &[5.0, 5.0, 14.0, 14.0]);
+/// assert_eq!(&c[8..12], &[9.0, 9.0, 18.0, 18.0]);
+/// assert_eq!(&c[12..16], &[13.0,13.0,22.0,22.0]);
+/// ```
+/// * **Intrinsic:** [`_mm512_shuffle_ps`]
+/// * **Assembly:** `vshufps zmm, zmm, zmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn shuffle_m512<const IMM: i32>(a: m512, b: m512) -> m512 {
+    m512(unsafe { _mm512_shuffle_ps(a.0, b.0, IMM) })
+}
+
 /// Sets all `i8` lanes to the value given.
 /// ```
 /// # use safe_arch::*;

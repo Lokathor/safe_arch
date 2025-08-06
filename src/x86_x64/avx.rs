@@ -1933,7 +1933,7 @@ pub fn sqrt_m256d(a: m256d) -> m256d {
   m256d(unsafe { _mm256_sqrt_pd(a.0) })
 }
 
-/// Lanewise `sqrt` on `f64` lanes.
+/// Lanewise `sqrt` on `f32` lanes.
 ///
 /// * **Intrinsic:** [``]
 /// * **Assembly:**
