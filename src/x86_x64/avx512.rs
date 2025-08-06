@@ -1465,6 +1465,25 @@ pub fn convert_to_i16_m512i_from_u8_m256i(a: m256i) -> m512i {
   m512i(unsafe { _mm512_cvtepu8_epi16(a.0) })
 }
 
+/// Convert `u8` values to `u16` values (zero-extend).
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// // 0xFF_u8 → 255 → as u16 still 255
+/// let a = m256i::from([0xFFu8 as i8; 32]);
+/// let b: [u16; 32] = convert_to_u16_m512i_from_u8_m256i(a).into();
+/// assert_eq!(b, [0x00FFu16; 32]);
+/// ```
+/// * **Intrinsic:** [`_mm512_cvtepu8_epi16`]
+/// * **Assembly:** `vpmovzxbw zmm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn convert_to_u16_m512i_from_u8_m256i(a: m256i) -> m512i {
+    m512i(unsafe { _mm512_cvtepu8_epi16(a.0) })
+}
+
 /// Convert `i16` values to `i32` values.
 /// ```
 /// # use safe_arch::*;
@@ -1479,6 +1498,25 @@ pub fn convert_to_i16_m512i_from_u8_m256i(a: m256i) -> m512i {
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
 pub fn convert_to_i32_m512i_from_i16_m256i(a: m256i) -> m512i {
   m512i(unsafe { _mm512_cvtepi16_epi32(a.0) })
+}
+
+/// Convert `u16` values to `u32` values (zero-extend).
+/// 
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// // 0xFFFFu16 → 65535 → as u32 still 65535
+/// let a = m256i::from([0xFFFFu16 as i16; 16]);
+/// let b: [u32; 16] = convert_to_u32_m512i_from_u16_m256i(a).into();
+/// assert_eq!(b, [0x0000_FFFFu32; 16]);
+/// ```
+/// * **Intrinsic:** [`_mm512_cvtepu16_epi32`]
+/// * **Assembly:** `vpmovzxwd zmm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn convert_to_u32_m512i_from_u16_m256i(a: m256i) -> m512i {
+    unsafe { m512i(_mm512_cvtepu16_epi32(a.0)) }
 }
 
 /// Convert `i16` values to `i8` values, saturating.
