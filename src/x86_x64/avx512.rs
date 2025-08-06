@@ -1685,6 +1685,44 @@ pub fn unpack_low_i16_m512i(a: m512i, b: m512i) -> m512i {
   m512i(unsafe { _mm512_unpacklo_epi16(a.0, b.0) })
 }
 
+/// Unpack and interleave high `i32` lanes of `a` and `b`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = m512i::from([1_i32; 16]);
+/// let b = m512i::from([2_i32; 16]);
+/// let c: [i32; 16] = unpack_high_i32_m512i(a, b).into();
+/// // Unpacking happens within each 128-bit lane
+/// ```
+/// * **Intrinsic:** [`_mm512_unpackhi_epi32`]
+/// * **Assembly:** `vpunpckhdq zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn unpack_high_i32_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_unpackhi_epi32(a.0, b.0) })
+}
+
+/// Unpack and interleave low `i32` lanes of `a` and `b`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = m512i::from([1_i32; 16]);
+/// let b = m512i::from([2_i32; 16]);
+/// let c: [i32; 16] = unpack_low_i32_m512i(a, b).into();
+/// // Unpacking happens within each 128-bit lane
+/// ```
+/// * **Intrinsic:** [`_mm512_unpacklo_epi32`]
+/// * **Assembly:** `vpunpckldq zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn unpack_low_i32_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_unpacklo_epi32(a.0, b.0) })
+}
+
 // Shift operations
 
 /// Lanewise `u16` shift left by the matching `u16` lane in `count`.
