@@ -1599,6 +1599,43 @@ pub fn convert_truncate_m512d_i64_m512i(a: m512d) -> m512i {
   m512i(unsafe { _mm512_cvttpd_epi64(a.0) })
 }
 
+/// Convert `i32` lanes to `f64` lanes in a 512-bit vector.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// // eight 32-bit integers → eight 64-bit doubles
+/// let a = m256i::from([3_i32; 8]);
+/// let b: [f64; 8] = convert_to_m512d_from_i32_m256i(a).into();
+/// assert_eq!(b, [3.0_f64; 8]);
+/// ```
+/// * **Intrinsic:** [`_mm512_cvtepi32_pd`]
+/// * **Assembly:** `vcvtdq2pd zmm, ymm`  
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn convert_to_m512d_from_i32_m256i(a: m256i) -> m512d {
+    m512d(unsafe { _mm512_cvtepi32_pd(a.0) })
+}
+
+/// Convert `i32` lanes to `f32` lanes in a 512-bit vector.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = m512i::from([3_i32; 16]);
+/// let b: [f32; 16] = convert_to_m512_from_i32_m512i(a).into();
+/// assert_eq!(b, [3.0_f32; 16]);
+/// ```
+/// * **Intrinsic:** [`_mm512_cvtepi32_ps`]
+/// * **Assembly:** `vcvtdq2ps zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn convert_to_m512_from_i32_m512i(a: m512i) -> m512 {
+    m512(unsafe { _mm512_cvtepi32_ps(a.0) })
+}
+
 // Pack operations
 
 /// Saturating convert `i32` to `i16`, and pack the values.
