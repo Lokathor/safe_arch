@@ -1785,7 +1785,7 @@ pub fn shl_each_u64_m512i(a: m512i, count: m512i) -> m512i {
 /// # use safe_arch::*;
 /// // build a vector whose lanes are either 0 or –1
 /// let a = set_splat_i8_m512i(-1);
-/// let m: mmask64 = to_mmask64_m512i(a);
+/// let m: mmask64 = movepi8_mask_m512i(a);
 /// assert_eq!(m, !0u64);
 /// ```
 /// * **Intrinsic:** [`_mm512_movepi8_mask`]
@@ -1793,7 +1793,7 @@ pub fn shl_each_u64_m512i(a: m512i, count: m512i) -> m512i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn to_mmask64_m512i(a: m512i) -> mmask64 {
+pub fn movepi8_mask_m512i(a: m512i) -> mmask64 {
     unsafe { _mm512_movepi8_mask(a.0) }
 }
 
@@ -1803,7 +1803,7 @@ pub fn to_mmask64_m512i(a: m512i) -> mmask64 {
 /// ```rust
 /// # use safe_arch::*;
 /// let a = set_splat_i16_m512i(-1);
-/// let m: mmask32 = to_mmask32_m512i(a);
+/// let m: mmask32 = movepi16_mask_m512i(a);
 /// assert_eq!(m, !0u32);
 /// ```
 /// * **Intrinsic:** [`_mm512_movepi16_mask`]
@@ -1811,7 +1811,7 @@ pub fn to_mmask64_m512i(a: m512i) -> mmask64 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn to_mmask32_m512i(a: m512i) -> mmask32 {
+pub fn movepi16_mask_m512i(a: m512i) -> mmask32 {
     unsafe { _mm512_movepi16_mask(a.0) }
 }
 
@@ -1821,7 +1821,7 @@ pub fn to_mmask32_m512i(a: m512i) -> mmask32 {
 /// ```rust
 /// # use safe_arch::*;
 /// let a = set_splat_i32_m512i(-1);
-/// let m: mmask16 = to_mmask16_m512i(a);
+/// let m: mmask16 = movepi32_mask_m512i(a);
 /// assert_eq!(m, !0u16);
 /// ```
 /// * **Intrinsic:** [`_mm512_movepi32_mask`]
@@ -1829,7 +1829,7 @@ pub fn to_mmask32_m512i(a: m512i) -> mmask32 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512dq")))]
-pub fn to_mmask16_m512i(a: m512i) -> mmask16 {
+pub fn movepi32_mask_m512i(a: m512i) -> mmask16 {
     unsafe { _mm512_movepi32_mask(a.0) }
 }
 
@@ -1839,7 +1839,7 @@ pub fn to_mmask16_m512i(a: m512i) -> mmask16 {
 /// ```rust
 /// # use safe_arch::*;
 /// let a = set_splat_i64_m512i(-1);
-/// let m: mmask8 = to_mmask8_m512i(a);
+/// let m: mmask8 = movepi64_mask_m512i(a);
 /// assert_eq!(m, !0u8);
 /// ```
 /// * **Intrinsic:** [`_mm512_movepi64_mask`]
@@ -1847,7 +1847,7 @@ pub fn to_mmask16_m512i(a: m512i) -> mmask16 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512dq")))]
-pub fn to_mmask8_m512i(a: m512i) -> mmask8 {
+pub fn movepi64_mask_m512i(a: m512i) -> mmask8 {
     unsafe { _mm512_movepi64_mask(a.0) }
 }
 
@@ -1858,12 +1858,12 @@ pub fn to_mmask8_m512i(a: m512i) -> mmask8 {
 /// # use safe_arch::*;
 /// // Build a vector of all -0.0f32 (sign bit set)
 /// let a = set_splat_m512(-0.0);
-/// let m: mmask16 = to_mmask16_m512(a);
+/// let m: mmask16 = movepi32_mask_m512(a);
 /// assert_eq!(m, !0u16);
 ///
 /// // And with +0.0 (no sign-bits)
 /// let b = set_splat_m512(0.0);
-/// let m2: mmask16 = to_mmask16_m512(b);
+/// let m2: mmask16 = movepi32_mask_m512(b);
 /// assert_eq!(m2, 0);
 /// ```
 /// * **Intrinsic:** [`_mm512_movepi32_mask`]
@@ -1871,7 +1871,7 @@ pub fn to_mmask8_m512i(a: m512i) -> mmask8 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512dq")))]
-pub fn to_mmask16_m512(a: m512) -> mmask16 {
+pub fn movepi32_mask_m512(a: m512) -> mmask16 {
     let ai: __m512i = unsafe { _mm512_castps_si512(a.0) };
     unsafe { _mm512_movepi32_mask(ai) }
 }
@@ -1883,12 +1883,12 @@ pub fn to_mmask16_m512(a: m512) -> mmask16 {
 /// # use safe_arch::*;
 /// // All lanes have the sign bit set (−0.0)
 /// let a = set_splat_m512d(-0.0);
-/// let m: mmask8 = to_mmask8_m512d(a);
+/// let m: mmask8 = movepi64_mask_m512d(a);
 /// assert_eq!(m, !0u8);
 ///
 /// // All lanes positive zero — no sign bits
 /// let b = set_splat_m512d(0.0);
-/// let m2: mmask8 = to_mmask8_m512d(b);
+/// let m2: mmask8 = movepi64_mask_m512d(b);
 /// assert_eq!(m2, 0);
 /// ```
 /// * **Intrinsic:** [`_mm512_movepi64_mask`]
@@ -1896,7 +1896,7 @@ pub fn to_mmask16_m512(a: m512) -> mmask16 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512dq")))]
-pub fn to_mmask8_m512d(a: m512d) -> mmask8 {
+pub fn movepi64_mask_m512d(a: m512d) -> mmask8 {
     let ai: __m512i = unsafe { _mm512_castpd_si512(a.0) };
     unsafe { _mm512_movepi64_mask(ai) }
 }
