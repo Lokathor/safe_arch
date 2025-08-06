@@ -1665,6 +1665,129 @@ pub fn shl_each_u64_m512i(a: m512i, count: m512i) -> m512i {
 
 // Extract and insert operations
 
+/// Extracts a 64-bit mask from each of the 64 `i8` lanes’ MSB.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// // build a vector whose lanes are either 0 or –1
+/// let a = set_splat_i8_m512i(-1);
+/// let m: mmask64 = to_mmask64_m512i(a);
+/// assert_eq!(m, !0u64);
+/// ```
+/// * **Intrinsic:** [`_mm512_movepi8_mask`]
+/// * **Assembly:** `vpmovmb2q k, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn to_mmask64_m512i(a: m512i) -> mmask64 {
+    unsafe { _mm512_movepi8_mask(a.0) }
+}
+
+/// Extracts a 32-bit mask from each of the 32 `i16` lanes’ MSB.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i16_m512i(-1);
+/// let m: mmask32 = to_mmask32_m512i(a);
+/// assert_eq!(m, !0u32);
+/// ```
+/// * **Intrinsic:** [`_mm512_movepi16_mask`]
+/// * **Assembly:** `vpmovmw2d k, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn to_mmask32_m512i(a: m512i) -> mmask32 {
+    unsafe { _mm512_movepi16_mask(a.0) }
+}
+
+/// Extracts a 16-bit mask from each of the 16 `i32` lanes’ MSB.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i32_m512i(-1);
+/// let m: mmask16 = to_mmask16_m512i(a);
+/// assert_eq!(m, !0u16);
+/// ```
+/// * **Intrinsic:** [`_mm512_movepi32_mask`]
+/// * **Assembly:** `vpmovmd2w k, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512dq")))]
+pub fn to_mmask16_m512i(a: m512i) -> mmask16 {
+    unsafe { _mm512_movepi32_mask(a.0) }
+}
+
+/// Extracts an 8-bit mask from each of the 8 `i64` lanes’ MSB.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i64_m512i(-1);
+/// let m: mmask8 = to_mmask8_m512i(a);
+/// assert_eq!(m, !0u8);
+/// ```
+/// * **Intrinsic:** [`_mm512_movepi64_mask`]
+/// * **Assembly:** `vpmovmq2d k, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512dq")))]
+pub fn to_mmask8_m512i(a: m512i) -> mmask8 {
+    unsafe { _mm512_movepi64_mask(a.0) }
+}
+
+/// Extracts a 16-bit mask from each of the 16 `f32` lanes’ MSB by reinterpreting
+/// the `m512` as integer bits and pulling out the sign bit of each lane.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// // Make a vector of all -0.0f32 (sign bit set)
+/// let a = set_splat_m512(-0.0);
+/// let m: mmask16 = to_mmask16_m512(a);
+/// assert_eq!(m, !0u16);
+/// // And with +0.0 (no sign-bits)
+/// let b = set_splat_m512(0.0);
+/// let m2: mmask16 = to_mmask16_m512(b);
+/// assert_eq!(m2, 0);
+/// ```
+/// * **Intrinsic:** [`_mm512_movepi32_mask`]
+/// * **Assembly:** `vpmovmd2w k, zmm, zmm`
+#[must_use]
+#[inline(always)]
+pub fn to_mmask16_m512(a: m512) -> mmask16 {
+    // cast the PS register to integer bits, then extract MSBs
+    let ai: __m512i = unsafe { _mm512_castps_si512(a.0) };
+    unsafe { _mm512_movepi32_mask(ai) }
+}
+
+/// Extracts an 8-bit mask from each of the 8 `f64` lanes’ MSB by reinterpreting
+/// the `m512d` as integer bits and pulling out the sign bit of each lane.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// // Make a vector of all -0.0f64 (sign bit set)
+/// let a = set_splat_m512d(-0.0);
+/// let m: mmask8 = to_mmask8_m512d(a);
+/// assert_eq!(m, !0u8);
+/// // And with +0.0 (no sign-bits)
+/// let b = set_splat_m512d(0.0);
+/// let m2: mmask8 = to_mmask8_m512d(b);
+/// assert_eq!(m2, 0);
+/// ```
+/// * **Intrinsic:** [`_mm512_movepi64_mask`]
+/// * **Assembly:** `vpmovmq2d k, zmm, zmm`
+#[must_use]
+#[inline(always)]
+pub fn to_mmask8_m512d(a: m512d) -> mmask8 {
+    // cast the PD register to integer bits, then extract MSBs
+    let ai: __m512i = unsafe { _mm512_castpd_si512(a.0) };
+    unsafe { _mm512_movepi64_mask(ai) }
+}
+
 /// Extract 256-bit integer from `a` at the specified index.
 /// ```
 /// # use safe_arch::*;
