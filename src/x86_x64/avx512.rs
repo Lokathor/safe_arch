@@ -51,26 +51,12 @@ macro_rules! cmp_int_op {
         use ::core::arch::x86_64::_MM_CMPINT_NLT;
         _MM_CMPINT_NLT
     }};
-    (Ge) => {{
-        #[cfg(target_arch = "x86")]
-        use ::core::arch::x86::_MM_CMPINT_GE;
-        #[cfg(target_arch = "x86_64")]
-        use ::core::arch::x86_64::_MM_CMPINT_GE;
-        _MM_CMPINT_GE
-    }};
     (Nle) => {{
         #[cfg(target_arch = "x86")]
         use ::core::arch::x86::_MM_CMPINT_NLE;
         #[cfg(target_arch = "x86_64")]
         use ::core::arch::x86_64::_MM_CMPINT_NLE;
         _MM_CMPINT_NLE
-    }};
-    (Gt) => {{
-        #[cfg(target_arch = "x86")]
-        use ::core::arch::x86::_MM_CMPINT_GT;
-        #[cfg(target_arch = "x86_64")]
-        use ::core::arch::x86_64::_MM_CMPINT_GT;
-        _MM_CMPINT_GT
     }};
     (True) => {{
         #[cfg(target_arch = "x86")]
