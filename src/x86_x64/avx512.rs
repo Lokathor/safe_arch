@@ -2180,6 +2180,60 @@ pub fn shr_all_u64_m512i(a: m512i, count: u64) -> m512i {
     shr_each_u64_m512i(a, cnt)
 }
 
+/// Absolute value of `i8` lanes in a 512-bit integer vector.
+/// 
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i8_m512i(-7);
+/// let b: [i8; 64] = abs_i8_m512i(a).into();
+/// assert_eq!(b, [7_i8; 64]);
+/// ```
+/// * **Intrinsic:** [`_mm512_abs_epi8`]
+/// * **Assembly:** `vpabsb zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn abs_i8_m512i(a: m512i) -> m512i {
+    m512i(unsafe { _mm512_abs_epi8(a.0) })
+}
+
+/// Absolute value of `i16` lanes in a 512-bit integer vector.
+/// 
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i16_m512i(-1234);
+/// let b: [i16; 32] = abs_i16_m512i(a).into();
+/// assert_eq!(b, [1234_i16; 32]);
+/// ```
+/// * **Intrinsic:** [`_mm512_abs_epi16`]
+/// * **Assembly:** `vpabsw zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn abs_i16_m512i(a: m512i) -> m512i {
+    m512i(unsafe { _mm512_abs_epi16(a.0) })
+}
+
+/// Absolute value of `i32` lanes in a 512-bit integer vector.
+/// 
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i32_m512i(-100000);
+/// let b: [i32; 16] = abs_i32_m512i(a).into();
+/// assert_eq!(b, [100000_i32; 16]);
+/// ```
+/// * **Intrinsic:** [`_mm512_abs_epi32`]
+/// * **Assembly:** `vpabsd zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn abs_i32_m512i(a: m512i) -> m512i {
+    m512i(unsafe { _mm512_abs_epi32(a.0) })
+}
+
 // Extract and insert operations
 
 /// Extracts a 64-bit mask from each of the 64 `i8` lanes’ MSB.
