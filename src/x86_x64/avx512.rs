@@ -2752,6 +2752,60 @@ pub fn permute_i32_m512i(idx: m512i, a: m512i) -> m512i {
     m512i(unsafe { _mm512_permutexvar_epi32(idx.0, a.0) })
 }
 
+/// Rounds each lane of a 512-bit vector of double-precision floats (`f64`) according to `OP`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = m512d::from([
+///     1.3,  2.7, -1.3, -2.7,
+///     3.5, -3.5,  4.1, -4.9,
+/// ]);
+/// // Round to nearest, suppress exceptions
+/// let r_nearest: [f64; 8] = round_m512d::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(a).into();
+/// assert_eq!(r_nearest, [1.0, 3.0, -1.0, -3.0, 4.0, -4.0, 4.0, -5.0]);
+///
+/// // Round toward zero, suppress exceptions
+/// let r_zero: [f64; 8] = round_m512d::<{ _MM_FROUND_TO_ZERO | _MM_FROUND_NO_EXC }>(a).into();
+/// assert_eq!(r_zero, [1.0, 2.0, -1.0, -2.0, 3.0, -3.0, 4.0, -4.0]);
+/// ```
+/// * **Intrinsic:** [`_mm512_roundscale_pd`]
+/// * **Assembly:** `vrndscalepd zmm, zmm, imm8`  
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512er")))]
+pub fn round_m512d<const OP: i32>(a: m512d) -> m512d {
+    m512d(unsafe { _mm512_roundscale_pd(a.0, OP) })
+}
+
+/// Rounds each lane of a 512-bit vector of single-precision floats (`f32`) according to `OP`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = m512::from([
+///     1.3,  2.7, -1.3, -2.7,
+///     3.5, -3.5,  4.1, -4.9,
+///     5.2, -5.2,  6.8, -6.8,
+///     7.9, -7.9,  8.4, -8.4,
+/// ]);
+/// // Round to nearest, suppress exceptions
+/// let r_nearest: [f32; 16] = round_m512::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(a).into();
+/// assert_eq!(&r_nearest[0..4], &[1.0, 3.0, -1.0, -3.0]);
+///
+/// // Round toward zero, suppress exceptions
+/// let r_zero: [f32; 16] = round_m512::<{ _MM_FROUND_TO_ZERO | _MM_FROUND_NO_EXC }>(a).into();
+/// assert_eq!(&r_zero[0..4], &[1.0, 2.0, -1.0, -2.0]);
+/// ```
+/// * **Intrinsic:** [`_mm512_roundscale_ps`]
+/// * **Assembly:** `vrndscaleps zmm, zmm, imm8`  
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512er")))]
+pub fn round_m512<const OP: i32>(a: m512) -> m512 {
+    m512(unsafe { _mm512_roundscale_ps(a.0, OP) })
+}
+
 /// Permute `i32` values from `a` and `b` using index vector `idx`.
 /// ```
 /// # use safe_arch::*;
