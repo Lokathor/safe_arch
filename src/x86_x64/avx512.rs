@@ -2304,7 +2304,7 @@ pub fn shl_all_i64_m512i(a: m512i, count: u64) -> m512i {
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
 pub fn shr_all_i64_m512i(a: m512i, count: u64) -> m512i {
-    let cnt = m512i(unsafe { _mm512_set1_epi64(count) });
+    let cnt = m512i(unsafe { _mm512_set1_epi64(count as i64) });
     m512i(unsafe { _mm512_srav_epi64(a.0, cnt.0) })
 }
 
