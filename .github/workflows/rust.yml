@@ -120,8 +120,8 @@ jobs:
     # Set RUSTFLAGS to enable AVX512
     - name: Set RUSTFLAGS for AVX512
       run: |
-        echo "RUSTFLAGS=-C target-feature=+avx512f,+avx512dq,+avx512cd,+avx512bw,+avx512vl,+avx512er" >> $env:GITHUB_ENV
-        echo "RUSTDOCFLAGS=-C target-feature=+avx512f,+avx512dq,+avx512cd,+avx512bw,+avx512vl,+avx512er" >> $env:GITHUB_ENV
+        echo "RUSTFLAGS=-C target-feature=+avx512f,+avx512dq,+avx512cd,+avx512bw,+avx512vl" >> $env:GITHUB_ENV
+        echo "RUSTDOCFLAGS=-C target-feature=+avx512f,+avx512dq,+avx512cd,+avx512bw,+avx512vl" >> $env:GITHUB_ENV
       shell: powershell
     
     # Build tests with AVX512 features
