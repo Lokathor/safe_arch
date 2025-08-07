@@ -2213,8 +2213,8 @@ pub fn shl_all_u16_m512i(a: m512i, count: u16) -> m512i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn shl_all_i16_m512i(a: m512i, count: i16) -> m512i {
-    let cnt = m512i(unsafe { _mm512_set1_epi16(count) });
+pub fn shl_all_i16_m512i(a: m512i, count: u16) -> m512i {
+    let cnt = m512i(unsafe { _mm512_set1_epi16(count as i16) });
     shl_each_u16_m512i(a, cnt)
 }
 
@@ -2231,8 +2231,8 @@ pub fn shl_all_i16_m512i(a: m512i, count: i16) -> m512i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
-pub fn shr_all_i16_m512i(a: m512i, count: i16) -> m512i {
-    let cnt = m512i(unsafe { _mm512_set1_epi16(count) });
+pub fn shr_all_i16_m512i(a: m512i, count: u16) -> m512i {
+    let cnt = m512i(unsafe { _mm512_set1_epi16(count as i16) });
     m512i(unsafe { _mm512_srav_epi16(a.0, cnt.0) })
 }
 
@@ -2249,8 +2249,8 @@ pub fn shr_all_i16_m512i(a: m512i, count: i16) -> m512i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn shl_all_i32_m512i(a: m512i, count: i32) -> m512i {
-    let cnt = m512i(unsafe { _mm512_set1_epi32(count) });
+pub fn shl_all_i32_m512i(a: m512i, count: u32) -> m512i {
+    let cnt = m512i(unsafe { _mm512_set1_epi32(count as i32) });
     shl_each_u32_m512i(a, cnt)
 }
 
@@ -2267,8 +2267,8 @@ pub fn shl_all_i32_m512i(a: m512i, count: i32) -> m512i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn shr_all_i32_m512i(a: m512i, count: i32) -> m512i {
-    let cnt = m512i(unsafe { _mm512_set1_epi32(count) });
+pub fn shr_all_i32_m512i(a: m512i, count: u32) -> m512i {
+    let cnt = m512i(unsafe { _mm512_set1_epi32(count as i32) });
     m512i(unsafe { _mm512_srav_epi32(a.0, cnt.0) })
 }
 
@@ -2285,8 +2285,8 @@ pub fn shr_all_i32_m512i(a: m512i, count: i32) -> m512i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn shl_all_i64_m512i(a: m512i, count: i64) -> m512i {
-    let cnt = m512i(unsafe { _mm512_set1_epi64(count) });
+pub fn shl_all_i64_m512i(a: m512i, count: u64) -> m512i {
+    let cnt = m512i(unsafe { _mm512_set1_epi64(count as i64) });
     shl_each_u64_m512i(a, cnt)
 }
 
@@ -2303,7 +2303,7 @@ pub fn shl_all_i64_m512i(a: m512i, count: i64) -> m512i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn shr_all_i64_m512i(a: m512i, count: i64) -> m512i {
+pub fn shr_all_i64_m512i(a: m512i, count: u64) -> m512i {
     let cnt = m512i(unsafe { _mm512_set1_epi64(count) });
     m512i(unsafe { _mm512_srav_epi64(a.0, cnt.0) })
 }
