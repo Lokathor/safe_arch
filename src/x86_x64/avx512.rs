@@ -618,8 +618,8 @@ pub fn add_saturating_i16_m512i(a: m512i, b: m512i) -> m512i {
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
-/// let a = set_splat_u8_m512i(200);
-/// let b = set_splat_u8_m512i(100);
+/// let a = set_splat_i8_m512i(200_u8 as i8);
+/// let b = set_splat_i8_m512i(100);
 /// let c: [u8; 64] = add_saturating_u8_m512i(a, b).into();
 /// // 200 + 100 = 300, but saturates to 255 (u8::MAX)
 /// assert_eq!(c, [255_u8; 64]);
@@ -638,8 +638,8 @@ pub fn add_saturating_u8_m512i(a: m512i, b: m512i) -> m512i {
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
-/// let a = set_splat_u16_m512i(60_000);
-/// let b = set_splat_u16_m512i(10_000);
+/// let a = set_splat_i16_m512i(60_000_u16 as i16);
+/// let b = set_splat_i16_m512i(10_000);
 /// let c: [u16; 32] = add_saturating_u16_m512i(a, b).into();
 /// // 60000 + 10000 = 70000, saturates to 65535 (u16::MAX)
 /// assert_eq!(c, [65535_u16; 32]);
@@ -698,8 +698,8 @@ pub fn sub_saturating_i16_m512i(a: m512i, b: m512i) -> m512i {
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
-/// let a = set_splat_u8_m512i(50);
-/// let b = set_splat_u8_m512i(100);
+/// let a = set_splat_i8_m512i(50);
+/// let b = set_splat_i8_m512i(100);
 /// let c: [u8; 64] = sub_saturating_u8_m512i(a, b).into();
 /// // 50 - 100 = -50, saturates to 0 (u8::MIN)
 /// assert_eq!(c, [0_u8; 64]);
@@ -718,8 +718,8 @@ pub fn sub_saturating_u8_m512i(a: m512i, b: m512i) -> m512i {
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
-/// let a = set_splat_u16_m512i(5_000);
-/// let b = set_splat_u16_m512i(10_000);
+/// let a = set_splat_i16_m512i(5_000);
+/// let b = set_splat_i16_m512i(10_000);
 /// let c: [u16; 32] = sub_saturating_u16_m512i(a, b).into();
 /// // 5000 - 10000 = -5000, saturates to 0 (u16::MIN)
 /// assert_eq!(c, [0_u16; 32]);
@@ -953,7 +953,7 @@ pub fn fmadd_m512d(a: m512d, b: m512d, c: m512d) -> m512d {
 /// # use safe_arch::*;
 /// let a = set_splat_i8_m512i(5);
 /// let b = set_splat_i8_m512i(5);
-/// let m = cmp_op_mask_i8::<{ _MM_CMPINT_EQ }>(a, b);
+/// let m = cmp_op_mask_i8::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
 /// assert_eq!(m, u64::MAX);
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epi8_mask`  
@@ -970,7 +970,7 @@ pub fn cmp_op_mask_i8<const OP: i32>(a: m512i, b: m512i) -> mmask64 {
 /// let a = set_splat_i8_m512i(3);
 /// let b = set_splat_i8_m512i(5);
 /// // unsigned <  → 3<5
-/// let m = cmp_op_mask_u8::<{ _MM_CMPINT_LT }>(a, b);
+/// let m = cmp_op_mask_u8::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(a, b);
 /// assert_eq!(m, u64::MAX);
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epu8_mask`  
@@ -1602,7 +1602,7 @@ pub fn blend_varying_i32_m512i(a: m512i, b: m512i, mask: mmask16) -> m512i {
 /// let a = set_splat_m512(10.0);
 /// let b = set_splat_m512(20.0);
 /// let mask = 0xAAAA;
-/// let c: [f32; 16] = blend_m512(a, b, mask).into();
+/// let c: [f32; 16] = blend_varying_m512(a, b, mask).into();
 /// for (i, &val) in c.iter().enumerate() {
 ///   assert_eq!(val, if (mask >> i) & 1 == 1 { 20.0 } else { 10.0 });
 /// }
@@ -1622,7 +1622,7 @@ pub fn blend_varying_m512(a: m512, b: m512, mask: mmask16) -> m512 {
 /// let a = set_splat_m512d(10.0);
 /// let b = set_splat_m512d(20.0);
 /// let mask = 0xAA;
-/// let c: [f64; 8] = blend_m512d(a, b, mask).into();
+/// let c: [f64; 8] = blend_varying_m512d(a, b, mask).into();
 /// for (i, &val) in c.iter().enumerate() {
 ///   assert_eq!(val, if (mask >> i) & 1 == 1 { 20.0 } else { 10.0 });
 /// }
@@ -2817,9 +2817,9 @@ pub fn maskz_mov_i32_m512i(mask: mmask16) -> m512i {
 /// ```rust
 /// # use safe_arch::*;
 /// let full = maskz_mov_i16_m512i(!0u32);
-/// assert_eq!(full.to_array(), [i16::MAX; 32]);
+/// assert_eq!(full.to_array(), [-1_i32; 16]);
 /// let none = maskz_mov_i16_m512i(0);
-/// assert_eq!(none.to_array(), [0; 32]);
+/// assert_eq!(none.to_array(), [0; 16]);
 /// ```
 /// * **Intrinsic:** `_mm512_maskz_mov_epi16`  
 /// * **Assembly:** `VMOVDQU16 zmm{dest}{mask}{z}, zmmones`
@@ -2837,9 +2837,9 @@ pub fn maskz_mov_i16_m512i(mask: mmask32) -> m512i {
 /// ```rust
 /// # use safe_arch::*;
 /// let full = maskz_mov_i8_m512i(!0u64);
-/// assert_eq!(full.to_array(), [i8::MAX; 64]);
+/// assert_eq!(full, set_splat_i8_m512i(-1));
 /// let none = maskz_mov_i8_m512i(0);
-/// assert_eq!(none.to_array(), [0; 64]);
+/// assert_eq!(none, set_splat_i8_m512i(0));
 /// ```
 /// * **Intrinsic:** `_mm512_maskz_mov_epi8`  
 /// * **Assembly:** `VMOVDQU8 zmm{dest}{mask}{z}, zmmones`
@@ -2954,9 +2954,9 @@ pub fn cast_m512d_to_m256d(a: m512d) -> m256d {
 /// # use safe_arch::*;
 /// // [a0,a1,a2,a3,  a4,a5,a6,a7,  …]
 /// let a = m512i::from([0,1,2,3,  4,5,6,7,  8,9,10,11, 12,13,14,15]);
-/// // IMM = 0b_10_11_00_01 = 0x2D means
+/// // IMM = 0b10_11_00_01 = 0xB1
 /// //   for each 4-lane chunk pick lanes [1,0,3,2]
-/// let c: [i32;16] = shuffle_i32_m512i::<0x2D>(a).into();
+/// let c: [i32;16] = shuffle_i32_m512i::<0xB1>(a).into();
 /// assert_eq!(&c[0..4], &[1,0,3,2]);
 /// assert_eq!(&c[4..8], &[5,4,7,6]);
 /// ```
@@ -3254,8 +3254,8 @@ pub fn max_i64_m512i(a: m512i, b: m512i) -> m512i {
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
-/// let a = set_splat_u64_m512i(1);
-/// let b = set_splat_u64_m512i(5);
+/// let a = set_splat_i64_m512i(1);
+/// let b = set_splat_i64_m512i(5);
 /// let c: [u64; 8] = max_u64_m512i(a, b).into();
 /// assert_eq!(c, [5_u64; 8]);
 /// ```
@@ -3386,8 +3386,8 @@ pub fn min_i64_m512i(a: m512i, b: m512i) -> m512i {
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
-/// let a = set_splat_u64_m512i(1);
-/// let b = set_splat_u64_m512i(5);
+/// let a = set_splat_i64_m512i(1);
+/// let b = set_splat_i64_m512i(5);
 /// let c: [u64; 8] = min_u64_m512i(a, b).into();
 /// assert_eq!(c, [1_u64; 8]);
 /// ```
