@@ -515,6 +515,166 @@ pub fn sub_m512d(a: m512d, b: m512d) -> m512d {
   m512d(unsafe { _mm512_sub_pd(a.0, b.0) })
 }
 
+/// Lanewise saturating `a + b` with lanes as signed `i8`.
+/// 
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i8_m512i(126);
+/// let b = set_splat_i8_m512i(125);
+/// let c: [i8; 64] = add_saturating_i8_m512i(a, b).into();
+/// // 126 + 125 = 251, but saturates to 127 (i8::MAX)
+/// assert_eq!(c, [127_i8; 64]);
+/// ```
+/// * **Intrinsic:** [`_mm512_adds_epi8`]
+/// * **Assembly:** `vpaddsb zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn add_saturating_i8_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_adds_epi8(a.0, b.0) })
+}
+
+/// Lanewise saturating `a + b` with lanes as signed `i16`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i16_m512i(32_700);
+/// let b = set_splat_i16_m512i(32_000);
+/// let c: [i16; 32] = add_saturating_i16_m512i(a, b).into();
+/// // 32700 + 32000 = 64700, but saturates to 32767 (i16::MAX)
+/// assert_eq!(c, [32767_i16; 32]);
+/// ```
+/// * **Intrinsic:** [`_mm512_adds_epi16`]
+/// * **Assembly:** `vpaddsw zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn add_saturating_i16_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_adds_epi16(a.0, b.0) })
+}
+
+/// Lanewise saturating `a + b` with lanes as unsigned `u8`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_u8_m512i(200);
+/// let b = set_splat_u8_m512i(100);
+/// let c: [u8; 64] = add_saturating_u8_m512i(a, b).into();
+/// // 200 + 100 = 300, but saturates to 255 (u8::MAX)
+/// assert_eq!(c, [255_u8; 64]);
+/// ```
+/// * **Intrinsic:** [`_mm512_adds_epu8`]
+/// * **Assembly:** `vpaddusb zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn add_saturating_u8_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_adds_epu8(a.0, b.0) })
+}
+
+/// Lanewise saturating `a + b` with lanes as unsigned `u16`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_u16_m512i(60_000);
+/// let b = set_splat_u16_m512i(10_000);
+/// let c: [u16; 32] = add_saturating_u16_m512i(a, b).into();
+/// // 60000 + 10000 = 70000, saturates to 65535 (u16::MAX)
+/// assert_eq!(c, [65535_u16; 32]);
+/// ```
+/// * **Intrinsic:** [`_mm512_adds_epu16`]
+/// * **Assembly:** `vpaddusw zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn add_saturating_u16_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_adds_epu16(a.0, b.0) })
+}
+
+/// Lanewise saturating `a - b` with lanes as signed `i8`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i8_m512i(-120);
+/// let b = set_splat_i8_m512i(100);
+/// let c: [i8; 64] = sub_saturating_i8_m512i(a, b).into();
+/// // -120 - 100 = -220, saturates to -128 (i8::MIN)
+/// assert_eq!(c, [-128_i8; 64]);
+/// ```
+/// * **Intrinsic:** [`_mm512_subs_epi8`]
+/// * **Assembly:** `vpsubsb zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn sub_saturating_i8_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_subs_epi8(a.0, b.0) })
+}
+
+/// Lanewise saturating `a - b` with lanes as signed `i16`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i16_m512i(-30_000);
+/// let b = set_splat_i16_m512i(10_000);
+/// let c: [i16; 32] = sub_saturating_i16_m512i(a, b).into();
+/// // -30000 - 10000 = -40000, saturates to -32768 (i16::MIN)
+/// assert_eq!(c, [-32768_i16; 32]);
+/// ```
+/// * **Intrinsic:** [`_mm512_subs_epi16`]
+/// * **Assembly:** `vpsubsw zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn sub_saturating_i16_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_subs_epi16(a.0, b.0) })
+}
+
+/// Lanewise saturating `a - b` with lanes as unsigned `u8`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_u8_m512i(50);
+/// let b = set_splat_u8_m512i(100);
+/// let c: [u8; 64] = sub_saturating_u8_m512i(a, b).into();
+/// // 50 - 100 = -50, saturates to 0 (u8::MIN)
+/// assert_eq!(c, [0_u8; 64]);
+/// ```
+/// * **Intrinsic:** [`_mm512_subs_epu8`]
+/// * **Assembly:** `vpsubusb zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn sub_saturating_u8_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_subs_epu8(a.0, b.0) })
+}
+
+/// Lanewise saturating `a - b` with lanes as unsigned `u16`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_u16_m512i(5_000);
+/// let b = set_splat_u16_m512i(10_000);
+/// let c: [u16; 32] = sub_saturating_u16_m512i(a, b).into();
+/// // 5000 - 10000 = -5000, saturates to 0 (u16::MIN)
+/// assert_eq!(c, [0_u16; 32]);
+/// ```
+/// * **Intrinsic:** [`_mm512_subs_epu16`]
+/// * **Assembly:** `vpsubusw zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn sub_saturating_u16_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_subs_epu16(a.0, b.0) })
+}
+
 /// Lanewise `a * b` with lanes as `f32`.
 /// ```
 /// # use safe_arch::*;
