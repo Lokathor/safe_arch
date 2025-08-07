@@ -12,6 +12,78 @@ pub type mmask32 = __mmask32;
 /// Mask type for 64-element operations
 pub type mmask64 = __mmask64;
 
+/// Turns an integer comparison operator token into the appropriate
+#[macro_export]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+macro_rules! cmp_int_op {
+    (Eq) => {{
+        #[cfg(target_arch = "x86")]
+        use ::core::arch::x86::_MM_CMPINT_EQ;
+        #[cfg(target_arch = "x86_64")]
+        use ::core::arch::x86_64::_MM_CMPINT_EQ;
+        _MM_CMPINT_EQ
+    }};
+    (Lt) => {{
+        #[cfg(target_arch = "x86")]
+        use ::core::arch::x86::_MM_CMPINT_LT;
+        #[cfg(target_arch = "x86_64")]
+        use ::core::arch::x86_64::_MM_CMPINT_LT;
+        _MM_CMPINT_LT
+    }};
+    (Le) => {{
+        #[cfg(target_arch = "x86")]
+        use ::core::arch::x86::_MM_CMPINT_LE;
+        #[cfg(target_arch = "x86_64")]
+        use ::core::arch::x86_64::_MM_CMPINT_LE;
+        _MM_CMPINT_LE
+    }};
+    (Ne) => {{
+        #[cfg(target_arch = "x86")]
+        use ::core::arch::x86::_MM_CMPINT_NE;
+        #[cfg(target_arch = "x86_64")]
+        use ::core::arch::x86_64::_MM_CMPINT_NE;
+        _MM_CMPINT_NE
+    }};
+    (Nlt) => {{
+        #[cfg(target_arch = "x86")]
+        use ::core::arch::x86::_MM_CMPINT_NLT;
+        #[cfg(target_arch = "x86_64")]
+        use ::core::arch::x86_64::_MM_CMPINT_NLT;
+        _MM_CMPINT_NLT
+    }};
+    (Ge) => {{
+        #[cfg(target_arch = "x86")]
+        use ::core::arch::x86::_MM_CMPINT_GE;
+        #[cfg(target_arch = "x86_64")]
+        use ::core::arch::x86_64::_MM_CMPINT_GE;
+        _MM_CMPINT_GE
+    }};
+    (Nle) => {{
+        #[cfg(target_arch = "x86")]
+        use ::core::arch::x86::_MM_CMPINT_NLE;
+        #[cfg(target_arch = "x86_64")]
+        use ::core::arch::x86_64::_MM_CMPINT_NLE;
+        _MM_CMPINT_NLE
+    }};
+    (Gt) => {{
+        #[cfg(target_arch = "x86")]
+        use ::core::arch::x86::_MM_CMPINT_GT;
+        #[cfg(target_arch = "x86_64")]
+        use ::core::arch::x86_64::_MM_CMPINT_GT;
+        _MM_CMPINT_GT
+    }};
+    (True) => {{
+        #[cfg(target_arch = "x86")]
+        use ::core::arch::x86::_MM_CMPINT_TRUE;
+        #[cfg(target_arch = "x86_64")]
+        use ::core::arch::x86_64::_MM_CMPINT_TRUE;
+        _MM_CMPINT_TRUE
+    }};
+    ($unknown:tt) => {
+        compile_error!("`cmp_int_op!` got an unknown integer-compare token");
+    };
+}
+
 // Constructors and basic operations
 
 /// Zeroed `m512i`
