@@ -2775,6 +2775,167 @@ pub fn movepi64_mask_m512d(a: m512d) -> mmask8 {
     unsafe { _mm512_movepi64_mask(ai) }
 }
 
+/// Compare only the low `f32` lane according to `OP`, returning a mask (bit 0).
+///
+/// * Operators are according to the `cmp_op!` macro (pass as a const generic).
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_m512(2.0);
+/// let b = set_splat_m512(1.0);
+/// // low lane: 2.0 > 1.0 => bit 0 set; others ignored
+/// let m: mmask16 = cmp_op_mask_m512_s::<{ cmp_op!(GreaterThanOrdered) }>(a, b);
+/// assert_eq!(m, 0x0001);
+/// ```
+/// * **Intrinsic:** [`_mm512_mask_cmp_ps_mask`]
+/// * **Assembly:** `vcmpps k, zmm, zmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn cmp_op_mask_m512_s<const OP: i32>(a: m512, b: m512) -> mmask16 {
+  unsafe { _mm512_mask_cmp_ps_mask(0x0001u16, a.0, b.0, OP) }
+}
+
+/// Compare only the low `f64` lane according to `OP`, returning a mask (bit 0).
+///
+/// * Operators are according to the `cmp_op!` macro (pass as a const generic).
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_m512d(2.0);
+/// let b = set_splat_m512d(3.0);
+/// // low lane: 2.0 < 3.0 => bit 0 set; others ignored
+/// let m: mmask8 = cmp_op_mask_m512d_s::<{ cmp_op!(LessThanOrdered) }>(a, b);
+/// assert_eq!(m, 0x01);
+/// ```
+/// * **Intrinsic:** [`_mm512_mask_cmp_pd_mask`]
+/// * **Assembly:** `vcmppd k, zmm, zmm, imm8`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn cmp_op_mask_m512d_s<const OP: i32>(a: m512d, b: m512d) -> mmask8 {
+  unsafe { _mm512_mask_cmp_pd_mask(0x01u8, a.0, b.0, OP) }
+}
+
+/// Low-lane add: result lane 0 = `a0 + b0`, other lanes unchanged.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_m512(1.0);
+/// let b = set_splat_m512(2.0);
+/// let out: [f32; 16] = add_m512_s(a, b).into();
+/// assert_eq!(out, [3.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+///                   1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]);
+/// ```
+/// * **Intrinsic:** [`_mm512_mask_add_ps`] (merge to `a`)
+/// * **Assembly:** `vaddps zmm{k}, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn add_m512_s(a: m512, b: m512) -> m512 {
+  m512(unsafe { _mm512_mask_add_ps(a.0, 0x0001u16, a.0, b.0) })
+}
+
+/// Low-lane add for `f64`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_m512d(1.0);
+/// let b = set_splat_m512d(2.0);
+/// let out: [f64; 8] = add_m512d_s(a, b).into();
+/// assert_eq!(out, [3.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]);
+/// ```
+/// * **Intrinsic:** [`_mm512_mask_add_pd`] (merge to `a`)
+/// * **Assembly:** `vaddpd zmm{k}, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn add_m512d_s(a: m512d, b: m512d) -> m512d {
+  m512d(unsafe { _mm512_mask_add_pd(a.0, 0x01u8, a.0, b.0) })
+}
+
+/// Low-lane subtract: result lane 0 = `a0 - b0`, other lanes unchanged.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_m512(3.0);
+/// let b = set_splat_m512(1.0);
+/// let out: [f32; 16] = sub_m512_s(a, b).into();
+/// assert_eq!(out, [2.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0,
+///                   3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0]);
+/// ```
+/// * **Intrinsic:** [`_mm512_mask_sub_ps`] (merge to `a`)
+/// * **Assembly:** `vsubps zmm{k}, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn sub_m512_s(a: m512, b: m512) -> m512 {
+  m512(unsafe { _mm512_mask_sub_ps(a.0, 0x0001u16, a.0, b.0) })
+}
+
+/// Low-lane subtract for `f64`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_m512d(3.0);
+/// let b = set_splat_m512d(1.0);
+/// let out: [f64; 8] = sub_m512d_s(a, b).into();
+/// assert_eq!(out, [2.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0]);
+/// ```
+/// * **Intrinsic:** [`_mm512_mask_sub_pd`] (merge to `a`)
+/// * **Assembly:** `vsubpd zmm{k}, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn sub_m512d_s(a: m512d, b: m512d) -> m512d {
+  m512d(unsafe { _mm512_mask_sub_pd(a.0, 0x01u8, a.0, b.0) })
+}
+
+/// Low-lane multiply: result lane 0 = `a0 * b0`, other lanes unchanged.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_m512(2.0);
+/// let b = set_splat_m512(4.0);
+/// let out: [f32; 16] = mul_m512_s(a, b).into();
+/// assert_eq!(out, [8.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
+///                   2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]);
+/// ```
+/// * **Intrinsic:** [`_mm512_mask_mul_ps`] (merge to `a`)
+/// * **Assembly:** `vmulps zmm{k}, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn mul_m512_s(a: m512, b: m512) -> m512 {
+  m512(unsafe { _mm512_mask_mul_ps(a.0, 0x0001u16, a.0, b.0) })
+}
+
+/// Low-lane multiply for `f64`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_m512d(2.0);
+/// let b = set_splat_m512d(4.0);
+/// let out: [f64; 8] = mul_m512d_s(a, b).into();
+/// assert_eq!(out, [8.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]);
+/// ```
+/// * **Intrinsic:** [`_mm512_mask_mul_pd`] (merge to `a`)
+/// * **Assembly:** `vmulpd zmm{k}, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn mul_m512d_s(a: m512d, b: m512d) -> m512d {
+  m512d(unsafe { _mm512_mask_mul_pd(a.0, 0x01u8, a.0, b.0) })
+}
+
 /// Extract 256-bit integer from `a` at the specified index.
 /// ```
 /// # use safe_arch::*;
@@ -3986,6 +4147,60 @@ pub fn cast_to_m512d_from_m512(a: m512) -> m512d {
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
 pub fn cast_to_m512_from_m512d(a: m512d) -> m512 {
   unsafe { m512(_mm512_castpd_ps(a.0)) }
+}
+
+/// Bit-preserving cast to `m256` from `m512`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_m512(3.25);
+/// let lo: [f32; 8] = cast_to_m256_from_m512(a).into();
+/// assert_eq!(lo, [3.25_f32; 8]);
+/// ```
+/// * **Intrinsic:** [`_mm512_castps512_ps256`]
+/// * **Assembly:** *(none – no-op cast)*
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn cast_to_m256_from_m512(a: m512) -> m256 {
+  m256(unsafe { _mm512_castps512_ps256(a.0) })
+}
+
+/// Bit-preserving cast to `m256d` from `m512d`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_m512d(-1.5);
+/// let lo: [f64; 4] = cast_to_m256d_from_m512d(a).into();
+/// assert_eq!(lo, [-1.5_f64; 4]);
+/// ```
+/// * **Intrinsic:** [`_mm512_castpd512_pd256`]
+/// * **Assembly:** *(none – no-op cast)*
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn cast_to_m256d_from_m512d(a: m512d) -> m256d {
+  m256d(unsafe { _mm512_castpd512_pd256(a.0) })
+}
+
+/// Bit-preserving cast to `m256i` from `m512i`.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = set_splat_i32_m512i(42);
+/// let lo: [i32; 8] = cast_to_m256i_from_m512i(a).into();
+/// assert_eq!(lo, [42_i32; 8]);
+/// ```
+/// * **Intrinsic:** [`_mm512_castsi512_si256`]
+/// * **Assembly:** *(none – no-op cast)*
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn cast_to_m256i_from_m512i(a: m512i) -> m256i {
+  m256i(unsafe { _mm512_castsi512_si256(a.0) })
 }
 
 // m512i implementations
