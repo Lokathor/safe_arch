@@ -916,7 +916,7 @@ pub fn div_m512d(a: m512d, b: m512d) -> m512d {
 /// let a = set_splat_m512(2.0);
 /// let b = set_splat_m512(3.0);
 /// let c = set_splat_m512(1.0);
-/// let d: [f32; 16] = fmadd_m512(a, b, c).into();
+/// let d: [f32; 16] = fused_mul_add_m512(a, b, c).into();
 /// assert_eq!(d, [7.0_f32; 16]);
 /// ```
 /// * **Intrinsic:** [`_mm512_fmadd_ps`]
@@ -924,7 +924,7 @@ pub fn div_m512d(a: m512d, b: m512d) -> m512d {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn fmadd_m512(a: m512, b: m512, c: m512) -> m512 {
+pub fn fused_mul_add_m512(a: m512, b: m512, c: m512) -> m512 {
   m512(unsafe { _mm512_fmadd_ps(a.0, b.0, c.0) })
 }
 
@@ -934,7 +934,7 @@ pub fn fmadd_m512(a: m512, b: m512, c: m512) -> m512 {
 /// let a = set_splat_m512d(2.0);
 /// let b = set_splat_m512d(3.0);
 /// let c = set_splat_m512d(1.0);
-/// let d: [f64; 8] = fmadd_m512d(a, b, c).into();
+/// let d: [f64; 8] = fused_mul_add_m512d(a, b, c).into();
 /// assert_eq!(d, [7.0_f64; 8]);
 /// ```
 /// * **Intrinsic:** [`_mm512_fmadd_pd`]
@@ -942,8 +942,206 @@ pub fn fmadd_m512(a: m512, b: m512, c: m512) -> m512 {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
-pub fn fmadd_m512d(a: m512d, b: m512d, c: m512d) -> m512d {
+pub fn fused_mul_add_m512d(a: m512d, b: m512d, c: m512d) -> m512d {
   m512d(unsafe { _mm512_fmadd_pd(a.0, b.0, c.0) })
+}
+
+/// Fused multiply-subtract. Computes `(a * b) - c` with a single rounding.
+/// ```
+/// # use safe_arch::*;
+/// let a = set_splat_m512(2.0);
+/// let b = set_splat_m512(3.0);
+/// let c = set_splat_m512(1.0);
+/// let d: [f32; 16] = fused_mul_sub_m512(a, b, c).into();
+/// assert_eq!(d, [5.0_f32; 16]);
+/// ```
+/// * **Intrinsic:** [`_mm512_fmsub_ps`]
+/// * **Assembly:** one of
+///   * `vfmsub132ps zmm, zmm, zmm`
+///   * `vfmsub213ps zmm, zmm, zmm`
+///   * `vfmsub231ps zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn fused_mul_sub_m512(a: m512, b: m512, c: m512) -> m512 {
+  m512(unsafe { _mm512_fmsub_ps(a.0, b.0, c.0) })
+}
+
+/// Fused multiply-subtract. Computes `(a * b) - c` with a single rounding.
+/// ```
+/// # use safe_arch::*;
+/// let a = set_splat_m512d(2.0);
+/// let b = set_splat_m512d(3.0);
+/// let c = set_splat_m512d(1.0);
+/// let d: [f64; 8] = fused_mul_sub_m512d(a, b, c).into();
+/// assert_eq!(d, [5.0_f64; 8]);
+/// ```
+/// * **Intrinsic:** [`_mm512_fmsub_pd`]
+/// * **Assembly:** one of
+///   * `vfmsub132pd zmm, zmm, zmm`
+///   * `vfmsub213pd zmm, zmm, zmm`
+///   * `vfmsub231pd zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn fused_mul_sub_m512d(a: m512d, b: m512d, c: m512d) -> m512d {
+  m512d(unsafe { _mm512_fmsub_pd(a.0, b.0, c.0) })
+}
+
+/// Lanewise fused `-(a * b) + c`.
+/// ```
+/// # use safe_arch::*;
+/// let a = set_splat_m512(2.0);
+/// let b = set_splat_m512(3.0);
+/// let c = set_splat_m512(1.0);
+/// let d: [f32; 16] = fused_mul_neg_add_m512(a, b, c).into();
+/// assert_eq!(d, [-5.0_f32; 16]);
+/// ```
+/// * **Intrinsic:** [`_mm512_fnmadd_ps`]
+/// * **Assembly:** one of
+///   * `vfnmadd132ps zmm, zmm, zmm`
+///   * `vfnmadd213ps zmm, zmm, zmm`
+///   * `vfnmadd231ps zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn fused_mul_neg_add_m512(a: m512, b: m512, c: m512) -> m512 {
+  m512(unsafe { _mm512_fnmadd_ps(a.0, b.0, c.0) })
+}
+
+/// Lanewise fused `-(a * b) + c`.
+/// ```
+/// # use safe_arch::*;
+/// let a = set_splat_m512d(2.0);
+/// let b = set_splat_m512d(3.0);
+/// let c = set_splat_m512d(1.0);
+/// let d: [f64; 8] = fused_mul_neg_add_m512d(a, b, c).into();
+/// assert_eq!(d, [-5.0_f64; 8]);
+/// ```
+/// * **Intrinsic:** [`_mm512_fnmadd_pd`]
+/// * **Assembly:** one of
+///   * `vfnmadd132pd zmm, zmm, zmm`
+///   * `vfnmadd213pd zmm, zmm, zmm`
+///   * `vfnmadd231pd zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn fused_mul_neg_add_m512d(a: m512d, b: m512d, c: m512d) -> m512d {
+  m512d(unsafe { _mm512_fnmadd_pd(a.0, b.0, c.0) })
+}
+
+/// Lanewise fused `-(a * b) - c`.
+/// ```
+/// # use safe_arch::*;
+/// let a = set_splat_m512(2.0);
+/// let b = set_splat_m512(3.0);
+/// let c = set_splat_m512(1.0);
+/// let d: [f32; 16] = fused_mul_neg_sub_m512(a, b, c).into();
+/// assert_eq!(d, [-7.0_f32; 16]);
+/// ```
+/// * **Intrinsic:** [`_mm512_fnmsub_ps`]
+/// * **Assembly:** one of
+///   * `vfnmsub132ps zmm, zmm, zmm`
+///   * `vfnmsub213ps zmm, zmm, zmm`
+///   * `vfnmsub231ps zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn fused_mul_neg_sub_m512(a: m512, b: m512, c: m512) -> m512 {
+  m512(unsafe { _mm512_fnmsub_ps(a.0, b.0, c.0) })
+}
+
+/// Lanewise fused `-(a * b) - c`.
+/// ```
+/// # use safe_arch::*;
+/// let a = set_splat_m512d(2.0);
+/// let b = set_splat_m512d(3.0);
+/// let c = set_splat_m512d(1.0);
+/// let d: [f64; 8] = fused_mul_neg_sub_m512d(a, b, c).into();
+/// assert_eq!(d, [-7.0_f64; 8]);
+/// ```
+/// * **Intrinsic:** [`_mm512_fnmsub_pd`]
+/// * **Assembly:** one of
+///   * `vfnmsub132pd zmm, zmm, zmm`
+///   * `vfnmsub213pd zmm, zmm, zmm`
+///   * `vfnmsub231pd zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn fused_mul_neg_sub_m512d(a: m512d, b: m512d, c: m512d) -> m512d {
+  m512d(unsafe { _mm512_fnmsub_pd(a.0, b.0, c.0) })
+}
+
+/// Alternating fused multiply add/sub: even lanes `(a*b)+c`, odd lanes `(a*b)-c`.
+/// ```
+/// # use safe_arch::*;
+/// let a = set_splat_m512(2.0);
+/// let b = set_splat_m512(3.0);
+/// let c = set_splat_m512(1.0);
+/// let d: [f32; 16] = fused_mul_add_sub_m512(a, b, c).into();
+/// assert_eq!(d, [5.0,7.0,5.0,7.0,5.0,7.0,5.0,7.0,5.0,7.0,5.0,7.0,5.0,7.0,5.0,7.0]);
+/// ```
+/// * **Intrinsic:** [`_mm512_fmaddsub_ps`]
+/// * **Assembly:** `vfmaddsub132ps zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn fused_mul_add_sub_m512(a: m512, b: m512, c: m512) -> m512 {
+  m512(unsafe { _mm512_fmaddsub_ps(a.0, b.0, c.0) })
+}
+
+/// Alternating fused multiply add/sub: even lanes `(a*b)+c`, odd lanes `(a*b)-c`.
+/// ```
+/// # use safe_arch::*;
+/// let a = set_splat_m512d(2.0);
+/// let b = set_splat_m512d(3.0);
+/// let c = set_splat_m512d(1.0);
+/// let d: [f64; 8] = fused_mul_add_sub_m512d(a, b, c).into();
+/// assert_eq!(d, [5.0,7.0,5.0,7.0,5.0,7.0,5.0,7.0]);
+/// ```
+/// * **Intrinsic:** [`_mm512_fmaddsub_pd`]
+/// * **Assembly:** `vfmaddsub132pd zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn fused_mul_add_sub_m512d(a: m512d, b: m512d, c: m512d) -> m512d {
+  m512d(unsafe { _mm512_fmaddsub_pd(a.0, b.0, c.0) })
+}
+
+/// Alternating fused multiply sub/add: even lanes `(a*b)-c`, odd lanes `(a*b)+c`.
+/// ```
+/// # use safe_arch::*;
+/// let a = set_splat_m512(2.0);
+/// let b = set_splat_m512(3.0);
+/// let c = set_splat_m512(1.0);
+/// let d: [f32; 16] = fused_mul_sub_add_m512(a, b, c).into();
+/// assert_eq!(d, [7.0,5.0,7.0,5.0,7.0,5.0,7.0,5.0,7.0,5.0,7.0,5.0,7.0,5.0,7.0,5.0]);
+/// ```
+/// * **Intrinsic:** [`_mm512_fmsubadd_ps`]
+/// * **Assembly:** `vfmsubadd132ps zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn fused_mul_sub_add_m512(a: m512, b: m512, c: m512) -> m512 {
+  m512(unsafe { _mm512_fmsubadd_ps(a.0, b.0, c.0) })
+}
+
+/// Alternating fused multiply sub/add: even lanes `(a*b)-c`, odd lanes `(a*b)+c`.
+/// ```
+/// # use safe_arch::*;
+/// let a = set_splat_m512d(2.0);
+/// let b = set_splat_m512d(3.0);
+/// let c = set_splat_m512d(1.0);
+/// let d: [f64; 8] = fused_mul_sub_add_m512d(a, b, c).into();
+/// assert_eq!(d, [7.0,5.0,7.0,5.0,7.0,5.0,7.0,5.0]);
+/// ```
+/// * **Intrinsic:** [`_mm512_fmsubadd_pd`]
+/// * **Assembly:** `vfmsubadd132pd zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn fused_mul_sub_add_m512d(a: m512d, b: m512d, c: m512d) -> m512d {
+  m512d(unsafe { _mm512_fmsubadd_pd(a.0, b.0, c.0) })
 }
 
 // Comparison operations
