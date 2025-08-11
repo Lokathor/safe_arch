@@ -1,8 +1,5 @@
 # [Docs.rs](https://docs.rs/safe_arch)
 
-## Notes from Tritonn
-This is intended to be an AVX512 expansion held on standby, ready to be a PR upstream as soon as avx512 target features are considered stable.
-
 # safe_arch
 
 Exposes arch-specific intrinsics as safe function.
