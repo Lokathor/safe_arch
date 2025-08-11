@@ -26,7 +26,6 @@ unsafe impl bytemuck::Pod for m128i {}
 unsafe impl bytemuck::TransparentWrapper<__m128i> for m128i {}
 
 impl Clone for m128i {
-  #[must_use]
   #[inline(always)]
   fn clone(&self) -> Self {
     *self
@@ -35,7 +34,6 @@ impl Clone for m128i {
 impl Copy for m128i {}
 
 impl Default for m128i {
-  #[must_use]
   #[inline(always)]
   fn default() -> Self {
     unsafe { core::mem::zeroed() }
@@ -45,7 +43,6 @@ impl Default for m128i {
 // 8-bit
 
 impl From<[i8; 16]> for m128i {
-  #[must_use]
   #[inline(always)]
   fn from(arr: [i8; 16]) -> Self {
     unsafe { core::mem::transmute(arr) }
@@ -53,7 +50,6 @@ impl From<[i8; 16]> for m128i {
 }
 
 impl From<m128i> for [i8; 16] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m128i) -> Self {
     unsafe { core::mem::transmute(m) }
@@ -61,7 +57,6 @@ impl From<m128i> for [i8; 16] {
 }
 
 impl From<[u8; 16]> for m128i {
-  #[must_use]
   #[inline(always)]
   fn from(arr: [u8; 16]) -> Self {
     unsafe { core::mem::transmute(arr) }
@@ -69,7 +64,6 @@ impl From<[u8; 16]> for m128i {
 }
 
 impl From<m128i> for [u8; 16] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m128i) -> Self {
     unsafe { core::mem::transmute(m) }
@@ -79,7 +73,6 @@ impl From<m128i> for [u8; 16] {
 // 16-bit
 
 impl From<[i16; 8]> for m128i {
-  #[must_use]
   #[inline(always)]
   fn from(arr: [i16; 8]) -> Self {
     unsafe { core::mem::transmute(arr) }
@@ -87,7 +80,6 @@ impl From<[i16; 8]> for m128i {
 }
 
 impl From<m128i> for [i16; 8] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m128i) -> Self {
     unsafe { core::mem::transmute(m) }
@@ -95,7 +87,6 @@ impl From<m128i> for [i16; 8] {
 }
 
 impl From<[u16; 8]> for m128i {
-  #[must_use]
   #[inline(always)]
   fn from(arr: [u16; 8]) -> Self {
     unsafe { core::mem::transmute(arr) }
@@ -103,7 +94,6 @@ impl From<[u16; 8]> for m128i {
 }
 
 impl From<m128i> for [u16; 8] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m128i) -> Self {
     unsafe { core::mem::transmute(m) }
@@ -113,7 +103,6 @@ impl From<m128i> for [u16; 8] {
 // 32-bit
 
 impl From<[i32; 4]> for m128i {
-  #[must_use]
   #[inline(always)]
   fn from(arr: [i32; 4]) -> Self {
     unsafe { core::mem::transmute(arr) }
@@ -121,7 +110,6 @@ impl From<[i32; 4]> for m128i {
 }
 
 impl From<m128i> for [i32; 4] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m128i) -> Self {
     unsafe { core::mem::transmute(m) }
@@ -129,7 +117,6 @@ impl From<m128i> for [i32; 4] {
 }
 
 impl From<[u32; 4]> for m128i {
-  #[must_use]
   #[inline(always)]
   fn from(arr: [u32; 4]) -> Self {
     unsafe { core::mem::transmute(arr) }
@@ -137,7 +124,6 @@ impl From<[u32; 4]> for m128i {
 }
 
 impl From<m128i> for [u32; 4] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m128i) -> Self {
     unsafe { core::mem::transmute(m) }
@@ -147,7 +133,6 @@ impl From<m128i> for [u32; 4] {
 // 64-bit
 
 impl From<[i64; 2]> for m128i {
-  #[must_use]
   #[inline(always)]
   fn from(arr: [i64; 2]) -> Self {
     unsafe { core::mem::transmute(arr) }
@@ -155,7 +140,6 @@ impl From<[i64; 2]> for m128i {
 }
 
 impl From<m128i> for [i64; 2] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m128i) -> Self {
     unsafe { core::mem::transmute(m) }
@@ -163,7 +147,6 @@ impl From<m128i> for [i64; 2] {
 }
 
 impl From<[u64; 2]> for m128i {
-  #[must_use]
   #[inline(always)]
   fn from(arr: [u64; 2]) -> Self {
     unsafe { core::mem::transmute(arr) }
@@ -171,7 +154,6 @@ impl From<[u64; 2]> for m128i {
 }
 
 impl From<m128i> for [u64; 2] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m128i) -> Self {
     unsafe { core::mem::transmute(m) }
@@ -181,7 +163,6 @@ impl From<m128i> for [u64; 2] {
 // 128-bit
 
 impl From<i128> for m128i {
-  #[must_use]
   #[inline(always)]
   fn from(i: i128) -> Self {
     unsafe { core::mem::transmute(i) }
@@ -189,7 +170,6 @@ impl From<i128> for m128i {
 }
 
 impl From<m128i> for i128 {
-  #[must_use]
   #[inline(always)]
   fn from(m: m128i) -> Self {
     unsafe { core::mem::transmute(m) }
@@ -197,7 +177,6 @@ impl From<m128i> for i128 {
 }
 
 impl From<u128> for m128i {
-  #[must_use]
   #[inline(always)]
   fn from(u: u128) -> Self {
     unsafe { core::mem::transmute(u) }
@@ -205,7 +184,6 @@ impl From<u128> for m128i {
 }
 
 impl From<m128i> for u128 {
-  #[must_use]
   #[inline(always)]
   fn from(m: m128i) -> Self {
     unsafe { core::mem::transmute(m) }

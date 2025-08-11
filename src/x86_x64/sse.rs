@@ -1342,7 +1342,6 @@ pub fn bitxor_m128(a: m128, b: m128) -> m128 {
 
 impl Add for m128 {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn add(self, rhs: Self) -> Self {
     add_m128(self, rhs)
@@ -1357,7 +1356,6 @@ impl AddAssign for m128 {
 
 impl BitAnd for m128 {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn bitand(self, rhs: Self) -> Self {
     bitand_m128(self, rhs)
@@ -1372,7 +1370,6 @@ impl BitAndAssign for m128 {
 
 impl BitOr for m128 {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn bitor(self, rhs: Self) -> Self {
     bitor_m128(self, rhs)
@@ -1387,7 +1384,6 @@ impl BitOrAssign for m128 {
 
 impl BitXor for m128 {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn bitxor(self, rhs: Self) -> Self {
     bitxor_m128(self, rhs)
@@ -1402,7 +1398,6 @@ impl BitXorAssign for m128 {
 
 impl Div for m128 {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn div(self, rhs: Self) -> Self {
     div_m128(self, rhs)
@@ -1417,7 +1412,6 @@ impl DivAssign for m128 {
 
 impl Mul for m128 {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn mul(self, rhs: Self) -> Self {
     mul_m128(self, rhs)
@@ -1432,7 +1426,6 @@ impl MulAssign for m128 {
 
 impl Neg for m128 {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn neg(self) -> Self {
     sub_m128(zeroed_m128(), self)
@@ -1445,7 +1438,6 @@ impl Not for m128 {
   /// simple enough.
   ///
   /// Negates the bits by performing an `xor` with an all-1s bit pattern.
-  #[must_use]
   #[inline(always)]
   fn not(self) -> Self {
     let all_bits = set_splat_m128(f32::from_bits(u32::MAX));
@@ -1455,7 +1447,6 @@ impl Not for m128 {
 
 impl Sub for m128 {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn sub(self, rhs: Self) -> Self {
     sub_m128(self, rhs)
@@ -1470,7 +1461,6 @@ impl SubAssign for m128 {
 
 impl PartialEq for m128 {
   /// Not a direct intrinsic, this is a `cmp_eq_mask` and then a `move_mask`.
-  #[must_use]
   #[inline(always)]
   fn eq(&self, other: &Self) -> bool {
     move_mask_m128(cmp_eq_mask_m128(*self, *other)) == 0b1111

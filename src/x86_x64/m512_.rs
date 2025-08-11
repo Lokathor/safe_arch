@@ -62,7 +62,6 @@ impl m512 {
 }
 
 impl Clone for m512 {
-  #[must_use]
   #[inline(always)]
   fn clone(&self) -> Self {
     *self
@@ -71,7 +70,6 @@ impl Clone for m512 {
 impl Copy for m512 {}
 
 impl Default for m512 {
-  #[must_use]
   #[inline(always)]
   fn default() -> Self {
     unsafe { core::mem::zeroed() }
@@ -79,7 +77,6 @@ impl Default for m512 {
 }
 
 impl From<[f32; 16]> for m512 {
-  #[must_use]
   #[inline(always)]
   fn from(arr: [f32; 16]) -> Self {
     // Safety: because this semantically moves the value from the input position
@@ -90,7 +87,6 @@ impl From<[f32; 16]> for m512 {
 }
 
 impl From<m512> for [f32; 16] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m512) -> Self {
     // We can of course transmute to a lower alignment
@@ -107,7 +103,10 @@ impl Debug for m512 {
   /// ```
   /// # use safe_arch::*;
   /// let f = format!("{:?}", m512::default());
-  /// assert_eq!(&f, "m512(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)");
+  /// assert_eq!(
+  ///   &f,
+  ///   "m512(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)"
+  /// );
   /// ```
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     write!(f, "m512(")?;
@@ -164,7 +163,10 @@ impl LowerExp for m512 {
   /// ```
   /// # use safe_arch::*;
   /// let f = format!("{:e}", m512::default());
-  /// assert_eq!(&f, "(0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0)");
+  /// assert_eq!(
+  ///   &f,
+  ///   "(0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0)"
+  /// );
   /// ```
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     write!(f, "(")?;
@@ -183,7 +185,10 @@ impl UpperExp for m512 {
   /// ```
   /// # use safe_arch::*;
   /// let f = format!("{:E}", m512::default());
-  /// assert_eq!(&f, "(0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0)");
+  /// assert_eq!(
+  ///   &f,
+  ///   "(0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0)"
+  /// );
   /// ```
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     write!(f, "(")?;

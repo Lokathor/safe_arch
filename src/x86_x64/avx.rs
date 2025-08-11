@@ -2157,7 +2157,6 @@ pub fn zero_extend_m128i(a: m128i) -> m256i {
 
 impl Add for m256d {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn add(self, rhs: Self) -> Self {
     add_m256d(self, rhs)
@@ -2172,7 +2171,6 @@ impl AddAssign for m256d {
 
 impl BitAnd for m256d {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn bitand(self, rhs: Self) -> Self {
     bitand_m256d(self, rhs)
@@ -2187,7 +2185,6 @@ impl BitAndAssign for m256d {
 
 impl BitOr for m256d {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn bitor(self, rhs: Self) -> Self {
     bitor_m256d(self, rhs)
@@ -2202,7 +2199,6 @@ impl BitOrAssign for m256d {
 
 impl BitXor for m256d {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn bitxor(self, rhs: Self) -> Self {
     bitxor_m256d(self, rhs)
@@ -2217,7 +2213,6 @@ impl BitXorAssign for m256d {
 
 impl Div for m256d {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn div(self, rhs: Self) -> Self {
     div_m256d(self, rhs)
@@ -2232,7 +2227,6 @@ impl DivAssign for m256d {
 
 impl Mul for m256d {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn mul(self, rhs: Self) -> Self {
     mul_m256d(self, rhs)
@@ -2247,7 +2241,6 @@ impl MulAssign for m256d {
 
 impl Neg for m256d {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn neg(self) -> Self {
     sub_m256d(zeroed_m256d(), self)
@@ -2260,7 +2253,6 @@ impl Not for m256d {
   /// simple enough.
   ///
   /// Negates the bits by performing an `xor` with an all-ones bit pattern.
-  #[must_use]
   #[inline(always)]
   fn not(self) -> Self {
     let all_bits = set_splat_m256d(f64::from_bits(u64::MAX));
@@ -2270,7 +2262,6 @@ impl Not for m256d {
 
 impl Sub for m256d {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn sub(self, rhs: Self) -> Self {
     sub_m256d(self, rhs)
@@ -2286,7 +2277,6 @@ impl SubAssign for m256d {
 impl PartialEq for m256d {
   /// Performs a comparison to get a mask, then moves the mask and checks for
   /// all true.
-  #[must_use]
   #[inline(always)]
   fn eq(&self, other: &Self) -> bool {
     let mask = m256d(unsafe { _mm256_cmp_pd(self.0, other.0, _CMP_EQ_OQ) });
@@ -2296,7 +2286,6 @@ impl PartialEq for m256d {
 
 impl Add for m256 {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn add(self, rhs: Self) -> Self {
     add_m256(self, rhs)
@@ -2311,7 +2300,6 @@ impl AddAssign for m256 {
 
 impl BitAnd for m256 {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn bitand(self, rhs: Self) -> Self {
     bitand_m256(self, rhs)
@@ -2326,7 +2314,6 @@ impl BitAndAssign for m256 {
 
 impl BitOr for m256 {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn bitor(self, rhs: Self) -> Self {
     bitor_m256(self, rhs)
@@ -2341,7 +2328,6 @@ impl BitOrAssign for m256 {
 
 impl BitXor for m256 {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn bitxor(self, rhs: Self) -> Self {
     bitxor_m256(self, rhs)
@@ -2356,7 +2342,6 @@ impl BitXorAssign for m256 {
 
 impl Div for m256 {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn div(self, rhs: Self) -> Self {
     div_m256(self, rhs)
@@ -2371,7 +2356,6 @@ impl DivAssign for m256 {
 
 impl Mul for m256 {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn mul(self, rhs: Self) -> Self {
     mul_m256(self, rhs)
@@ -2386,7 +2370,6 @@ impl MulAssign for m256 {
 
 impl Neg for m256 {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn neg(self) -> Self {
     sub_m256(zeroed_m256(), self)
@@ -2399,7 +2382,6 @@ impl Not for m256 {
   /// simple enough.
   ///
   /// Negates the bits by performing an `xor` with an all-ones bit pattern.
-  #[must_use]
   #[inline(always)]
   fn not(self) -> Self {
     let all_bits = set_splat_m256(f32::from_bits(u32::MAX));
@@ -2409,7 +2391,6 @@ impl Not for m256 {
 
 impl Sub for m256 {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn sub(self, rhs: Self) -> Self {
     sub_m256(self, rhs)
@@ -2425,7 +2406,6 @@ impl SubAssign for m256 {
 impl PartialEq for m256 {
   /// Performs a comparison to get a mask, then moves the mask and checks for
   /// all true.
-  #[must_use]
   #[inline(always)]
   fn eq(&self, other: &Self) -> bool {
     let mask = m256(unsafe { _mm256_cmp_ps(self.0, other.0, _CMP_EQ_OQ) });

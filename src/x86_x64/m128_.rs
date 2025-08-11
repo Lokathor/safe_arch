@@ -64,7 +64,6 @@ impl m128 {
 }
 
 impl Clone for m128 {
-  #[must_use]
   #[inline(always)]
   fn clone(&self) -> Self {
     *self
@@ -73,7 +72,6 @@ impl Clone for m128 {
 impl Copy for m128 {}
 
 impl Default for m128 {
-  #[must_use]
   #[inline(always)]
   fn default() -> Self {
     unsafe { core::mem::zeroed() }
@@ -81,7 +79,6 @@ impl Default for m128 {
 }
 
 impl From<[f32; 4]> for m128 {
-  #[must_use]
   #[inline(always)]
   fn from(arr: [f32; 4]) -> Self {
     // Safety: because this semantically moves the value from the input position
@@ -92,7 +89,6 @@ impl From<[f32; 4]> for m128 {
 }
 
 impl From<m128> for [f32; 4] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m128) -> Self {
     // We can of course transmute to a lower alignment

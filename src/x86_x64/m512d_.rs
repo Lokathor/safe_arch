@@ -64,7 +64,6 @@ impl m512d {
 }
 
 impl Clone for m512d {
-  #[must_use]
   #[inline(always)]
   fn clone(&self) -> Self {
     *self
@@ -73,7 +72,6 @@ impl Clone for m512d {
 impl Copy for m512d {}
 
 impl Default for m512d {
-  #[must_use]
   #[inline(always)]
   fn default() -> Self {
     unsafe { core::mem::zeroed() }
@@ -81,7 +79,6 @@ impl Default for m512d {
 }
 
 impl From<[f64; 8]> for m512d {
-  #[must_use]
   #[inline(always)]
   fn from(arr: [f64; 8]) -> Self {
     // Safety: because this semantically moves the value from the input position
@@ -92,7 +89,6 @@ impl From<[f64; 8]> for m512d {
 }
 
 impl From<m512d> for [f64; 8] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m512d) -> Self {
     // We can of course transmute to a lower alignment

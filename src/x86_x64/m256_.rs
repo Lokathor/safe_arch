@@ -62,7 +62,6 @@ impl m256 {
 }
 
 impl Clone for m256 {
-  #[must_use]
   #[inline(always)]
   fn clone(&self) -> Self {
     *self
@@ -71,7 +70,6 @@ impl Clone for m256 {
 impl Copy for m256 {}
 
 impl Default for m256 {
-  #[must_use]
   #[inline(always)]
   fn default() -> Self {
     unsafe { core::mem::zeroed() }
@@ -79,7 +77,6 @@ impl Default for m256 {
 }
 
 impl From<[f32; 8]> for m256 {
-  #[must_use]
   #[inline(always)]
   fn from(arr: [f32; 8]) -> Self {
     // Safety: because this semantically moves the value from the input position
@@ -90,7 +87,6 @@ impl From<[f32; 8]> for m256 {
 }
 
 impl From<m256> for [f32; 8] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m256) -> Self {
     // We can of course transmute to a lower alignment

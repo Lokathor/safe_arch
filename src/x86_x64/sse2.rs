@@ -1971,7 +1971,8 @@ pub fn pack_i16_to_u8_m128i(a: m128i, b: m128i) -> m128i {
 /// ```
 /// # use safe_arch::*;
 /// let a = m128i::from([0_u8, 11, 2, 13, 4, 15, 6, 17, 8, 19, 20, 21, 22, 23, 24, 127]);
-/// let b = m128i::from([20_u8, 110, 250, 103, 34, 105, 60, 217, 8, 19, 210, 201, 202, 203, 204, 127]);
+/// let b =
+///   m128i::from([20_u8, 110, 250, 103, 34, 105, 60, 217, 8, 19, 210, 201, 202, 203, 204, 127]);
 /// let c: [u64; 2] = sum_of_u8_abs_diff_m128i(a, b).into();
 /// assert_eq!(c, [831_u64, 910]);
 /// ```
@@ -3077,7 +3078,6 @@ pub fn bitxor_m128i(a: m128i, b: m128i) -> m128i {
 
 impl Add for m128d {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn add(self, rhs: Self) -> Self {
     add_m128d(self, rhs)
@@ -3092,7 +3092,6 @@ impl AddAssign for m128d {
 
 impl BitAnd for m128d {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn bitand(self, rhs: Self) -> Self {
     bitand_m128d(self, rhs)
@@ -3107,7 +3106,6 @@ impl BitAndAssign for m128d {
 
 impl BitOr for m128d {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn bitor(self, rhs: Self) -> Self {
     bitor_m128d(self, rhs)
@@ -3122,7 +3120,6 @@ impl BitOrAssign for m128d {
 
 impl BitXor for m128d {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn bitxor(self, rhs: Self) -> Self {
     bitxor_m128d(self, rhs)
@@ -3137,7 +3134,6 @@ impl BitXorAssign for m128d {
 
 impl Div for m128d {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn div(self, rhs: Self) -> Self {
     div_m128d(self, rhs)
@@ -3152,7 +3148,6 @@ impl DivAssign for m128d {
 
 impl Mul for m128d {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn mul(self, rhs: Self) -> Self {
     mul_m128d(self, rhs)
@@ -3167,7 +3162,6 @@ impl MulAssign for m128d {
 
 impl Neg for m128d {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn neg(self) -> Self {
     sub_m128d(zeroed_m128d(), self)
@@ -3180,7 +3174,6 @@ impl Not for m128d {
   /// simple enough.
   ///
   /// Negates the bits by performing an `xor` with an all-1s bit pattern.
-  #[must_use]
   #[inline(always)]
   fn not(self) -> Self {
     let all_bits = set_splat_m128d(f64::from_bits(u64::MAX));
@@ -3190,7 +3183,6 @@ impl Not for m128d {
 
 impl Sub for m128d {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn sub(self, rhs: Self) -> Self {
     sub_m128d(self, rhs)
@@ -3205,7 +3197,6 @@ impl SubAssign for m128d {
 
 impl PartialEq for m128d {
   /// Not a direct intrinsic, this is a `cmp_eq_mask` and then a `move_mask`.
-  #[must_use]
   #[inline(always)]
   fn eq(&self, other: &Self) -> bool {
     move_mask_m128d(cmp_eq_mask_m128d(*self, *other)) == 0b11
@@ -3218,7 +3209,6 @@ impl PartialEq for m128d {
 
 impl BitAnd for m128i {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn bitand(self, rhs: Self) -> Self {
     bitand_m128i(self, rhs)
@@ -3233,7 +3223,6 @@ impl BitAndAssign for m128i {
 
 impl BitOr for m128i {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn bitor(self, rhs: Self) -> Self {
     bitor_m128i(self, rhs)
@@ -3248,7 +3237,6 @@ impl BitOrAssign for m128i {
 
 impl BitXor for m128i {
   type Output = Self;
-  #[must_use]
   #[inline(always)]
   fn bitxor(self, rhs: Self) -> Self {
     bitxor_m128i(self, rhs)
@@ -3267,7 +3255,6 @@ impl Not for m128i {
   /// simple enough.
   ///
   /// Negates the bits by performing an `xor` with an all-1s bit pattern.
-  #[must_use]
   #[inline(always)]
   fn not(self) -> Self {
     let all_bits = set_splat_i32_m128i(-1);
@@ -3278,7 +3265,6 @@ impl Not for m128i {
 impl PartialEq for m128i {
   /// Not a direct intrinsic, this is a `cmp_eq_mask_i8_m128i` and then a
   /// `move_mask_i8_m128i`.
-  #[must_use]
   #[inline(always)]
   fn eq(&self, other: &Self) -> bool {
     move_mask_i8_m128i(cmp_eq_mask_i8_m128i(*self, *other)) == 0b11111111_11111111
@@ -3286,4 +3272,3 @@ impl PartialEq for m128i {
 }
 /// Unlike with the floating types, ints have absolute equality.
 impl Eq for m128i {}
-

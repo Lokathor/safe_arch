@@ -11,9 +11,9 @@ use super::*;
 /// * The exact layout to view the type as depends on the operation used.
 /// * `From` and `Into` impls are provided for all the relevant signed integer
 ///   array types.
-/// * Formatting impls print as sixteen `i32` values just because they have to pick
-///   something. If you want an alternative you can turn it into an array and
-///   print as you like.
+/// * Formatting impls print as sixteen `i32` values just because they have to
+///   pick something. If you want an alternative you can turn it into an array
+///   and print as you like.
 #[repr(transparent)]
 #[allow(non_camel_case_types)]
 pub struct m512i(pub __m512i);
@@ -67,7 +67,6 @@ impl m512i {
 }
 
 impl Clone for m512i {
-  #[must_use]
   #[inline(always)]
   fn clone(&self) -> Self {
     *self
@@ -76,7 +75,6 @@ impl Clone for m512i {
 impl Copy for m512i {}
 
 impl Default for m512i {
-  #[must_use]
   #[inline(always)]
   fn default() -> Self {
     unsafe { core::mem::zeroed() }
@@ -86,7 +84,6 @@ impl Default for m512i {
 // 8-bit
 
 impl From<[i8; 64]> for m512i {
-  #[must_use]
   #[inline(always)]
   fn from(arr: [i8; 64]) -> Self {
     unsafe { core::mem::transmute(arr) }
@@ -94,7 +91,6 @@ impl From<[i8; 64]> for m512i {
 }
 
 impl From<m512i> for [i8; 64] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m512i) -> Self {
     unsafe { core::mem::transmute(m) }
@@ -102,7 +98,6 @@ impl From<m512i> for [i8; 64] {
 }
 
 impl From<[u8; 64]> for m512i {
-  #[must_use]
   #[inline(always)]
   fn from(arr: [u8; 64]) -> Self {
     unsafe { core::mem::transmute(arr) }
@@ -110,7 +105,6 @@ impl From<[u8; 64]> for m512i {
 }
 
 impl From<m512i> for [u8; 64] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m512i) -> Self {
     unsafe { core::mem::transmute(m) }
@@ -120,7 +114,6 @@ impl From<m512i> for [u8; 64] {
 // 16-bit
 
 impl From<[i16; 32]> for m512i {
-  #[must_use]
   #[inline(always)]
   fn from(arr: [i16; 32]) -> Self {
     unsafe { core::mem::transmute(arr) }
@@ -128,7 +121,6 @@ impl From<[i16; 32]> for m512i {
 }
 
 impl From<m512i> for [i16; 32] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m512i) -> Self {
     unsafe { core::mem::transmute(m) }
@@ -136,7 +128,6 @@ impl From<m512i> for [i16; 32] {
 }
 
 impl From<[u16; 32]> for m512i {
-  #[must_use]
   #[inline(always)]
   fn from(arr: [u16; 32]) -> Self {
     unsafe { core::mem::transmute(arr) }
@@ -144,7 +135,6 @@ impl From<[u16; 32]> for m512i {
 }
 
 impl From<m512i> for [u16; 32] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m512i) -> Self {
     unsafe { core::mem::transmute(m) }
@@ -154,7 +144,6 @@ impl From<m512i> for [u16; 32] {
 // 32-bit
 
 impl From<[i32; 16]> for m512i {
-  #[must_use]
   #[inline(always)]
   fn from(arr: [i32; 16]) -> Self {
     unsafe { core::mem::transmute(arr) }
@@ -162,7 +151,6 @@ impl From<[i32; 16]> for m512i {
 }
 
 impl From<m512i> for [i32; 16] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m512i) -> Self {
     unsafe { core::mem::transmute(m) }
@@ -170,7 +158,6 @@ impl From<m512i> for [i32; 16] {
 }
 
 impl From<[u32; 16]> for m512i {
-  #[must_use]
   #[inline(always)]
   fn from(arr: [u32; 16]) -> Self {
     unsafe { core::mem::transmute(arr) }
@@ -178,7 +165,6 @@ impl From<[u32; 16]> for m512i {
 }
 
 impl From<m512i> for [u32; 16] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m512i) -> Self {
     unsafe { core::mem::transmute(m) }
@@ -188,7 +174,6 @@ impl From<m512i> for [u32; 16] {
 // 64-bit
 
 impl From<[i64; 8]> for m512i {
-  #[must_use]
   #[inline(always)]
   fn from(arr: [i64; 8]) -> Self {
     unsafe { core::mem::transmute(arr) }
@@ -196,7 +181,6 @@ impl From<[i64; 8]> for m512i {
 }
 
 impl From<m512i> for [i64; 8] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m512i) -> Self {
     unsafe { core::mem::transmute(m) }
@@ -204,7 +188,6 @@ impl From<m512i> for [i64; 8] {
 }
 
 impl From<[u64; 8]> for m512i {
-  #[must_use]
   #[inline(always)]
   fn from(arr: [u64; 8]) -> Self {
     unsafe { core::mem::transmute(arr) }
@@ -212,7 +195,6 @@ impl From<[u64; 8]> for m512i {
 }
 
 impl From<m512i> for [u64; 8] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m512i) -> Self {
     unsafe { core::mem::transmute(m) }
@@ -222,7 +204,6 @@ impl From<m512i> for [u64; 8] {
 // 128-bit
 
 impl From<[i128; 4]> for m512i {
-  #[must_use]
   #[inline(always)]
   fn from(i: [i128; 4]) -> Self {
     unsafe { core::mem::transmute(i) }
@@ -230,7 +211,6 @@ impl From<[i128; 4]> for m512i {
 }
 
 impl From<m512i> for [i128; 4] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m512i) -> Self {
     unsafe { core::mem::transmute(m) }
@@ -238,7 +218,6 @@ impl From<m512i> for [i128; 4] {
 }
 
 impl From<[u128; 4]> for m512i {
-  #[must_use]
   #[inline(always)]
   fn from(u: [u128; 4]) -> Self {
     unsafe { core::mem::transmute(u) }
@@ -246,7 +225,6 @@ impl From<[u128; 4]> for m512i {
 }
 
 impl From<m512i> for [u128; 4] {
-  #[must_use]
   #[inline(always)]
   fn from(m: m512i) -> Self {
     unsafe { core::mem::transmute(m) }
@@ -319,7 +297,10 @@ impl LowerExp for m512i {
   /// ```
   /// # use safe_arch::*;
   /// let f = format!("{:e}", m512i::default());
-  /// assert_eq!(&f, "(0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0)");
+  /// assert_eq!(
+  ///   &f,
+  ///   "(0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0)"
+  /// );
   /// ```
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     write!(f, "(")?;
@@ -338,7 +319,10 @@ impl UpperExp for m512i {
   /// ```
   /// # use safe_arch::*;
   /// let f = format!("{:E}", m512i::default());
-  /// assert_eq!(&f, "(0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0)");
+  /// assert_eq!(
+  ///   &f,
+  ///   "(0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0, 0E0)"
+  /// );
   /// ```
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     write!(f, "(")?;
