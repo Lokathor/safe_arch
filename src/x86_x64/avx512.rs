@@ -1155,7 +1155,7 @@ pub fn fused_mul_sub_add_m512d(a: m512d, b: m512d, c: m512d) -> m512d {
 /// # use safe_arch::*;
 /// let a = set_splat_i8_m512i(5);
 /// let b = set_splat_i8_m512i(5);
-/// let m = cmp_op_mask_i8::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// let m = cmp_op_mask_i8::<{ _MM_CMPINT_EQ }>(a, b);
 /// assert_eq!(m, u64::MAX);
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epi8_mask`
@@ -1172,7 +1172,7 @@ pub fn cmp_op_mask_i8<const OP: i32>(a: m512i, b: m512i) -> mmask64 {
 /// let a = set_splat_i8_m512i(3);
 /// let b = set_splat_i8_m512i(5);
 /// // unsigned <  → 3<5
-/// let m = cmp_op_mask_u8::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(a, b);
+/// let m = cmp_op_mask_u8::<{ _MM_CMPINT_LT }>(a, b);
 /// assert_eq!(m, u64::MAX);
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epu8_mask`
@@ -1188,7 +1188,7 @@ pub fn cmp_op_mask_u8<const OP: i32>(a: m512i, b: m512i) -> mmask64 {
 /// # use safe_arch::*;
 /// let a = set_splat_i16_m512i(5);
 /// let b = set_splat_i16_m512i(5);
-/// let m = cmp_op_mask_i16::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// let m = cmp_op_mask_i16::<{ _MM_CMPINT_EQ }>(a, b);
 /// assert_eq!(m, u32::MAX);
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epi16_mask`
@@ -1205,7 +1205,7 @@ pub fn cmp_op_mask_i16<const OP: i32>(a: m512i, b: m512i) -> mmask32 {
 /// let a = set_splat_i16_m512i(3);
 /// let b = set_splat_i16_m512i(5);
 /// // unsigned <= → 3<=5
-/// let m = cmp_op_mask_u16::<{ ::core::arch::x86_64::_MM_CMPINT_LE }>(a, b);
+/// let m = cmp_op_mask_u16::<{ _MM_CMPINT_LE }>(a, b);
 /// assert_eq!(m, u32::MAX);
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epu16_mask`
@@ -1222,7 +1222,7 @@ pub fn cmp_op_mask_u16<const OP: i32>(a: m512i, b: m512i) -> mmask32 {
 /// let a = set_splat_i32_m512i(5);
 /// let b = set_splat_i32_m512i(2);
 /// // signed > → 5>2
-/// let m = cmp_op_mask_i32::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(b, a);
+/// let m = cmp_op_mask_i32::<{ _MM_CMPINT_LT }>(b, a);
 /// assert_eq!(m, u16::MAX);
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epi32_mask`
@@ -1239,7 +1239,7 @@ pub fn cmp_op_mask_i32<const OP: i32>(a: m512i, b: m512i) -> mmask16 {
 /// let a = set_splat_i32_m512i(2);
 /// let b = set_splat_i32_m512i(5);
 /// // unsigned < → 2<5
-/// let m = cmp_op_mask_u32::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(a, b);
+/// let m = cmp_op_mask_u32::<{ _MM_CMPINT_LT }>(a, b);
 /// assert_eq!(m, u16::MAX);
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epu32_mask`
@@ -1255,7 +1255,7 @@ pub fn cmp_op_mask_u32<const OP: i32>(a: m512i, b: m512i) -> mmask16 {
 /// # use safe_arch::*;
 /// let a = set_splat_i64_m512i(5);
 /// let b = set_splat_i64_m512i(5);
-/// let m = cmp_op_mask_i64::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// let m = cmp_op_mask_i64::<{ _MM_CMPINT_EQ }>(a, b);
 /// assert_eq!(m, u8::MAX);
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epi64_mask`
@@ -1272,7 +1272,7 @@ pub fn cmp_op_mask_i64<const OP: i32>(a: m512i, b: m512i) -> mmask8 {
 /// let a = set_splat_i64_m512i(3);
 /// let b = set_splat_i64_m512i(5);
 /// // unsigned <= → 3<=5
-/// let m = cmp_op_mask_u64::<{ ::core::arch::x86_64::_MM_CMPINT_LE }>(a, b);
+/// let m = cmp_op_mask_u64::<{ _MM_CMPINT_LE }>(a, b);
 /// assert_eq!(m, u8::MAX);
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epu64_mask`
@@ -1289,7 +1289,7 @@ pub fn cmp_op_mask_u64<const OP: i32>(a: m512i, b: m512i) -> mmask8 {
 /// let a = set_splat_m512(3.0);
 /// let b = set_splat_m512(5.0);
 /// // < : 3<5
-/// let m = cmp_op_mask_f32::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(a, b);
+/// let m = cmp_op_mask_f32::<{ _MM_CMPINT_LT }>(a, b);
 /// assert_eq!(m, u16::MAX);
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_ps_mask`
@@ -1305,7 +1305,7 @@ pub fn cmp_op_mask_f32<const OP: i32>(a: m512, b: m512) -> mmask16 {
 /// # use safe_arch::*;
 /// let a = set_splat_m512d(3.0);
 /// let b = set_splat_m512d(3.0);
-/// let m = cmp_op_mask_f64::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// let m = cmp_op_mask_f64::<{ _MM_CMPINT_EQ }>(a, b);
 /// assert_eq!(m, u8::MAX);
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_pd_mask`
@@ -1325,7 +1325,7 @@ pub fn cmp_op_mask_f64<const OP: i32>(a: m512d, b: m512d) -> mmask8 {
 /// # use safe_arch::*;
 /// let a = set_splat_i8_m512i(5);
 /// let b = set_splat_i8_m512i(5);
-/// let v = cmp_op_mask_i8_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// let v = cmp_op_mask_i8_m512i::<{ _MM_CMPINT_EQ }>(a, b);
 /// assert_eq!(v, set_splat_i8_m512i(-1));
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epi8_mask`, `_mm512_maskz_mov_epi8`
@@ -1342,7 +1342,7 @@ pub fn cmp_op_mask_i8_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// # use safe_arch::*;
 /// let a = set_splat_i8_m512i(3);
 /// let b = set_splat_i8_m512i(5);
-/// let v = cmp_op_mask_u8_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(a, b);
+/// let v = cmp_op_mask_u8_m512i::<{ _MM_CMPINT_LT }>(a, b);
 /// assert_eq!(v, set_splat_i8_m512i(-1));
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epu8_mask`, `_mm512_maskz_mov_epi8`
@@ -1359,7 +1359,7 @@ pub fn cmp_op_mask_u8_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// # use safe_arch::*;
 /// let a = set_splat_i16_m512i(5);
 /// let b = set_splat_i16_m512i(5);
-/// let v = cmp_op_mask_i16_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// let v = cmp_op_mask_i16_m512i::<{ _MM_CMPINT_EQ }>(a, b);
 /// assert_eq!(v, set_splat_i16_m512i(-1));
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epi16_mask`, `_mm512_maskz_mov_epi16`
@@ -1376,7 +1376,7 @@ pub fn cmp_op_mask_i16_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// # use safe_arch::*;
 /// let a = set_splat_i16_m512i(3);
 /// let b = set_splat_i16_m512i(5);
-/// let v = cmp_op_mask_u16_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_LE }>(a, b);
+/// let v = cmp_op_mask_u16_m512i::<{ _MM_CMPINT_LE }>(a, b);
 /// assert_eq!(v, set_splat_i16_m512i(-1));
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epu16_mask`, `_mm512_maskz_mov_epi16`
@@ -1393,7 +1393,7 @@ pub fn cmp_op_mask_u16_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// # use safe_arch::*;
 /// let a = set_splat_i32_m512i(5);
 /// let b = set_splat_i32_m512i(2);
-/// let v = cmp_op_mask_i32_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(b, a);
+/// let v = cmp_op_mask_i32_m512i::<{ _MM_CMPINT_LT }>(b, a);
 /// assert_eq!(v, set_splat_i32_m512i(-1));
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epi32_mask`, `_mm512_maskz_mov_epi32`
@@ -1410,7 +1410,7 @@ pub fn cmp_op_mask_i32_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// # use safe_arch::*;
 /// let a = set_splat_i32_m512i(2);
 /// let b = set_splat_i32_m512i(5);
-/// let v = cmp_op_mask_u32_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(a, b);
+/// let v = cmp_op_mask_u32_m512i::<{ _MM_CMPINT_LT }>(a, b);
 /// assert_eq!(v, set_splat_i32_m512i(-1));
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epu32_mask`, `_mm512_maskz_mov_epi32`
@@ -1427,7 +1427,7 @@ pub fn cmp_op_mask_u32_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// # use safe_arch::*;
 /// let a = set_splat_i64_m512i(5);
 /// let b = set_splat_i64_m512i(5);
-/// let v = cmp_op_mask_i64_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// let v = cmp_op_mask_i64_m512i::<{ _MM_CMPINT_EQ }>(a, b);
 /// assert_eq!(v, set_splat_i64_m512i(-1));
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epi64_mask`, `_mm512_maskz_mov_epi64`
@@ -1444,7 +1444,7 @@ pub fn cmp_op_mask_i64_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// # use safe_arch::*;
 /// let a = set_splat_i64_m512i(3);
 /// let b = set_splat_i64_m512i(5);
-/// let v = cmp_op_mask_u64_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_LE }>(a, b);
+/// let v = cmp_op_mask_u64_m512i::<{ _MM_CMPINT_LE }>(a, b);
 /// assert_eq!(v, set_splat_i64_m512i(-1));
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epu64_mask`, `_mm512_maskz_mov_epi64`
@@ -1461,7 +1461,7 @@ pub fn cmp_op_mask_u64_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// # use safe_arch::*;
 /// let a = set_splat_m512(3.0);
 /// let b = set_splat_m512(5.0);
-/// let v = cmp_op_mask_m512::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(a, b);
+/// let v = cmp_op_mask_m512::<{ _MM_CMPINT_LT }>(a, b);
 /// assert_eq!(v.to_bits(), [u32::MAX; 16]);
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_ps_mask`, `_mm512_maskz_mov_ps`
@@ -1481,7 +1481,7 @@ pub fn cmp_op_mask_m512<const OP: i32>(a: m512, b: m512) -> m512 {
 /// # use safe_arch::*;
 /// let a = set_splat_m512d(3.0);
 /// let b = set_splat_m512d(3.0);
-/// let v = cmp_op_mask_m512d::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// let v = cmp_op_mask_m512d::<{ _MM_CMPINT_EQ }>(a, b);
 /// assert_eq!(v.to_bits(), [u64::MAX; 8]);
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_pd_mask`, `_mm512_maskz_mov_pd`
@@ -3397,11 +3397,11 @@ pub fn permute_i32_m512i(idx: m512i, a: m512i) -> m512i {
 ///     3.5, -3.5,  4.1, -4.9,
 /// ]);
 /// // Round to nearest, suppress exceptions
-/// let r_nearest: [f64; 8] = round_m512d::<{ core::arch::x86_64::_MM_FROUND_TO_NEAREST_INT | core::arch::x86_64::_MM_FROUND_NO_EXC }>(a).into();
+/// let r_nearest: [f64; 8] = round_m512d::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(a).into();
 /// assert_eq!(r_nearest, [1.0, 3.0, -1.0, -3.0, 4.0, -4.0, 4.0, -5.0]);
 ///
 /// // Round toward zero, suppress exceptions
-/// let r_zero: [f64; 8] = round_m512d::<{ core::arch::x86_64::_MM_FROUND_TO_ZERO | core::arch::x86_64::_MM_FROUND_NO_EXC }>(a).into();
+/// let r_zero: [f64; 8] = round_m512d::<{ _MM_FROUND_TO_ZERO | _MM_FROUND_NO_EXC }>(a).into();
 /// assert_eq!(r_zero, [1.0, 2.0, -1.0, -2.0, 3.0, -3.0, 4.0, -4.0]);
 /// ```
 /// * **Intrinsic:** [`_mm512_roundscale_pd`]
@@ -3425,11 +3425,11 @@ pub fn round_m512d<const OP: i32>(a: m512d) -> m512d {
 ///     7.9, -7.9,  8.4, -8.4,
 /// ]);
 /// // Round to nearest, suppress exceptions
-/// let r_nearest: [f32; 16] = round_m512::<{ core::arch::x86_64::_MM_FROUND_TO_NEAREST_INT | core::arch::x86_64::_MM_FROUND_NO_EXC }>(a).into();
+/// let r_nearest: [f32; 16] = round_m512::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(a).into();
 /// assert_eq!(&r_nearest[0..4], &[1.0, 3.0, -1.0, -3.0]);
 ///
 /// // Round toward zero, suppress exceptions
-/// let r_zero: [f32; 16] = round_m512::<{ core::arch::x86_64::_MM_FROUND_TO_ZERO | core::arch::x86_64::_MM_FROUND_NO_EXC }>(a).into();
+/// let r_zero: [f32; 16] = round_m512::<{ _MM_FROUND_TO_ZERO | _MM_FROUND_NO_EXC }>(a).into();
 /// assert_eq!(&r_zero[0..4], &[1.0, 2.0, -1.0, -2.0]);
 /// ```
 /// * **Intrinsic:** [`_mm512_roundscale_ps`]
