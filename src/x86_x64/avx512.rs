@@ -1153,6 +1153,10 @@ pub fn fused_mul_sub_add_m512d(a: m512d, b: m512d, c: m512d) -> m512d {
 /// Compare `i8` lanes under `OP`, returning a 64-bit mask.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i8_m512i(5);
 /// let b = set_splat_i8_m512i(5);
 /// let m = cmp_op_mask_i8::<{ _MM_CMPINT_EQ }>(a, b);
@@ -1169,6 +1173,10 @@ pub fn cmp_op_mask_i8<const OP: i32>(a: m512i, b: m512i) -> mmask64 {
 /// Compare `u8` lanes under `OP`, returning a 64-bit mask.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i8_m512i(3);
 /// let b = set_splat_i8_m512i(5);
 /// // unsigned <  → 3<5
@@ -1186,6 +1194,10 @@ pub fn cmp_op_mask_u8<const OP: i32>(a: m512i, b: m512i) -> mmask64 {
 /// Compare `i16` lanes under `OP`, returning a 32-bit mask.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i16_m512i(5);
 /// let b = set_splat_i16_m512i(5);
 /// let m = cmp_op_mask_i16::<{ _MM_CMPINT_EQ }>(a, b);
@@ -1202,6 +1214,10 @@ pub fn cmp_op_mask_i16<const OP: i32>(a: m512i, b: m512i) -> mmask32 {
 /// Compare `u16` lanes under `OP`, returning a 32-bit mask.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i16_m512i(3);
 /// let b = set_splat_i16_m512i(5);
 /// // unsigned <= → 3<=5
@@ -1219,6 +1235,10 @@ pub fn cmp_op_mask_u16<const OP: i32>(a: m512i, b: m512i) -> mmask32 {
 /// Compare `i32` lanes under `OP`, returning a 16-bit mask.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i32_m512i(5);
 /// let b = set_splat_i32_m512i(2);
 /// // signed > → 5>2
@@ -1236,6 +1256,10 @@ pub fn cmp_op_mask_i32<const OP: i32>(a: m512i, b: m512i) -> mmask16 {
 /// Compare `u32` lanes under `OP`, returning a 16-bit mask.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i32_m512i(2);
 /// let b = set_splat_i32_m512i(5);
 /// // unsigned < → 2<5
@@ -1253,6 +1277,10 @@ pub fn cmp_op_mask_u32<const OP: i32>(a: m512i, b: m512i) -> mmask16 {
 /// Compare `i64` lanes under `OP`, returning an 8-bit mask.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i64_m512i(5);
 /// let b = set_splat_i64_m512i(5);
 /// let m = cmp_op_mask_i64::<{ _MM_CMPINT_EQ }>(a, b);
@@ -1269,6 +1297,10 @@ pub fn cmp_op_mask_i64<const OP: i32>(a: m512i, b: m512i) -> mmask8 {
 /// Compare `u64` lanes under `OP`, returning an 8-bit mask.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i64_m512i(3);
 /// let b = set_splat_i64_m512i(5);
 /// // unsigned <= → 3<=5
@@ -1286,6 +1318,10 @@ pub fn cmp_op_mask_u64<const OP: i32>(a: m512i, b: m512i) -> mmask8 {
 /// Compare `f32` lanes under `OP`, returning a 16-bit mask.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_m512(3.0);
 /// let b = set_splat_m512(5.0);
 /// // < : 3<5
@@ -1303,6 +1339,10 @@ pub fn cmp_op_mask_f32<const OP: i32>(a: m512, b: m512) -> mmask16 {
 /// Compare `f64` lanes under `OP`, returning an 8-bit mask.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_m512d(3.0);
 /// let b = set_splat_m512d(3.0);
 /// let m = cmp_op_mask_f64::<{ _MM_CMPINT_EQ }>(a, b);
@@ -1323,6 +1363,10 @@ pub fn cmp_op_mask_f64<const OP: i32>(a: m512d, b: m512d) -> mmask8 {
 /// `i8` version: expands your `mmask64` into a `m512i` of all-ones or zeros.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i8_m512i(5);
 /// let b = set_splat_i8_m512i(5);
 /// let v = cmp_op_mask_i8_m512i::<{ _MM_CMPINT_EQ }>(a, b);
@@ -1340,6 +1384,10 @@ pub fn cmp_op_mask_i8_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// `u8` version: expands your `mmask64` into a `m512i` of all-ones or zeros.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i8_m512i(3);
 /// let b = set_splat_i8_m512i(5);
 /// let v = cmp_op_mask_u8_m512i::<{ _MM_CMPINT_LT }>(a, b);
@@ -1357,6 +1405,10 @@ pub fn cmp_op_mask_u8_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// `i16` version: expands your `mmask32` into a `m512i` of all-ones or zeros.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i16_m512i(5);
 /// let b = set_splat_i16_m512i(5);
 /// let v = cmp_op_mask_i16_m512i::<{ _MM_CMPINT_EQ }>(a, b);
@@ -1374,6 +1426,10 @@ pub fn cmp_op_mask_i16_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// `u16` version: expands your `mmask32` into a `m512i` of all-ones or zeros.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i16_m512i(3);
 /// let b = set_splat_i16_m512i(5);
 /// let v = cmp_op_mask_u16_m512i::<{ _MM_CMPINT_LE }>(a, b);
@@ -1391,6 +1447,10 @@ pub fn cmp_op_mask_u16_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// `i32` version: expands your `mmask16` into a `m512i` of all-ones or zeros.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i32_m512i(5);
 /// let b = set_splat_i32_m512i(2);
 /// let v = cmp_op_mask_i32_m512i::<{ _MM_CMPINT_LT }>(b, a);
@@ -1408,6 +1468,10 @@ pub fn cmp_op_mask_i32_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// `u32` version: expands your `mmask16` into a `m512i` of all-ones or zeros.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i32_m512i(2);
 /// let b = set_splat_i32_m512i(5);
 /// let v = cmp_op_mask_u32_m512i::<{ _MM_CMPINT_LT }>(a, b);
@@ -1425,6 +1489,10 @@ pub fn cmp_op_mask_u32_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// `i64` version: expands your `mmask8` into a `m512i` of all-ones or zeros.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i64_m512i(5);
 /// let b = set_splat_i64_m512i(5);
 /// let v = cmp_op_mask_i64_m512i::<{ _MM_CMPINT_EQ }>(a, b);
@@ -1442,6 +1510,10 @@ pub fn cmp_op_mask_i64_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// `u64` version: expands your `mmask8` into a `m512i` of all-ones or zeros.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i64_m512i(3);
 /// let b = set_splat_i64_m512i(5);
 /// let v = cmp_op_mask_u64_m512i::<{ _MM_CMPINT_LE }>(a, b);
@@ -1459,6 +1531,10 @@ pub fn cmp_op_mask_u64_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// `f32` version: expands your `mmask16` into a `m512` of all-ones or zeros.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_m512(3.0);
 /// let b = set_splat_m512(5.0);
 /// let v = cmp_op_mask_m512::<{ _MM_CMPINT_LT }>(a, b);
@@ -1479,6 +1555,10 @@ pub fn cmp_op_mask_m512<const OP: i32>(a: m512, b: m512) -> m512 {
 /// `f64` version: expands your `mmask8` into a `m512d` of all-ones or zeros.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_m512d(3.0);
 /// let b = set_splat_m512d(3.0);
 /// let v = cmp_op_mask_m512d::<{ _MM_CMPINT_EQ }>(a, b);
@@ -3392,6 +3472,10 @@ pub fn permute_i32_m512i(idx: m512i, a: m512i) -> m512i {
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = m512d::from([
 ///     1.3,  2.7, -1.3, -2.7,
 ///     3.5, -3.5,  4.1, -4.9,
@@ -3418,6 +3502,10 @@ pub fn round_m512d<const OP: i32>(a: m512d) -> m512d {
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = m512::from([
 ///     1.3,  2.7, -1.3, -2.7,
 ///     3.5, -3.5,  4.1, -4.9,
