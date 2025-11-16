@@ -1,6 +1,10 @@
 #![cfg(target_feature = "avx512f")]
 #![allow(non_camel_case_types)]
 use super::*;
+
+#[cfg(target_arch = "x86")]
+use ::core::arch::x86::*;
+#[cfg(target_arch = "x86_64")]
 use ::core::arch::x86_64::*;
 
 /// Mask type for 8-element operations
@@ -122,7 +126,7 @@ pub fn zeroed_m512() -> m512 {
 
 /// Shuffle the `f64` lanes from `a` and `b` together using an immediate control
 /// value, across all eight double-precision lanes in the ZMM register.
-/// 
+///
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
@@ -143,7 +147,7 @@ pub fn shuffle_m512d<const IMM: i32>(a: m512d, b: m512d) -> m512d {
 
 /// Shuffle the `f32` lanes from `a` and `b` together using an immediate control
 /// value, across all sixteen single-precision lanes in the ZMM register.
-/// 
+///
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
@@ -574,7 +578,7 @@ pub fn sub_m512d(a: m512d, b: m512d) -> m512d {
 }
 
 /// Lanewise saturating `a + b` with lanes as signed `i8`.
-/// 
+///
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
@@ -839,7 +843,7 @@ pub fn mul_u32_wide_m512i(a: m512i, b: m512i) -> m512i {
 /// let c2: [i16; 32] = mul_i16_keep_high_m512i(a2, b).into();
 /// assert_eq!(c2, [(-0x1000_i16); 32]);
 /// ```
-/// * **Intrinsic:** [`_mm512_mulhi_epi16`]  
+/// * **Intrinsic:** [`_mm512_mulhi_epi16`]
 /// * **Assembly:** `vpmulhw zmm, zmm, zmm`
 #[must_use]
 #[inline(always)]
@@ -859,15 +863,15 @@ pub fn mul_i16_keep_high_m512i(a: m512i, b: m512i) -> m512i {
 /// let c: [u16; 32] = mul_u16_keep_high_m512i(a, b).into();
 /// assert_eq!(c, [0x4000_u16; 32]);
 ///
-/// // A mixed‐value test:  
+/// // A mixed‐value test:
 /// let a2 = set_splat_i16_m512i(0x1234);
 /// let b2 = set_splat_i16_m512i(0x00FF);
-/// // 0x1234×0x00FF = 0x1234 × 255 = 0x1234×0x00FF = 0x1234×0x00FF = 0x1234×0x00FF = 0x2FE * 0x100 + ... 
+/// // 0x1234×0x00FF = 0x1234 × 255 = 0x1234×0x00FF = 0x1234×0x00FF = 0x1234×0x00FF = 0x2FE * 0x100 + ...
 /// // actually 0x1234=4660, ×255=1_188_300 = 0x122A6C → high16 = 0x0012 (18)
 /// let c2: [u16; 32] = mul_u16_keep_high_m512i(a2, b2).into();
 /// assert_eq!(c2, [0x0012_u16; 32]);
 /// ```
-/// * **Intrinsic:** [`_mm512_mulhi_epu16`]  
+/// * **Intrinsic:** [`_mm512_mulhi_epu16`]
 /// * **Assembly:** `vpmulhuw zmm, zmm, zmm`
 #[must_use]
 #[inline(always)]
@@ -1149,12 +1153,16 @@ pub fn fused_mul_sub_add_m512d(a: m512d, b: m512d, c: m512d) -> m512d {
 /// Compare `i8` lanes under `OP`, returning a 64-bit mask.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i8_m512i(5);
 /// let b = set_splat_i8_m512i(5);
-/// let m = cmp_op_mask_i8::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// let m = cmp_op_mask_i8::<{ _MM_CMPINT_EQ }>(a, b);
 /// assert_eq!(m, u64::MAX);
 /// ```
-/// * **Intrinsic:** `_mm512_cmp_epi8_mask`  
+/// * **Intrinsic:** `_mm512_cmp_epi8_mask`
 /// * **Assembly:** `VPCMPB k, zmm, zmm, imm8`
 #[must_use] #[inline(always)]
 #[cfg(target_feature = "avx512bw")]
@@ -1165,13 +1173,17 @@ pub fn cmp_op_mask_i8<const OP: i32>(a: m512i, b: m512i) -> mmask64 {
 /// Compare `u8` lanes under `OP`, returning a 64-bit mask.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i8_m512i(3);
 /// let b = set_splat_i8_m512i(5);
 /// // unsigned <  → 3<5
-/// let m = cmp_op_mask_u8::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(a, b);
+/// let m = cmp_op_mask_u8::<{ _MM_CMPINT_LT }>(a, b);
 /// assert_eq!(m, u64::MAX);
 /// ```
-/// * **Intrinsic:** `_mm512_cmp_epu8_mask`  
+/// * **Intrinsic:** `_mm512_cmp_epu8_mask`
 /// * **Assembly:** `VPCMPUB k, zmm, zmm, imm8`
 #[must_use] #[inline(always)]
 #[cfg(target_feature = "avx512bw")]
@@ -1182,12 +1194,16 @@ pub fn cmp_op_mask_u8<const OP: i32>(a: m512i, b: m512i) -> mmask64 {
 /// Compare `i16` lanes under `OP`, returning a 32-bit mask.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i16_m512i(5);
 /// let b = set_splat_i16_m512i(5);
-/// let m = cmp_op_mask_i16::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// let m = cmp_op_mask_i16::<{ _MM_CMPINT_EQ }>(a, b);
 /// assert_eq!(m, u32::MAX);
 /// ```
-/// * **Intrinsic:** `_mm512_cmp_epi16_mask`  
+/// * **Intrinsic:** `_mm512_cmp_epi16_mask`
 /// * **Assembly:** `VPCMPW k, zmm, zmm, imm8`
 #[must_use] #[inline(always)]
 #[cfg(target_feature = "avx512bw")]
@@ -1198,13 +1214,17 @@ pub fn cmp_op_mask_i16<const OP: i32>(a: m512i, b: m512i) -> mmask32 {
 /// Compare `u16` lanes under `OP`, returning a 32-bit mask.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i16_m512i(3);
 /// let b = set_splat_i16_m512i(5);
 /// // unsigned <= → 3<=5
-/// let m = cmp_op_mask_u16::<{ ::core::arch::x86_64::_MM_CMPINT_LE }>(a, b);
+/// let m = cmp_op_mask_u16::<{ _MM_CMPINT_LE }>(a, b);
 /// assert_eq!(m, u32::MAX);
 /// ```
-/// * **Intrinsic:** `_mm512_cmp_epu16_mask`  
+/// * **Intrinsic:** `_mm512_cmp_epu16_mask`
 /// * **Assembly:** `VPCMPUW k, zmm, zmm, imm8`
 #[must_use] #[inline(always)]
 #[cfg(target_feature = "avx512bw")]
@@ -1215,13 +1235,17 @@ pub fn cmp_op_mask_u16<const OP: i32>(a: m512i, b: m512i) -> mmask32 {
 /// Compare `i32` lanes under `OP`, returning a 16-bit mask.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i32_m512i(5);
 /// let b = set_splat_i32_m512i(2);
 /// // signed > → 5>2
-/// let m = cmp_op_mask_i32::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(b, a);
+/// let m = cmp_op_mask_i32::<{ _MM_CMPINT_LT }>(b, a);
 /// assert_eq!(m, u16::MAX);
 /// ```
-/// * **Intrinsic:** `_mm512_cmp_epi32_mask`  
+/// * **Intrinsic:** `_mm512_cmp_epi32_mask`
 /// * **Assembly:** `VPCMPD k, zmm, zmm, imm8`
 #[must_use] #[inline(always)]
 #[cfg(target_feature = "avx512f")]
@@ -1232,13 +1256,17 @@ pub fn cmp_op_mask_i32<const OP: i32>(a: m512i, b: m512i) -> mmask16 {
 /// Compare `u32` lanes under `OP`, returning a 16-bit mask.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i32_m512i(2);
 /// let b = set_splat_i32_m512i(5);
 /// // unsigned < → 2<5
-/// let m = cmp_op_mask_u32::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(a, b);
+/// let m = cmp_op_mask_u32::<{ _MM_CMPINT_LT }>(a, b);
 /// assert_eq!(m, u16::MAX);
 /// ```
-/// * **Intrinsic:** `_mm512_cmp_epu32_mask`  
+/// * **Intrinsic:** `_mm512_cmp_epu32_mask`
 /// * **Assembly:** `VPCMPUD k, zmm, zmm, imm8`
 #[must_use] #[inline(always)]
 #[cfg(target_feature = "avx512f")]
@@ -1249,12 +1277,16 @@ pub fn cmp_op_mask_u32<const OP: i32>(a: m512i, b: m512i) -> mmask16 {
 /// Compare `i64` lanes under `OP`, returning an 8-bit mask.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i64_m512i(5);
 /// let b = set_splat_i64_m512i(5);
-/// let m = cmp_op_mask_i64::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// let m = cmp_op_mask_i64::<{ _MM_CMPINT_EQ }>(a, b);
 /// assert_eq!(m, u8::MAX);
 /// ```
-/// * **Intrinsic:** `_mm512_cmp_epi64_mask`  
+/// * **Intrinsic:** `_mm512_cmp_epi64_mask`
 /// * **Assembly:** `VPCMPQ k, zmm, zmm, imm8`
 #[must_use] #[inline(always)]
 #[cfg(target_feature = "avx512f")]
@@ -1265,13 +1297,17 @@ pub fn cmp_op_mask_i64<const OP: i32>(a: m512i, b: m512i) -> mmask8 {
 /// Compare `u64` lanes under `OP`, returning an 8-bit mask.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i64_m512i(3);
 /// let b = set_splat_i64_m512i(5);
 /// // unsigned <= → 3<=5
-/// let m = cmp_op_mask_u64::<{ ::core::arch::x86_64::_MM_CMPINT_LE }>(a, b);
+/// let m = cmp_op_mask_u64::<{ _MM_CMPINT_LE }>(a, b);
 /// assert_eq!(m, u8::MAX);
 /// ```
-/// * **Intrinsic:** `_mm512_cmp_epu64_mask`  
+/// * **Intrinsic:** `_mm512_cmp_epu64_mask`
 /// * **Assembly:** `VPCMPUQ k, zmm, zmm, imm8`
 #[must_use] #[inline(always)]
 #[cfg(target_feature = "avx512f")]
@@ -1282,13 +1318,17 @@ pub fn cmp_op_mask_u64<const OP: i32>(a: m512i, b: m512i) -> mmask8 {
 /// Compare `f32` lanes under `OP`, returning a 16-bit mask.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_m512(3.0);
 /// let b = set_splat_m512(5.0);
 /// // < : 3<5
-/// let m = cmp_op_mask_f32::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(a, b);
+/// let m = cmp_op_mask_f32::<{ _MM_CMPINT_LT }>(a, b);
 /// assert_eq!(m, u16::MAX);
 /// ```
-/// * **Intrinsic:** `_mm512_cmp_ps_mask`  
+/// * **Intrinsic:** `_mm512_cmp_ps_mask`
 /// * **Assembly:** `VPCMPPS k, zmm, zmm, imm8`
 #[must_use] #[inline(always)]
 #[cfg(target_feature = "avx512f")]
@@ -1299,12 +1339,16 @@ pub fn cmp_op_mask_f32<const OP: i32>(a: m512, b: m512) -> mmask16 {
 /// Compare `f64` lanes under `OP`, returning an 8-bit mask.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_m512d(3.0);
 /// let b = set_splat_m512d(3.0);
-/// let m = cmp_op_mask_f64::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// let m = cmp_op_mask_f64::<{ _MM_CMPINT_EQ }>(a, b);
 /// assert_eq!(m, u8::MAX);
 /// ```
-/// * **Intrinsic:** `_mm512_cmp_pd_mask`  
+/// * **Intrinsic:** `_mm512_cmp_pd_mask`
 /// * **Assembly:** `VPCMPPD k, zmm, zmm, imm8`
 #[must_use] #[inline(always)]
 #[cfg(target_feature = "avx512f")]
@@ -1319,9 +1363,13 @@ pub fn cmp_op_mask_f64<const OP: i32>(a: m512d, b: m512d) -> mmask8 {
 /// `i8` version: expands your `mmask64` into a `m512i` of all-ones or zeros.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i8_m512i(5);
 /// let b = set_splat_i8_m512i(5);
-/// let v = cmp_op_mask_i8_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// let v = cmp_op_mask_i8_m512i::<{ _MM_CMPINT_EQ }>(a, b);
 /// assert_eq!(v, set_splat_i8_m512i(-1));
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epi8_mask`, `_mm512_maskz_mov_epi8`
@@ -1336,9 +1384,13 @@ pub fn cmp_op_mask_i8_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// `u8` version: expands your `mmask64` into a `m512i` of all-ones or zeros.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i8_m512i(3);
 /// let b = set_splat_i8_m512i(5);
-/// let v = cmp_op_mask_u8_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(a, b);
+/// let v = cmp_op_mask_u8_m512i::<{ _MM_CMPINT_LT }>(a, b);
 /// assert_eq!(v, set_splat_i8_m512i(-1));
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epu8_mask`, `_mm512_maskz_mov_epi8`
@@ -1353,9 +1405,13 @@ pub fn cmp_op_mask_u8_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// `i16` version: expands your `mmask32` into a `m512i` of all-ones or zeros.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i16_m512i(5);
 /// let b = set_splat_i16_m512i(5);
-/// let v = cmp_op_mask_i16_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// let v = cmp_op_mask_i16_m512i::<{ _MM_CMPINT_EQ }>(a, b);
 /// assert_eq!(v, set_splat_i16_m512i(-1));
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epi16_mask`, `_mm512_maskz_mov_epi16`
@@ -1370,9 +1426,13 @@ pub fn cmp_op_mask_i16_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// `u16` version: expands your `mmask32` into a `m512i` of all-ones or zeros.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i16_m512i(3);
 /// let b = set_splat_i16_m512i(5);
-/// let v = cmp_op_mask_u16_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_LE }>(a, b);
+/// let v = cmp_op_mask_u16_m512i::<{ _MM_CMPINT_LE }>(a, b);
 /// assert_eq!(v, set_splat_i16_m512i(-1));
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epu16_mask`, `_mm512_maskz_mov_epi16`
@@ -1387,9 +1447,13 @@ pub fn cmp_op_mask_u16_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// `i32` version: expands your `mmask16` into a `m512i` of all-ones or zeros.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i32_m512i(5);
 /// let b = set_splat_i32_m512i(2);
-/// let v = cmp_op_mask_i32_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(b, a);
+/// let v = cmp_op_mask_i32_m512i::<{ _MM_CMPINT_LT }>(b, a);
 /// assert_eq!(v, set_splat_i32_m512i(-1));
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epi32_mask`, `_mm512_maskz_mov_epi32`
@@ -1404,9 +1468,13 @@ pub fn cmp_op_mask_i32_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// `u32` version: expands your `mmask16` into a `m512i` of all-ones or zeros.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i32_m512i(2);
 /// let b = set_splat_i32_m512i(5);
-/// let v = cmp_op_mask_u32_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(a, b);
+/// let v = cmp_op_mask_u32_m512i::<{ _MM_CMPINT_LT }>(a, b);
 /// assert_eq!(v, set_splat_i32_m512i(-1));
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epu32_mask`, `_mm512_maskz_mov_epi32`
@@ -1421,9 +1489,13 @@ pub fn cmp_op_mask_u32_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// `i64` version: expands your `mmask8` into a `m512i` of all-ones or zeros.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i64_m512i(5);
 /// let b = set_splat_i64_m512i(5);
-/// let v = cmp_op_mask_i64_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// let v = cmp_op_mask_i64_m512i::<{ _MM_CMPINT_EQ }>(a, b);
 /// assert_eq!(v, set_splat_i64_m512i(-1));
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epi64_mask`, `_mm512_maskz_mov_epi64`
@@ -1438,9 +1510,13 @@ pub fn cmp_op_mask_i64_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// `u64` version: expands your `mmask8` into a `m512i` of all-ones or zeros.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_i64_m512i(3);
 /// let b = set_splat_i64_m512i(5);
-/// let v = cmp_op_mask_u64_m512i::<{ ::core::arch::x86_64::_MM_CMPINT_LE }>(a, b);
+/// let v = cmp_op_mask_u64_m512i::<{ _MM_CMPINT_LE }>(a, b);
 /// assert_eq!(v, set_splat_i64_m512i(-1));
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_epu64_mask`, `_mm512_maskz_mov_epi64`
@@ -1455,9 +1531,13 @@ pub fn cmp_op_mask_u64_m512i<const OP: i32>(a: m512i, b: m512i) -> m512i {
 /// `f32` version: expands your `mmask16` into a `m512` of all-ones or zeros.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_m512(3.0);
 /// let b = set_splat_m512(5.0);
-/// let v = cmp_op_mask_m512::<{ ::core::arch::x86_64::_MM_CMPINT_LT }>(a, b);
+/// let v = cmp_op_mask_m512::<{ _MM_CMPINT_LT }>(a, b);
 /// assert_eq!(v.to_bits(), [u32::MAX; 16]);
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_ps_mask`, `_mm512_maskz_mov_ps`
@@ -1475,9 +1555,13 @@ pub fn cmp_op_mask_m512<const OP: i32>(a: m512, b: m512) -> m512 {
 /// `f64` version: expands your `mmask8` into a `m512d` of all-ones or zeros.
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = set_splat_m512d(3.0);
 /// let b = set_splat_m512d(3.0);
-/// let v = cmp_op_mask_m512d::<{ ::core::arch::x86_64::_MM_CMPINT_EQ }>(a, b);
+/// let v = cmp_op_mask_m512d::<{ _MM_CMPINT_EQ }>(a, b);
 /// assert_eq!(v.to_bits(), [u64::MAX; 8]);
 /// ```
 /// * **Intrinsic:** `_mm512_cmp_pd_mask`, `_mm512_maskz_mov_pd`
@@ -1968,7 +2052,7 @@ pub fn convert_to_i32_m512i_from_i16_m256i(a: m256i) -> m512i {
 }
 
 /// Convert `u16` values to `u32` values (zero-extend).
-/// 
+///
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
@@ -2077,7 +2161,7 @@ pub fn convert_truncate_m512d_i64_m512i(a: m512d) -> m512i {
 /// assert_eq!(b, [3.0_f64; 8]);
 /// ```
 /// * **Intrinsic:** [`_mm512_cvtepi32_pd`]
-/// * **Assembly:** `vcvtdq2pd zmm, ymm`  
+/// * **Assembly:** `vcvtdq2pd zmm, ymm`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
@@ -2597,7 +2681,7 @@ pub fn shr_all_u64_m512i(a: m512i, count: u64) -> m512i {
 }
 
 /// Absolute value of `i8` lanes in a 512-bit integer vector.
-/// 
+///
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
@@ -2615,7 +2699,7 @@ pub fn abs_i8_m512i(a: m512i) -> m512i {
 }
 
 /// Absolute value of `i16` lanes in a 512-bit integer vector.
-/// 
+///
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
@@ -2633,7 +2717,7 @@ pub fn abs_i16_m512i(a: m512i) -> m512i {
 }
 
 /// Absolute value of `i32` lanes in a 512-bit integer vector.
-/// 
+///
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
@@ -3100,7 +3184,7 @@ pub fn insert_m256d_to_m512d<const LANE: i32>(a: m512d, b: m256d) -> m512d {
 /// let none = maskz_mov_f32_m512(0);
 /// assert_eq!(none, set_splat_m512(0.0));
 /// ```
-/// * **Intrinsic:** `_mm512_maskz_mov_ps`  
+/// * **Intrinsic:** `_mm512_maskz_mov_ps`
 /// * **Assembly:** `VMOVDQU32 zmm{dest}{mask}{z}, zmmones`
 #[must_use]
 #[inline(always)]
@@ -3120,7 +3204,7 @@ pub fn maskz_mov_f32_m512(mask: mmask16) -> m512 {
 /// let none = maskz_mov_f64_m512d(0);
 /// assert_eq!(none, set_splat_m512d(0.0));
 /// ```
-/// * **Intrinsic:** `_mm512_maskz_mov_pd`  
+/// * **Intrinsic:** `_mm512_maskz_mov_pd`
 /// * **Assembly:** `VMOVDQU64 zmm{dest}{mask}{z}, zmmones`
 #[must_use]
 #[inline(always)]
@@ -3140,7 +3224,7 @@ pub fn maskz_mov_f64_m512d(mask: mmask8) -> m512d {
 /// let none = maskz_mov_i64_m512i(0);
 /// assert_eq!(none, set_splat_i64_m512i(0));
 /// ```
-/// * **Intrinsic:** `_mm512_maskz_mov_epi64`  
+/// * **Intrinsic:** `_mm512_maskz_mov_epi64`
 /// * **Assembly:** `VMOVDQU64 zmm{dest}{mask}{z}, zmmones`
 #[must_use]
 #[inline(always)]
@@ -3160,7 +3244,7 @@ pub fn maskz_mov_i64_m512i(mask: mmask8) -> m512i {
 /// let none = maskz_mov_i32_m512i(0);
 /// assert_eq!(none, set_splat_i32_m512i(0));
 /// ```
-/// * **Intrinsic:** `_mm512_maskz_mov_epi32`  
+/// * **Intrinsic:** `_mm512_maskz_mov_epi32`
 /// * **Assembly:** `VMOVDQU32 zmm{dest}{mask}{z}, zmmones`
 #[must_use]
 #[inline(always)]
@@ -3180,7 +3264,7 @@ pub fn maskz_mov_i32_m512i(mask: mmask16) -> m512i {
 /// let none = maskz_mov_i16_m512i(0);
 /// assert_eq!(none.to_array(), [0; 16]);
 /// ```
-/// * **Intrinsic:** `_mm512_maskz_mov_epi16`  
+/// * **Intrinsic:** `_mm512_maskz_mov_epi16`
 /// * **Assembly:** `VMOVDQU16 zmm{dest}{mask}{z}, zmmones`
 #[must_use]
 #[inline(always)]
@@ -3200,7 +3284,7 @@ pub fn maskz_mov_i16_m512i(mask: mmask32) -> m512i {
 /// let none = maskz_mov_i8_m512i(0);
 /// assert_eq!(none, set_splat_i8_m512i(0));
 /// ```
-/// * **Intrinsic:** `_mm512_maskz_mov_epi8`  
+/// * **Intrinsic:** `_mm512_maskz_mov_epi8`
 /// * **Assembly:** `VMOVDQU8 zmm{dest}{mask}{z}, zmmones`
 #[must_use]
 #[inline(always)]
@@ -3388,20 +3472,24 @@ pub fn permute_i32_m512i(idx: m512i, a: m512i) -> m512i {
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = m512d::from([
 ///     1.3,  2.7, -1.3, -2.7,
 ///     3.5, -3.5,  4.1, -4.9,
 /// ]);
 /// // Round to nearest, suppress exceptions
-/// let r_nearest: [f64; 8] = round_m512d::<{ core::arch::x86_64::_MM_FROUND_TO_NEAREST_INT | core::arch::x86_64::_MM_FROUND_NO_EXC }>(a).into();
+/// let r_nearest: [f64; 8] = round_m512d::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(a).into();
 /// assert_eq!(r_nearest, [1.0, 3.0, -1.0, -3.0, 4.0, -4.0, 4.0, -5.0]);
 ///
 /// // Round toward zero, suppress exceptions
-/// let r_zero: [f64; 8] = round_m512d::<{ core::arch::x86_64::_MM_FROUND_TO_ZERO | core::arch::x86_64::_MM_FROUND_NO_EXC }>(a).into();
+/// let r_zero: [f64; 8] = round_m512d::<{ _MM_FROUND_TO_ZERO | _MM_FROUND_NO_EXC }>(a).into();
 /// assert_eq!(r_zero, [1.0, 2.0, -1.0, -2.0, 3.0, -3.0, 4.0, -4.0]);
 /// ```
 /// * **Intrinsic:** [`_mm512_roundscale_pd`]
-/// * **Assembly:** `vrndscalepd zmm, zmm, imm8`  
+/// * **Assembly:** `vrndscalepd zmm, zmm, imm8`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
@@ -3414,6 +3502,10 @@ pub fn round_m512d<const OP: i32>(a: m512d) -> m512d {
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
+/// #[cfg(target_arch = "x86")]
+/// use ::core::arch::x86::*;
+/// #[cfg(target_arch = "x86_64")]
+/// use ::core::arch::x86_64::*;
 /// let a = m512::from([
 ///     1.3,  2.7, -1.3, -2.7,
 ///     3.5, -3.5,  4.1, -4.9,
@@ -3421,15 +3513,15 @@ pub fn round_m512d<const OP: i32>(a: m512d) -> m512d {
 ///     7.9, -7.9,  8.4, -8.4,
 /// ]);
 /// // Round to nearest, suppress exceptions
-/// let r_nearest: [f32; 16] = round_m512::<{ core::arch::x86_64::_MM_FROUND_TO_NEAREST_INT | core::arch::x86_64::_MM_FROUND_NO_EXC }>(a).into();
+/// let r_nearest: [f32; 16] = round_m512::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(a).into();
 /// assert_eq!(&r_nearest[0..4], &[1.0, 3.0, -1.0, -3.0]);
 ///
 /// // Round toward zero, suppress exceptions
-/// let r_zero: [f32; 16] = round_m512::<{ core::arch::x86_64::_MM_FROUND_TO_ZERO | core::arch::x86_64::_MM_FROUND_NO_EXC }>(a).into();
+/// let r_zero: [f32; 16] = round_m512::<{ _MM_FROUND_TO_ZERO | _MM_FROUND_NO_EXC }>(a).into();
 /// assert_eq!(&r_zero[0..4], &[1.0, 2.0, -1.0, -2.0]);
 /// ```
 /// * **Intrinsic:** [`_mm512_roundscale_ps`]
-/// * **Assembly:** `vrndscaleps zmm, zmm, imm8`  
+/// * **Assembly:** `vrndscaleps zmm, zmm, imm8`
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
@@ -3591,7 +3683,7 @@ pub fn max_u32_m512i(a: m512i, b: m512i) -> m512i {
 }
 
 /// Lanewise maximum for signed `i64` lanes.
-/// 
+///
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
@@ -3600,7 +3692,7 @@ pub fn max_u32_m512i(a: m512i, b: m512i) -> m512i {
 /// let c: [i64; 8] = max_i64_m512i(a, b).into();
 /// assert_eq!(c, [2_i64; 8]);
 /// ```
-/// * **Intrinsic:** [`_mm512_max_epi64`] :contentReference[oaicite:0]{index=0}  
+/// * **Intrinsic:** [`_mm512_max_epi64`] :contentReference[oaicite:0]{index=0}
 /// * **Assembly:** `vpmaxsq zmm, zmm, zmm`
 #[must_use] #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
@@ -3609,7 +3701,7 @@ pub fn max_i64_m512i(a: m512i, b: m512i) -> m512i {
 }
 
 /// Lanewise maximum for unsigned `u64` lanes.
-/// 
+///
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
@@ -3618,7 +3710,7 @@ pub fn max_i64_m512i(a: m512i, b: m512i) -> m512i {
 /// let c: [u64; 8] = max_u64_m512i(a, b).into();
 /// assert_eq!(c, [5_u64; 8]);
 /// ```
-/// * **Intrinsic:** [`_mm512_max_epu64`] :contentReference[oaicite:1]{index=1}  
+/// * **Intrinsic:** [`_mm512_max_epu64`] :contentReference[oaicite:1]{index=1}
 /// * **Assembly:** `vpmaxuq zmm, zmm, zmm`
 #[must_use] #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
@@ -3723,7 +3815,7 @@ pub fn min_u32_m512i(a: m512i, b: m512i) -> m512i {
 }
 
 /// Lanewise minimum for signed `i64` lanes.
-/// 
+///
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
@@ -3732,7 +3824,7 @@ pub fn min_u32_m512i(a: m512i, b: m512i) -> m512i {
 /// let c: [i64; 8] = min_i64_m512i(a, b).into();
 /// assert_eq!(c, [-5_i64; 8]);
 /// ```
-/// * **Intrinsic:** [`_mm512_min_epi64`] :contentReference[oaicite:2]{index=2}  
+/// * **Intrinsic:** [`_mm512_min_epi64`] :contentReference[oaicite:2]{index=2}
 /// * **Assembly:** `vpminsq zmm, zmm, zmm`
 #[must_use] #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
@@ -3741,7 +3833,7 @@ pub fn min_i64_m512i(a: m512i, b: m512i) -> m512i {
 }
 
 /// Lanewise minimum for unsigned `u64` lanes.
-/// 
+///
 /// # Examples
 /// ```rust
 /// # use safe_arch::*;
@@ -3750,7 +3842,7 @@ pub fn min_i64_m512i(a: m512i, b: m512i) -> m512i {
 /// let c: [u64; 8] = min_u64_m512i(a, b).into();
 /// assert_eq!(c, [1_u64; 8]);
 /// ```
-/// * **Intrinsic:** [`_mm512_min_epu64`] :contentReference[oaicite:3]{index=3}  
+/// * **Intrinsic:** [`_mm512_min_epu64`] :contentReference[oaicite:3]{index=3}
 /// * **Assembly:** `vpminuq zmm, zmm, zmm`
 #[must_use] #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
