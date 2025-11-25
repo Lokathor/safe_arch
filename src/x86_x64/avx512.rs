@@ -4348,6 +4348,7 @@ impl BitAnd for m512i {
   }
 }
 impl BitAndAssign for m512i {
+  #[inline(always)]
   fn bitand_assign(&mut self, rhs: Self) {
     *self = *self & rhs;
   }
