@@ -2903,26 +2903,6 @@ pub fn cmp_op_mask_m512d_s<const OP: i32>(a: m512d, b: m512d) -> mmask8 {
   unsafe { _mm512_mask_cmp_pd_mask(0x01u8, a.0, b.0, OP) }
 }
 
-/// Horizontal `a + b` with lanes as `i16`.
-///
-/// * The results are interleaved 128-bits at a time: a.low, b.low, a.high,
-///   b.high
-/// ```
-/// # use safe_arch::*;
-/// let a = m512i::from([5_i16; 32]);
-/// let b = m512i::from([6_i16; 32]);
-/// let c: [i16; 32] = add_horizontal_i16_m512i(a, b).into();
-/// assert_eq!(c, [10_i16, 10, 10, 10, 12, 12, 12, 12, 10, 10, 10, 10, 12, 12, 12, 12, 10, 10, 10, 10, 12, 12, 12, 12, 10, 10, 10, 10, 12, 12, 12, 12]);
-/// ```
-/// * **Intrinsic:** [`_mm512_hadd_epi16`]
-/// * **Assembly:** `vphaddw zmm, zmm, zmm`
-#[must_use]
-#[inline(always)]
-#[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
-pub fn add_horizontal_i16_m512i(a: m512i, b: m512i) -> m512i {
-  m512i(unsafe { _mm512_hadd_epi16(a.0, b.0) })
-}
-
 /// Multiply `i16` lanes producing `i32` values, horizontal add pairs of `i32`
 /// values to produce the final output.
 /// ```rust
