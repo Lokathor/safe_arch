@@ -4422,7 +4422,7 @@ impl Not for m512 {
   /// let c = !a;
   /// // Note: This is a bitwise NOT, not a logical NOT
   /// ```
-  #[must_use]
+  #[inline(always)]
   fn not(self) -> Self {
     let all_bits = cast_to_m512_from_m512i(set_splat_i32_m512i(-1));
     self ^ all_bits
