@@ -2903,6 +2903,24 @@ pub fn cmp_op_mask_m512d_s<const OP: i32>(a: m512d, b: m512d) -> mmask8 {
   unsafe { _mm512_mask_cmp_pd_mask(0x01u8, a.0, b.0, OP) }
 }
 
+/// Multiply `i16` lanes producing `i32` values, horizontal add pairs of `i32`
+/// values to produce the final output.
+/// ```rust
+/// # use safe_arch::*;
+/// let a = m512i::from([1_i16, 2, 3, 4, -1, -2, -3, -4, 12, 13, -14, -15, 100, 200, 300, -400, -1, 2, 3, 4, -1, -2, -3, -4, 12, 13, -14, -15, 100, 200, 300, -400]);
+/// let b = m512i::from([5_i16, 6, 7, 8, -15, -26, -37, 48, 50, 60, 70, -80, 90, 100, 12, -80, 5, 6, 7, 8, -15, -26, -37, 48, 50, 60, 70, -80, 90, 100, 12, -80]);
+/// let c: [i32; 16] = mul_i16_horizontal_add_m512i(a, b).into();
+/// assert_eq!(c, [17, 53, 67, -81, 1380, 220, 29000, 35600, 7, 53, 67, -81, 1380, 220, 29000, 35600]);
+/// ```
+/// * **Intrinsic:** [`_mm512_madd_epi16`]
+/// * **Assembly:** `vpmaddwd zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512bw")))]
+pub fn mul_i16_horizontal_add_m512i(a: m512i, b: m512i) -> m512i {
+  m512i(unsafe { _mm512_madd_epi16(a.0, b.0) })
+}
+
 /// Low-lane add: result lane 0 = `a0 + b0`, other lanes unchanged.
 ///
 /// # Examples
@@ -4308,7 +4326,6 @@ impl Not for m512i {
   /// let c: [u128; 4] = (!a).into();
   /// assert_eq!(c, [u128::MAX, u128::MAX, u128::MAX, u128::MAX]);
   /// ```
-  #[must_use]
   #[inline(always)]
   fn not(self) -> Self {
     let all_bits = set_splat_i16_m512i(-1);
@@ -4325,7 +4342,6 @@ impl BitAnd for m512i {
   /// let c: [i64; 8] = (a & b).into();
   /// assert_eq!(c, [0_i64, 0, 0, 1, 0, 0, 0, 1]);
   /// ```
-  #[must_use]
   #[inline(always)]
   fn bitand(self, rhs: Self) -> Self {
     bitand_m512i(self, rhs)
@@ -4347,7 +4363,6 @@ impl BitOr for m512i {
   /// let c: [i64; 8] = (a | b).into();
   /// assert_eq!(c, [0_i64, 1, 1, 1, 0, 1, 1, 1]);
   /// ```
-  #[must_use]
   #[inline(always)]
   fn bitor(self, rhs: Self) -> Self {
     bitor_m512i(self, rhs)
@@ -4369,7 +4384,6 @@ impl BitXor for m512i {
   /// let c: [i64; 8] = (a ^ b).into();
   /// assert_eq!(c, [0_i64, 1, 1, 0, 0, 1, 1, 0]);
   /// ```
-  #[must_use]
   #[inline(always)]
   fn bitxor(self, rhs: Self) -> Self {
     bitxor_m512i(self, rhs)
@@ -4383,7 +4397,6 @@ impl BitXorAssign for m512i {
 }
 
 impl PartialEq for m512i {
-  #[must_use]
   #[inline(always)]
   /// ```
   /// # use safe_arch::*;
@@ -4410,7 +4423,6 @@ impl Not for m512 {
   /// let c = !a;
   /// // Note: This is a bitwise NOT, not a logical NOT
   /// ```
-  #[must_use]
   #[inline(always)]
   fn not(self) -> Self {
     let all_bits = cast_to_m512_from_m512i(set_splat_i32_m512i(-1));
@@ -4428,7 +4440,6 @@ impl BitAnd for m512 {
   /// let c = a & b;
   /// assert_eq!(c.to_bits(), [0x00000000_u32; 16]);
   /// ```
-  #[must_use]
   #[inline(always)]
   fn bitand(self, rhs: Self) -> Self {
     bitand_m512(self, rhs)
@@ -4451,7 +4462,6 @@ impl BitOr for m512 {
   /// let c = a | b;
   /// assert_eq!(c.to_bits(), [0xFFFFFFFF_u32; 16]);
   /// ```
-  #[must_use]
   #[inline(always)]
   fn bitor(self, rhs: Self) -> Self {
     bitor_m512(self, rhs)
@@ -4474,7 +4484,6 @@ impl BitXor for m512 {
   /// let c = a ^ b;
   /// assert_eq!(c.to_bits(), [0x00000000_u32; 16]);
   /// ```
-  #[must_use]
   #[inline(always)]
   fn bitxor(self, rhs: Self) -> Self {
     bitxor_m512(self, rhs)
@@ -4488,7 +4497,6 @@ impl BitXorAssign for m512 {
 }
 
 impl PartialEq for m512 {
-  #[must_use]
   #[inline(always)]
   /// ```
   /// # use safe_arch::*;
@@ -4513,7 +4521,6 @@ impl Not for m512d {
   /// let c = !a;
   /// // Note: This is a bitwise NOT, not a logical NOT
   /// ```
-  #[must_use]
   #[inline(always)]
   fn not(self) -> Self {
     let all_bits = cast_to_m512d_from_m512i(set_splat_i64_m512i(-1));
@@ -4531,7 +4538,6 @@ impl BitAnd for m512d {
   /// let c = a & b;
   /// assert_eq!(c.to_bits(), [0x0000000000000000_u64; 8]);
   /// ```
-  #[must_use]
   #[inline(always)]
   fn bitand(self, rhs: Self) -> Self {
     bitand_m512d(self, rhs)
@@ -4554,7 +4560,6 @@ impl BitOr for m512d {
   /// let c = a | b;
   /// assert_eq!(c.to_bits(), [0xFFFFFFFFFFFFFFFF_u64; 8]);
   /// ```
-  #[must_use]
   #[inline(always)]
   fn bitor(self, rhs: Self) -> Self {
     bitor_m512d(self, rhs)
@@ -4577,7 +4582,6 @@ impl BitXor for m512d {
   /// let c = a ^ b;
   /// assert_eq!(c.to_bits(), [0x0000000000000000_u64; 8]);
   /// ```
-  #[must_use]
   #[inline(always)]
   fn bitxor(self, rhs: Self) -> Self {
     bitxor_m512d(self, rhs)
@@ -4591,7 +4595,6 @@ impl BitXorAssign for m512d {
 }
 
 impl PartialEq for m512d {
-  #[must_use]
   #[inline(always)]
   /// ```
   /// # use safe_arch::*;

@@ -161,9 +161,9 @@ macro_rules! round_op {
   }};
   (Zero) => {{
     #[cfg(target_arch = "x86")]
-    use ::core::arch::x86::{_mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO};
+    use ::core::arch::x86::{_MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO, _mm256_round_pd};
     #[cfg(target_arch = "x86_64")]
-    use ::core::arch::x86_64::{_mm256_round_pd, _MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO};
+    use ::core::arch::x86_64::{_MM_FROUND_NO_EXC, _MM_FROUND_TO_ZERO, _mm256_round_pd};
     _MM_FROUND_NO_EXC | _MM_FROUND_TO_ZERO
   }};
 }
