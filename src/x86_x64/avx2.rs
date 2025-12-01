@@ -2112,7 +2112,7 @@ pub fn shuffle_av_i32_all_m256i(a: m256i, v: m256i) -> m256i {
 /// # use safe_arch::*;
 /// let a = m256::from_array([8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0]);
 /// let v = m256i::from([7, 6, 5, 5, 3, 2, 2, 0]);
-/// let c: [f32; 8] = shuffle_av_i32_all_m256(a, v).to_array();
+/// let c: [f32; 8] = shuffle_av_f32_all_m256(a, v).to_array();
 /// assert_eq!(c, [15.0, 14.0, 13.0, 13.0, 11.0, 10.0, 10.0, 8.0]);
 /// ```
 /// * **Intrinsic:** [`_mm256_permutevar8x32_ps`]
@@ -2120,7 +2120,7 @@ pub fn shuffle_av_i32_all_m256i(a: m256i, v: m256i) -> m256i {
 #[must_use]
 #[inline(always)]
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx2")))]
-pub fn shuffle_av_i32_all_m256(a: m256, v: m256i) -> m256 {
+pub fn shuffle_av_f32_all_m256(a: m256, v: m256i) -> m256 {
   m256(unsafe { _mm256_permutevar8x32_ps(a.0, v.0) })
 }
 
