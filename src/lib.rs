@@ -306,7 +306,8 @@ submodule!(pub x86_x64 {
   /// * **Intrinsic:** `_bswap`
   /// * **Assembly:** `bswap r32`
   pub fn byte_swap_i32(i: i32) -> i32 {
-    _bswap(i)
+    #[allow(unused_unsafe)]
+    unsafe { _bswap(i)}
   }
 
   /// Swap the bytes of the given 64-bit value.
@@ -319,6 +320,7 @@ submodule!(pub x86_x64 {
   /// * **Assembly:** `bswap r64`
   #[cfg(target_arch="x86_64")]
   pub fn byte_swap_i64(i: i64) -> i64 {
-    _bswap64(i)
+    #[allow(unused_unsafe)]
+    unsafe { _bswap64(i) }
   }
 });
