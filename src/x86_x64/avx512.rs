@@ -3485,6 +3485,72 @@ pub fn permute_i32_m512i(idx: m512i, a: m512i) -> m512i {
     m512i(unsafe { _mm512_permutexvar_epi32(idx.0, a.0) })
 }
 
+/// Shuffle `i8` values in `a` using variable byte indices.
+///
+/// Each output lane `i` is `a[idx[i] & 63]` (the index is taken modulo 64;
+/// out-of-range indices do not zero the lane).
+/// ```
+/// # use safe_arch::*;
+/// # #[cfg(target_arch = "x86")]
+/// # use ::core::arch::x86::*;
+/// # #[cfg(target_arch = "x86_64")]
+/// # use ::core::arch::x86_64::*;
+/// let mut table = [0_i8; 64];
+/// let mut indices = [0_i8; 64];
+/// for i in 0..64 {
+///   table[i] = i as i8;
+///   indices[i] = (63 - i) as i8;
+/// }
+/// let a = m512i::from(table);
+/// let idx = m512i::from(indices);
+/// let b: [i8; 64] = permute_i8_m512i(idx, a).into();
+/// for i in 0..64 {
+///   assert_eq!(b[i], (63 - i) as i8);
+/// }
+/// ```
+/// * **Intrinsic:** [`_mm512_permutexvar_epi8`]
+/// * **Assembly:** `vpermb zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg(target_feature = "avx512vbmi")]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512vbmi")))]
+pub fn permute_i8_m512i(idx: m512i, a: m512i) -> m512i {
+    m512i(unsafe { _mm512_permutexvar_epi8(idx.0, a.0) })
+}
+
+/// Shuffle `i8` values in `a` using variable byte indices.
+///
+/// Each output lane `i` is `a[idx[i] & 31]` (the index is taken modulo 32;
+/// out-of-range indices do not zero the lane).
+/// ```
+/// # use safe_arch::*;
+/// # #[cfg(target_arch = "x86")]
+/// # use ::core::arch::x86::*;
+/// # #[cfg(target_arch = "x86_64")]
+/// # use ::core::arch::x86_64::*;
+/// let mut table = [0_i8; 32];
+/// let mut indices = [0_i8; 32];
+/// for i in 0..32 {
+///   table[i] = i as i8;
+///   indices[i] = (31 - i) as i8;
+/// }
+/// let a = m256i::from(table);
+/// let idx = m256i::from(indices);
+/// let b: [i8; 32] = permute_i8_m256i(idx, a).into();
+/// for i in 0..32 {
+///   assert_eq!(b[i], (31 - i) as i8);
+/// }
+/// ```
+/// * **Intrinsic:** [`_mm256_permutexvar_epi8`]
+/// * **Assembly:** `vpermb ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg(all(target_feature = "avx512vbmi", target_feature = "avx512vl"))]
+#[cfg_attr(docsrs, doc(cfg(all(target_feature = "avx512vbmi", target_feature = "avx512vl"))))]
+pub fn permute_i8_m256i(idx: m256i, a: m256i) -> m256i {
+    m256i(unsafe { _mm256_permutexvar_epi8(idx.0, a.0) })
+}
+
 /// Rounds each lane of a 512-bit vector of double-precision floats (`f64`) according to `OP`.
 ///
 /// # Examples
