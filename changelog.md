@@ -1,6 +1,6 @@
 # `safe_arch`
 
-## Unreleased
+## 1.2
 
 * add an `avx512ifma` module with `add_mul_low_u52_*` / `add_mul_high_u52_*`
   (`vpmadd52luq` / `vpmadd52huq`) wrappers for `m128i`, `m256i` and `m512i`
