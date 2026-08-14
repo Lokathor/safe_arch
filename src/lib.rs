@@ -245,6 +245,8 @@ submodule!(pub x86_x64 {
   submodule!(pub adx);
   #[cfg(target_feature = "aes")]
   submodule!(pub aes);
+  #[cfg(target_feature = "avx512ifma")]
+  submodule!(pub avx512ifma);
   #[cfg(target_feature = "bmi1")]
   submodule!(pub bmi1);
   #[cfg(target_feature = "bmi2")]

@@ -811,7 +811,7 @@ pub fn mul_i32_keep_low_m512i(a: m512i, b: m512i) -> m512i {
 /// * **Assembly:** `vpmulldq zmm, zmm, zmm`
 #[must_use]
 #[inline(always)]
-#[cfg(target_feature = "avx512dq")]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
 pub fn mul_i32_wide_m512i(a: m512i, b: m512i) -> m512i {
     m512i(unsafe { _mm512_mul_epi32(a.0, b.0) })
 }
@@ -822,7 +822,7 @@ pub fn mul_i32_wide_m512i(a: m512i, b: m512i) -> m512i {
 /// * **Assembly:** `vpmuludq zmm, zmm, zmm`
 #[must_use]
 #[inline(always)]
-#[cfg(target_feature = "avx512dq")]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
 pub fn mul_u32_wide_m512i(a: m512i, b: m512i) -> m512i {
     m512i(unsafe { _mm512_mul_epu32(a.0, b.0) })
 }
@@ -2349,6 +2349,50 @@ pub fn unpack_low_i32_m512i(a: m512i, b: m512i) -> m512i {
     m512i(unsafe { _mm512_unpacklo_epi32(a.0, b.0) })
 }
 
+/// Unpack and interleave high `i64` lanes of `a` and `b`.
+///
+/// Note that this works within each 128-bit lane, so it interleaves the *odd*
+/// lanes of the whole register rather than its high half.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = m512i::from([0_i64, 1, 2, 3, 4, 5, 6, 7]);
+/// let b = m512i::from([10_i64, 11, 12, 13, 14, 15, 16, 17]);
+/// let c: [i64; 8] = unpack_high_i64_m512i(a, b).into();
+/// assert_eq!(c, [1, 11, 3, 13, 5, 15, 7, 17]);
+/// ```
+/// * **Intrinsic:** [`_mm512_unpackhi_epi64`]
+/// * **Assembly:** `vpunpckhqdq zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn unpack_high_i64_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_unpackhi_epi64(a.0, b.0) })
+}
+
+/// Unpack and interleave low `i64` lanes of `a` and `b`.
+///
+/// Note that this works within each 128-bit lane, so it interleaves the *even*
+/// lanes of the whole register rather than its low half.
+///
+/// # Examples
+/// ```rust
+/// # use safe_arch::*;
+/// let a = m512i::from([0_i64, 1, 2, 3, 4, 5, 6, 7]);
+/// let b = m512i::from([10_i64, 11, 12, 13, 14, 15, 16, 17]);
+/// let c: [i64; 8] = unpack_low_i64_m512i(a, b).into();
+/// assert_eq!(c, [0, 10, 2, 12, 4, 14, 6, 16]);
+/// ```
+/// * **Intrinsic:** [`_mm512_unpacklo_epi64`]
+/// * **Assembly:** `vpunpcklqdq zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn unpack_low_i64_m512i(a: m512i, b: m512i) -> m512i {
+    m512i(unsafe { _mm512_unpacklo_epi64(a.0, b.0) })
+}
+
 // Shift operations
 
 /// Lanewise `u16` shift left by the matching `u16` lane in `count`.
@@ -3431,6 +3475,98 @@ pub fn shuffle_i32_m512i<const IMM: i32>(a: m512i) -> m512i {
 }
 
 /// Shuffle `i32` values between `a` and `b` using variable indices.
+///
+/// Each index selects from the concatenation of `a` and `b`: `0..4` picks a
+/// lane of `a` and `4..8` picks a lane of `b`. Only the low 3 bits of each
+/// index are read.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([0, 1, 2, 3]);
+/// let b = m128i::from([10, 11, 12, 13]);
+/// let idx = m128i::from([0, 4, 1, 5]);
+/// let c: [i32; 4] = shuffle_abv_i32_all_m128i(a, idx, b).into();
+/// assert_eq!(c, [0, 10, 1, 11]);
+/// ```
+/// * **Intrinsic:** [`_mm_permutex2var_epi32`]
+/// * **Assembly:** `vpermt2d xmm, xmm, xmm`
+#[must_use]
+#[inline(always)]
+#[cfg(all(target_feature = "avx512f", target_feature = "avx512vl"))]
+#[cfg_attr(docsrs, doc(cfg(all(target_feature = "avx512f", target_feature = "avx512vl"))))]
+pub fn shuffle_abv_i32_all_m128i(a: m128i, idx: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_permutex2var_epi32(a.0, idx.0, b.0) })
+}
+
+/// Shuffle `i64` values between `a` and `b` using variable indices.
+///
+/// Each index selects from the concatenation of `a` and `b`: `0..2` picks a
+/// lane of `a` and `2..4` picks a lane of `b`. Only the low 2 bits of each
+/// index are read.
+/// ```
+/// # use safe_arch::*;
+/// let a = m128i::from([0_i64, 1]);
+/// let b = m128i::from([10_i64, 11]);
+/// let idx = m128i::from([2_i64, 1]);
+/// let c: [i64; 2] = shuffle_abv_i64_all_m128i(a, idx, b).into();
+/// assert_eq!(c, [10, 1]);
+/// ```
+/// * **Intrinsic:** [`_mm_permutex2var_epi64`]
+/// * **Assembly:** `vpermt2q xmm, xmm, xmm`
+#[must_use]
+#[inline(always)]
+#[cfg(all(target_feature = "avx512f", target_feature = "avx512vl"))]
+#[cfg_attr(docsrs, doc(cfg(all(target_feature = "avx512f", target_feature = "avx512vl"))))]
+pub fn shuffle_abv_i64_all_m128i(a: m128i, idx: m128i, b: m128i) -> m128i {
+  m128i(unsafe { _mm_permutex2var_epi64(a.0, idx.0, b.0) })
+}
+
+/// Shuffle `i32` values between `a` and `b` using variable indices.
+///
+/// Each index selects from the concatenation of `a` and `b`: `0..8` picks a
+/// lane of `a` and `8..16` picks a lane of `b`. Only the low 4 bits of each
+/// index are read.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([0, 1, 2, 3, 4, 5, 6, 7]);
+/// let b = m256i::from([10, 11, 12, 13, 14, 15, 16, 17]);
+/// let idx = m256i::from([0, 8, 1, 9, 2, 10, 3, 11]);
+/// let c: [i32; 8] = shuffle_abv_i32_all_m256i(a, idx, b).into();
+/// assert_eq!(c, [0, 10, 1, 11, 2, 12, 3, 13]);
+/// ```
+/// * **Intrinsic:** [`_mm256_permutex2var_epi32`]
+/// * **Assembly:** `vpermt2d ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg(all(target_feature = "avx512f", target_feature = "avx512vl"))]
+#[cfg_attr(docsrs, doc(cfg(all(target_feature = "avx512f", target_feature = "avx512vl"))))]
+pub fn shuffle_abv_i32_all_m256i(a: m256i, idx: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_permutex2var_epi32(a.0, idx.0, b.0) })
+}
+
+/// Shuffle `i64` values between `a` and `b` using variable indices.
+///
+/// Each index selects from the concatenation of `a` and `b`: `0..4` picks a
+/// lane of `a` and `4..8` picks a lane of `b`. Only the low 3 bits of each
+/// index are read.
+/// ```
+/// # use safe_arch::*;
+/// let a = m256i::from([0_i64, 1, 2, 3]);
+/// let b = m256i::from([10_i64, 11, 12, 13]);
+/// let idx = m256i::from([0_i64, 4, 1, 5]);
+/// let c: [i64; 4] = shuffle_abv_i64_all_m256i(a, idx, b).into();
+/// assert_eq!(c, [0, 10, 1, 11]);
+/// ```
+/// * **Intrinsic:** [`_mm256_permutex2var_epi64`]
+/// * **Assembly:** `vpermt2q ymm, ymm, ymm`
+#[must_use]
+#[inline(always)]
+#[cfg(all(target_feature = "avx512f", target_feature = "avx512vl"))]
+#[cfg_attr(docsrs, doc(cfg(all(target_feature = "avx512f", target_feature = "avx512vl"))))]
+pub fn shuffle_abv_i64_all_m256i(a: m256i, idx: m256i, b: m256i) -> m256i {
+  m256i(unsafe { _mm256_permutex2var_epi64(a.0, idx.0, b.0) })
+}
+
+/// Shuffle `i32` values between `a` and `b` using variable indices.
 /// ```
 /// # use safe_arch::*;
 /// let a = m512i::from([0_i32; 16]);
@@ -3446,6 +3582,28 @@ pub fn shuffle_i32_m512i<const IMM: i32>(a: m512i) -> m512i {
 #[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
 pub fn shuffle_abv_i32_all_m512i(a: m512i, idx: m512i, b: m512i) -> m512i {
   m512i(unsafe { _mm512_permutex2var_epi32(a.0, idx.0, b.0) })
+}
+
+/// Shuffle `i64` values between `a` and `b` using variable indices.
+///
+/// Each index selects from the concatenation of `a` and `b`: `0..8` picks a
+/// lane of `a` and `8..16` picks a lane of `b`. Only the low 4 bits of each
+/// index are read.
+/// ```
+/// # use safe_arch::*;
+/// let a = m512i::from([0_i64, 1, 2, 3, 4, 5, 6, 7]);
+/// let b = m512i::from([10_i64, 11, 12, 13, 14, 15, 16, 17]);
+/// let idx = m512i::from([0_i64, 8, 1, 9, 2, 10, 3, 11]);
+/// let c: [i64; 8] = shuffle_abv_i64_all_m512i(a, idx, b).into();
+/// assert_eq!(c, [0, 10, 1, 11, 2, 12, 3, 13]);
+/// ```
+/// * **Intrinsic:** [`_mm512_permutex2var_epi64`]
+/// * **Assembly:** `vpermt2q zmm, zmm, zmm`
+#[must_use]
+#[inline(always)]
+#[cfg_attr(docsrs, doc(cfg(target_feature = "avx512f")))]
+pub fn shuffle_abv_i64_all_m512i(a: m512i, idx: m512i, b: m512i) -> m512i {
+  m512i(unsafe { _mm512_permutex2var_epi64(a.0, idx.0, b.0) })
 }
 
 /// Shuffle `i64` values in `a` using variable indices.
